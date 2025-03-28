@@ -22,9 +22,10 @@ Route::middleware(['auth'])->group(function () {
         
         // registertraining
         Route::get('/dashboard/user/pelatihan', [RegTrainingController::class, 'index'])->name('dashboard.training');
-        Route::get('/dashboard/user/pelatihan/form', [RegTrainingController::class, 'formReg'])->name('dashboard.form');
         Route::get('/dashboard/user/pelatihan/selectdate', [RegTrainingController::class, 'selectDate'])->name('dashboard.selectDate');
+        Route::get('/dashboard/user/pelatihan/form', [RegTrainingController::class, 'formReg'])->name('dashboard.form');
         
+        // Route::post('/dashboard/user/pelatihan/form/send',[RegTrainingController::class,'formReg'])->name('dashboard.form.send');
     });
 });
 

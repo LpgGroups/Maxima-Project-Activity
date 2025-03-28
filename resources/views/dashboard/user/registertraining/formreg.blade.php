@@ -32,7 +32,7 @@
                 Maxima Aksara Jaya Utama, pastikan Anda mengisi form aplikasi pendaftaran dengan benar dan sesuai data
                 yang valid.</p>
 
-            <form action="#" method="POST">
+            <form action="" method="POST">
                 @csrf
                 <div class="flex gap-x-4">
                     <!-- Nama PIC Perusahaan -->
