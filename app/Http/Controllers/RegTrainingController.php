@@ -42,7 +42,7 @@ class RegTrainingController extends Controller
             'name_pic' => 'required|string|regex:/^[A-Za-z\s]+$/',
             'name_company' => 'required|string',
             'email_pic' => 'required|email',
-            'phone' => 'required|regex:/^\+?[1-9]\d{1,14}$/',
+            'phone' => 'required|regex:/^\+?[1-9]\d{1,14}$/', 
         ]);
 
         // Simpan data ke database
