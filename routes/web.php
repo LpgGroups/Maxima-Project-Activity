@@ -8,7 +8,7 @@ use App\Http\Controllers\RegTrainingController;
 
 Route::get('/', [LoginController::class, 'index'])->name('login.index');
 Route::post('/', [LoginController::class, 'authenticate'])->name('login');
-Route::get("/test",function(){
+Route::get('/test',function(){
     return 'test clear';
 });
 Route::middleware(['auth'])->group(function () {
