@@ -15,7 +15,7 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware([UserAccess::class . ':admin'])->group(function () {
         Route::get('/dashboard/admin', function () {
             return 'Halaman Admin';
-        })->name('dashboard.admin.index');
+        })->name('dashboard.admin.index'); 
     });
     Route::middleware([UserAccess::class . ':user'])->group(function () {
          // user
