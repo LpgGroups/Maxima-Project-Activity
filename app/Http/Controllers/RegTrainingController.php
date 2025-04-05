@@ -6,6 +6,7 @@ use App\Models\RegTraining;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class RegTrainingController extends Controller
 {
@@ -37,60 +38,55 @@ class RegTrainingController extends Controller
         ]);
     }
     public function saveForm1(Request $request)
-    {
-        // Validasi input
-        $request->validate([
-            'name_pic' => 'required|string|regex:/^[A-Za-z\s]+$/',
-            'name_company' => 'required|string',
-            'email_pic' => 'required|email',
-            'phone_pic' => 'required',
-        ]);
-    
-        // Cek apakah sudah ada data berdasarkan email atau user_id yang ada di session
-        $user = Auth::user(); // Ambil data user yang sedang login
-        $existingRegistration = RegTraining::where('user_id', $user->id)->first();
-    
-        // Jika data sudah ada, update
-        if ($existingRegistration) {
-            // Update data yang sudah ada
-            $existingRegistration->name_pic = $request->name_pic;
-            $existingRegistration->name_company = $request->name_company;
-            $existingRegistration->phone_pic = $request->phone_pic;
-            $existingRegistration->email_pic = $request->email_pic;
-    
-            // Simpan perubahan
-            if ($existingRegistration->save()) {
-                // Return success response
-                return response()->json(['success' => true]);
-            }
-        } else {
-            // Jika tidak ada data, buat data baru
-            $registration = new RegTraining();
-            $registration->user_id = $user->id;
-            $registration->name_pic = $request->name_pic;
-            $registration->name_company = $request->name_company;
-            $registration->email_pic = $request->email_pic;
-            $registration->phone_pic = $request->phone_pic;
-    
-            // Simpan data baru
-            if ($registration->save()) {
-                // Save session data
-                session([
-                    'name_pic' => $registration->name_pic,
-                    'name_company' => $registration->name_company,
-                    'email_pic' => $registration->email_pic,
-                    'phone_pic' => $registration->phone_pic,
-                    'activity' => $registration->activity,
-                    'date' => $registration->date,
-                ]);
-    
-                // Return success response
-                return response()->json(['success' => true]);
-            }
+{
+    // Validasi input
+    $request->validate([
+        'name_pic' => 'required|string|regex:/^[A-Za-z\s]+$/',
+        'name_company' => 'required|string',
+        'email_pic' => 'required|email',
+        'phone_pic' => 'required',
+       
+    ]);
+
+    try {
+        $user = Auth::user(); // Pastikan user terautentikasi
+
+        if (!$user) {
+            return response()->json(['success' => false, 'message' => 'User not authenticated or found.']);
         }
-    
-        // Return error response jika gagal
-        return response()->json(['success' => false]);
+
+        // Cek apakah record sudah ada berdasarkan ID dan user_id
+        $trainingData = RegTraining::where('user_id', $user->id)
+            ->where('id', $request->input('id'))
+            ->first();
+
+        if ($trainingData) {
+            // Update data jika sudah ada
+            $trainingData->update([
+                'name_pic' => $request->input('name_pic'),
+                'name_company' => $request->input('name_company'),
+                'email_pic' => $request->input('email_pic'),
+                'phone_pic' => $request->input('phone_pic'),
+               
+            ]);
+        } else {
+            // Simpan data baru jika belum ada
+            RegTraining::create([
+                'user_id' => $user->id,
+                'name_pic' => $request->input('name_pic'),
+                'name_company' => $request->input('name_company'),
+                'email_pic' => $request->input('email_pic'),
+                'phone_pic' => $request->input('phone_pic'),
+              
+            ]);
+        }
+
+        return response()->json(['success' => true, 'message' => 'Data berhasil disimpan/diupdate!']);
+    } catch (\Exception $e) {
+        // Log error jika terjadi masalah
+        Log::error("Error while saving/updating form: " . $e->getMessage());
+        return response()->json(['success' => false, 'message' => 'Terjadi kesalahan, coba lagi.']);
     }
-    
+}
+
 }

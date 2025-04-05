@@ -34,6 +34,7 @@
 
                 <form id="registrationForm" action="{{ route('dashboard.form.save') }}" method="POST">
                     @csrf
+                    <input type="" id="trainingId" name="id" value="{{ old('id', $training->id ?? '') }}">
                     <div class="flex gap-x-4">
                         <!-- Nama PIC Perusahaan -->
                         <div class="relative mt-4 w-64">
@@ -89,13 +90,13 @@
                     <div class="mt-4">
                         <!-- Tampilkan aktivitas yang dipilih -->
                         <p class="font-bold">Jenis Kegiatan</p>
-                        <p>{{ $training->activity }}</p>
+                        <p id="activity">{{ $training->activity }}</p>
                     </div>
 
 
                     <div class="mt-4">
                         <p class="font-bold">Tanggal Pelatihan</p>
-                        <p>{{ \Carbon\Carbon::parse($training->date)->format('d-F-Y') }}</p>
+                        <p id="date">{{ \Carbon\Carbon::parse($training->date)->format('d-F-Y') }}</p>
                     </div>
                     <div id="responseMessage" class="mt-4 hidden"></div>
                     <!-- Submit Button -->

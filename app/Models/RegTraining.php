@@ -12,10 +12,11 @@ class RegTraining extends Model
     protected $table = 'reg_training';
 
     protected $fillable = [
+        'id',
         'name_pic',
         'name_company',
-        'phone',
-        'email',
+        'phone_pic',
+        'email_pic',
         'activity',
         'date',
         'place',

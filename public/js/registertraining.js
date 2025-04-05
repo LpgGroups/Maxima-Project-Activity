@@ -40,11 +40,11 @@ function submitForm1() {
 
         var formData = {
             '_token': $('input[name="_token"]').val(),
+            'id': $('#trainingId').val(),  // Menambahkan ID untuk update
             'name_pic': $('#name_pic').val(),
             'name_company': $('#name_company').val(),
             'email_pic': $('#email_pic').val(),
             'phone_pic': $('#phone_pic').val(),
-            
         };
 
         console.log(formData);  // Log the data being sent
@@ -62,7 +62,7 @@ function submitForm1() {
             success: function (response) {
                 if (response.success) {
                     $('#responseMessage').addClass('text-green-500').removeClass('text-red-500')
-                        .text('Data berhasil disimpan!');
+                        .text('Data berhasil disimpan atau diperbarui!');
                 } else {
                     $('#responseMessage').addClass('text-red-500').removeClass('text-green-500')
                         .text('Gagal menyimpan data. Silakan coba lagi.');
@@ -75,6 +75,7 @@ function submitForm1() {
         });
     });
 }
+
 
 // function send data
 $(document).ready(function() {
