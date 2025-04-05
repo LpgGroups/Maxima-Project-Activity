@@ -56,10 +56,7 @@ class RegTrainingController extends Controller
             $existingRegistration->name_pic = $request->name_pic;
             $existingRegistration->name_company = $request->name_company;
             $existingRegistration->phone_pic = $request->phone_pic;
-    
-            // Update date dan activity jika sudah ada di session
-            $existingRegistration->date = session('date');
-            $existingRegistration->activity = session('activity');
+            $existingRegistration->email_pic = $request->email_pic;
     
             // Simpan perubahan
             if ($existingRegistration->save()) {
@@ -74,10 +71,6 @@ class RegTrainingController extends Controller
             $registration->name_company = $request->name_company;
             $registration->email_pic = $request->email_pic;
             $registration->phone_pic = $request->phone_pic;
-    
-            // Pastikan nilai date dan activity dari session selalu terupdate
-            $registration->date = session('date');
-            $registration->activity = session('activity');
     
             // Simpan data baru
             if ($registration->save()) {
