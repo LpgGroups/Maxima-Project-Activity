@@ -31,4 +31,5 @@ Route::middleware(['auth'])->group(function () {
         // Route::post('/dashboard/user/pelatihan/form/send',[RegTrainingController::class,'formReg'])->name('dashboard.form.send');
     });
 });
+  
 
