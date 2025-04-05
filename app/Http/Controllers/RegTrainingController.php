@@ -38,33 +38,66 @@ class RegTrainingController extends Controller
     }
     public function saveForm1(Request $request)
     {
+        // Validasi input
         $request->validate([
             'name_pic' => 'required|string|regex:/^[A-Za-z\s]+$/',
             'name_company' => 'required|string',
             'email_pic' => 'required|email',
-            'phone' => 'required|regex:/^\+?[1-9]\d{1,14}$/', 
+            'phone_pic' => 'required',
         ]);
-
-        // Simpan data ke database
-        $registration = new RegTraining();
-        $registration->name_pic = $request->name_pic;
-        $registration->name_company = $request->name_company;
-        $registration->email_pic = $request->email;
-        $registration->phone = $request->phone; 
-        // Jika perlu, simpan data pelatihan
-        $registration->training_activity = $request->activity; // Contoh untuk data kegiatan pelatihan
-
-
-        $registration->save();
-        session([
-            'name_pic' => $registration->name_pic,
-            'name_company' => $registration->name_company,
-            'email_pic' => $registration->email_pic,
-            'phone' => $registration->phone,
-            'activity' => $registration->training_activity,
-        ]);
-
-        // Redirect atau tampilkan pesan sukses
-        return redirect()->route('dashboard.user.registertraining.formreg'); // Ganti dengan rute yang sesuai
+    
+        // Cek apakah sudah ada data berdasarkan email atau user_id yang ada di session
+        $user = Auth::user(); // Ambil data user yang sedang login
+        $existingRegistration = RegTraining::where('user_id', $user->id)->first();
+    
+        // Jika data sudah ada, update
+        if ($existingRegistration) {
+            // Update data yang sudah ada
+            $existingRegistration->name_pic = $request->name_pic;
+            $existingRegistration->name_company = $request->name_company;
+            $existingRegistration->phone_pic = $request->phone_pic;
+    
+            // Update date dan activity jika sudah ada di session
+            $existingRegistration->date = session('date');
+            $existingRegistration->activity = session('activity');
+    
+            // Simpan perubahan
+            if ($existingRegistration->save()) {
+                // Return success response
+                return response()->json(['success' => true]);
+            }
+        } else {
+            // Jika tidak ada data, buat data baru
+            $registration = new RegTraining();
+            $registration->user_id = $user->id;
+            $registration->name_pic = $request->name_pic;
+            $registration->name_company = $request->name_company;
+            $registration->email_pic = $request->email_pic;
+            $registration->phone_pic = $request->phone_pic;
+    
+            // Pastikan nilai date dan activity dari session selalu terupdate
+            $registration->date = session('date');
+            $registration->activity = session('activity');
+    
+            // Simpan data baru
+            if ($registration->save()) {
+                // Save session data
+                session([
+                    'name_pic' => $registration->name_pic,
+                    'name_company' => $registration->name_company,
+                    'email_pic' => $registration->email_pic,
+                    'phone_pic' => $registration->phone_pic,
+                    'activity' => $registration->activity,
+                    'date' => $registration->date,
+                ]);
+    
+                // Return success response
+                return response()->json(['success' => true]);
+            }
+        }
+    
+        // Return error response jika gagal
+        return response()->json(['success' => false]);
     }
+    
 }

@@ -1,79 +1,83 @@
-document.addEventListener("DOMContentLoaded", function () {
-    // Ambil elemen-elemen yang dibutuhkan
-    const addButton = document.getElementById("addButton");
-    const calendarModal = document.getElementById("calendarModal");
-    const closeModalButton = document.getElementById("closeModal");
-    const calendarContainer = document.getElementById("calendarContainer");
+// Function tab Tab
+function showTabs(){
+    showTab(1);
 
-    // Variabel untuk menyimpan tanggal yang dipilih
-    let selectedDate = null;
+    document.getElementById('tab1').addEventListener('click', function() {
+        showTab(1);
+    });
+    document.getElementById('tab2').addEventListener('click', function() {
+        showTab(2);
+    });
+    document.getElementById('tab3').addEventListener('click', function() {
+        showTab(3);
+    });
     
-    // Fungsi untuk menampilkan kalender
-    function renderCalendar() {
-        // Buat elemen untuk kalender
-        const today = new Date();
-        const currentMonth = today.getMonth();
-        const currentYear = today.getFullYear();
-        const firstDay = new Date(currentYear, currentMonth, 1).getDay();
-        const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-
-        calendarContainer.innerHTML = ""; // Bersihkan konten kalender sebelumnya
-
-        // Menampilkan nama bulan dan tahun
-        const monthName = today.toLocaleString("default", { month: "long" });
-        const yearName = today.getFullYear();
-        const monthHeader = document.createElement("h4");
-        monthHeader.classList.add("text-center", "text-xl", "mb-4");
-        monthHeader.textContent = `${monthName} ${yearName}`;
-        calendarContainer.appendChild(monthHeader);
-
-        // Membuat grid kalender
-        const daysGrid = document.createElement("div");
-        daysGrid.classList.add("grid", "grid-cols-7", "gap-2");
-
-        // Menampilkan nama hari
-        const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-        daysOfWeek.forEach(day => {
-            const dayHeader = document.createElement("div");
-            dayHeader.textContent = day;
-            dayHeader.classList.add("text-center", "font-bold");
-            daysGrid.appendChild(dayHeader);
+    function showTab(tabIndex) {
+        // Hide all tab content
+        document.querySelectorAll('.tab-content').forEach(function(content) {
+            content.classList.add('hidden');
         });
-
-        // Menambahkan tanggal kosong sebelum tanggal pertama bulan ini
-        for (let i = 0; i < firstDay; i++) {
-            const emptyCell = document.createElement("div");
-            emptyCell.classList.add("text-center", "text-xs");
-            daysGrid.appendChild(emptyCell);
-        }
-
-        // Menambahkan tanggal bulan ini
-        for (let day = 1; day <= daysInMonth; day++) {
-            const dayCell = document.createElement("div");
-            dayCell.textContent = day;
-            dayCell.classList.add("text-center", "cursor-pointer", "py-2", "rounded", "hover:bg-blue-500", "hover:text-white", "transition");
-
-            // Menambahkan event listener untuk memilih tanggal
-            dayCell.addEventListener("click", function () {
-                selectedDate = new Date(currentYear, currentMonth, day);
-                dayCell.classList.add("bg-blue-500", "text-white");
-                alert(`Tanggal yang dipilih: ${selectedDate.toLocaleDateString()}`);
-            });
-
-            daysGrid.appendChild(dayCell);
-        }
-
-        calendarContainer.appendChild(daysGrid);
+    
+        // Remove active class from all tabs
+        document.querySelectorAll('ul li a').forEach(function(tab) {
+            tab.classList.remove('text-violet-400', 'border-b-2', 'border-blue-600', 'bg-white');
+            tab.classList.add('text-gray-600');
+        });
+    
+        // Show the selected tab's content
+        document.getElementById('content' + tabIndex).classList.remove('hidden');
+    
+        // Highlight the active tab
+        const activeTab = document.getElementById('tab' + tabIndex);
+        activeTab.classList.add('text-violet-400', 'border-b-2', 'border-blue-600', 'bg-white');
+        activeTab.classList.remove('text-gray-600');
     }
+}
 
-    // Tampilkan kalender saat tombol "Tambah" diklik
-    addButton.addEventListener("click", function () {
-        calendarModal.classList.remove("hidden");
-        renderCalendar();
-    });
+function submitForm1() {
+    $('#submitBtn').click(function (e) {
+        e.preventDefault(); // Prevent default form submission
 
-    // Menutup modal kalender saat tombol "Tutup" diklik
-    closeModalButton.addEventListener("click", function () {
-        calendarModal.classList.add("hidden");
+        var formData = {
+            '_token': $('input[name="_token"]').val(),
+            'name_pic': $('#name_pic').val(),
+            'name_company': $('#name_company').val(),
+            'email_pic': $('#email_pic').val(),
+            'phone_pic': $('#phone_pic').val(),
+            
+        };
+
+        console.log(formData);  // Log the data being sent
+
+        // Clear previous response message
+        $('#responseMessage').removeClass('hidden').text('');
+
+        $.ajax({
+            url: '/dashboard/user/training/form/save', // URL untuk save
+            type: 'POST',
+            data: formData,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function (response) {
+                if (response.success) {
+                    $('#responseMessage').addClass('text-green-500').removeClass('text-red-500')
+                        .text('Data berhasil disimpan!');
+                } else {
+                    $('#responseMessage').addClass('text-red-500').removeClass('text-green-500')
+                        .text('Gagal menyimpan data. Silakan coba lagi.');
+                }
+            },
+            error: function (xhr, status, error) {
+                $('#responseMessage').addClass('text-red-500').removeClass('text-green-500')
+                    .text('Terjadi kesalahan. Coba lagi.');
+            }
+        });
     });
+}
+
+// function send data
+$(document).ready(function() {
+   showTabs();
+   submitForm1();
 });

@@ -67,13 +67,13 @@
 
             <!-- Kalender -->
             <div class="grid grid-cols-7 gap-2 p-2" id="calendar-days">
+                <div class="text-center font-semibold">Min</div>
                 <div class="text-center font-semibold">Sen</div>
                 <div class="text-center font-semibold">Sel</div>
                 <div class="text-center font-semibold">Rab</div>
                 <div class="text-center font-semibold">Kam</div>
                 <div class="text-center font-semibold">Jum</div>
                 <div class="text-center font-semibold">Sab</div>
-                <div class="text-center font-semibold">Min</div>
             </div>
 
             <div class="grid grid-cols-7 gap-2 p-2" id="days"></div>

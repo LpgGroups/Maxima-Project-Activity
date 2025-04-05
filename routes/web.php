@@ -23,9 +23,10 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/dashboard/booking', [DashboardUserController::class, 'bookingDate'])->name('dashboard.user.booking');
         
         // registertraining
-        Route::get('/dashboard/user/pelatihan', [RegTrainingController::class, 'index'])->name('dashboard.training');
-        Route::get('/dashboard/user/pelatihan/selectdate', [RegTrainingController::class, 'selectDate'])->name('dashboard.selectDate');
-        Route::get('/dashboard/user/pelatihan/form', [RegTrainingController::class, 'formReg'])->name('dashboard.form');
+        Route::get('/dashboard/user/training', [RegTrainingController::class, 'index'])->name('dashboard.training');
+        Route::get('/dashboard/user/training/selectdate', [RegTrainingController::class, 'selectDate'])->name('dashboard.selectDate');
+        Route::get('/dashboard/user/training/form', [RegTrainingController::class, 'formReg'])->name('dashboard.form');
+        Route::post('/dashboard/user/training/form/save', [RegTrainingController::class, 'saveForm1'])->name('dashboard.form.save');
         
         // Route::post('/dashboard/user/pelatihan/form/send',[RegTrainingController::class,'formReg'])->name('dashboard.form.send');
     });

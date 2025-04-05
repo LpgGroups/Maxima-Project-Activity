@@ -69,7 +69,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 day
             );
             const dayOfWeek = currentDay.getDay();
-            const isWeekend = dayOfWeek === 5 || dayOfWeek === 6;
+            const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
             const isPastDate =
                 currentDay < today && currentDay.getMonth() === today.getMonth();
             const isWithinNextTenDays =
@@ -227,9 +227,10 @@ document.addEventListener("DOMContentLoaded", function () {
                                                 month: "long",
                                             })} ${currentDate.getFullYear()} berhasil dibuat!`,
                                         }).then(() => {
+                                            id= response.id
                                             // Redirect ke halaman lain setelah 2 detik
                                             setTimeout(function () {
-                                                window.location.href = "/dashboard/user/pelatihan/form";
+                                                window.location.href = "/dashboard/user/training/form";
                                             }, 1000);
                                         });
                                     } else {
