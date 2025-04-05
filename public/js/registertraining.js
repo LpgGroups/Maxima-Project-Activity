@@ -65,8 +65,8 @@ function submitForm1() {
                         .text('Data berhasil disimpan atau diperbarui!');
                 } else {
                     $('#responseMessage').addClass('text-red-500').removeClass('text-green-500')
-                        .text('Gagal menyimpan data. Silakan coba lagi.');
-                }
+                        .text('Gagal menyimpan data. Silakan coba lagi.'); 
+                } 
             },
             error: function (xhr, status, error) {
                 $('#responseMessage').addClass('text-red-500').removeClass('text-green-500')
