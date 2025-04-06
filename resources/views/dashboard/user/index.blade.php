@@ -78,7 +78,7 @@
 
             <div class="grid grid-cols-7 gap-2 p-2" id="days"></div>
             <button id="booking-button" class="bg-gray-300 text-white py-2 px-4 rounded-lg cursor-not-allowed"
-                disabled>Booking Jadwal</button>
+                disabled>Pilih Jadwal Pelatihan</button>
         </div>
     </div>
 @endsection
