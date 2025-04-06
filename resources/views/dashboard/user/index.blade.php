@@ -83,6 +83,4 @@
     </div>
 @endsection
 
-@push('scripts')
-    <script src="{{ asset('js/datepicker.js') }}"></script>
-@endpush
+
