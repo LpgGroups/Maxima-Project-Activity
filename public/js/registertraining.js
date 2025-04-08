@@ -74,7 +74,7 @@ function submitForm1() {
             }
         });
     });
-}
+} 
 
 function addInputField() {
     // Create a new div to hold the input and buttons
