@@ -20,7 +20,7 @@ function showTabs(){
     
         // Remove active class from all tabs
         document.querySelectorAll('ul li a').forEach(function(tab) {
-            tab.classList.remove('text-violet-400', 'border-b-2', 'border-blue-600', 'bg-white');
+            tab.classList.remove('text-violet-400', 'border-b-2', 'border-violet-400', 'bg-white');
             tab.classList.add('text-gray-600');
         });
     
@@ -29,7 +29,7 @@ function showTabs(){
     
         // Highlight the active tab
         const activeTab = document.getElementById('tab' + tabIndex);
-        activeTab.classList.add('text-violet-400', 'border-b-2', 'border-blue-600', 'bg-white');
+        activeTab.classList.add('text-violet-400', 'border-b-2', 'border-violet-400', 'bg-white');
         activeTab.classList.remove('text-gray-600');
     }
 }
