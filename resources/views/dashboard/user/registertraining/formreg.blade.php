@@ -110,12 +110,18 @@
             </div>
         </div>
 
-
-
         <div id="content2" class="tab-content hidden">
             <div class="p-4 border border-t-0 border-gray-300 bg-white">
-                <h3 class="text-xl font-semibold">Content for Tab 2</h3>
-                <p>This is the content for tab 2.</p>
+                <h1 class="text-xl font-semibold">Submit Peserta</h1>
+                <p>Lengkapi Data Peserta yang akan mengikuti pelatihan yang diselenggarakan oleh PT. Maxima Aksara Jaya Utama</p>
+                
+                <!-- Input Field Section with Scroll -->
+                <div id="input-fields-container" class="max-h-80 overflow-y-auto space-y-2">
+                    <div class="flex items-center space-x-2 mb-2">
+                        <input type="text" class="form-control px-3 py-2 border border-gray-300 rounded-md" placeholder="Nama Peserta" />
+                        <button class="text-lg font-bold text-blue-500 px-3 py-2 border border-gray-300 rounded-md hover:bg-gray-100" onclick="addInputField()">+</button>
+                    </div>
+                </div>
             </div>
         </div>
 

@@ -76,9 +76,43 @@ function submitForm1() {
     });
 }
 
+function addInputField() {
+    // Create a new div to hold the input and buttons
+    const newInputGroup = document.createElement('div');
+    newInputGroup.classList.add('flex', 'items-center', 'space-x-2', 'mb-2');
+    
+    // Create the input field
+    const newInput = document.createElement('input');
+    newInput.type = 'text';
+    newInput.classList.add('form-control', 'px-3', 'py-2', 'border', 'border-gray-300', 'rounded-md');
+    newInput.placeholder = 'Nama Peserta';
+    
+    // Create the add button
+    const newAddButton = document.createElement('button');
+    newAddButton.classList.add('text-lg', 'font-bold', 'text-blue-500', 'px-3', 'py-2', 'border', 'border-gray-300', 'rounded-md', 'hover:bg-gray-100');
+    newAddButton.textContent = '+';
+    newAddButton.onclick = addInputField; // Add the same functionality to the new button
+    
+    // Create the remove button
+    const newRemoveButton = document.createElement('button');
+    newRemoveButton.classList.add('text-lg', 'font-bold', 'text-red-500', 'px-3', 'py-2', 'border', 'border-gray-300', 'rounded-md', 'hover:bg-gray-100');
+    newRemoveButton.textContent = '-';
+    newRemoveButton.onclick = function() {
+        newInputGroup.remove(); // Remove the entire input group when the remove button is clicked
+    };
+    
+    // Append input, add button, and remove button to the new input group
+    newInputGroup.appendChild(newInput);
+    newInputGroup.appendChild(newAddButton);
+    newInputGroup.appendChild(newRemoveButton);
+    
+    // Append the new input group to the container
+    document.getElementById('input-fields-container').appendChild(newInputGroup);
+}
 
 // function send data
 $(document).ready(function() {
    showTabs();
    submitForm1();
+   addInputField();
 });
