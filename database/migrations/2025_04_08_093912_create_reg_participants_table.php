@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->string('reason')->nullable();
             $table->integer('isprogress')->default(1);
-            $table->timestamps();
             $table->unsignedBigInteger('form_id')->nullable();
+            $table->timestamps();
             $table->foreign('form_id')->references('id')->on('reg_training')->onDelete('cascade');
         });
     }

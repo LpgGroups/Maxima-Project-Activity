@@ -76,6 +76,8 @@ function submitForm1() {
     });
 } 
 
+let form_id = 1; // Misalnya, ini adalah form_id yang dapat Anda ambil dari server atau halaman saat ini
+
 function addInputField() {
     // Create a new div to hold the input and buttons
     const newInputGroup = document.createElement('div');
@@ -86,6 +88,9 @@ function addInputField() {
     newInput.type = 'text';
     newInput.classList.add('form-control', 'px-3', 'py-2', 'border', 'border-gray-300', 'rounded-md');
     newInput.placeholder = 'Nama Peserta';
+    
+    // Set an ID to each input so you can identify them later
+    newInput.setAttribute('id', 'input-participant-' + Date.now()); // unique id based on timestamp
     
     // Create the add button
     const newAddButton = document.createElement('button');
@@ -110,9 +115,39 @@ function addInputField() {
     document.getElementById('input-fields-container').appendChild(newInputGroup);
 }
 
+function sendForm2(){
+    let participants = [];
+    // Loop through all the input fields and collect their values
+    const inputs = document.querySelectorAll('#input-fields-container input');
+    
+    inputs.forEach(input => {
+        participants.push({
+            name: input.value,
+            form_id: form_id // Each participant will get the same form_id
+        });
+    });
+
+    // Now send this data to the server using an AJAX call
+    $.ajax({
+        url: '/your-api-endpoint', // Ganti dengan endpoint yang sesuai
+        method: 'POST',
+        data: {
+            participants: participants,
+            _token: '{{ csrf_token() }}' // Pastikan CSRF token tersedia
+        },
+        success: function(response) {
+            console.log('Data berhasil dikirim', response);
+        },
+        error: function(error) {
+            console.error('Error mengirim data', error);
+        }
+    });
+}
+
 // function send data
 $(document).ready(function() {
    showTabs();
    submitForm1();
    addInputField();
+   sendForm2();
 });
