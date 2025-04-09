@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\RegTraining;
 use App\Http\Controllers\Controller;
+use App\Models\RegParticipant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -44,8 +45,7 @@ class RegTrainingController extends Controller
         'name_pic' => 'required|string|regex:/^[A-Za-z\s]+$/',
         'name_company' => 'required|string',
         'email_pic' => 'required|email',
-        'phone_pic' => 'required',
-       
+        'phone_pic' => 'required|numeric',    
     ]);
 
     try {
@@ -87,6 +87,27 @@ class RegTrainingController extends Controller
         Log::error("Error while saving/updating form: " . $e->getMessage());
         return response()->json(['success' => false, 'message' => 'Terjadi kesalahan, coba lagi.']);
     }
+}
+
+public function saveForm2(Request $request)
+{
+    // Validasi data
+    $request->validate([
+        'participants' => 'required|array',
+        'participants.*.name' => 'required|string', // Validasi nama peserta
+        'form_id' => 'required|integer', // Validasi form_id
+    ]);
+
+    // Proses data peserta
+    foreach ($request->participants as $participantData) {
+        // Simpan data peserta ke database
+        $participant = new RegParticipant(); // Ganti dengan model yang sesuai
+        $participant->name = $participantData['name'];
+        $participant->form_id = $request->form_id; // Menggunakan form_id yang dikirim dari frontend
+        $participant->save(); // Simpan ke database
+    }
+
+    return response()->json(['message' => 'Data berhasil disimpan']);
 }
 
 }

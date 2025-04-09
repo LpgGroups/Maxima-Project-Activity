@@ -41,7 +41,8 @@
                             <input id="name_pic" name="name_pic" type="text"
                                 class="peer block w-full appearance-none border border-[#515151] bg-transparent px-2.5 py-3 text-sm text-[#515151] rounded-md focus:border-[#1E6E9E] focus:outline-none focus:ring-1 focus:ring-[#1E6E9E] placeholder-transparent"
                                 placeholder="" required pattern="[A-Za-z\s]+"
-                                title="Nama PIC hanya boleh berisi huruf dan spasi." />
+                                title="Nama PIC hanya boleh berisi huruf dan spasi."
+                                value="{{ old('name_pic', $training->name_pic ?? '') }}" />
                             <label for="name_pic"
                                 class="absolute text-base rounded-lg bg-[#ffffff] text-[#515151] transition-all duration-300 transform -translate-y-4 scale-75 top-3 left-2.5 ml-2 z-10 origin-[0] peer-focus:text-[#1E6E9E] peer-focus:scale-75 peer-focus:-translate-y-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0">
                                 Nama PIC
@@ -52,8 +53,8 @@
                         <div class="relative mt-4 w-64">
                             <input id="name_company" name="name_company" type="text"
                                 class="peer block w-full appearance-none border border-[#515151] bg-transparent px-2.5 py-3 text-sm text-[#515151] rounded-md focus:border-[#1E6E9E] focus:outline-none focus:ring-1 focus:ring-[#1E6E9E] placeholder-transparent"
-                                placeholder="" required
-                                title="Nama Perusahaan hanya boleh berisi huruf, angka, dan spasi." />
+                                placeholder="" required title="Nama Perusahaan hanya boleh berisi huruf, angka, dan spasi."
+                                value="{{ old('name_company', $training->name_company ?? '') }}" />
                             <label for="name_company"
                                 class="absolute text-base rounded-lg bg-[#ffffff] text-[#515151] transition-all duration-300 transform -translate-y-4 scale-75 top-3 left-2.5 ml-2 z-10 origin-[0] peer-focus:text-[#1E6E9E] peer-focus:scale-75 peer-focus:-translate-y-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0">
                                 Nama Perusahaan
@@ -66,7 +67,7 @@
                         <div class="relative mt-4 w-64">
                             <input id="email_pic" name="email_pic" type="email"
                                 class="peer block w-full appearance-none border border-[#515151] bg-transparent px-2.5 py-3 text-sm text-[#515151] rounded-md focus:border-[#1E6E9E] focus:outline-none focus:ring-1 focus:ring-[#1E6E9E] placeholder-transparent"
-                                placeholder="" required />
+                                placeholder="" required value="{{ old('email_pic', $training->email_pic ?? '') }}" />
                             <label for="email_pic"
                                 class="absolute text-base rounded-lg bg-[#ffffff] text-[#515151] transition-all duration-300 transform -translate-y-4 scale-75 top-3 left-2.5 ml-2 z-10 origin-[0] peer-focus:text-[#1E6E9E] peer-focus:scale-75 peer-focus:-translate-y-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0">
                                 Email PIC
@@ -77,11 +78,15 @@
                         <div class="relative mt-4 w-64">
                             <input id="phone_pic" name="phone_pic" type="text"
                                 class="peer block w-full appearance-none border border-[#515151] bg-transparent px-2.5 py-3 text-sm text-[#515151] rounded-md focus:border-[#1E6E9E] focus:outline-none focus:ring-1 focus:ring-[#1E6E9E] placeholder-transparent"
-                                placeholder="" required title="No WhatsApp harus berupa nomor telepon yang valid." />
+                                placeholder="" required title="No WhatsApp harus berupa nomor telepon yang valid."
+                                value="{{ old('phone_pic', $training->phone_pic ?? '') }}" />
                             <label for="phone_pic"
                                 class="absolute text-base rounded-lg bg-[#ffffff] text-[#515151] transition-all duration-300 transform -translate-y-4 scale-75 top-3 left-2.5 ml-2 z-10 origin-[0] peer-focus:text-[#1E6E9E] peer-focus:scale-75 peer-focus:-translate-y-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0">
                                 No WhatsApp
                             </label>
+                            @error('phone_pic')
+                                <div class="text-red-500 text-sm mt-1 z-10">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
 
@@ -115,7 +120,7 @@
                 <h1 class="text-xl font-semibold">Submit Peserta</h1>
                 <p>Lengkapi Data Peserta yang akan mengikuti pelatihan yang diselenggarakan oleh PT. Maxima Aksara Jaya
                     Utama</p>
-
+                <input type="" id="form_id" value="{{ $training->id }}">
                 <!-- Input Field Section with Scroll -->
                 <div id="input-fields-container" class="max-h-80 overflow-y-auto space-y-2">
                     <div class="flex items-center space-x-2 mb-2">
@@ -145,7 +150,7 @@
                     </div>
 
                     <div class="mt-4">
-                        <button type="button" id="submitBtn"
+                        <button type="button" id="submitBtnForm2"
                             class="bg-blue-500 text-white px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400">
                             Simpan Data
                         </button>

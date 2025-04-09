@@ -115,31 +115,40 @@ function addInputField() {
     document.getElementById('input-fields-container').appendChild(newInputGroup);
 }
 
-function sendForm2(){
-    let participants = [];
-    // Loop through all the input fields and collect their values
-    const inputs = document.querySelectorAll('#input-fields-container input');
-    
-    inputs.forEach(input => {
-        participants.push({
-            name: input.value,
-            form_id: form_id // Each participant will get the same form_id
-        });
+function sendForm2() {
+    // Ambil form_id dari elemen yang relevan, misalnya dari input hidden atau data attribute
+    var formId = $('#form_id').val(); // Pastikan form_id ada di halaman Anda
+
+    // Ambil data peserta
+    var participants = [];
+    $('#input-fields-container input').each(function() {
+        participants.push({ name: $(this).val() });
     });
 
-    // Now send this data to the server using an AJAX call
+    // Validasi jika data peserta ada
+    if (participants.length == 0 || formId == '') {
+        alert('Pastikan semua data peserta dan form ID terisi.');
+        return;
+    }
+
+    // Kirim data melalui AJAX
     $.ajax({
-        url: '/your-api-endpoint', // Ganti dengan endpoint yang sesuai
+        url: '/dashboard/user/training/form2/save', // Pastikan URL sesuai dengan route di server Anda
         method: 'POST',
         data: {
-            participants: participants,
-            _token: '{{ csrf_token() }}' // Pastikan CSRF token tersedia
+            form_id: formId, // Kirim form_id
+            participants: participants // Kirim data peserta
+        },
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Menambahkan token CSRF ke header
         },
         success: function(response) {
-            console.log('Data berhasil dikirim', response);
+            alert(response.message); // Menampilkan pesan sukses dari backend
+            console.log(response);
         },
-        error: function(error) {
-            console.error('Error mengirim data', error);
+        error: function(xhr, status, error) {
+            alert('Terjadi kesalahan saat mengirim data.');
+            console.error(error);
         }
     });
 }
@@ -149,5 +158,9 @@ $(document).ready(function() {
    showTabs();
    submitForm1();
    addInputField();
-   sendForm2();
+   $('#submitBtnForm2').click(function(e) {
+    e.preventDefault();  // Mencegah form submit default
+    sendForm2();  // Panggil fungsi sendForm2 saat tombol diklik
 });
+});
+

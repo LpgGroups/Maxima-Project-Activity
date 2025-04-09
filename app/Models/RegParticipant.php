@@ -9,7 +9,7 @@ class RegParticipant extends Model
 {
     /** @use HasFactory<\Database\Factories\RegParticipantFactory> */
     use HasFactory;
-    protected $table = 'reg_participant';
+    protected $table = 'reg_participants';
     protected $fillable = [
         'id',
         'name',
