@@ -42,10 +42,15 @@ class RegTrainingController extends Controller
 {
     // Validasi input
     $request->validate([
-        'name_pic' => 'required|string|regex:/^[A-Za-z\s]+$/',
-        'name_company' => 'required|string',
-        'email_pic' => 'required|email',
-        'phone_pic' => 'required|numeric',    
+        'name_pic' => ['required', 'string', 'regex:/^[A-Za-z\s]+$/'],
+        'name_company' => ['required', 'string'],
+        'email_pic' => ['required', 'email'],
+        'phone_pic' => ['required', 'numeric'],
+    ], [
+        'name_pic.regex' => 'Nama PIC hanya boleh berisi huruf dan spasi.',
+        'email_pic.email' => 'Format email tidak valid.',
+        'phone_pic.required' => 'Nomor WhatsApp wajib diisi.',
+        'phone_pic.numeric' => 'Nomor WhatsApp harus berupa angka.',
     ]);
 
     try {
