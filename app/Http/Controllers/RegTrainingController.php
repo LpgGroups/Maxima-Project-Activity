@@ -44,7 +44,7 @@ class RegTrainingController extends Controller
     $request->validate([
         'name_pic' => ['required', 'string', 'regex:/^[A-Za-z\s]+$/'],
         'name_company' => ['required', 'string'],
-        'email_pic' => ['required', 'email'],
+        'email_pic' => ['required', 'email'], 
         'phone_pic' => ['required', 'numeric'],
     ], [
         'name_pic.regex' => 'Nama PIC hanya boleh berisi huruf dan spasi.',
