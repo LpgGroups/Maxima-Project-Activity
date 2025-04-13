@@ -45,12 +45,13 @@ class RegTrainingController extends Controller
         'name_pic' => ['required', 'string', 'regex:/^[A-Za-z\s]+$/'],
         'name_company' => ['required', 'string'],
         'email_pic' => ['required', 'email'], 
-        'phone_pic' => ['required', 'numeric'],
+        'phone_pic' => ['required', 'numeric' ,'digits_between:10,13'],
     ], [
         'name_pic.regex' => 'Nama PIC hanya boleh berisi huruf dan spasi.',
         'email_pic.email' => 'Format email tidak valid.',
         'phone_pic.required' => 'Nomor WhatsApp wajib diisi.',
-        'phone_pic.numeric' => 'Nomor WhatsApp harus berupa angka.',
+        'phone_pic.numeric' => 'Nomor WhatsApp harus berupa angka ex:085712341234.',
+        'phone_pic.digits_between' => 'Nomor WhatsApp harus berisi 10 hingga 13 digit.'
     ]);
 
     try {
@@ -96,23 +97,41 @@ class RegTrainingController extends Controller
 
 public function saveForm2(Request $request)
 {
-    // Validasi data
     $request->validate([
         'participants' => 'required|array',
-        'participants.*.name' => 'required|string', // Validasi nama peserta
-        'form_id' => 'required|integer', // Validasi form_id
+        'participants.*.name' => 'required|string',
+        'form_id' => 'required|integer',
     ]);
 
-    // Proses data peserta
-    foreach ($request->participants as $participantData) {
-        // Simpan data peserta ke database
-        $participant = new RegParticipant(); // Ganti dengan model yang sesuai
-        $participant->name = $participantData['name'];
-        $participant->form_id = $request->form_id; // Menggunakan form_id yang dikirim dari frontend
-        $participant->save(); // Simpan ke database
+    $formId = $request->form_id;
+    $newNames = collect($request->participants)->pluck('name')->toArray(); // Ambil semua nama dari request
+
+    // Ambil semua peserta lama di form ini
+    $existingParticipants = RegParticipant::where('form_id', $formId)->get();
+
+    // Hapus peserta yang tidak ada lagi di data baru
+    foreach ($existingParticipants as $participant) {
+        if (!in_array($participant->name, $newNames)) {
+            $participant->delete();
+        }
     }
 
-    return response()->json(['message' => 'Data berhasil disimpan']);
+    // Tambah atau update peserta
+    foreach ($request->participants as $participantData) {
+        $participant = RegParticipant::where('name', $participantData['name'])
+                                     ->where('form_id', $formId)
+                                     ->first();
+
+        if (!$participant) {
+            $participant = new RegParticipant();
+            $participant->form_id = $formId;
+        }
+
+        $participant->name = $participantData['name'];
+        $participant->save();
+    }
+
+    return response()->json(['message' => 'Data peserta berhasil disinkronkan']);
 }
 
 }

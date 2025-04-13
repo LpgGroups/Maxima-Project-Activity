@@ -84,6 +84,9 @@
                                 class="absolute text-base rounded-lg bg-[#ffffff] text-[#515151] transition-all duration-300 transform -translate-y-4 scale-75 top-3 left-2.5 ml-2 z-10 origin-[0] peer-focus:text-[#1E6E9E] peer-focus:scale-75 peer-focus:-translate-y-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0">
                                 No WhatsApp
                             </label>
+                            <span class="ml-1 text-sm text-gray-500 cursor-pointer relative group">
+                                Ex:0818080808
+                            </span>
                             @error('phone_pic')
                                 <div class="text-red-500 text-sm mt-1 z-10">{{ $message }}</div>
                             @enderror

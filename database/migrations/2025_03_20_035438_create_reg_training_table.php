@@ -16,16 +16,15 @@ return new class extends Migration
             $table->string('username')->nullable();
             $table->string('name_pic')->nullable();
             $table->string('name_company')->nullable();
-            $table->integer('phone_pic')->nullable();
+            $table->string('phone_pic', 13)->nullable();
             $table->string('email_pic')->nullable();
             $table->string('activity')->nullable();
             $table->date('date')->nullable();
             $table->string('place')->nullable();
             $table->unsignedBigInteger('user_id')->nullable(); 
             $table->timestamps();
-
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-       
+
         });
     }
 
