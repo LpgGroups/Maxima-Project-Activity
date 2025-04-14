@@ -1,6 +1,8 @@
 // Function tab Tab
 function showTabs() {
-    showTab(1);
+    // Ambil tab terakhir yang disimpan di localStorage
+    const savedTab = localStorage.getItem("activeTab") || "1";
+    showTab(savedTab);
 
     document.getElementById("tab1").addEventListener("click", function () {
         showTab(1);
@@ -13,6 +15,9 @@ function showTabs() {
     });
 
     function showTab(tabIndex) {
+        // Simpan tab aktif ke localStorage
+        localStorage.setItem("activeTab", tabIndex);
+
         // Hide all tab content
         document.querySelectorAll(".tab-content").forEach(function (content) {
             content.classList.add("hidden");
@@ -30,9 +35,7 @@ function showTabs() {
         });
 
         // Show the selected tab's content
-        document
-            .getElementById("content" + tabIndex)
-            .classList.remove("hidden");
+        document.getElementById("content" + tabIndex).classList.remove("hidden");
 
         // Highlight the active tab
         const activeTab = document.getElementById("tab" + tabIndex);
@@ -45,6 +48,7 @@ function showTabs() {
         activeTab.classList.remove("text-gray-600");
     }
 }
+
 
 function submitForm1() {
     $("#submitBtn").click(function (e) {

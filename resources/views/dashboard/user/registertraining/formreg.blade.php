@@ -121,10 +121,11 @@
         <div id="content2" class="tab-content hidden">
             <div class="p-4 border border-t-0 border-gray-300 bg-white">
                 <h1 class="text-xl font-semibold">Submit Peserta</h1>
-                <p>Lengkapi Data Peserta yang akan mengikuti pelatihan yang diselenggarakan oleh PT. Maxima Aksara Jaya Utama</p>
-        
+                <p>Lengkapi Data Peserta yang akan mengikuti pelatihan yang diselenggarakan oleh PT. Maxima Aksara Jaya
+                    Utama</p>
+
                 <input type="" id="form_id" value="{{ $training->id }}">
-        
+
                 <div class="flex gap-6 mt-4">
                     <!-- KIRI: Form Input Peserta -->
                     <div class="w-1/2">
@@ -139,25 +140,48 @@
                             </div>
                         </div>
                     </div>
-        
+
                     <!-- KANAN: Preview Data yang Sudah Masuk (dari DB) -->
                     <div class="w-1/2 border border-gray-300 rounded-md p-4 bg-gray-50">
                         <h2 class="text-lg font-semibold mb-2">Peserta yang Sudah Tersimpan</h2>
-                        <ul class="list-decimal list-inside space-y-1 text-sm text-gray-700">
-                            @foreach ($training->participants as $participant)
-                                <li>{{ $participant->name }}</li>
-                            @endforeach
+
+                        @if (session('success'))
+                            <div class="bg-green-100 text-green-700 p-2 mb-4 rounded">
+                                {{ session('success') }}
+                            </div>
+                        @endif
+
+                        <ul class="list-decimal list-inside space-y-1 text-sm text-gray-700 max-h-60 overflow-y-auto pr-2">
+                            @forelse ($training->participants as $index => $participant)
+                                <li
+                                    class="flex items-center justify-between px-2 py-1 {{ $index % 2 === 0 ? 'bg-gray-200' : 'bg-[#fffef5]' }}">
+                                    <span>{{ $index + 1 }}. {{ $participant->name }}</span>
+                                    <form action="{{ route('dashboard.form2.destroy', $participant->id) }}"
+                                        method="POST" onsubmit="return confirm('Yakin ingin menghapus peserta ini?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit"
+                                            class="text-red-600 hover:text-red-800 text-xs">Hapus</button>
+                                    </form>
+                                </li>
+                            @empty
+                                <h1 class="text-center text-gray-500 w-full py-2">Data peserta belum ada</h1>
+                            @endforelse
                         </ul>
+
                     </div>
+
+
                 </div>
-        
+
                 <!-- Link GDrive -->
                 <div class="border-b-2 border-[#CAC9FF] mt-4"></div>
                 <div class="container">
                     <p class="mt-2">
-                        Upload data peserta melalui Google Drive dengan download template yang telah Kami sediakan, lalu copy link Google Drive untuk dipaste ke dalam box di bawah ini.
+                        Upload data peserta melalui Google Drive dengan download template yang telah Kami sediakan, lalu
+                        copy link Google Drive untuk dipaste ke dalam box di bawah ini.
                     </p>
-        
+
                     <div class="relative mt-4 w-64">
                         <input id="link" name="link" type="text"
                             class="peer block w-full appearance-none border border-[#515151] bg-transparent px-2.5 py-3 text-sm text-[#515151] rounded-md focus:border-[#1E6E9E] focus:outline-none focus:ring-1 focus:ring-[#1E6E9E] placeholder-transparent"
@@ -167,7 +191,7 @@
                             Link Persyaratan
                         </label>
                     </div>
-        
+
                     <div class="mt-4">
                         <button type="button" id="submitBtnForm2"
                             class="bg-blue-500 text-white px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400">
@@ -177,8 +201,8 @@
                 </div>
             </div>
         </div>
-        
-        
+
+
 
         <div id="content3" class="tab-content hidden">
             <div class="p-4 border border-t-0 border-gray-300 bg-white">

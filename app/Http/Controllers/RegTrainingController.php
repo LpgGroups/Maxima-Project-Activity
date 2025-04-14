@@ -106,34 +106,28 @@ public function saveForm2(Request $request)
     ]);
 
     $formId = $request->form_id;
-    $newNames = collect($request->participants)->pluck('name')->toArray(); // Ambil semua nama dari request
 
-    // Ambil semua peserta lama di form ini
-    $existingParticipants = RegParticipant::where('form_id', $formId)->get();
-
-    // Hapus peserta yang tidak ada lagi di data baru
-    foreach ($existingParticipants as $participant) {
-        if (!in_array($participant->name, $newNames)) {
-            $participant->delete();
-        }
-    }
-
-    // Tambah atau update peserta
     foreach ($request->participants as $participantData) {
-        $participant = RegParticipant::where('name', $participantData['name'])
-                                     ->where('form_id', $formId)
-                                     ->first();
+        // Cek apakah peserta dengan nama ini sudah ada di form ini
+        $exists = RegParticipant::where('form_id', $formId)
+                                ->where('name', $participantData['name'])
+                                ->exists();
 
-        if (!$participant) {
-            $participant = new RegParticipant();
-            $participant->form_id = $formId;
+        if (!$exists) {
+            RegParticipant::create([
+                'form_id' => $formId,
+                'name' => $participantData['name'],
+            ]);
         }
-
-        $participant->name = $participantData['name'];
-        $participant->save();
     }
 
-    return response()->json(['message' => 'Data peserta berhasil disinkronkan']);
+    return response()->json(['message' => 'Data peserta berhasil ditambahkan']);
 }
+public function destroyUser($id)
+{
+    $participant = RegParticipant::findOrFail($id);
+    $participant->delete();
 
+    return back()->with('success', 'Peserta berhasil dihapus.');
+}
 }
