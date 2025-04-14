@@ -70,8 +70,10 @@ document.addEventListener("DOMContentLoaded", function () {
             );
             const dayOfWeek = currentDay.getDay();
             const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
-            const isPastDate =
-                currentDay < today && currentDay.getMonth() === today.getMonth();
+            // const isPastDate =
+            //     currentDay < today && currentDay.getMonth() === today.getMonth();
+            const isPastDate = currentDay < today;
+
             const isWithinNextTenDays =
                 currentDay <= tenDaysLater && currentDay > today;
             const isToday =
@@ -79,13 +81,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 currentDate.getMonth() === today.getMonth() &&
                 currentDate.getFullYear() === today.getFullYear();
 
-            // Mengecek apakah tanggal berada di bulan yang sudah lewat
-            const isPreviousMonth = currentDay.getMonth() < today.getMonth() || (currentDay.getMonth() === today.getMonth() && currentDay.getDate() < today.getDate());
+           
+            // const isPreviousMonth = currentDay.getMonth() < today.getMonth() || (currentDay.getMonth() === today.getMonth() && currentDay.getDate() < today.getDate());
 
             if (isToday) {
                 dayCell.classList.add("bg-violet-400", "text-white");
                 dayCell.style.pointerEvents = "none";
-            } else if (isPastDate || isWithinNextTenDays || isWeekend || isPreviousMonth) {
+            } else if (isPastDate || isWithinNextTenDays || isWeekend) {
                 dayCell.classList.add(
                     "bg-gray-300",
                     "text-gray-500",
