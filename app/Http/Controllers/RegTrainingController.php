@@ -20,6 +20,12 @@ class RegTrainingController extends Controller
             'title' => 'Daftar Training',
         ]);
     }
+    public function selectDate()
+    {
+        return view('dashboard.user.registertraining.selectdate', [
+            'title' => 'Daftar Training',
+        ]);
+    }
     public function formReg()
     {
         $user = Auth::user();
@@ -27,15 +33,11 @@ class RegTrainingController extends Controller
             ->latest() // Mengurutkan berdasarkan waktu pembuatan terbaru
             ->first(); // Ambil data pertama (terbaru)
 
+        // get model regparticipan untuk semua user yg di handle pada 
+
         return view('dashboard.user.registertraining.formreg', [
             'title' => 'Form Register',
             'training' => $training, // Mengirim data trainingke view
-        ]);
-    }
-    public function selectDate()
-    {
-        return view('dashboard.user.registertraining.selectdate', [
-            'title' => 'Daftar Training',
         ]);
     }
     public function saveForm1(Request $request)

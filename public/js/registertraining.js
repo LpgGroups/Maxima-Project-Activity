@@ -191,7 +191,7 @@ function sendForm2() {
 
     // Validasi jika data peserta ada
     if (participants.length == 0 || formId == "") {
-        alert("Pastikan semua data peserta dan form ID terisi.");
+        alert("Pastikan semua data peserta");
         return;
     }
 

@@ -22,5 +22,11 @@ class RegTraining extends Model
         'place',
         'user_id',
     ];
+
+    public function participants()
+    {
+        return $this->hasMany(RegParticipant::class, 'form_id');
+    }
+
 }
 

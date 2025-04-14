@@ -121,27 +121,43 @@
         <div id="content2" class="tab-content hidden">
             <div class="p-4 border border-t-0 border-gray-300 bg-white">
                 <h1 class="text-xl font-semibold">Submit Peserta</h1>
-                <p>Lengkapi Data Peserta yang akan mengikuti pelatihan yang diselenggarakan oleh PT. Maxima Aksara Jaya
-                    Utama</p>
+                <p>Lengkapi Data Peserta yang akan mengikuti pelatihan yang diselenggarakan oleh PT. Maxima Aksara Jaya Utama</p>
+        
                 <input type="" id="form_id" value="{{ $training->id }}">
-                <!-- Input Field Section with Scroll -->
-                <div id="input-fields-container" class="max-h-80 overflow-y-auto space-y-2">
-                    <div class="flex items-center space-x-2 mb-2">
-                        <input type="text" class="form-control px-3 py-2 border border-gray-300 rounded-md"
-                            placeholder="Nama Peserta" />
-                        <button
-                            class="text-lg font-bold text-blue-500 px-3 py-2 border border-gray-300 rounded-md hover:bg-gray-100"
-                            onclick="addInputField()">+</button>
+        
+                <div class="flex gap-6 mt-4">
+                    <!-- KIRI: Form Input Peserta -->
+                    <div class="w-1/2">
+                        <h2 class="text-lg font-medium mb-2">Input Nama Peserta</h2>
+                        <div id="input-fields-container" class="max-h-80 overflow-y-auto space-y-2">
+                            <div class="flex items-center space-x-2 mb-2">
+                                <input type="text" class="form-control px-3 py-2 border border-gray-300 rounded-md"
+                                    placeholder="Nama Peserta" />
+                                <button
+                                    class="text-lg font-bold text-blue-500 px-3 py-2 border border-gray-300 rounded-md hover:bg-gray-100"
+                                    onclick="addInputField()">+</button>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <!-- KANAN: Preview Data yang Sudah Masuk (dari DB) -->
+                    <div class="w-1/2 border border-gray-300 rounded-md p-4 bg-gray-50">
+                        <h2 class="text-lg font-semibold mb-2">Peserta yang Sudah Tersimpan</h2>
+                        <ul class="list-decimal list-inside space-y-1 text-sm text-gray-700">
+                            @foreach ($training->participants as $participant)
+                                <li>{{ $participant->name }}</li>
+                            @endforeach
+                        </ul>
                     </div>
                 </div>
-
+        
+                <!-- Link GDrive -->
                 <div class="border-b-2 border-[#CAC9FF] mt-4"></div>
-
                 <div class="container">
-                    <p class="mt-2">Upload data peserta melalui Google Drive dengan download template yang telah Kami
-                        sediakan, lalu copy link google drive
-                        untuk di paste kedalam box di bawah ini.(download template)</p>
-
+                    <p class="mt-2">
+                        Upload data peserta melalui Google Drive dengan download template yang telah Kami sediakan, lalu copy link Google Drive untuk dipaste ke dalam box di bawah ini.
+                    </p>
+        
                     <div class="relative mt-4 w-64">
                         <input id="link" name="link" type="text"
                             class="peer block w-full appearance-none border border-[#515151] bg-transparent px-2.5 py-3 text-sm text-[#515151] rounded-md focus:border-[#1E6E9E] focus:outline-none focus:ring-1 focus:ring-[#1E6E9E] placeholder-transparent"
@@ -151,7 +167,7 @@
                             Link Persyaratan
                         </label>
                     </div>
-
+        
                     <div class="mt-4">
                         <button type="button" id="submitBtnForm2"
                             class="bg-blue-500 text-white px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400">
@@ -159,35 +175,10 @@
                         </button>
                     </div>
                 </div>
-
-                <div class="border-b-2 border-[#CAC9FF] mt-4"></div>
-
-                {{-- <div class="container2">
-                    <p class="mt-2">Upload data peserta melalui Google Drive dengan download template yang telah Kami
-                        sediakan, lalu copy link google drive
-                        untuk di paste kedalam box di bawah ini.</p>
-                    <div class="flex gap-x-4">
-                        <div class="mt-2">
-                            <label class="block mb-2 text-sm font-medium text-gray-900"
-                                for="file_input">Upload Quotation</label>
-                            <input
-                                class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-                                aria-describedby="file_input_help" id="file_input" type="file">
-                            <p class="mt-1 text-sm text-gray-500" id="file_input_help">PDF Only</p>
-                        </div>
-                        
-                        <div class="mt-2">
-                            <label class="block mb-2 text-sm font-medium text-gray-900"
-                                for="file_input">Upload MoU</label>
-                            <input
-                                class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-                                aria-describedby="file_input_help" id="file_input" type="file">
-                            <p class="mt-1 text-sm text-gray-500" id="file_input_help">PDF Only</p>
-                        </div>
-                    </div>
-                </div> --}}
             </div>
         </div>
+        
+        
 
         <div id="content3" class="tab-content hidden">
             <div class="p-4 border border-t-0 border-gray-300 bg-white">
