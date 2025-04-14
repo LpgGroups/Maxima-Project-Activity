@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('activity')->nullable();
             $table->date('date')->nullable();
             $table->string('place')->nullable();
+            $table->integer('isprogress')->default(0);
             $table->unsignedBigInteger('user_id')->nullable(); 
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

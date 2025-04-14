@@ -191,7 +191,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (result.isConfirmed) {
                     // Ambil jenis pelatihan yang dipilih
                     const trainingType = document.getElementById("training-select").value;
-                    const formattedDate = bookingDate; // Format date untuk dikirim
+                    const formattedDate = bookingDate; // Format date untuk dikirim\
+                    const progres1="1"
     
                     // Tampilkan informasi booking untuk konfirmasi lebih lanjut
                     Swal.fire({
@@ -216,6 +217,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                     _token: $('meta[name="csrf-token"]').attr("content"),
                                     date: formattedDate,
                                     activity: trainingType, // Kirim jenis pelatihan yang dipilih
+                                    isprogress:progres1
                                 },
                                 success: function (response) {
                                     if (response.success) {

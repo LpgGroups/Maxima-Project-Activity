@@ -20,6 +20,7 @@ class RegTraining extends Model
         'activity',
         'date',
         'place',
+        'isprogress',
         'user_id',
     ];
 

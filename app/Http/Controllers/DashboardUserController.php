@@ -12,9 +12,17 @@ use App\Models\User;
 class DashboardUserController extends Controller
 {
     public function index()
-    {
+    {  
+        $user = Auth::user();
+    
+        // Ambil semua pelatihan milik user yang sedang login
+        $trainings = RegTraining::where('user_id', $user->id)
+            ->latest()
+            ->get();
+    
         return view('dashboard.user.index', [
-            'title' => 'Dashboad User',
+            'title' => 'Dashboard User',
+            'trainings' => $trainings
         ]);
     }
 

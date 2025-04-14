@@ -16,10 +16,10 @@
             </div>
 
             <!-- Elemen Total Kehadiran (Dibawah Total Pelatihan & Peserta) -->
-            <div class="lg:w-[568px] sm:w-full h-[374px] bg-white rounded-2xl shadow-md p-4 sm:mb-0 lg:mb-[500px]">
+            <div class="lg:w-[568px] sm:w-full h-auto bg-white rounded-2xl shadow-md p-4 sm:mb-0 lg:mb-[500px]">
                 {{-- table --}}
-                <div class="lg:h-auto h-[225px] rounded-2xl p-2 w-full">
-                    <table class="table-auto w-full text-center align-middle ">
+                <div class="rounded-2xl p-2 w-full">
+                    <table class="table-auto w-full text-center align-middle">
                         <thead>
                             <tr class="bg-slate-600 lg:text-sm text-white text-[8px]">
                                 <th class="rounded-l-lg">No</th>
@@ -30,28 +30,34 @@
                             </tr>
                         </thead>
                         <tbody class="lg:text-[12px] text-[8px]">
-                            {{-- foreach --}}
-                            <tr class="odd:bg-white even:bg-gray-300 rounded">
-                                <!-- Nomor urut yang benar -->
-                                <td>1</td>
-                                <td>TKPK1</td>
-                                <td>aktif</td>
-                                <td>18 mar-20 mar 2025</td>
-                                <td>
-                                    <div class="w-full h-2 bg-gray-200 rounded-full dark:bg-gray-700">
-                                        <div class="bg-blue-600 text-[8px] font-medium text-blue-100 text-center leading-none rounded-full"
-                                            style="width: 45%; height:8px"> 45%</div>
-                                    </div>
-                                </td>
-
-                            </tr>
-
-
+                            @forelse ($trainings as $index => $training)
+                                <tr class="odd:bg-white even:bg-gray-300">
+                                    <td>{{ $index + 1 }}</td>
+                                    <td>{{ $training->activity }}</td>
+                                    <td>Aktif</td>
+                                    <td>{{ \Carbon\Carbon::parse($training->date)->format('d M Y') }}</td>
+                                    <td>
+                                        {{-- Contoh Progress Bar berdasarkan jumlah peserta --}}
+                                        @php
+                                            $progress = $training->participants->count() * 10; // Misalnya 10% per peserta
+                                            $progress = $progress > 100 ? 100 : $progress; // Maks 100%
+                                        @endphp
+                                        <div class="w-full h-2 bg-gray-200 rounded-full dark:bg-gray-700">
+                                            <div class="bg-blue-600 text-[8px] font-medium text-blue-100 text-center leading-none rounded-full"
+                                                style="width: {{ $progress }}%; height:8px"> {{ $progress }}%</div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="5" class="text-gray-500 py-2">Belum ada data pelatihan</td>
+                                </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>
-
             </div>
+
         </div>
 
         <!-- Elemen Kalender di Sebelah Kanan -->
