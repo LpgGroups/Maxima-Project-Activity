@@ -31,7 +31,7 @@
                         </thead>
                         <tbody class="lg:text-[12px] text-[8px]">
                             @forelse ($trainings as $index => $training)
-                                <tr class="odd:bg-white even:bg-gray-300">
+                                <tr onclick="window.location='{{ route('dashboard.form', $training->id) }}'" class="odd:bg-white even:bg-gray-300">
                                     <td>{{ $index + 1 }}</td>
                                     <td>{{ $training->activity }}</td>
                                     <td>Aktif</td>

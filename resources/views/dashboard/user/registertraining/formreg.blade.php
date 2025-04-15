@@ -209,32 +209,34 @@
                 <h3 class="text-xl font-semibold">Informasi Pendaftaran</h3>
                 <p>Pastikan data dibawah ini sesuai dengan informasi Anda</p>
 
-                <div id="inf_training" class="border w-[600px] mt-4">test
-                    <p>Nama
-                        Pic&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:
-                        {{ $training->name_pic }}</p>
-                    <p>Nama
-                        Perusahaan&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:
-                        {{ $training->name_company }}</p>
-                    <p>Email Pic
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:
-                        {{ $training->email_pic }}</p>
-                    <p>No WhatsApp
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:
-                        {{ $training->phone_pic }}</p>
-                    <p>Kegiatan
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:
-                        {{ $training->activity }}</p>
-                    <p>Tanggal Kegiatan
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:
-                        {{ \Carbon\Carbon::parse($training->date)->format('d-F-Y') }}</p>
-                    <p>Tempat Kegiatan
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:
-                        {{ $training->place }}</p>
-                    <p>Jumlah Peserta
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:
-                        {{ $training->participants->count() }}</p>
+                <div id="inf_training" class="border rounded-lg w-[600px] mt-4 p-4 bg-white">
+                    <div class="grid grid-cols-2 gap-y-2">
+                        <div class="font-semibold">Nama PIC</div>
+                        <div>: {{ $training->name_pic }}</div>
+
+                        <div class="font-semibold">Nama Perusahaan</div>
+                        <div>: {{ $training->name_company }}</div>
+
+                        <div class="font-semibold">Email PIC</div>
+                        <div>: {{ $training->email_pic }}</div>
+
+                        <div class="font-semibold">No WhatsApp</div>
+                        <div>: {{ $training->phone_pic }}</div>
+
+                        <div class="font-semibold">Kegiatan</div>
+                        <div>: {{ $training->activity }}</div>
+
+                        <div class="font-semibold">Tanggal Kegiatan</div>
+                        <div>: {{ \Carbon\Carbon::parse($training->date)->format('d-F-Y') }}</div>
+
+                        <div class="font-semibold">Tempat Kegiatan</div>
+                        <div>: {{ $training->place }}</div>
+
+                        <div class="font-semibold">Jumlah Peserta</div>
+                        <div>: {{ $training->participants->count() }}</div>
+                    </div>
                 </div>
+
             </div>
         </div>
     </div>
