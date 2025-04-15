@@ -26,18 +26,19 @@ class RegTrainingController extends Controller
             'title' => 'Daftar Training',
         ]);
     }
-    public function formReg()
+    public function formReg($id)
     {
         $user = Auth::user();
-        $training = RegTraining::where('user_id', $user->id) // Mengambil user_id dari pengguna yang sedang login
-            ->latest() // Mengurutkan berdasarkan waktu pembuatan terbaru
-            ->first(); // Ambil data pertama (terbaru)
-
-        // get model regparticipan untuk semua user yg di handle pada 
-
+    
+        // Validasi bahwa pelatihan yang dipilih milik user tersebut
+        $training = RegTraining::where('user_id', $user->id)
+            ->where('id', $id)
+            ->with('participants') // jika butuh relasi
+            ->firstOrFail();
+    
         return view('dashboard.user.registertraining.formreg', [
             'title' => 'Form Register',
-            'training' => $training, // Mengirim data trainingke view
+            'training' => $training,
         ]);
     }
     public function saveForm1(Request $request)

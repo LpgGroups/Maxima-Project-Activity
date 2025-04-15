@@ -265,7 +265,8 @@ document.addEventListener("DOMContentLoaded", function () {
                                             // Redirect ke halaman lain setelah 2 detik
                                             setTimeout(function () {
                                                 window.location.href =
-                                                    "/dashboard/user/training/form";
+                                                    "/dashboard/user/training/form/" +
+                                                    response.id;
                                             }, 1000);
                                         });
                                     } else {

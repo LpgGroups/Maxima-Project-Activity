@@ -31,20 +31,37 @@
                         </thead>
                         <tbody class="lg:text-[12px] text-[8px]">
                             @forelse ($trainings as $index => $training)
-                                <tr onclick="window.location='{{ route('dashboard.form', $training->id) }}'" class="odd:bg-white even:bg-gray-300">
+                                <tr onclick="window.location='{{ route('dashboard.form', ['id' => $training->id]) }}'"
+                                    class="odd:bg-white even:bg-gray-300 cursor-pointer hover:bg-red-500 hover:text-white leading-loose">
                                     <td>{{ $index + 1 }}</td>
                                     <td>{{ $training->activity }}</td>
                                     <td>Aktif</td>
                                     <td>{{ \Carbon\Carbon::parse($training->date)->format('d M Y') }}</td>
                                     <td>
-                                        {{-- Contoh Progress Bar berdasarkan jumlah peserta --}}
                                         @php
-                                            $progress = $training->participants->count() * 10; // Misalnya 10% per peserta
-                                            $progress = $progress > 100 ? 100 : $progress; // Maks 100%
+                                            // Ambil nilai isprogress
+                                            $progressValue = $training->isprogress;
+
+                                            // Tentukan persentase dan warna berdasarkan nilai isprogress
+                                            $progressMap = [
+                                                1 => ['percent' => 10, 'color' => 'bg-red-600'],
+                                                2 => ['percent' => 30, 'color' => 'bg-orange-500'],
+                                                3 => ['percent' => 50, 'color' => 'bg-yellow-400'],
+                                                4 => ['percent' => 75, 'color' => 'bg-[#bffb4e]'],
+                                                5 => ['percent' => 100, 'color' => 'bg-green-600'],
+                                            ];
+
+                                            $progress = $progressMap[$progressValue] ?? [
+                                                'percent' => 0,
+                                                'color' => 'bg-gray-400',
+                                            ];
                                         @endphp
+
                                         <div class="w-full h-2 bg-gray-200 rounded-full dark:bg-gray-700">
-                                            <div class="bg-blue-600 text-[8px] font-medium text-blue-100 text-center leading-none rounded-full"
-                                                style="width: {{ $progress }}%; height:8px"> {{ $progress }}%</div>
+                                            <div class="{{ $progress['color'] }} text-[8px] font-medium text-white text-center leading-none rounded-full"
+                                                style="width: {{ $progress['percent'] }}%; height:8px">
+                                                {{ $progress['percent'] }}%
+                                            </div>
                                         </div>
                                     </td>
                                 </tr>
@@ -88,5 +105,3 @@
         </div>
     </div>
 @endsection
-
-

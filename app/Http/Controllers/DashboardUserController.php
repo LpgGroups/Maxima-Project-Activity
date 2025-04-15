@@ -12,14 +12,14 @@ use App\Models\User;
 class DashboardUserController extends Controller
 {
     public function index()
-    {  
+    {
         $user = Auth::user();
-    
+
         // Ambil semua pelatihan milik user yang sedang login
-        $trainings = RegTraining::where('user_id', $user->id)
-            ->latest()
-            ->get();
-    
+        $trainings = RegTraining::where('user_id', Auth::id())
+        ->latest() // = orderBy('created_at', 'desc')
+        ->get();
+
         return view('dashboard.user.index', [
             'title' => 'Dashboard User',
             'trainings' => $trainings
@@ -32,8 +32,8 @@ class DashboardUserController extends Controller
         $validated = $request->validate([
             'date' => 'required|date',  // pastikan 'date' valid
             'activity' => 'required',
-            'place'=>'required',
-            'isprogress'=>'required'
+            'place' => 'required',
+            'isprogress' => 'required'
         ]);
 
         try {
@@ -49,9 +49,9 @@ class DashboardUserController extends Controller
             $booking->date = $validated['date'];
             $booking->user_id = $user->id;  // Set user_id dengan ID user yang sedang login
             $booking->username = $user->name;  // Set name_user dengan nama pengguna
-            $booking->activity=$validated['activity'];
-            $booking->place=$validated['place'];
-            $booking->isprogress=$validated['isprogress'];
+            $booking->activity = $validated['activity'];
+            $booking->place = $validated['place'];
+            $booking->isprogress = $validated['isprogress'];
 
             // Simpan ke database
             $booking->save();

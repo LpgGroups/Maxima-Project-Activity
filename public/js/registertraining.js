@@ -35,7 +35,9 @@ function showTabs() {
         });
 
         // Show the selected tab's content
-        document.getElementById("content" + tabIndex).classList.remove("hidden");
+        document
+            .getElementById("content" + tabIndex)
+            .classList.remove("hidden");
 
         // Highlight the active tab
         const activeTab = document.getElementById("tab" + tabIndex);
@@ -48,7 +50,6 @@ function showTabs() {
         activeTab.classList.remove("text-gray-600");
     }
 }
-
 
 function submitForm1() {
     $("#submitBtn").click(function (e) {
