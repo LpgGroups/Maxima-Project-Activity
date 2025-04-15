@@ -206,8 +206,35 @@
 
         <div id="content3" class="tab-content hidden">
             <div class="p-4 border border-t-0 border-gray-300 bg-white">
-                <h3 class="text-xl font-semibold">Content for Tab 3</h3>
-                <p>This is the content for tab 3.</p>
+                <h3 class="text-xl font-semibold">Informasi Pendaftaran</h3>
+                <p>Pastikan data dibawah ini sesuai dengan informasi Anda</p>
+
+                <div id="inf_training" class="border w-[600px] mt-4">test
+                    <p>Nama
+                        Pic&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:
+                        {{ $training->name_pic }}</p>
+                    <p>Nama
+                        Perusahaan&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:
+                        {{ $training->name_company }}</p>
+                    <p>Email Pic
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:
+                        {{ $training->email_pic }}</p>
+                    <p>No WhatsApp
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:
+                        {{ $training->phone_pic }}</p>
+                    <p>Kegiatan
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:
+                        {{ $training->activity }}</p>
+                    <p>Tanggal Kegiatan
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:
+                        {{ \Carbon\Carbon::parse($training->date)->format('d-F-Y') }}</p>
+                    <p>Tempat Kegiatan
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:
+                        {{ $training->place }}</p>
+                    <p>Jumlah Peserta
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:
+                        {{ $training->participants->count() }}</p>
+                </div>
             </div>
         </div>
     </div>

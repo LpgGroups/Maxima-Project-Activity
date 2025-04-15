@@ -81,7 +81,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 currentDate.getMonth() === today.getMonth() &&
                 currentDate.getFullYear() === today.getFullYear();
 
-           
             // const isPreviousMonth = currentDay.getMonth() < today.getMonth() || (currentDay.getMonth() === today.getMonth() && currentDay.getDate() < today.getDate());
 
             if (isToday) {
@@ -163,7 +162,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 currentDate.getMonth(),
                 selectedDay
             ).toLocaleDateString("en-CA"); // Format YYYY-MM-DD (ISO 8601)
-    
+
             // Menampilkan konfirmasi menggunakan SweetAlert2
             Swal.fire({
                 title: `Apakah Anda yakin ingin booking tanggal ${selectedDay} ${new Date(
@@ -186,14 +185,42 @@ document.addEventListener("DOMContentLoaded", function () {
                     <option value="P3K">First Aid(P3K)</option>
                     <option value="AK3U">AK3U</option>
                 </select>
+
+               <label class="block mt-2 mb-2 text-sm font-medium text-gray-900 dark:text-red-500">Tempat Pelatihan:</label>
+               <div class="flex items-center justify-center min-h-5">
+                <div class="flex flex-wrap items-center justify-center border border-gray-300 rounded-lg h-12 w-[200px]">
+                <div class="flex me-4 ">
+                        <input id="red-radio" type="radio" value="Online" name="colored-radio" class="w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                        <label for="red-radio" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Online</label>
+                    </div>
+                    <div class="flex items-center me-4">
+                        <input id="green-radio" type="radio" value="Offline" name="colored-radio" class="w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                        <label for="green-radio" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Offline</label>
+                    </div>
+                </div>
+                </div>
+                </div>
             `,
             }).then((result) => {
                 if (result.isConfirmed) {
                     // Ambil jenis pelatihan yang dipilih
-                    const trainingType = document.getElementById("training-select").value;
+                    const trainingType =
+                        document.getElementById("training-select").value;
                     const formattedDate = bookingDate; // Format date untuk dikirim\
-                    const progres1="1"
-    
+                    const progres = "1";
+                    const trainingPlace = document.querySelector(
+                        'input[name="colored-radio"]:checked'
+                    )?.value;
+
+                    if (!trainingPlace) {
+                        Swal.fire({
+                            icon: "warning",
+                            title: "Tempat Pelatihan Belum Dipilih!",
+                            text: "Silakan pilih 'Online' atau 'Offline' sebelum melanjutkan.",
+                            confirmButtonText: "OK",
+                        });
+                        return;
+                    }
                     // Tampilkan informasi booking untuk konfirmasi lebih lanjut
                     Swal.fire({
                         title: "Konfirmasi Booking",
@@ -214,10 +241,13 @@ document.addEventListener("DOMContentLoaded", function () {
                                 url: "/dashboard/booking",
                                 method: "POST",
                                 data: {
-                                    _token: $('meta[name="csrf-token"]').attr("content"),
+                                    _token: $('meta[name="csrf-token"]').attr(
+                                        "content"
+                                    ),
                                     date: formattedDate,
                                     activity: trainingType, // Kirim jenis pelatihan yang dipilih
-                                    isprogress:progres1
+                                    isprogress: progres,
+                                    place: trainingPlace,
                                 },
                                 success: function (response) {
                                     if (response.success) {
@@ -231,10 +261,11 @@ document.addEventListener("DOMContentLoaded", function () {
                                                 month: "long",
                                             })} ${currentDate.getFullYear()} berhasil dibuat!`,
                                         }).then(() => {
-                                            id= response.id
+                                            id = response.id;
                                             // Redirect ke halaman lain setelah 2 detik
                                             setTimeout(function () {
-                                                window.location.href = "/dashboard/user/training/form";
+                                                window.location.href =
+                                                    "/dashboard/user/training/form";
                                             }, 1000);
                                         });
                                     } else {
@@ -256,11 +287,11 @@ document.addEventListener("DOMContentLoaded", function () {
                             });
                         }
                     });
-    
+
                     // Hitung mundur detik
                     let countdown = 10;
                     const confirmButton = Swal.getConfirmButton();
-    
+
                     // Update tombol OK dengan countdown
                     const countdownInterval = setInterval(() => {
                         if (countdown > 0) {
@@ -275,8 +306,5 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         }
     });
-    
-
     renderCalendar();
 });
- 
