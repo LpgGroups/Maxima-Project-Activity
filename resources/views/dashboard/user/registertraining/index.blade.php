@@ -1,41 +1,65 @@
 @extends('dashboard.layouts.dashboardmain')
 @section('container')
-<div class="lg:w-full sm:w-full h-auto bg-white rounded-2xl shadow-md p-4 sm:mb-0 lg:mb-[500px]">
-    <a href="{{ route('dashboard.selectDate') }}">Tambah</a>
-    
+    <div class="lg:w-full sm:w-full h-auto bg-white rounded-2xl shadow-md p-4 sm:mb-0 lg:mb-[500px]">
+        <a href="{{ route('dashboard.selectDate') }}">Tambah</a>
 
-    <!-- Table -->
-    <div class="lg:h-auto h-[225px] rounded-2xl p-2 w-full">
-        <table class="table-auto w-full text-center align-middle">
-            <thead>
-                <tr class="bg-slate-600 lg:text-sm text-white text-[8px]">
-                    <th class="rounded-l-lg">No</th>
-                    <th>Nama Pelatihan</th>
-                    <th>Status</th>
-                    <th>Peserta</th>
-                    <th>Tanggal</th>
-                    <th class="rounded-r-lg">Progress</th>
-                </tr>
-            </thead>
-            <tbody class="lg:text-[12px] text-[8px]">
-                <tr class="odd:bg-white even:bg-gray-300 rounded">
-                    <td>1</td>
-                    <td>TKPK1</td>
-                    <td>aktif</td>
-                    <td>12 peserta</td>
-                    <td>18 mar-20 mar 2025</td>
-                    <td>
-                        <div class="w-full h-2 bg-gray-200 rounded-full dark:bg-gray-700">
-                            <div class="bg-blue-600 text-[8px] font-medium text-blue-100 text-center leading-none rounded-full"
-                                style="width: 45%; height:8px"> 45%</div>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+
+        <!-- Table -->
+        <div class="lg:h-auto h-[225px] rounded-2xl p-2 w-full">
+            <table class="table-auto w-full text-center align-middle">
+                <thead>
+                    <tr class="bg-slate-600 lg:text-sm text-white text-[8px]">
+                        <th class="rounded-l-lg">No</th>
+                        <th>Nama Pelatihan</th>
+                        <th>Status</th>
+                        <th>Peserta</th>
+                        <th>Tanggal</th>
+                        <th class="rounded-r-lg">Progress</th>
+                    </tr>
+                </thead>
+                <tbody class="lg:text-[12px] text-[8px]">
+                    @foreach ($trainings as $index => $training)
+                        <tr onclick="window.location='{{ route('dashboard.form', ['id' => $training->id]) }}'"
+                            class="odd:bg-white even:bg-gray-300 cursor-pointer hover:bg-red-500 hover:text-white leading-loose">
+                            <td>{{ $index + 1 }}</td>
+                            <td>{{ $training->activity }}</td>
+                            <td>{{ $training->status }}</td>
+                            <td>{{ $training->participants->count() }} peserta</td>
+                            <td>{{ \Carbon\Carbon::parse($training->start_date)->format('d M') }} -
+                                {{ \Carbon\Carbon::parse($training->end_date)->format('d M Y') }}</td>
+                            <td>
+                                @php
+                                    // Ambil nilai isprogress
+                                    $progressValue = $training->isprogress;
+
+                                    // Tentukan persentase dan warna berdasarkan nilai isprogress
+                                    $progressMap = [
+                                        1 => ['percent' => 10, 'color' => 'bg-red-600'],
+                                        2 => ['percent' => 30, 'color' => 'bg-orange-500'],
+                                        3 => ['percent' => 50, 'color' => 'bg-yellow-400'],
+                                        4 => ['percent' => 75, 'color' => 'bg-[#bffb4e]'],
+                                        5 => ['percent' => 100, 'color' => 'bg-green-600'],
+                                    ];
+
+                                    $progress = $progressMap[$progressValue] ?? [
+                                        'percent' => 0,
+                                        'color' => 'bg-gray-400',
+                                    ];
+                                @endphp
+
+                                <div class="w-[80px] h-2 bg-gray-200 rounded-full dark:bg-gray-700 mx-auto">
+                                    <div class="{{ $progress['color'] }} text-[8px] font-medium text-white text-center leading-none rounded-full"
+                                        style="width: {{ $progress['percent'] }}%; height:8px">
+                                        {{ $progress['percent'] }}%
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
-
 @endsection
 
 @push('scripts')

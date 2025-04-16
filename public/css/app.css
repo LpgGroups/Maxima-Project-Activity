@@ -1500,6 +1500,14 @@ video {
   width: 2px;
 }
 
+.w-\[700px\] {
+  width: 700px;
+}
+
+.w-\[70px\] {
+  width: 70px;
+}
+
 .min-w-0 {
   min-width: 0px;
 }

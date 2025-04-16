@@ -57,7 +57,7 @@
                                             ];
                                         @endphp
 
-                                        <div class="w-full h-2 bg-gray-200 rounded-full dark:bg-gray-700">
+                                        <div class="w-[80px] h-2 bg-gray-200 rounded-full dark:bg-gray-700 mx-auto">
                                             <div class="{{ $progress['color'] }} text-[8px] font-medium text-white text-center leading-none rounded-full"
                                                 style="width: {{ $progress['percent'] }}%; height:8px">
                                                 {{ $progress['percent'] }}%

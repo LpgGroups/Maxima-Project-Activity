@@ -54,7 +54,7 @@ function showTabs() {
 function submitForm1() {
     $("#submitBtn").click(function (e) {
         e.preventDefault(); // Prevent default form submission
-
+        const progress = "2";
         var formData = {
             _token: $('input[name="_token"]').val(),
             id: $("#trainingId").val(), // Menambahkan ID untuk update
@@ -62,6 +62,7 @@ function submitForm1() {
             name_company: $("#name_company").val(),
             email_pic: $("#email_pic").val(),
             phone_pic: $("#phone_pic").val(),
+            isprogress: progress,
         };
 
         console.log(formData); // Log the data being sent
@@ -187,7 +188,7 @@ function addInputField() {
 function sendForm2() {
     // Ambil form_id dari elemen yang relevan, misalnya dari input hidden atau data attribute
     var formId = $("#form_id").val(); // Pastikan form_id ada di halaman Anda
-
+   
     // Ambil data peserta
     var participants = [];
     $("#input-fields-container input").each(function () {
@@ -207,6 +208,7 @@ function sendForm2() {
         data: {
             form_id: formId, // Kirim form_id
             participants: participants, // Kirim data peserta
+           
         },
         headers: {
             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"), // Menambahkan token CSRF ke header
@@ -214,6 +216,7 @@ function sendForm2() {
         success: function (response) {
             alert(response.message); // Menampilkan pesan sukses dari backend
             console.log(response);
+            console.log(isprogress);
         },
         error: function (xhr, status, error) {
             alert("Terjadi kesalahan saat mengirim data.");
