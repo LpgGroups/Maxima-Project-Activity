@@ -202,15 +202,13 @@
             </div>
         </div>
 
-
-
         <div id="content3" class="tab-content hidden">
             <div class="p-4 border border-t-0 border-gray-300 bg-white">
-                <h3 class="text-xl font-semibold">Informasi Pendaftaran</h3>
-                <p>Pastikan data dibawah ini sesuai dengan informasi Anda</p>
+                <h3 class="text-[24px] font-semibold">Informasi Pendaftaran</h3>
+                <p class="text-[12px]">Pastikan data dibawah ini sesuai dengan informasi Anda</p>
 
-                <div id="inf_training" class="border rounded-lg w-[600px] mt-4 p-4 bg-white">
-                    <div class="grid grid-cols-2 gap-y-2">
+                <div id="inf_training" class="border rounded-lg w-[600px] mt-2 p-2 bg-white">
+                    <div class="grid grid-cols-2 gap-y-2 text-[14px] leading-none">
                         <div class="font-semibold">Nama PIC</div>
                         <div>: {{ $training->name_pic }}</div>
 
@@ -235,6 +233,42 @@
                         <div class="font-semibold">Jumlah Peserta</div>
                         <div>: {{ $training->participants->count() }}</div>
                     </div>
+                </div>
+                <hr class="h-px mt-2 bg-gray-200 border-0 dark:bg-gray-700 w-[600px]">
+                <div class="border border-gray-300 w-[600px] mt-4 rounded-lg p-2 ">
+                    <h3 class="text-[24px] font-semibold">Daftar Peserta</h3>
+                    <p class="text-[12px]">Berikut ini adalah data peserta yang telah di daftarkan. Peserta yang telah
+                        memenuhi persyaratan memiliki tanda (✓) dan peserta
+                        yang belum melengkapi persyaratan memiliki tanda (X)</p>
+
+                    {{-- table --}}
+                    <div class="rounded-2xl p-2 w-full">
+                        <table class="table-auto w-full text-center align-middle">
+                            <thead>
+                                <tr class="bg-slate-600 lg:text-sm text-white text-[8px]">
+                                    <th class="rounded-l-lg w-[10px]">No</th>
+                                    <th class="w-[100px]">Peserta</th>
+                                    <th class="w-[80px]">Status</th>
+                                    <th class="rounded-r-lg w-[200px]">Informasi</th>
+                                </tr>
+                            </thead>
+                            <tbody class="lg:text-[12px] text-[8px]">
+                                @forelse ($training->participants as $index => $participant)
+                                    <tr>
+                                        <td class="w-[10px]">{{ $index + 1 }}</td>
+                                        <td class="w-[100px]">{{ $participant->name }}</td>
+                                        <td class="w-[80px]">{{ $participant->isprogress ? 'Aktif' : 'Belum Aktif' }}</td>
+                                        <td class="w-[200px]">{{ $participant->reason }}</td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="4" class="text-center py-2">Tidak ada peserta</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                    
                 </div>
 
             </div>
