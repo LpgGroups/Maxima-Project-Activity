@@ -62,6 +62,4 @@
     </div>
 @endsection
 
-@push('scripts')
-    <script src="{{ asset('js/registertraining.js') }}"></script>
-@endpush
+

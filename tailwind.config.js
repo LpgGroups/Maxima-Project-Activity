@@ -1,4 +1,4 @@
-import defaultTheme from 'tailwindcss/defaultTheme';
+import defaultTheme from "tailwindcss/defaultTheme";
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -13,14 +13,24 @@ export default {
     ],
     theme: {
         extend: {
+            keyframes: {
+                "flip-horizontal": {
+                    "0%": { transform: "rotateY(0deg)" },
+                    "50%": { transform: "rotateY(180deg)" },
+                    "100%": { transform: "rotateY(360deg)" },
+                },
+            },
+            animation: {
+                "flip-horizontal": "flip-horizontal 3s linear infinite",
+            },
             fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                sans: ["Figtree", ...defaultTheme.fontFamily.sans],
                 poppins: ["Poppins", "sans-serif"],
-                inter:  ['Inter', 'sans-serif'],
+                inter: ["Inter", "sans-serif"],
             },
             rotate: {
-                '180': '180deg',
-              }
+                180: "180deg",
+            },
         },
     },
     plugins: [],

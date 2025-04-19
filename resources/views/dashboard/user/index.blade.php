@@ -104,4 +104,12 @@
                 disabled>Pilih Jadwal Pelatihan</button>
         </div>
     </div>
+
+    <div id="page-loader"
+        class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-white bg-opacity-60 backdrop-blur-sm hidden">
+        <!-- Logo PNG + animasi spin -->
+        <img src="/img/logo_maxima.png" alt="Logo" class="w-20 h-20 animate-flip-horizontal opacity-90" />
+
+        <p class="mt-6 text-sm text-gray-700">Sedang memuat halaman...</p>
+    </div>
 @endsection
