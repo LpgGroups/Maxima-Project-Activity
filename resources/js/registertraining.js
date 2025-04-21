@@ -188,7 +188,7 @@ function addInputField() {
 function sendForm2() {
     // Ambil form_id dari elemen yang relevan, misalnya dari input hidden atau data attribute
     var formId = $("#form_id").val(); // Pastikan form_id ada di halaman Anda
-   
+
     // Ambil data peserta
     var participants = [];
     $("#input-fields-container input").each(function () {
@@ -200,7 +200,7 @@ function sendForm2() {
         alert("Pastikan semua data peserta");
         return;
     }
-
+    showLoading();
     // Kirim data melalui AJAX
     $.ajax({
         url: "/dashboard/user/training/form2/save", // Pastikan URL sesuai dengan route di server Anda
@@ -208,23 +208,66 @@ function sendForm2() {
         data: {
             form_id: formId, // Kirim form_id
             participants: participants, // Kirim data peserta
-           
         },
         headers: {
             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"), // Menambahkan token CSRF ke header
         },
         success: function (response) {
-            alert(response.message); // Menampilkan pesan sukses dari backend
+            showSuccess(response.message, true);
             console.log(response);
             console.log(isprogress);
         },
         error: function (xhr, status, error) {
-            alert("Terjadi kesalahan saat mengirim data.");
+            showError("Terjadi kesalahan saat mengirim data.");
             console.error(error);
         },
     });
 }
 
+function showLoading() {
+    Swal.fire({
+        title: "Mengirim data...",
+        text: "Silakan tunggu sebentar",
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        didOpen: () => {
+            Swal.showLoading();
+        },
+    });
+}
+
+// Tampilkan pesan sukses
+function showSuccess(message, reload = false, redirectUrl = null) {
+    Swal.fire({
+        icon: "success",
+        title: "Berhasil!",
+        text: message || "Data berhasil dikirim.",
+    }).then(() => {
+        if (reload) {
+            location.reload();
+        } else if (redirectUrl) {
+            window.location.href = redirectUrl;
+        }
+    });
+}
+
+// Tampilkan pesan error
+function showError(message) {
+    Swal.fire({
+        icon: "error",
+        title: "Gagal!",
+        text: message || "Terjadi kesalahan saat mengirim data.",
+    });
+}
+
+// Tampilkan alert peringatan
+function showWarning(message) {
+    Swal.fire({
+        icon: "warning",
+        title: "Oops...",
+        text: message || "Ada data yang belum diisi.",
+    });
+}
 // function send data
 $(document).ready(function () {
     showTabs();

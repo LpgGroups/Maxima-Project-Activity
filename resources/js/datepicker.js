@@ -261,14 +261,11 @@ document.addEventListener("DOMContentLoaded", function () {
                                                 month: "long",
                                             })} ${currentDate.getFullYear()} berhasil dibuat!`,
                                         }).then(() => {
-                                            showLoader(
-                                                "Mengalihkan ke halaman formulir..."
-                                            );
                                             setTimeout(() => {
                                                 window.location.href =
                                                     "/dashboard/user/training/form/" +
                                                     response.id;
-                                            }, 10000);
+                                            }, 1000);
                                         });
                                     } else {
                                         Swal.fire({
@@ -309,19 +306,5 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    function showLoader(message = "Sedang memuat halaman...") {
-        const loader = document.getElementById("page-loader");
-        if (loader) {
-            loader.classList.remove("hidden");
-            loader.querySelector("p").textContent = message;
-        }
-    }
-
-    function hideLoader() {
-        const loader = document.getElementById("page-loader");
-        if (loader) {
-            loader.classList.add("hidden");
-        }
-    }
     renderCalendar();
 });

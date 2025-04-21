@@ -8,13 +8,15 @@ use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
-    public function index(){
+    public function index()
+    {
         return view('auth.login', [
             'title' => 'Login',
-        ]); 
+        ]);
     }
 
-    public function authenticate(Request $request){
+    public function authenticate(Request $request)
+    {
         $request->validate(
             [
                 'email' => 'required',
@@ -25,17 +27,16 @@ class LoginController extends Controller
                 'password.required' => 'Password wajib di isi',
             ]
         );
-        $credential=[
-            'email'=>$request->email,
-            'password'=>$request->password
+        $credential = [
+            'email' => $request->email,
+            'password' => $request->password
         ];
         if (Auth::attempt($credential)) {
             if (Auth::user()->role == 'user') {
                 return redirect()->route('dashboard.user.index');
-            } else if((Auth::user()->role == 'admin')){
+            } else if ((Auth::user()->role == 'admin')) {
                 return redirect()->route('dashboard.admin.index');
-            }
-             else {
+            } else {
                 Auth::logout();
                 return redirect('/')->withErrors('Periksa Akun Kembali');
             }
