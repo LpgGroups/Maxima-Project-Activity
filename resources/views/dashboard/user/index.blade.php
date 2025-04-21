@@ -112,5 +112,6 @@
 @endsection
 
 @push('scripts')
-<script src="{{ asset('js/datepicker.js') }}"></script>
+@vite('resources/js/datepicker.js')
+
 @endpush

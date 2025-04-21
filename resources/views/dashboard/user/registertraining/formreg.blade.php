@@ -300,5 +300,5 @@
     </div>
 @endsection
 @push('scripts')
-<script src="{{ asset('js/registertraining.js') }}"></script>
+    @vite('resources/js/regtraining.js')
 @endpush
