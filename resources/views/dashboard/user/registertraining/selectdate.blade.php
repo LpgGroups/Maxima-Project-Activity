@@ -31,5 +31,5 @@
 @endsection
 
 @push('scripts')
-    @vite('resources/js/datepicker.js') <!-- Injeksi JS spesifik halaman -->
+<script src="{{ asset('js/datepicker.js') }}"></script>
 @endpush

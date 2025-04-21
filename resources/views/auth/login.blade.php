@@ -63,5 +63,5 @@
     </div>
 @endsection
 @push('scripts')
-    @vite('resources/js/authentifikasi.js') <!-- Injeksi JS spesifik halaman -->
+    <script src="{{ asset('js/authentifikasi.js') }}"></script>
 @endpush
