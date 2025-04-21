@@ -55,13 +55,15 @@
         </div>
     </div>
     <div id="page-loader"
-        class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-white bg-opacity-60 backdrop-blur-sm hidden">
-        <!-- Logo PNG + animasi spin -->
+    class="fixed inset-0 z-50 bg-white bg-opacity-60 backdrop-blur-sm hidden">
+    <div class="flex flex-col items-center justify-center h-full">
         <img src="/img/maximalog.png" alt="Logo" class="w-20 h-20 animate-flip-horizontal opacity-90" />
-
         <p class="mt-6 text-sm text-gray-700">Sedang memuat halaman...</p>
     </div>
+</div>
+
 @endsection
 @push('scripts')
-    <script src="{{ asset('js/authentifikasi.js') }}"></script>
+  @vite('resources/js/authentifikasi.js')
+
 @endpush
