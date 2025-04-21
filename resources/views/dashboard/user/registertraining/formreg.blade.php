@@ -300,5 +300,5 @@
     </div>
 @endsection
 @push('scripts')
-    @vite('resources/js/registertraining.js') <!-- Injeksi JS spesifik halaman -->
+<script src="{{ asset('js/registertraining.js') }}"></script>
 @endpush
