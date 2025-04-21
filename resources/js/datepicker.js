@@ -1,3 +1,4 @@
+
 document.addEventListener("DOMContentLoaded", function () {
     let currentDate = new Date();
     let selectedDay = null;

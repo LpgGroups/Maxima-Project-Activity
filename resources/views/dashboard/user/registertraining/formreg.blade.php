@@ -299,3 +299,6 @@
         </div>
     </div>
 @endsection
+@push('scripts')
+    @vite('resources/js/registertraining.js') <!-- Injeksi JS spesifik halaman -->
+@endpush

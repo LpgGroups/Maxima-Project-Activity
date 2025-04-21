@@ -17,8 +17,9 @@ class DashboardUserController extends Controller
 
         // Ambil semua pelatihan milik user yang sedang login
         $trainings = RegTraining::where('user_id', Auth::id())
-        ->latest() // = orderBy('created_at', 'desc')
-        ->get();
+            ->latest()  // Mengurutkan berdasarkan 'created_at' secara menurun (terbaru)
+            ->take(10)  // Membatasi hanya 10 data pelatihan
+            ->get();
 
         return view('dashboard.user.index', [
             'title' => 'Dashboard User',
