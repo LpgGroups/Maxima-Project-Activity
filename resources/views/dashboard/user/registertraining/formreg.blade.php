@@ -1,7 +1,7 @@
 @extends('dashboard.layouts.dashboardmain')
 
 @section('container')
-    <p>hellok</p>
+    <p>test</p>
     <div class="container mx-auto ">
         <!-- Tab Navigation -->
         <div class="rounded-lg">
@@ -106,13 +106,37 @@
                         <p class="font-bold">Tanggal Pelatihan</p>
                         <p id="date">{{ \Carbon\Carbon::parse($training->date)->format('d-F-Y') }}</p>
                     </div>
-                    <div id="responseMessage" class="mt-4 hidden"></div>
+
+                    <div class="flex">
+                        <div id="loadingSpinner" class="hidden ml-2">
+                            <svg class="animate-spin h-5 w-5 text-blue-500" xmlns="http://www.w3.org/2000/svg"
+                                fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                    stroke-width="4">
+                                </circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+                            </svg>
+                        </div>
+                        <div id="responseMessage" class="mt-4 hidden"></div>
+                    </div>
                     <!-- Submit Button -->
-                    <div class="mt-4">
+                    <div class="mt-4 flex">
                         <button type="button" id="submitBtn"
                             class="bg-blue-500 text-white px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400">
-                            Daftar
+                            Simpan Data
                         </button>
+                        @if ($training->updated_at)
+                            <div class="ml-2 text-green-400">
+                                <strong>Update Terakhir:</strong><br>
+                                {{ $training->updated_at->setTimezone('Asia/Jakarta')->format('d-F-Y H:i') }} WIB
+                            </div>
+                        @else
+                            <div class="ml-2 text-red-400">
+                                <strong>Update Terakhir:</strong><br>
+                                Belum pernah diupdate
+                            </div>
+                        @endif
+
                     </div>
                 </form>
             </div>
@@ -268,7 +292,7 @@
                             </tbody>
                         </table>
                     </div>
-                    
+
                 </div>
 
             </div>
@@ -276,5 +300,5 @@
     </div>
 @endsection
 @push('scripts')
-    <script src="{{ asset('js/registertraining.js') }}"></script>
+    @vite('resources/js/registertraining.js') <!-- Injeksi JS spesifik halaman -->
 @endpush

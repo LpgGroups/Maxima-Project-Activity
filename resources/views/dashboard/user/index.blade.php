@@ -21,7 +21,7 @@
                 <div class="rounded-2xl p-2 w-full">
                     <table class="table-auto w-full text-center align-middle">
                         <thead>
-                            <tr class="bg-slate-600 lg:text-sm text-white text-[8px]">
+                            <tr class="bg-slate-600 lg:text-sm text-white text-[10px]">
                                 <th class="rounded-l-lg">No</th>
                                 <th>Nama Pelatihan</th>
                                 <th>Status</th>
@@ -29,7 +29,7 @@
                                 <th class="rounded-r-lg">Progress</th>
                             </tr>
                         </thead>
-                        <tbody class="lg:text-[12px] text-[8px]">
+                        <tbody class="lg:text-[14px] text-[10px]">
                             @forelse ($trainings as $index => $training)
                                 <tr onclick="window.location='{{ route('dashboard.form', ['id' => $training->id]) }}'"
                                     class="odd:bg-white even:bg-gray-300 cursor-pointer hover:bg-red-500 hover:text-white leading-loose">
@@ -73,6 +73,11 @@
                         </tbody>
                     </table>
                 </div>
+                <div class="text-center mt-1">
+                    <a href="/dashboard/user/training" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">
+                        Tampilkan Lebih Banyak
+                    </a>
+                </div>
             </div>
 
         </div>
@@ -105,3 +110,7 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+    @vite('resources/js/datepicker.js') <!-- Injeksi JS spesifik halaman -->
+@endpush

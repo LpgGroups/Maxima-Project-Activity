@@ -27,10 +27,11 @@
 <div class="flex h-screen">
 
     <!-- Sidebar -->
-    <div id="sidebar" class="transition-all duration-300 ease-in-out bg-[#2A2A2A] text-white h-full flex flex-col w-64 fixed top-0 left-0 z-20">
+    <div id="sidebar"
+        class="transition-all duration-300 ease-in-out bg-[#2A2A2A] text-white h-full flex flex-col w-64 fixed top-0 left-0 z-20">
         <div class="flex items-center justify-between p-4">
             <img src="/img/logo_maxima.png" class="w-20 h-auto rounded-lg">
-           
+
             <button onclick="toggleSidebar()" class="text-red-600 bg-[#EBEAFF] rounded-full ml-2 animate-bounce">
                 <svg id="sidebar-toggle-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                     stroke-width="1.5" stroke="currentColor" class="size-6">
@@ -44,8 +45,8 @@
             <ul>
                 <li class="my-1">
                     <a href="/dashboard/user"
-                       class="flex items-center space-x-2 menu-item-hover 
-                              @if(request()->is('dashboard/user')) bg-red-500 text-white @else hover:bg-red-500 @endif 
+                        class="flex items-center space-x-2 menu-item-hover 
+                              @if (request()->is('dashboard/user')) bg-red-500 text-white @else hover:bg-red-500 @endif 
                               rounded-lg p-2">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="size-6">
@@ -55,13 +56,17 @@
                         <span class="text-sm">Dashboard</span>
                     </a>
                 </li>
-                
+
                 <li class="my-1">
                     <a href="/dashboard/user/training"
-                        class="flex items-center space-x-2 menu-item-hover hover:bg-red-500 rounded-lg p-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 6.878V6a2.25 2.25 0 0 1 2.25-2.25h7.5A2.25 2.25 0 0 1 18 6v.878m-12 0c.235-.083.487-.128.75-.128h10.5c.263 0 .515.045.75.128m-12 0A2.25 2.25 0 0 0 4.5 9v.878m13.5-3A2.25 2.25 0 0 1 19.5 9v.878m0 0a2.246 2.246 0 0 0-.75-.128H5.25c-.263 0-.515.045-.75.128m15 0A2.25 2.25 0 0 1 21 12v6a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 18v-6c0-.98.626-1.813 1.5-2.122" />
-                          </svg>                      
+                        class="flex items-center space-x-2 menu-item-hover 
+                              @if (request()->is('dashboard/user/training')) bg-red-500 text-white @else hover:bg-red-500 @endif 
+                              rounded-lg p-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="size-6">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M6 6.878V6a2.25 2.25 0 0 1 2.25-2.25h7.5A2.25 2.25 0 0 1 18 6v.878m-12 0c.235-.083.487-.128.75-.128h10.5c.263 0 .515.045.75.128m-12 0A2.25 2.25 0 0 0 4.5 9v.878m13.5-3A2.25 2.25 0 0 1 19.5 9v.878m0 0a2.246 2.246 0 0 0-.75-.128H5.25c-.263 0-.515.045-.75.128m15 0A2.25 2.25 0 0 1 21 12v6a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 18v-6c0-.98.626-1.813 1.5-2.122" />
+                        </svg>
                         <span class="text-sm">Daftar Pelatihan</span>
                     </a>
                 </li>
@@ -105,7 +110,7 @@
             sidebar.classList.add('w-64');
             sidebar.querySelectorAll('span').forEach(span => span.classList.remove('hidden')); // Show text
             icon.classList.remove('rotate-90'); // Reset icon
-             mainContent.classList.remove('ml-20');
+            mainContent.classList.remove('ml-20');
             mainContent.classList.add('ml-64');
 
         }

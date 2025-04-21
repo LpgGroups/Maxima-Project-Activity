@@ -1,3 +1,4 @@
+
 document.addEventListener("DOMContentLoaded", function () {
     let currentDate = new Date();
     let selectedDay = null;
@@ -261,9 +262,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                                 month: "long",
                                             })} ${currentDate.getFullYear()} berhasil dibuat!`,
                                         }).then(() => {
-                                            id = response.id;
-                                            // Redirect ke halaman lain setelah 2 detik
-                                            setTimeout(function () {
+                                            setTimeout(() => {
                                                 window.location.href =
                                                     "/dashboard/user/training/form/" +
                                                     response.id;
@@ -307,5 +306,6 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         }
     });
+
     renderCalendar();
 });
