@@ -226,79 +226,127 @@
             </div>
         </div>
 
-        <div id="content3" class="tab-content hidden">
-            <div class="p-4 border border-t-0 border-gray-300 bg-white">
-                <h3 class="text-[24px] font-semibold">Informasi Pendaftaran</h3>
-                <p class="text-[12px]">Pastikan data dibawah ini sesuai dengan informasi Anda</p>
+        <div class="flex h-screen overflow-y-auto">
+            <!-- KONTEN UTAMA (scrollable) -->
+            <div class="flex-1  ">
+                <div id="content3" class="tab-content">
+                    <div class="p-4 border border-t-0 border-gray-300 bg-white">
+                        <h3 class="text-[24px] font-semibold">Informasi Pendaftaran</h3>
+                        <p class="text-[12px]">Pastikan data dibawah ini sesuai dengan informasi Anda</p>
 
-                <div id="inf_training" class="border rounded-lg w-[600px] mt-2 p-2 bg-white">
-                    <div class="grid grid-cols-2 gap-y-2 text-[14px] leading-none">
-                        <div class="font-semibold">Nama PIC</div>
-                        <div>: {{ $training->name_pic }}</div>
+                        <div id="inf_training" class="border rounded-lg w-[600px] mt-2 p-2 bg-white">
+                            <div class="grid grid-cols-2 gap-y-2 text-[14px] leading-none">
+                                <div class="font-semibold">Nama PIC</div>
+                                <div>: {{ $training->name_pic }}</div>
 
-                        <div class="font-semibold">Nama Perusahaan</div>
-                        <div>: {{ $training->name_company }}</div>
+                                <div class="font-semibold">Nama Perusahaan</div>
+                                <div>: {{ $training->name_company }}</div>
 
-                        <div class="font-semibold">Email PIC</div>
-                        <div>: {{ $training->email_pic }}</div>
+                                <div class="font-semibold">Email PIC</div>
+                                <div>: {{ $training->email_pic }}</div>
 
-                        <div class="font-semibold">No WhatsApp</div>
-                        <div>: {{ $training->phone_pic }}</div>
+                                <div class="font-semibold">No WhatsApp</div>
+                                <div>: {{ $training->phone_pic }}</div>
 
-                        <div class="font-semibold">Kegiatan</div>
-                        <div>: {{ $training->activity }}</div>
+                                <div class="font-semibold">Kegiatan</div>
+                                <div>: {{ $training->activity }}</div>
 
-                        <div class="font-semibold">Tanggal Kegiatan</div>
-                        <div>: {{ \Carbon\Carbon::parse($training->date)->format('d-F-Y') }}</div>
+                                <div class="font-semibold">Tanggal Kegiatan</div>
+                                <div>: {{ \Carbon\Carbon::parse($training->date)->format('d-F-Y') }}</div>
 
-                        <div class="font-semibold">Tempat Kegiatan</div>
-                        <div>: {{ $training->place }}</div>
+                                <div class="font-semibold">Tempat Kegiatan</div>
+                                <div>: {{ $training->place }}</div>
 
-                        <div class="font-semibold">Jumlah Peserta</div>
-                        <div>: {{ $training->participants->count() }}</div>
+                                <div class="font-semibold">Jumlah Peserta</div>
+                                <div>: {{ $training->participants->count() }}</div>
+                            </div>
+                        </div>
+
+                        <hr class="h-px mt-2 bg-gray-200 border-0 dark:bg-gray-700 w-[600px]">
+
+                        <!-- Upload Persetujuan -->
+                        <div class="border border-gray-300 w-[600px] mt-4 rounded-lg p-2">
+                            <h3 class="text-[24px] font-semibold">Upload Persetujuan</h3>
+                            <p class="text-[12px]">PIC diharapkan untuk mengupload kembali berkas MoU dan Quotation yang
+                                telah disetujui dan ditandatangani oleh PIC.</p>
+
+                            <div class="mt-2">
+                                <label class="block mb-2 mt-2 text-sm font-medium text-gray-900" for="file_input">Upload
+                                    file MoU</label>
+                                <input
+                                    class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
+                                    aria-describedby="file_input_help" id="file_input" type="file">
+                                <p class="mt-1 text-sm text-gray-500" id="file_input_help">Format File: PDF (Maks Size:
+                                    2MB).</p>
+                            </div>
+
+                            <div class="mt-2">
+                                <label class="block mb-2 text-sm font-medium text-gray-900" for="file_input_2">Upload file
+                                    Quotation</label>
+                                <input
+                                    class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
+                                    aria-describedby="file_input_help" id="file_input_2" type="file">
+                                <p class="mt-1 text-sm text-gray-500" id="file_input_help">Format File: PDF (Maks Size:
+                                    2MB).</p>
+                            </div>
+                        </div>
+
+                        <hr class="h-px mt-2 bg-gray-200 border-0 w-[600px]">
+
+                        <!-- Daftar Peserta -->
+                        <div class="border border-gray-300 w-[600px] mt-4 rounded-lg p-2">
+                            <h3 class="text-[24px] font-semibold">Daftar Peserta</h3>
+                            <p class="text-[12px]">Berikut ini adalah data peserta yang telah di daftarkan. Peserta yang
+                                telah memenuhi persyaratan memiliki tanda (✓) dan peserta yang belum melengkapi persyaratan
+                                memiliki tanda (X)</p>
+
+                            <div class="rounded-2xl p-2 w-full">
+                                <table class="table-auto w-full text-center align-middle">
+                                    <thead>
+                                        <tr class="bg-slate-600 text-white text-[8px] lg:text-sm">
+                                            <th class="rounded-l-lg w-[10px]">No</th>
+                                            <th class="w-[100px]">Peserta</th>
+                                            <th class="w-[80px]">Status</th>
+                                            <th class="rounded-r-lg w-[200px]">Informasi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="text-[8px] lg:text-[12px]">
+                                        @forelse ($training->participants as $index => $participant)
+                                            <tr>
+                                                <td class="w-[10px]">{{ $index + 1 }}</td>
+                                                <td class="w-[100px]">{{ $participant->name }}</td>
+                                                <td class="w-[80px]">
+                                                    {{ $participant->isprogress ? 'Aktif' : 'Belum Aktif' }}</td>
+                                                <td class="w-[200px]">{{ $participant->reason }}</td>
+                                            </tr>
+                                        @empty
+                                            <tr>
+                                                <td colspan="4" class="text-center py-2">Tidak ada peserta</td>
+                                            </tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <hr class="h-px mt-2 bg-gray-200 border-0 dark:bg-gray-700 w-[600px]">
-                <div class="border border-gray-300 w-[600px] mt-4 rounded-lg p-2 ">
-                    <h3 class="text-[24px] font-semibold">Daftar Peserta</h3>
-                    <p class="text-[12px]">Berikut ini adalah data peserta yang telah di daftarkan. Peserta yang telah
-                        memenuhi persyaratan memiliki tanda (✓) dan peserta
-                        yang belum melengkapi persyaratan memiliki tanda (X)</p>
-
-                    {{-- table --}}
-                    <div class="rounded-2xl p-2 w-full">
-                        <table class="table-auto w-full text-center align-middle">
-                            <thead>
-                                <tr class="bg-slate-600 lg:text-sm text-white text-[8px]">
-                                    <th class="rounded-l-lg w-[10px]">No</th>
-                                    <th class="w-[100px]">Peserta</th>
-                                    <th class="w-[80px]">Status</th>
-                                    <th class="rounded-r-lg w-[200px]">Informasi</th>
-                                </tr>
-                            </thead>
-                            <tbody class="lg:text-[12px] text-[8px]">
-                                @forelse ($training->participants as $index => $participant)
-                                    <tr>
-                                        <td class="w-[10px]">{{ $index + 1 }}</td>
-                                        <td class="w-[100px]">{{ $participant->name }}</td>
-                                        <td class="w-[80px]">{{ $participant->isprogress ? 'Aktif' : 'Belum Aktif' }}</td>
-                                        <td class="w-[200px]">{{ $participant->reason }}</td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="4" class="text-center py-2">Tidak ada peserta</td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-
-                </div>
-
             </div>
+
+            <!-- ASIDE -->
+            <aside id="side-panel" class="w-[300px] sticky top-0 h-screen bg-gray-50 border-l border-gray-300 p-4 hidden">
+                <h3 class="text-xl font-bold mb-2">Panel Info</h3>
+                <ul class="text-sm text-gray-700 space-y-2">
+                    <li>✔️ Cek kembali informasi PIC</li>
+                    <li>📄 Pastikan berkas MoU & Quotation sudah sesuai</li>
+                    <li>👥 Verifikasi status peserta</li>
+                    <li>📌 Semua file harus PDF max 2MB</li>
+                </ul>
+            </aside>
+
         </div>
+
     </div>
 @endsection
 @push('scripts')
-    @vite('resources/js/regtraining.js')
+    @vite('resources/js/registertraining.js')
 @endpush
