@@ -15,9 +15,15 @@ export default defineConfig({
         }),
     ],
 
+    server: {
+        cors: {
+            origin: "https://test.maximagroup.co.id",  // Ganti dengan domain asal yang tepat
+        },
+    },
+
     build: {
         outDir: "public/build",
-        manifest: true, 
+        manifest: true,
         rollupOptions: {
             input: {
                 app: "resources/js/app.js",
