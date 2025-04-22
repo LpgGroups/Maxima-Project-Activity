@@ -6,13 +6,13 @@
             <!-- Elemen Total Pelatihan -->
             <div class="lg:w-[276px] sm:w-full h-auto bg-white rounded-2xl shadow-md p-4">
                 <div class="text-violet-400 text-2xl font-bold">Total Pelatihan</div>
-                <div class="text-black text-[52px] font-bold">3</div>
+                <div class="text-black text-[52px] font-bold">{{ $totalTrainings }}</div>
             </div>
 
             <!-- Elemen Total Peserta -->
             <div class="lg:w-[276px] sm:w-full h-auto bg-white rounded-2xl shadow-md p-4">
                 <div class="text-violet-400 text-2xl font-bold">Total Peserta</div>
-                <div class="text-black text-[52px] font-bold">21</div>
+                <div class="text-black text-[52px] font-bold">{{ $totalParticipants }}</div>
             </div>
 
             <!-- Elemen Total Kehadiran (Dibawah Total Pelatihan & Peserta) -->
@@ -112,6 +112,5 @@
 @endsection
 
 @push('scripts')
-@vite('resources/js/datepicker.js')
-
+    @vite('resources/js/datepicker.js')
 @endpush

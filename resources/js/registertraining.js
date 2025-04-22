@@ -1,6 +1,4 @@
-// Function tab Tab
 function showTabs() {
-    // Ambil tab terakhir yang disimpan di localStorage
     const savedTab = localStorage.getItem("activeTab") || "1";
     showTab(savedTab);
 
@@ -15,15 +13,12 @@ function showTabs() {
     });
 
     function showTab(tabIndex) {
-        // Simpan tab aktif ke localStorage
         localStorage.setItem("activeTab", tabIndex);
 
-        // Hide all tab content
         document.querySelectorAll(".tab-content").forEach(function (content) {
             content.classList.add("hidden");
         });
 
-        // Remove active class from all tabs
         document.querySelectorAll("ul li a").forEach(function (tab) {
             tab.classList.remove(
                 "text-violet-400",
@@ -34,7 +29,7 @@ function showTabs() {
             tab.classList.add("text-gray-600");
         });
 
-        // Show the selected tab's content
+        // Show selected tab content
         document
             .getElementById("content" + tabIndex)
             .classList.remove("hidden");
@@ -48,6 +43,15 @@ function showTabs() {
             "bg-white"
         );
         activeTab.classList.remove("text-gray-600");
+
+        const aside = document.getElementById("side-panel");
+        if (aside) {
+            if (tabIndex == 3) {
+                aside.classList.remove("hidden");
+            } else {
+                aside.classList.add("hidden");
+            }
+        }
     }
 }
 

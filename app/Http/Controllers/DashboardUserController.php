@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\RegParticipant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
@@ -13,9 +14,14 @@ class DashboardUserController extends Controller
 {
     public function index()
     {
-        $user = Auth::user();
+        $trainings = RegTraining::where('user_id', Auth::id())->get();
 
-        // Ambil semua pelatihan milik user yang sedang login
+        // Ambil semua participants dari training-training tersebut
+        $participants = RegParticipant::whereIn('form_id', $trainings->pluck('id'))->get();
+
+        // Optional: Hitung total peserta
+        $totalParticipants = $participants->count();
+        $totalTrainings = RegTraining::where('user_id', Auth::id())->count();
         $trainings = RegTraining::where('user_id', Auth::id())
             ->latest()  // Mengurutkan berdasarkan 'created_at' secara menurun (terbaru)
             ->take(10)  // Membatasi hanya 10 data pelatihan
@@ -23,7 +29,9 @@ class DashboardUserController extends Controller
 
         return view('dashboard.user.index', [
             'title' => 'Dashboard User',
-            'trainings' => $trainings
+            'trainings' => $trainings,
+            'totalTrainings' => $totalTrainings,
+            'totalParticipants' => $totalParticipants,
         ]);
     }
 
