@@ -9,7 +9,7 @@ export default defineConfig({
                 "resources/js/app.js",
                 "resources/js/authentifikasi.js", 
                 "resources/js/datepicker.js",
-                "resources/js/regtraining.js",
+                "resources/js/registertraining.js",
             ],
             refresh: true,
         }),
