@@ -76,13 +76,16 @@ class RegTrainingController extends Controller
 
             if ($trainingData) {
                 // Update data jika sudah ada
+                $currentProgress = $trainingData->isprogress;
+                $newProgress = $request->input('isprogress');
+
+                // Cek apakah progress baru lebih tinggi
                 $trainingData->update([
                     'name_pic' => $request->input('name_pic'),
                     'name_company' => $request->input('name_company'),
                     'email_pic' => $request->input('email_pic'),
                     'phone_pic' => $request->input('phone_pic'),
-                    'isprogress' => $request->input('isprogress'),
-
+                    'isprogress' => max($currentProgress, $newProgress),
                 ]);
             } else {
                 // Simpan data baru jika belum ada
@@ -110,14 +113,14 @@ class RegTrainingController extends Controller
             'participants' => 'required|array',
             'participants.*.name' => 'required|string',
             'form_id' => 'required|integer',
-           
+
         ]);
 
         $formId = $request->form_id;
 
         $training = RegTraining::find($formId);
         if ($training) {
-            $training->isprogress = 3;
+            $training->isprogress = max($training->isprogress, 3);
             $training->save();
         }
 
@@ -131,7 +134,7 @@ class RegTrainingController extends Controller
                 RegParticipant::create([
                     'form_id' => $formId,
                     'name' => $participantData['name'],
-                    
+
                 ]);
             }
         }

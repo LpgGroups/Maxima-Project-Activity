@@ -1496,10 +1496,6 @@ video {
   width: 100vw;
 }
 
-.w-\[400px\] {
-  width: 400px;
-}
-
 .min-w-0 {
   min-width: 0px;
 }
@@ -2812,6 +2808,10 @@ video {
   padding-right: 0.5rem;
 }
 
+.pr-6 {
+  padding-right: 1.5rem;
+}
+
 .ps-10 {
   padding-inline-start: 2.5rem;
 }
@@ -2846,10 +2846,6 @@ video {
 
 .pt-8 {
   padding-top: 2rem;
-}
-
-.pr-6 {
-  padding-right: 1.5rem;
 }
 
 .text-left {

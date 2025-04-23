@@ -60,7 +60,7 @@ class DashboardUserController extends Controller
             $booking->username = $user->name;  // Set name_user dengan nama pengguna
             $booking->activity = $validated['activity'];
             $booking->place = $validated['place'];
-            $booking->isprogress = $validated['isprogress'];
+            $booking->isprogress = max($booking->isprogress, $validated['isprogress']);
 
             // Simpan ke database
             $booking->save();
