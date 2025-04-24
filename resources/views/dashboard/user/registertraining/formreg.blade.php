@@ -270,25 +270,32 @@
                             <p class="text-[12px]">PIC diharapkan untuk mengupload kembali berkas MoU dan Quotation yang
                                 telah disetujui dan ditandatangani oleh PIC.</p>
 
-                            <div class="mt-2">
-                                <label class="block mb-2 mt-2 text-sm font-medium text-gray-900" for="file_input">Upload
-                                    file MoU</label>
-                                <input
-                                    class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
-                                    aria-describedby="file_input_help" id="file_input" type="file">
-                                <p class="mt-1 text-sm text-gray-500" id="file_input_help">Format File: PDF (Maks Size:
-                                    2MB).</p>
-                            </div>
+                            <form id="form3" enctype="multipart/form-data">
+                                @csrf
+                                <input type="" name="file_id" value="{{ $training->id }}">
 
-                            <div class="mt-2">
-                                <label class="block mb-2 text-sm font-medium text-gray-900" for="file_input_2">Upload file
-                                    Quotation</label>
-                                <input
-                                    class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
-                                    aria-describedby="file_input_help" id="file_input_2" type="file">
-                                <p class="mt-1 text-sm text-gray-500" id="file_input_help">Format File: PDF (Maks Size:
-                                    2MB).</p>
-                            </div>
+                                <div class="mt-2">
+                                    <label class="block mb-2 mt-2 text-sm font-medium text-gray-900" for="file_mou">Upload
+                                        file MoU</label>
+                                    <input name="file_mou" id="file_mou" type="file" accept="application/pdf"
+                                        class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none">
+                                    <p class="mt-1 text-sm text-gray-500">Format File: PDF (Maks Size: 2MB).</p>
+                                </div>
+
+                                <div class="mt-2">
+                                    <label class="block mb-2 text-sm font-medium text-gray-900"
+                                        for="file_quotation">Upload file Quotation</label>
+                                    <input name="file_quotation" id="file_quotation" type="file"
+                                        accept="application/pdf"
+                                        class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none">
+                                    <p class="mt-1 text-sm text-gray-500">Format File: PDF (Maks Size: 2MB).</p>
+                                </div>
+
+                                <button type="button" id="submitBtnForm3"
+                                    class="bg-blue-500 text-white px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400">
+                                    Simpan Data
+                                </button>
+                            </form>
                         </div>
 
                         <hr class="h-px mt-2 bg-gray-200 border-0 w-[600px]">

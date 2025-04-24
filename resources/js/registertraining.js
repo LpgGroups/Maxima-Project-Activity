@@ -228,6 +228,25 @@ function sendForm2() {
     });
 }
 
+function sendForm3() {
+    var formData = new FormData($("#form3")[0]);
+
+    $.ajax({
+        url: "/dashboard/user/training/form3/save",
+        type: "POST",
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            alert(response.message);
+        },
+        error: function (xhr) {
+            alert("Terjadi kesalahan saat upload file.");
+            console.log(xhr.responseText);
+        },
+    });
+}
+
 function showLoading() {
     Swal.fire({
         title: "Mengirim data...",
@@ -280,5 +299,10 @@ $(document).ready(function () {
     $("#submitBtnForm2").click(function (e) {
         e.preventDefault(); // Mencegah form submit default
         sendForm2(); // Panggil fungsi sendForm2 saat tombol diklik
+    });
+
+    $("#submitBtnForm3").click(function (e) {
+        e.preventDefault(); // Mencegah form submit default
+        sendForm3(); // Panggil fungsi sendForm2 saat tombol diklik
     });
 });

@@ -29,5 +29,9 @@ class RegTraining extends Model
         return $this->hasMany(RegParticipant::class, 'form_id');
     }
 
+    public function files(){
+        return $this->hasMany(FileRequirement::class,'file_id');
+    }
+
 }
 
