@@ -60,7 +60,7 @@ class DashboardUserController extends Controller
             $booking->username = $user->name;  // Set name_user dengan nama pengguna
             $booking->activity = $validated['activity'];
             $booking->place = $validated['place'];
-            $booking->isprogress = $validated['isprogress'];
+            $booking->isprogress = max($booking->isprogress, $validated['isprogress']);
 
             // Simpan ke database
             $booking->save();
@@ -71,7 +71,7 @@ class DashboardUserController extends Controller
                 'id' => $booking->id  // Ensure this contains the ID of the newly created booking
             ]);
         } catch (\Exception $e) {
-            // Log error jika terjadi masalah
+           
             Log::error("Error while creating booking: " . $e->getMessage());
 
             return response()->json(['success' => false, 'message' => $e->getMessage()]);

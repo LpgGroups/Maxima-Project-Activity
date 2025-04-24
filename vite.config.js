@@ -15,11 +15,11 @@ export default defineConfig({
         }),
     ],
 
-    server: {
-        cors: {
-            origin: "https://test.maximagroup.co.id",  // Ganti dengan domain asal yang tepat
-        },
-    },
+    // server: {
+    //     cors: {
+    //         origin: "https://test.maximagroup.co.id",  // Ganti dengan domain asal yang tepat
+    //     },
+    // },
 
     build: {
         outDir: "public/build",
