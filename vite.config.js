@@ -5,7 +5,7 @@ export default defineConfig({
     plugins: [
         laravel({
             input: [
-                "resources/css/app.css",
+                "resources/src/input.css",
                 "resources/js/app.js",
                 "resources/js/authentifikasi.js",
                 "resources/js/datepicker.js",
@@ -14,24 +14,4 @@ export default defineConfig({
             refresh: true,
         }),
     ],
-
-    // server: {
-    //     cors: {
-    //         origin: "https://test.maximagroup.co.id",  // Ganti dengan domain asal yang tepat
-    //     },
-    // },
-
-    build: {
-        outDir: "public/build",
-        manifest: true,
-        rollupOptions: {
-            input: {
-                app: "resources/js/app.js",
-                authentifikasi: "resources/js/authentifikasi.js",
-                datepicker: "resources/js/datepicker.js",
-                registertraining: "resources/js/registertraining.js",
-                css: "resources/css/app.css",
-            },
-        },
-    },
 });
