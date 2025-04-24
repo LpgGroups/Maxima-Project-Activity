@@ -5,7 +5,7 @@ export default defineConfig({
     plugins: [
         laravel({
             input: [
-                "resources/css/app.css",
+                "resources/src/input.css",
                 "resources/js/app.js",
                 "resources/js/authentifikasi.js",
                 "resources/js/datepicker.js",
