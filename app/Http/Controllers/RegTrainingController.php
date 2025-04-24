@@ -141,6 +141,10 @@ class RegTrainingController extends Controller
 
         return response()->json(['message' => 'Data peserta berhasil ditambahkan']);
     }
+
+    public function saveForm3(){
+
+    }
     public function destroyUser($id)
     {
         $participant = RegParticipant::findOrFail($id);

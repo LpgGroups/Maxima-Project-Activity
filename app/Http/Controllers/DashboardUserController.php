@@ -71,7 +71,7 @@ class DashboardUserController extends Controller
                 'id' => $booking->id  // Ensure this contains the ID of the newly created booking
             ]);
         } catch (\Exception $e) {
-            // Log error jika terjadi masalah
+           
             Log::error("Error while creating booking: " . $e->getMessage());
 
             return response()->json(['success' => false, 'message' => $e->getMessage()]);
