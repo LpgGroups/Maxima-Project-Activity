@@ -5,7 +5,7 @@ export default defineConfig({
     plugins: [
         laravel({
             input: [
-                "resources/src/input.css",
+                "resources/css/app.css",
                 "resources/js/app.js",
                 "resources/js/authentifikasi.js",
                 "resources/js/datepicker.js",
@@ -14,4 +14,6 @@ export default defineConfig({
             refresh: true,
         }),
     ],
+
+
 });
