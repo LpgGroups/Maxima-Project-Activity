@@ -196,7 +196,7 @@ class RegTrainingController extends Controller
         }
 
         return response()->json(['message' => 'File berhasil diperbarui!']);
-    }
+    } 
 
     public function destroyUser($id)
     {
