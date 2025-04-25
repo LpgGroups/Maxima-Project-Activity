@@ -4,10 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\RegTraining;
 use App\Http\Controllers\Controller;
+use App\Models\FileRequirement;
 use App\Models\RegParticipant;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
+
 
 class RegTrainingController extends Controller
 {
@@ -142,9 +146,58 @@ class RegTrainingController extends Controller
         return response()->json(['message' => 'Data peserta berhasil ditambahkan']);
     }
 
-    public function saveForm3(){
+    public function saveForm3(Request $request)
+    {
+        $request->validate([
+            'file_id' => 'required|exists:reg_training,id',
+            'file_mou' => 'nullable|file|mimes:pdf|max:2048',
+            'file_quotation' => 'nullable|file|mimes:pdf|max:2048',
+        ]);
 
-    }
+        $record = FileRequirement::where('file_id', $request->file_id)->first();
+        $training = RegTraining::find($request->file_id); // ← ambil data untuk nama file
+
+        // Ganti dengan field yang sesuai dari DB kamu
+        $nameCompany = Str::slug($training->name_company ?? 'Company', '_');
+        $nameTraining = Str::slug($training->activity ?? 'Training', '_');
+
+        $mouPath = $record->file_mou ?? null;
+        $quotationPath = $record->file_quotation ?? null;
+
+        if ($request->hasFile('file_mou')) {
+            if ($record && $record->file_mou) {
+                Storage::disk('public')->delete($record->file_mou);
+            }
+
+            $fileName = "MoU_{$nameCompany}_{$nameTraining}." . $request->file('file_mou')->getClientOriginalExtension();
+            $mouPath = $request->file('file_mou')->storeAs('uploads/mou', $fileName, 'public');
+        }
+
+        if ($request->hasFile('file_quotation')) {
+            if ($record && $record->file_quotation) {
+                Storage::disk('public')->delete($record->file_quotation);
+            }
+
+            $fileName = "Quotation_{$nameCompany}_{$nameTraining}." . $request->file('file_quotation')->getClientOriginalExtension();
+            $quotationPath = $request->file('file_quotation')->storeAs('uploads/quotation', $fileName, 'public');
+        }
+
+        if ($record) {
+            $record->update([
+                'file_mou' => $mouPath,
+                'file_quotation' => $quotationPath,
+            ]);
+        } else {
+            FileRequirement::create([
+                'file_id' => $request->file_id,
+                'file_mou' => $mouPath,
+                'file_quotation' => $quotationPath,
+            ]);
+        }
+
+        return response()->json(['message' => 'File berhasil diperbarui!']);
+    } 
+
     public function destroyUser($id)
     {
         $participant = RegParticipant::findOrFail($id);
