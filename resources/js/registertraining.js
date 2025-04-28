@@ -124,7 +124,6 @@ function submitForm1() {
 let form_id = 1; // Misalnya, ini adalah form_id yang dapat Anda ambil dari server atau halaman saat ini
 
 function addInputField() {
-    // Create a new div to hold the input and buttons
     const newInputGroup = document.createElement("div");
     newInputGroup.classList.add("flex", "items-center", "space-x-2", "mb-2");
 
@@ -141,7 +140,6 @@ function addInputField() {
     );
     newInput.placeholder = "Nama Peserta";
 
-    // Set an ID to each input so you can identify them later
     newInput.setAttribute("id", "input-participant-" + Date.now()); // unique id based on timestamp
 
     // Create the add button
@@ -158,7 +156,13 @@ function addInputField() {
         "hover:bg-gray-100"
     );
     newAddButton.textContent = "+";
-    newAddButton.onclick = addInputField; // Add the same functionality to the new button
+    newAddButton.onclick = addInputField;
+
+    window.onload = function () {
+        document
+            .querySelector("#input-fields-container button")
+            .addEventListener("click", addInputField);
+    };
 
     // Create the remove button
     const newRemoveButton = document.createElement("button");
@@ -190,7 +194,6 @@ function addInputField() {
 }
 
 function sendForm2() {
-    // Ambil form_id dari elemen yang relevan, misalnya dari input hidden atau data attribute
     var formId = $("#form_id").val(); // Pastikan form_id ada di halaman Anda
 
     // Ambil data peserta

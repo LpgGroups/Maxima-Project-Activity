@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 day
             );
             const dayOfWeek = currentDay.getDay();
-            const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+            const isWeekend = dayOfWeek === 0;
             // const isPastDate =
             //     currentDay < today && currentDay.getMonth() === today.getMonth();
             const isPastDate = currentDay < today;
@@ -183,6 +183,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     <option value="TKPK2">TKPK 2</option>
                     <option value="TKBT1">TKBT 1</option>
                     <option value="TKBT2">TKBT 2</option>
+                    <option value="BE">Basic Electrical</option>
                     <option value="P3K">First Aid(P3K)</option>
                     <option value="AK3U">AK3U</option>
                 </select>
