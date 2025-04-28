@@ -1,6 +1,6 @@
 @extends('layout.main')
 @section('container')
-    <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8 border border-red-500">
+    <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
         <div class="w-full max-w-screen overflow-x-hidden mx-auto">
             <img class="mx-auto w-auto h-auto top-[44px] left-[95px]" src="./img/maximalog.png" alt="LPG">
             <h2 class="top-[12px] text-center text-3xl font-bold tracking-tight text-[#10496C]">Login</h2>
@@ -54,16 +54,14 @@
             </form>
         </div>
     </div>
-    <div id="page-loader"
-    class="fixed inset-0 z-50 bg-white bg-opacity-60 backdrop-blur-sm hidden">
-    <div class="flex flex-col items-center justify-center h-full">
-        <img src="/img/maximalog.png" alt="Logo" class="w-20 h-20 animate-flip-horizontal opacity-90" />
-        <p class="mt-6 text-sm text-gray-700">Sedang memuat halaman...</p>
+    <div id="page-loader" class="fixed inset-0 z-50 bg-white bg-opacity-60 backdrop-blur-sm hidden">
+        <div class="flex flex-col items-center justify-center h-full">
+            <img src="/img/maximalog.png" alt="Logo" class="w-20 h-20 animate-flip-horizontal opacity-90" />
+            <p class="mt-6 text-sm text-gray-700">Sedang memuat halaman...</p>
+        </div>
     </div>
-</div>
 
 @endsection
 @push('scripts')
-  @vite('resources/js/authentifikasi.js')
-
+    @vite('resources/js/authentifikasi.js')
 @endpush
