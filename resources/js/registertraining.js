@@ -230,7 +230,7 @@ function sendForm2() {
 
 function sendForm3() {
     var formData = new FormData($("#form3")[0]);
-
+    showLoading();
     $.ajax({
         url: "/dashboard/user/training/form3/save",
         type: "POST",
@@ -238,10 +238,10 @@ function sendForm3() {
         contentType: false,
         processData: false,
         success: function (response) {
-            alert(response.message);
+            showSuccess(response.message, true);
         },
         error: function (xhr) {
-            alert("Terjadi kesalahan saat upload file.");
+            showError("Terjadi kesalahan saat mengirim data.");
             console.log(xhr.responseText);
         },
     });

@@ -25,8 +25,7 @@
                             <td>{{ $training->activity }}</td>
                             <td>{{ $training->status }}</td>
                             <td>{{ $training->participants->count() }} peserta</td>
-                            <td>{{ \Carbon\Carbon::parse($training->start_date)->format('d M') }} -
-                                {{ \Carbon\Carbon::parse($training->end_date)->format('d M Y') }}</td>
+                            <td>{{ \Carbon\Carbon::parse($training->date)->locale('id')->translatedFormat('d F Y') }}</td>
                             <td>
                                 @php
                                     // Ambil nilai isprogress
@@ -61,5 +60,3 @@
         </div>
     </div>
 @endsection
-
-

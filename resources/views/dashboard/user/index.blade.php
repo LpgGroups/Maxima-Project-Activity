@@ -36,7 +36,8 @@
                                     <td>{{ $index + 1 }}</td>
                                     <td>{{ $training->activity }}</td>
                                     <td>Aktif</td>
-                                    <td>{{ \Carbon\Carbon::parse($training->date)->format('d M Y') }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($training->date)->locale('id')->translatedFormat('d F Y') }}
+                                    </td>
                                     <td>
                                         @php
                                             // Ambil nilai isprogress
