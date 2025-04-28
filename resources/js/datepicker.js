@@ -1,4 +1,3 @@
-
 document.addEventListener("DOMContentLoaded", function () {
     let currentDate = new Date();
     let selectedDay = null;
@@ -166,15 +165,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // Menampilkan konfirmasi menggunakan SweetAlert2
             Swal.fire({
-                title: `Apakah Anda yakin ingin booking tanggal ${selectedDay} ${new Date(
+                title: `Apakah Anda yakin ingin register tanggal ${selectedDay} ${new Date(
                     currentDate.getFullYear(),
                     currentDate.getMonth()
-                ).toLocaleString("default", {
+                ).toLocaleString("id-ID", {
                     month: "long",
                 })} ${currentDate.getFullYear()}?`,
                 icon: "question",
                 showCancelButton: true,
-                confirmButtonText: "Ya, booking!",
+                confirmButtonText: "Ya, Register Pelatihan!",
                 cancelButtonText: "Batal",
                 html: `
                 <label for="training-select" class="block mb-2 text-sm font-medium text-gray-900 dark:text-red-500">Pilih Pelatihan:</label>
@@ -225,11 +224,11 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
                     // Tampilkan informasi booking untuk konfirmasi lebih lanjut
                     Swal.fire({
-                        title: "Konfirmasi Booking",
+                        title: "Konfirmasi Jadwal Pelatihan",
                         html: `Tanggal Pelatihan: <strong> ${selectedDay} ${new Date(
                             currentDate.getFullYear(),
                             currentDate.getMonth()
-                        ).toLocaleString("default", {
+                        ).toLocaleString("id-ID", {
                             month: "long",
                         })} ${currentDate.getFullYear()}?</strong><br>Jenis Pelatihan: <strong>${trainingType}</strong>`,
                         icon: "info",
