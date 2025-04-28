@@ -1,7 +1,7 @@
 @extends('layout.main')
 @section('container')
-    <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
-        <div class="sm:mx-auto sm:w-full sm:max-w-sm">
+    <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8 border border-red-500">
+        <div class="w-full max-w-screen overflow-x-hidden mx-auto">
             <img class="mx-auto w-auto h-auto top-[44px] left-[95px]" src="./img/maximalog.png" alt="LPG">
             <h2 class="top-[12px] text-center text-3xl font-bold tracking-tight text-[#10496C]">Login</h2>
             <p class="text-xs text-center mx-14 mt-2">Masukan Email dan Password
