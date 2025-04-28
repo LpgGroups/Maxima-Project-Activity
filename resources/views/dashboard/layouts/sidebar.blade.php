@@ -30,7 +30,9 @@
     <div id="sidebar"
         class="transition-all duration-300 ease-in-out bg-[#2A2A2A] text-white h-full flex flex-col w-64 fixed top-0 left-0 z-20">
         <div class="flex items-center justify-between p-4">
-            <img src="/img/logo_maxima.png" class="w-20 h-auto rounded-lg">
+            <a href="#" class="pointer-events-auto">
+                <img src="/img/logo_maxima.png" class="w-20 h-auto rounded-lg" alt="Logo">
+            </a>
 
             <button onclick="toggleSidebar()" class="text-red-600 bg-[#EBEAFF] rounded-full ml-2 animate-bounce">
                 <svg id="sidebar-toggle-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -86,7 +88,7 @@
 
         <!-- Version Info (di bawah) -->
         <div class="p-4 mt-auto">
-            <span class="text-sm">Testing Beta V1.1.1</span>
+            <span class="text-sm">Testing Beta V1.1.2</span>
         </div>
 
     </div>
