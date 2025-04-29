@@ -6,9 +6,21 @@ function showTabs() {
         showTab(1);
     });
     document.getElementById("tab2").addEventListener("click", function () {
+        if (!isForm1Complete()) {
+            Swal.fire({
+                icon: "warning",
+                title: "Oops...",
+                text: "Form 1 harus diisi terlebih dahulu.",
+            });
+            return;
+        }
         showTab(2);
     });
     document.getElementById("tab3").addEventListener("click", function () {
+        if (!isForm1Complete()) {
+            alert("Form 1 harus diisi terlebih dahulu.");
+            return;
+        }
         showTab(3);
     });
 
@@ -29,12 +41,10 @@ function showTabs() {
             tab.classList.add("text-gray-600");
         });
 
-        // Show selected tab content
         document
             .getElementById("content" + tabIndex)
             .classList.remove("hidden");
 
-        // Highlight the active tab
         const activeTab = document.getElementById("tab" + tabIndex);
         activeTab.classList.add(
             "text-violet-400",
@@ -52,6 +62,21 @@ function showTabs() {
                 aside.classList.add("hidden");
             }
         }
+    }
+
+    function isForm1Complete() {
+        const namePic = document.getElementById("name_pic").value;
+        const nameCompany = document.getElementById("name_company").value;
+        const emailPic = document.getElementById("email_pic").value;
+        const phonePic = document.getElementById("phone_pic").value;
+
+        return namePic && nameCompany && emailPic && phonePic;
+    }
+
+    // Styling agar tab 2 dan 3 terlihat disabled
+    if (!isForm1Complete()) {
+        document.getElementById("tab2").classList.add("text-gray-300");
+        document.getElementById("tab3").classList.add("text-gray-300");
     }
 }
 

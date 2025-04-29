@@ -181,7 +181,7 @@
                     </div>
 
                     <!-- KANAN: Preview Data yang Sudah Masuk (dari DB) -->
-                    <div class="w-1/2 border border-gray-300 rounded-md p-4 bg-gray-50">
+                    <div class="preview w-1/2 border border-gray-300 rounded-md p-4 bg-gray-50">
                         <h2 class="text-lg font-semibold mb-2">Peserta yang Sudah Tersimpan</h2>
 
                         @if (session('success'))
