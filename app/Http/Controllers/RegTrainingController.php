@@ -128,19 +128,26 @@ class RegTrainingController extends Controller
         }
 
         foreach ($request->participants as $participantData) {
+            $name = trim($participantData['name'] ?? '');
+
+            // Lewati jika nama kosong
+            if ($name === '') {
+                continue;
+            }
+
             // Cek apakah peserta dengan nama ini sudah ada di form ini
             $exists = RegParticipant::where('form_id', $formId)
-                ->where('name', $participantData['name'])
+                ->where('name', $name)
                 ->exists();
 
             if (!$exists) {
                 RegParticipant::create([
                     'form_id' => $formId,
-                    'name' => $participantData['name'],
-
+                    'name' => $name,
                 ]);
             }
         }
+
 
         return response()->json(['message' => 'Data peserta berhasil ditambahkan']);
     }

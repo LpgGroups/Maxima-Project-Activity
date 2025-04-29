@@ -232,7 +232,7 @@ function addInputField() {
 
 function sendForm2() {
     var formId = $("#form_id").val();
-    var link = $("#link").val(); // ambil nilai dari input "link"
+    var link = $("#link").val();
 
     var participants = [];
     $("#input-fields-container input").each(function () {
