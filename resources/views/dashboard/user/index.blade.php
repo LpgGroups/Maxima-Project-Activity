@@ -85,7 +85,7 @@
 
         <!-- Elemen Kalender di Sebelah Kanan -->
         <div class="w-full lg:w-96 h-[534px] bg-white rounded-2xl shadow-md p-4">
-            <p class="text-[18px] font-semibold">Calendar</p>
+            <p class="text-[18px] font-semibold">Kalender</p>
 
             <!-- Navigasi Bulan -->
             <div class="flex justify-between items-center mt-4">
