@@ -17,10 +17,16 @@ function showTabs() {
         showTab(2);
     });
     document.getElementById("tab3").addEventListener("click", function () {
-        if (!isForm1Complete()) {
-            alert("Form 1 harus diisi terlebih dahulu.");
+       
+        if (!isForm2Complete()) {
+            Swal.fire({
+                icon: "warning",
+                title: "Oops...",
+                text: "Form 2 harus diisi terlebih dahulu.",
+            });
             return;
         }
+
         showTab(3);
     });
 
@@ -76,6 +82,13 @@ function showTabs() {
     // Styling agar tab 2 dan 3 terlihat disabled
     if (!isForm1Complete()) {
         document.getElementById("tab2").classList.add("text-gray-300");
+    }
+
+    function isForm2Complete() {
+        const linkReq = document.getElementById("link").value;
+        return linkReq;
+    }
+    if (!isForm2Complete()) {
         document.getElementById("tab3").classList.add("text-gray-300");
     }
 }

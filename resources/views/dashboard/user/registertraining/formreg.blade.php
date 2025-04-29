@@ -224,7 +224,7 @@
                     <div class="relative mt-4 w-64">
                         <input id="link" name="link" type="text"
                             class="peer block w-full appearance-none border border-[#515151] bg-transparent px-2.5 py-3 text-sm text-[#515151] rounded-md focus:border-[#1E6E9E] focus:outline-none focus:ring-1 focus:ring-[#1E6E9E] placeholder-transparent"
-                            placeholder="" required />
+                            placeholder="" required value="{{ old('email_pic', $training->email_pic ?? '') }}" />
                         <label for="link"
                             class="absolute text-base rounded-lg bg-[#ffffff] text-[#515151] transition-all duration-300 transform -translate-y-4 scale-75 top-3 left-2.5 ml-2 z-10 origin-[0] peer-focus:text-[#1E6E9E] peer-focus:scale-75 peer-focus:-translate-y-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0">
                             Link Persyaratan
