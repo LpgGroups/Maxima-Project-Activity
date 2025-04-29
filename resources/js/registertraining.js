@@ -17,7 +17,6 @@ function showTabs() {
         showTab(2);
     });
     document.getElementById("tab3").addEventListener("click", function () {
-       
         if (!isForm2Complete()) {
             Swal.fire({
                 icon: "warning",
@@ -232,39 +231,32 @@ function addInputField() {
 }
 
 function sendForm2() {
-    var formId = $("#form_id").val(); // Pastikan form_id ada di halaman Anda
+    var formId = $("#form_id").val();
+    var link = $("#link").val(); // ambil nilai dari input "link"
 
-    // Ambil data peserta
     var participants = [];
     $("#input-fields-container input").each(function () {
         participants.push({ name: $(this).val() });
     });
 
-    // Validasi jika data peserta ada
-    if (participants.length == 0 || formId == "") {
-        alert("Pastikan semua data peserta");
-        return;
-    }
     showLoading();
-    // Kirim data melalui AJAX
+
     $.ajax({
-        url: "/dashboard/user/training/form2/save", // Pastikan URL sesuai dengan route di server Anda
+        url: "/dashboard/user/training/form2/save",
         method: "POST",
         data: {
-            form_id: formId, // Kirim form_id
-            participants: participants, // Kirim data peserta
+            form_id: formId,
+            link: link, // kirim ke server
+            participants: participants,
         },
         headers: {
-            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"), // Menambahkan token CSRF ke header
+            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
         },
         success: function (response) {
             showSuccess(response.message, true);
-            console.log(response);
-            console.log(isprogress);
         },
         error: function (xhr, status, error) {
             showError("Terjadi kesalahan saat mengirim data.");
-            console.error(error);
         },
     });
 }
