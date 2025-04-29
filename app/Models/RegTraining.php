@@ -19,6 +19,8 @@ class RegTraining extends Model
         'email_pic',
         'activity',
         'date',
+        'date_end',
+        'link',
         'place',
         'isprogress',
         'user_id',
