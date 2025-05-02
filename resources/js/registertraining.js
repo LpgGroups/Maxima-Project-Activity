@@ -1,37 +1,54 @@
 function showTabs() {
-    const savedTab = localStorage.getItem("activeTab") || "1";
+    const savedTab = "1";
     showTab(savedTab);
+    document
+        .getElementById("nextBtnform1")
+        .addEventListener("click", function () {
+            const isEnabled = this.dataset.enabled === "true";
 
-    document.getElementById("tab1").addEventListener("click", function () {
-        showTab(1);
-    });
-    document.getElementById("tab2").addEventListener("click", function () {
-        if (!isForm1Complete()) {
-            Swal.fire({
-                icon: "warning",
-                title: "Oops...",
-                text: "Form 1 harus diisi terlebih dahulu.",
-            });
-            return;
-        }
-        showTab(2);
-    });
-    document.getElementById("tab3").addEventListener("click", function () {
-        if (!isForm2Complete()) {
-            Swal.fire({
-                icon: "warning",
-                title: "Oops...",
-                text: "Form 2 harus diisi terlebih dahulu.",
-            });
-            return;
-        }
+            if (isEnabled) {
+                // Lanjut ke tab 2
+                showTab(2);
+            } else {
+                // Tampilkan pop-up jika belum lengkap
+                Swal.fire({
+                    icon: "warning",
+                    title: "Data Belum Lengkap",
+                    text: "Silakan lengkapi semua data di Form 1 terlebih dahulu sebelum melanjutkan.",
+                });
+            }
+        });
 
-        showTab(3);
-    });
+    document
+        .getElementById("nextBtnForm2")
+        .addEventListener("click", function () {
+            const isEnabled = this.dataset.enabled === "true";
+
+            if (isEnabled) {
+                // Lanjut ke tab 3 atau aksi berikutnya
+                showTab(3);
+            } else {
+                Swal.fire({
+                    icon: "warning",
+                    title: "Link Belum Diisi",
+                    text: "Silakan isi link persyaratan terlebih dahulu untuk melanjutkan.",
+                });
+            }
+        });
+
+    document
+        .getElementById("prevBtnForm2")
+        .addEventListener("click", function () {
+            showTab(1);
+        });
+
+    document
+        .getElementById("prevBtnForm3")
+        .addEventListener("click", function () {
+            showTab(2);
+        });
 
     function showTab(tabIndex) {
-        localStorage.setItem("activeTab", tabIndex);
-
         document.querySelectorAll(".tab-content").forEach(function (content) {
             content.classList.add("hidden");
         });
@@ -67,28 +84,6 @@ function showTabs() {
                 aside.classList.add("hidden");
             }
         }
-    }
-
-    function isForm1Complete() {
-        const namePic = document.getElementById("name_pic").value;
-        const nameCompany = document.getElementById("name_company").value;
-        const emailPic = document.getElementById("email_pic").value;
-        const phonePic = document.getElementById("phone_pic").value;
-
-        return namePic && nameCompany && emailPic && phonePic;
-    }
-
-    // Styling agar tab 2 dan 3 terlihat disabled
-    if (!isForm1Complete()) {
-        document.getElementById("tab2").classList.add("text-gray-300");
-    }
-
-    function isForm2Complete() {
-        const linkReq = document.getElementById("link").value;
-        return linkReq;
-    }
-    if (!isForm2Complete()) {
-        document.getElementById("tab3").classList.add("text-gray-300");
     }
 }
 

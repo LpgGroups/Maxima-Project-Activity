@@ -35,5 +35,17 @@ class RegTraining extends Model
         return $this->hasMany(FileRequirement::class,'file_id');
     }
 
+    public function isComplete()
+    {
+        return !empty($this->name_pic) &&
+               !empty($this->name_company) &&
+               !empty($this->email_pic) &&
+               !empty($this->phone_pic);
+    }
+    public function isLinkFilled()
+    {
+        return !empty($this->link);
+    }
+
 }
 

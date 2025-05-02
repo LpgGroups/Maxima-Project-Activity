@@ -88,7 +88,7 @@
 
         <!-- Version Info (di bawah) -->
         <div class="p-4 mt-auto">
-            <span class="text-sm">Testing Beta V1.1.2</span>
+            <span class="text-sm">Testing Beta V1.2.1</span>
         </div>
 
     </div>

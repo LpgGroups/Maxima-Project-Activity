@@ -1,5 +1,4 @@
 @extends('dashboard.layouts.dashboardmain')
-
 @section('container')
     @php
         $activityMap = [
@@ -13,7 +12,7 @@
         ];
     @endphp
 
-    <p class="text-center text-lg font-semibold my-2 text-[#9694FF]">
+    <p class="text-center text-lg font-semibold text-[#9694FF]">
         {{ $activityMap[$training->activity] ?? $training->activity }}
     </p>
 
@@ -23,17 +22,26 @@
             <ul class="flex border-b border-gray-300">
                 <li class="flex-1">
                     <a href="#" id="tab1"
-                        class="block text-violet-400 hover:text-blue-800 py-2 px-4 bg-gray-400 rounded-tl-lg text-center">Daftar
-                        Pelatihan</a>
+                        class="flex justify-center items-center gap-2 text-violet-400 py-2 px-4 bg-gray-400 rounded-tl-lg text-center">
+                        Daftar Pelatihan
+                        @if ($training->isLinkFilled())
+                            <img src="{{ asset('img/svg/success.svg') }}" alt="Success" class="w-4 h-4">
+                        @endif
+                    </a>
+
                 </li>
                 <li class="flex-1">
                     <a href="#" id="tab2"
-                        class="block text-gray-600 hover:text-blue-800 py-2 px-4 bg-gray-400 text-center">Pendaftaran
-                        Peserta</a>
+                        class="flex justify-center items-center gap-2 text-violet-400 py-2 px-4 bg-gray-400 text-center">
+                        Pendaftaran Peserta
+                        @if ($training->isComplete())
+                            <img src="{{ asset('img/svg/success.svg') }}" alt="Success" class="w-4 h-4">
+                        @endif
+                    </a>
                 </li>
                 <li class="flex-1">
                     <a href="#" id="tab3"
-                        class="block text-gray-600 hover:text-blue-800 py-2 px-4 bg-gray-400 rounded-tr-lg text-center">Submit
+                        class="block text-gray-600  py-2 px-4 bg-gray-400 rounded-tr-lg text-center">Submit
                         Data</a>
                 </li>
             </ul>
@@ -108,7 +116,6 @@
                         </div>
                     </div>
 
-                    {{-- Checkbox Daftar Kegiatan --}}
                     <p class="mt-4 text-[24px] font-semibold">Informasi Kegiatan</p>
                     <div class="mt-4">
                         <!-- Tampilkan aktivitas yang dipilih -->
@@ -134,6 +141,7 @@
                         </div>
                         <div id="responseMessage" class="mt-4 hidden"></div>
                     </div>
+
                     <!-- Submit Button -->
                     <div class="mt-4 flex">
                         <button type="button" id="submitBtn"
@@ -151,6 +159,17 @@
                                 Belum pernah diupdate
                             </div>
                         @endif
+
+                        <button type="button" id="nextBtnform1"
+                            class="
+                            {{ $training->isComplete() ? 'bg-green-500' : 'bg-gray-400' }}
+                            text-white px-4 py-2 ml-[500px] rounded-md
+                            focus:outline-none focus:ring-2
+                            {{ $training->isComplete() ? 'focus:ring-green-400' : 'focus:ring-gray-400' }}
+                            {{ $training->isComplete() ? '' : 'opacity-50 cursor-not-allowed' }}"
+                            data-enabled="{{ $training->isComplete() ? 'true' : 'false' }}">
+                            Selanjutnya
+                        </button>
 
                     </div>
                 </form>
@@ -231,11 +250,31 @@
                         </label>
                     </div>
 
-                    <div class="mt-4">
-                        <button type="button" id="submitBtnForm2"
-                            class="bg-blue-500 text-white px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400">
-                            Simpan Data
-                        </button>
+                    <div class="flex">
+                        <div class="mt-4">
+                            <button type="button" id="submitBtnForm2"
+                                class="w-48 bg-blue-500 text-white px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400">
+                                Simpan Data
+                            </button>
+                        </div>
+                        <div class="mt-4 flex ml-[500px] gap-x-2">
+                            <!-- Tombol Previous -->
+                            <button type="button" id="prevBtnForm2"
+                                class="bg-gray-500 text-white px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-400">
+                                Sebelumnya
+                            </button>
+
+                            <!-- Tombol Next -->
+                            <button type="button" id="nextBtnForm2"
+                                class="{{ $training->isLinkFilled() ? 'bg-green-500 focus:ring-green-400' : 'bg-gray-400 focus:ring-gray-400' }}
+                                       text-white px-4 py-2 rounded-md focus:outline-none focus:ring-2
+                                       {{ $training->isLinkFilled() ? '' : 'opacity-50 cursor-not-allowed' }}"
+                                data-enabled="{{ $training->isLinkFilled() ? 'true' : 'false' }}">
+                                Selanjutnya
+                            </button>
+                        </div>
+
+
                     </div>
                 </div>
             </div>
@@ -305,11 +344,6 @@
                                         class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none">
                                     <p class="mt-1 text-sm text-gray-500">Format File: PDF (Maks Size: 2MB).</p>
                                 </div>
-
-                                <button type="button" id="submitBtnForm3"
-                                    class="bg-blue-500 text-white px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400">
-                                    Simpan Data
-                                </button>
                             </form>
                         </div>
 
@@ -356,13 +390,30 @@
 
             <!-- ASIDE -->
             <aside id="side-panel" class="w-[300px] sticky top-0 h-screen bg-gray-50 border-l border-gray-300 p-4 hidden">
-                <h3 class="text-xl font-bold mb-2">Panel Info</h3>
-                <ul class="text-sm text-gray-700 space-y-2">
-                    <li>✔️ Cek kembali informasi PIC</li>
-                    <li>📄 Pastikan berkas MoU & Quotation sudah sesuai</li>
-                    <li>👥 Verifikasi status peserta</li>
-                    <li>📌 Semua file harus PDF max 2MB</li>
-                </ul>
+                <div class="w-70 h-50 rounded-[20px] text-red-600 border-2 border-red-600 p-2">
+                    <h3 class="text-xl font-bold mb-2">Informasi Data</h3>
+                    <ul class="list-disc text-xs ml-2">
+                        <li>Harap lengkapi data-data peserta H-3 sebelum hari pelatihan di mulai.</li>
+                        <li>Data dapat di ubah H-3 sebelum hari pelatihan.</li>
+                        <li>Mohon untuk input data dengan baik dan benar</li>
+                        <li>PIC diharapkan Mengupload kembali MoU dan Quotation yang telah ditanda tangan.</li>
+                    </ul>
+                </div>
+
+
+                <div class="mt-60 flex justify-between">
+                    <!-- Previous Button -->
+                    <button type="button" id="prevBtnForm3"
+                        class="bg-gray-500 text-white px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-400">
+                        Previous
+                    </button>
+
+                    <!-- Next Button -->
+                    <button type="button" id="submitBtnForm3"
+                        class="bg-blue-500 text-white px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400">
+                        Simpan Data
+                    </button>
+                </div>
             </aside>
 
         </div>
