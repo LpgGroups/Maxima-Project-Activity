@@ -24,7 +24,7 @@
                     <a href="#" id="tab1"
                         class="flex justify-center items-center gap-2 text-violet-400 py-2 px-4 bg-gray-400 rounded-tl-lg text-center">
                         Daftar Pelatihan
-                        @if ($training->isLinkFilled())
+                        @if ($training->isComplete())
                             <img src="{{ asset('img/svg/success.svg') }}" alt="Success" class="w-4 h-4">
                         @endif
                     </a>
@@ -34,7 +34,8 @@
                     <a href="#" id="tab2"
                         class="flex justify-center items-center gap-2 text-violet-400 py-2 px-4 bg-gray-400 text-center">
                         Pendaftaran Peserta
-                        @if ($training->isComplete())
+
+                        @if ($training->isLinkFilled())
                             <img src="{{ asset('img/svg/success.svg') }}" alt="Success" class="w-4 h-4">
                         @endif
                     </a>
