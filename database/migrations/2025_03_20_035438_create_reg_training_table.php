@@ -20,7 +20,9 @@ return new class extends Migration
             $table->string('email_pic')->nullable();
             $table->string('activity')->nullable();
             $table->date('date')->nullable();
+            $table->date('date_end')->nullable();
             $table->string('place')->nullable();
+            $table->string('link')->nullable();
             $table->integer('isprogress')->default(0);
             $table->unsignedBigInteger('user_id')->nullable(); 
             $table->timestamps();

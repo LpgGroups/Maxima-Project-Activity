@@ -114,10 +114,8 @@ class RegTrainingController extends Controller
     public function saveForm2(Request $request)
     {
         $request->validate([
-            'participants' => 'required|array',
-            'participants.*.name' => 'required|string',
             'form_id' => 'required|integer',
-
+            'link' => 'required|string',
         ]);
 
         $formId = $request->form_id;
@@ -125,23 +123,31 @@ class RegTrainingController extends Controller
         $training = RegTraining::find($formId);
         if ($training) {
             $training->isprogress = max($training->isprogress, 3);
+            $training->link = $request->link;
             $training->save();
         }
 
         foreach ($request->participants as $participantData) {
+            $name = trim($participantData['name'] ?? '');
+
+            // Lewati jika nama kosong
+            if ($name === '') {
+                continue;
+            }
+
             // Cek apakah peserta dengan nama ini sudah ada di form ini
             $exists = RegParticipant::where('form_id', $formId)
-                ->where('name', $participantData['name'])
+                ->where('name', $name)
                 ->exists();
 
             if (!$exists) {
                 RegParticipant::create([
                     'form_id' => $formId,
-                    'name' => $participantData['name'],
-
+                    'name' => $name,
                 ]);
             }
         }
+
 
         return response()->json(['message' => 'Data peserta berhasil ditambahkan']);
     }
@@ -196,7 +202,7 @@ class RegTrainingController extends Controller
         }
 
         return response()->json(['message' => 'File berhasil diperbarui!']);
-    } 
+    }
 
     public function destroyUser($id)
     {

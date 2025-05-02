@@ -1,20 +1,54 @@
 function showTabs() {
-    const savedTab = localStorage.getItem("activeTab") || "1";
+    const savedTab = "1";
     showTab(savedTab);
+    document
+        .getElementById("nextBtnform1")
+        .addEventListener("click", function () {
+            const isEnabled = this.dataset.enabled === "true";
 
-    document.getElementById("tab1").addEventListener("click", function () {
-        showTab(1);
-    });
-    document.getElementById("tab2").addEventListener("click", function () {
-        showTab(2);
-    });
-    document.getElementById("tab3").addEventListener("click", function () {
-        showTab(3);
-    });
+            if (isEnabled) {
+                // Lanjut ke tab 2
+                showTab(2);
+            } else {
+                // Tampilkan pop-up jika belum lengkap
+                Swal.fire({
+                    icon: "warning",
+                    title: "Data Belum Lengkap",
+                    text: "Silakan lengkapi semua data di Form 1 terlebih dahulu sebelum melanjutkan.",
+                });
+            }
+        });
+
+    document
+        .getElementById("nextBtnForm2")
+        .addEventListener("click", function () {
+            const isEnabled = this.dataset.enabled === "true";
+
+            if (isEnabled) {
+                // Lanjut ke tab 3 atau aksi berikutnya
+                showTab(3);
+            } else {
+                Swal.fire({
+                    icon: "warning",
+                    title: "Link Belum Diisi",
+                    text: "Silakan isi link persyaratan terlebih dahulu untuk melanjutkan.",
+                });
+            }
+        });
+
+    document
+        .getElementById("prevBtnForm2")
+        .addEventListener("click", function () {
+            showTab(1);
+        });
+
+    document
+        .getElementById("prevBtnForm3")
+        .addEventListener("click", function () {
+            showTab(2);
+        });
 
     function showTab(tabIndex) {
-        localStorage.setItem("activeTab", tabIndex);
-
         document.querySelectorAll(".tab-content").forEach(function (content) {
             content.classList.add("hidden");
         });
@@ -29,12 +63,10 @@ function showTabs() {
             tab.classList.add("text-gray-600");
         });
 
-        // Show selected tab content
         document
             .getElementById("content" + tabIndex)
             .classList.remove("hidden");
 
-        // Highlight the active tab
         const activeTab = document.getElementById("tab" + tabIndex);
         activeTab.classList.add(
             "text-violet-400",
@@ -194,39 +226,32 @@ function addInputField() {
 }
 
 function sendForm2() {
-    var formId = $("#form_id").val(); // Pastikan form_id ada di halaman Anda
+    var formId = $("#form_id").val();
+    var link = $("#link").val();
 
-    // Ambil data peserta
     var participants = [];
     $("#input-fields-container input").each(function () {
         participants.push({ name: $(this).val() });
     });
 
-    // Validasi jika data peserta ada
-    if (participants.length == 0 || formId == "") {
-        alert("Pastikan semua data peserta");
-        return;
-    }
     showLoading();
-    // Kirim data melalui AJAX
+
     $.ajax({
-        url: "/dashboard/user/training/form2/save", // Pastikan URL sesuai dengan route di server Anda
+        url: "/dashboard/user/training/form2/save",
         method: "POST",
         data: {
-            form_id: formId, // Kirim form_id
-            participants: participants, // Kirim data peserta
+            form_id: formId,
+            link: link, // kirim ke server
+            participants: participants,
         },
         headers: {
-            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"), // Menambahkan token CSRF ke header
+            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
         },
         success: function (response) {
             showSuccess(response.message, true);
-            console.log(response);
-            console.log(isprogress);
         },
         error: function (xhr, status, error) {
             showError("Terjadi kesalahan saat mengirim data.");
-            console.error(error);
         },
     });
 }

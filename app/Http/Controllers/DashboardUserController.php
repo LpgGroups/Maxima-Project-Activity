@@ -37,41 +37,50 @@ class DashboardUserController extends Controller
 
     public function bookingDate(Request $request)
     {
-        // Validasi input dari user
         $validated = $request->validate([
-            'date' => 'required|date',  // pastikan 'date' valid
+            'date' => 'required|date',
             'activity' => 'required',
             'place' => 'required',
             'isprogress' => 'required'
         ]);
 
         try {
-            $user = Auth::user();  // Menggunakan Auth::user() untuk mendapatkan seluruh data user
+            $user = Auth::user();
 
-            // Pastikan user ada, jika tidak, kirimkan response error
             if (!$user) {
-                return response()->json(['success' => false, 'message' => 'User not authenticated or found.']);
+                return response()->json(['success' => false, 'message' => 'User not authenticated.']);
             }
 
-            // Jika validasi sukses, lakukan penyimpanan data
+            // Map activity ke durasi (hari)
+            $durationMap = [
+                'TKPK1' => 6,
+                'TKPK2' => 6,
+                'TKBT1' => 4,
+                'TKBT2' => 4,
+                'BE' => 2,
+            ];
+
+            $duration = $durationMap[$validated['activity']] ?? 1; // default 1 hari
+            $startDate = \Carbon\Carbon::parse($validated['date']);
+            $endDate = $startDate->copy()->addDays($duration - 1); // -1 agar 1-6 itu = 6 hari
+
+            // Simpan data
             $booking = new RegTraining();
-            $booking->date = $validated['date'];
-            $booking->user_id = $user->id;  // Set user_id dengan ID user yang sedang login
-            $booking->username = $user->name;  // Set name_user dengan nama pengguna
+            $booking->date = $startDate->toDateString();
+            $booking->date_end = $endDate->toDateString(); // Simpan tanggal akhir
+            $booking->user_id = $user->id;
+            $booking->username = $user->name;
             $booking->activity = $validated['activity'];
             $booking->place = $validated['place'];
             $booking->isprogress = max($booking->isprogress, $validated['isprogress']);
 
-            // Simpan ke database
             $booking->save();
 
-            // Kirim response sukses
             return response()->json([
                 'success' => true,
-                'id' => $booking->id  // Ensure this contains the ID of the newly created booking
+                'id' => $booking->id
             ]);
         } catch (\Exception $e) {
-           
             Log::error("Error while creating booking: " . $e->getMessage());
 
             return response()->json(['success' => false, 'message' => $e->getMessage()]);
