@@ -21,7 +21,7 @@
                     @foreach ($trainings as $index => $training)
                         <tr onclick="window.location='{{ route('dashboard.form', ['id' => $training->id]) }}'"
                             class="odd:bg-white even:bg-gray-300 cursor-pointer hover:bg-red-500 hover:text-white leading-loose">
-                            <td>{{ $index + 1 }}</td>
+                            <td>{{ $trainings->firstItem() + $index }}</td>
                             <td>{{ $training->activity }}</td>
                             <td>{{ $training->status }}</td>
                             <td>{{ $training->participants->count() }} peserta</td>
@@ -57,6 +57,10 @@
                     @endforeach
                 </tbody>
             </table>
+
+            <div class="mt-4">
+                {{ $trainings->links() }}
+            </div>
         </div>
     </div>
 @endsection
