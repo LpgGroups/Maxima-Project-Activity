@@ -74,12 +74,16 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="text-center mt-1">
-                    <a href="/dashboard/user/training" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">
-                        Tampilkan Lebih Banyak
-                    </a>
-                </div>
+                @if ($totalTrainings > 10)
+                    <div class="text-center mt-1">
+                        <a href="/dashboard/user/training"
+                            class="font-medium text-blue-600 dark:text-blue-500 hover:underline">
+                            Tampilkan Lebih Banyak
+                        </a>
+                    </div>
+                @endif
             </div>
+
         </div>
 
         <!-- Elemen Kalender di Sebelah Kanan -->

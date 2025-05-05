@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Session;
 
 
 class RegTrainingController extends Controller
@@ -20,14 +21,17 @@ class RegTrainingController extends Controller
      */
     public function index()
     {
-        $trainings = RegTraining::where('user_id', Auth::id())
-            ->latest() // = orderBy('created_at', 'desc')
-            ->get();
+        $trainings = RegTraining::with('participants') // <--- ini bagian penting
+            ->where('user_id', Auth::id())
+            ->latest()
+            ->paginate(10);
+
         return view('dashboard.user.registertraining.index', [
             'title' => 'Daftar Training',
             'trainings' => $trainings
         ]);
     }
+
     public function selectDate()
     {
         return view('dashboard.user.registertraining.selectdate', [
@@ -38,15 +42,27 @@ class RegTrainingController extends Controller
     {
         $user = Auth::user();
 
-        // Validasi bahwa pelatihan yang dipilih milik user tersebut
         $training = RegTraining::where('user_id', $user->id)
             ->where('id', $id)
-            ->with('participants') // jika butuh relasi
+            ->with('participants')
             ->firstOrFail();
+
+        // Ambil tab terakhir user dari session
+        $sessionKey = 'active_tab_user_' . $user->id . '_training_' . $id;
+        $activeTab = Session::get($sessionKey, 1); // default ke 1
+
+        // Validasi: hanya bisa ke tab berikutnya jika sebelumnya sudah lengkap
+        if ($activeTab > 1 && !$training->isComplete()) {
+            $activeTab = 1;
+        } elseif ($activeTab > 2 && !$training->isLinkFilled()) {
+            $activeTab = 2;
+        }
 
         return view('dashboard.user.registertraining.formreg', [
             'title' => 'Form Register',
             'training' => $training,
+            'activeTab' => $activeTab,
+            'trainingId' => $id
         ]);
     }
     public function saveForm1(Request $request)
