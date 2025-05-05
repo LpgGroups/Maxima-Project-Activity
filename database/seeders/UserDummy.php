@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\User;
+
 class UserDummy extends Seeder
 {
     /**
@@ -15,10 +16,10 @@ class UserDummy extends Seeder
         $userData = [
             [
                 'name' => 'Muhammad Ricoasmara',
-                'email' => 'rico',
+                'email' => 'admin1',
                 'perusahaan' => 'IT',
                 'role' => 'admin',
-                'password' => bcrypt('04oktober2000')
+                'password' => bcrypt('54321')
             ],
             [
                 'name' => 'Nandar',

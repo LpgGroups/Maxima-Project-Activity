@@ -16,7 +16,7 @@
         {{ $activityMap[$training->activity] ?? $training->activity }}
     </p>
 
-    <div class="container mx-auto ">
+    <div class="container mx-auto">
         <!-- Tab Navigation -->
         <div class="rounded-lg">
             <ul class="flex border-b border-gray-300">
