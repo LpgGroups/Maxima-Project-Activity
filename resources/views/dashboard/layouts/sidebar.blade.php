@@ -133,7 +133,7 @@
 
         <!-- Version Info -->
         <div class="p-4 mt-auto">
-            <span class="text-sm">Testing Beta V1.3.2</span>
+            <span class="text-sm">Testing Beta V1.4.0</span>
         </div>
     </div>
 </div>

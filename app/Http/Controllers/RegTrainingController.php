@@ -47,16 +47,15 @@ class RegTrainingController extends Controller
             ->where('id', $id)
             ->with('participants')
             ->firstOrFail();
-       
-            TrainingNotification::updateOrCreate(
-                [
-                    'reg_training_id' => $training->id,
-                    'user_id' => $user->id,
-                ],
-                [
-                    'viewed_at' => now(),
-                ]
-            );
+
+        $notification = TrainingNotification::firstOrCreate([
+            'user_id' => Auth::id(),
+            'reg_training_id' => $training->id,
+        ]);
+
+        if (!$notification->viewed_at || $training->updated_at > $notification->viewed_at) {
+            $notification->update(['viewed_at' => now()]);
+        }
         return view('dashboard.user.registertraining.formreg', [
             'title' => 'Form Register',
             'training' => $training,

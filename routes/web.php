@@ -12,6 +12,7 @@ Route::post('/', [LoginController::class, 'authenticate'])->name('login');
 Route::middleware(['auth'])->group(function () {
     Route::middleware([UserAccess::class . ':admin'])->group(function () {
         Route::get('/dashboard/admin', [DashboardAdminController::class, 'index'])->name('dashboard.admin.index');
+        Route::get('/dashboard/admin/training/{id}', [DashboardAdminController::class, 'show'])->name('dashboard.admin.training.show');
     });
     Route::middleware([UserAccess::class . ':user'])->group(function () {
          // user

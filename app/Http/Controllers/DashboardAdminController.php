@@ -9,6 +9,7 @@ use App\Models\RegTraining;
 use App\Models\TrainingNotification;
 
 
+
 class DashboardAdminController extends Controller
 {
     public function index()
@@ -27,6 +28,23 @@ class DashboardAdminController extends Controller
             'trainingAll' => $trainingAll,
             'totalTraining' => $totalTraining,
             'admin' => $admin, // opsional kalau mau pakai di blade
+        ]);
+    }
+    public function show($id)
+    {
+        $training = RegTraining::with(['participants', 'trainingNotifications'])
+            ->findOrFail($id);
+
+        $userId = Auth::id();
+
+        TrainingNotification::updateOrCreate(
+            ['user_id' => $userId, 'reg_training_id' => $training->id],
+            ['viewed_at' => now()]
+        );
+
+        return view('dashboard.admin.cektraining.showtraining', [
+            'title' => 'Detail Pelatihan',
+            'training' => $training
         ]);
     }
 }

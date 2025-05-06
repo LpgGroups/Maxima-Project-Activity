@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('reg_training_id')->constrained('reg_training')->onDelete('cascade');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->timestamp('viewed_at')->nullable(); // null = belum dilihat
-            $table->timestamp('last_update_at')->nullable(); // null = belum dilihat
+            $table->timestamp('last_seen_updated_at')->nullable();
             $table->timestamps();
         });
     }

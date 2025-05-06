@@ -32,7 +32,7 @@
                         </thead>
                         <tbody class="lg:text-[14px] text-[10px]">
                             @forelse ($trainingAll as $index => $training)
-                                <tr onclick="window.location='{{ route('dashboard.form', ['id' => $training->id]) }}'"
+                                <tr onclick="window.location='{{ route('dashboard.admin.training.show', ['id' => $training->id]) }}'"
                                     class="odd:bg-white even:bg-gray-300 cursor-pointer hover:bg-red-500 hover:text-white leading-loose">
                                     <td>{{ $index + 1 }}</td>
                                     <td>{{ $training->name_pic }}</td>
@@ -40,15 +40,30 @@
                                         {{ $training->name_company }}
 
                                         @php
-                                            $notif = $training->trainingNotifications
-                                                ->where('user_id', auth()->id())
-                                                ->first();
-                                            $isNew = !$notif || !$notif->viewed_at;
+                                            $notification = $training->trainingNotifications->firstWhere(
+                                                'user_id',
+                                                auth()->id(),
+                                            );
+
+                                            $isNew = !$notification || !$notification->viewed_at;
+
+                                            // Jika bukan new, cek apakah ada update setelah dilihat
+                                            $isUpdated = false;
+                                            if (
+                                                $notification &&
+                                                $notification->viewed_at &&
+                                                $training->updated_at > $notification->viewed_at
+                                            ) {
+                                                $isUpdated = true;
+                                            }
                                         @endphp
 
                                         @if ($isNew)
                                             <span
                                                 class="ml-2 text-red-600 font-semibold text-xs bg-red-100 px-2 py-0.5 rounded-full">NEW</span>
+                                        @elseif ($isUpdated)
+                                            <span
+                                                class="ml-2 text-blue-600 font-semibold text-xs bg-blue-100 px-2 py-0.5 rounded-full">UPDATED</span>
                                         @endif
                                     </td>
 
