@@ -38,9 +38,12 @@
                                     <td>{{ $training->name_pic }}</td>
                                     <td>
                                         {{ $training->name_company }}
+
                                         @php
-                                            $created = \Carbon\Carbon::parse($training->created_at);
-                                            $isNew = $created->diffInHours(now()) < 8;
+                                            $notif = $training->trainingNotifications
+                                                ->where('user_id', auth()->id())
+                                                ->first();
+                                            $isNew = !$notif || !$notif->viewed_at;
                                         @endphp
 
                                         @if ($isNew)

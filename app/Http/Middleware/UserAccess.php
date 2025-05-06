@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Session;
 
 class UserAccess
 {
+    
     /**
      * Handle an incoming request.
      *

@@ -6,12 +6,13 @@ use App\Models\RegTraining;
 use App\Http\Controllers\Controller;
 use App\Models\FileRequirement;
 use App\Models\RegParticipant;
+use App\Models\TrainingNotification;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Session;
+
 
 
 class RegTrainingController extends Controller
@@ -46,22 +47,19 @@ class RegTrainingController extends Controller
             ->where('id', $id)
             ->with('participants')
             ->firstOrFail();
-
-        // Ambil tab terakhir user dari session
-        $sessionKey = 'active_tab_user_' . $user->id . '_training_' . $id;
-        $activeTab = Session::get($sessionKey, 1); // default ke 1
-
-        // Validasi: hanya bisa ke tab berikutnya jika sebelumnya sudah lengkap
-        if ($activeTab > 1 && !$training->isComplete()) {
-            $activeTab = 1;
-        } elseif ($activeTab > 2 && !$training->isLinkFilled()) {
-            $activeTab = 2;
-        }
-
+       
+            TrainingNotification::updateOrCreate(
+                [
+                    'reg_training_id' => $training->id,
+                    'user_id' => $user->id,
+                ],
+                [
+                    'viewed_at' => now(),
+                ]
+            );
         return view('dashboard.user.registertraining.formreg', [
             'title' => 'Form Register',
             'training' => $training,
-            'activeTab' => $activeTab,
             'trainingId' => $id
         ]);
     }
