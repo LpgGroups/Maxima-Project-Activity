@@ -34,7 +34,22 @@
                                 <tr onclick="window.location='{{ route('dashboard.form', ['id' => $training->id]) }}'"
                                     class="odd:bg-white even:bg-gray-300 cursor-pointer hover:bg-red-500 hover:text-white leading-loose">
                                     <td>{{ $index + 1 }}</td>
-                                    <td>{{ $training->activity }}</td>
+                                    <td>
+                                        {{ $training->activity }}
+
+                                        @php
+                                            $notif = $training->trainingNotifications
+                                                ->where('user_id', auth()->id())
+                                                ->first();
+                                            $isNew = !$notif || !$notif->viewed_at;
+                                        @endphp
+
+                                        @if ($isNew)
+                                            <span
+                                                class="ml-2 text-red-600 font-semibold text-xs bg-red-100 px-2 py-0.5 rounded-full">NEW</span>
+                                        @endif
+                                    </td>
+
                                     <td>Aktif</td>
                                     <td>{{ \Carbon\Carbon::parse($training->date)->locale('id')->translatedFormat('d F Y') }}
                                     </td>
