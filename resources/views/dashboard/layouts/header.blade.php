@@ -31,18 +31,16 @@
                         class="px-4 py-3 text-sm font-semibold text-gray-700 dark:text-white border-b dark:border-gray-700">
                         Notifikasi
                     </div>
-                    <ul
-                        class="max-h-60 overflow-y-auto text-sm text-gray-600 dark:text-gray-300 divide-y divide-gray-200 dark:divide-gray-700">
-                        <li class="px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700">
-                            🔔 Anda memiliki jadwal meeting pukul 10:00 WIB
-                        </li>
-                        <li class="px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700">
-                            📢 Pengumuman baru dari HR telah diposting
-                        </li>
-                        <li class="px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700">
-                            ✅ Tugas mingguan Anda telah dikonfirmasi
-                        </li>
-                    </ul>
+                    @isset($dropdownNotifications)
+                        <ul
+                            class="max-h-60 overflow-y-auto text-sm text-gray-600 dark:text-gray-300 divide-y divide-gray-200 dark:divide-gray-700">
+                            @forelse ($dropdownNotifications as $notif)
+                                <li>🔔 {{ $notif->training->activity }}</li>
+                            @empty
+                                <li>Tidak ada notifikasi baru.</li>
+                            @endforelse
+                        </ul>
+                    @endisset
                     <div class="px-4 py-2 text-sm text-center text-indigo-600 hover:underline dark:text-indigo-400">
                         <a href="#">Lihat semua notifikasi</a>
                     </div>
