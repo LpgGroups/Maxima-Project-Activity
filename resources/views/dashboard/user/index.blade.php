@@ -38,15 +38,27 @@
                                         {{ $training->activity }}
 
                                         @php
-                                            $notif = $training->trainingNotifications
+                                            $notification = $training->trainingNotifications
                                                 ->where('user_id', auth()->id())
                                                 ->first();
-                                            $isNew = !$notif || !$notif->viewed_at;
+                                            $isNew = !$notification || !$notification->viewed_at;
+
+                                            // Jika bukan new, cek apakah ada update setelah dilihat
+                                            $isUpdated = false;
+                                            if (
+                                                $notification &&
+                                                $notification->viewed_at &&
+                                                $training->updated_at > $notification->viewed_at
+                                            ) {
+                                                $isUpdated = true;
+                                            }
                                         @endphp
 
                                         @if ($isNew)
-                                            <span
-                                                class="ml-2 text-red-600 font-semibold text-xs bg-red-100 px-2 py-0.5 rounded-full">NEW</span>
+                                            <img src="/img/gif/new.gif" alt="New" class="w-5 h-3 -mt-3 inline-block">
+                                        @elseif ($isUpdated)
+                                            <img src="/img/gif/update.gif" alt="Updated"
+                                                class="w-5 h-3 -mt-3 inline-block">
                                         @endif
                                     </td>
 

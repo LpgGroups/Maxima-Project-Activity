@@ -59,11 +59,10 @@
                                         @endphp
 
                                         @if ($isNew)
-                                            <span
-                                                class="ml-2 text-red-600 font-semibold text-xs bg-red-100 px-2 py-0.5 rounded-full">NEW</span>
+                                            <img src="/img/gif/new.gif" alt="New" class="w-5 h-3 -mt-3 inline-block">
                                         @elseif ($isUpdated)
-                                            <span
-                                                class="ml-2 text-blue-600 font-semibold text-xs bg-blue-100 px-2 py-0.5 rounded-full">UPDATED</span>
+                                            <img src="/img/gif/update.gif" alt="Updated"
+                                                class="w-5 h-3 -mt-3 inline-block">
                                         @endif
                                     </td>
 

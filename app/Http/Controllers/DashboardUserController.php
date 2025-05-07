@@ -86,4 +86,8 @@ class DashboardUserController extends Controller
             return response()->json(['success' => false, 'message' => $e->getMessage()]);
         }
     }
+
+    public function showProfile(){
+        
+    }
 }
