@@ -39,9 +39,10 @@ class NewTrainingRegistered extends Notification
     {
         return [
             'title' => 'Training Baru Telah Didaftarkan',
-            'message' => $this->training->name_company . ' telah mendaftarkan training.',
+            'message' => $this->training->user_id . ' telah mendaftarkan training.',
             'training_id' => $this->training->id,
-            'created_by' => $this->training->user->name,
+            'created_at' => $this->training->user->name,
+            'url' => route('dashboard.admin.training.show', $this->training->id),
         ];
     }
 

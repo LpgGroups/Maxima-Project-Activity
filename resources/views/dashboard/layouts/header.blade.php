@@ -19,7 +19,7 @@
                     <!-- Badge jumlah notifikasi -->
                     <span
                         class="absolute -top-1 -right-1 inline-flex items-center justify-center w-4 h-4 text-xs font-bold text-white bg-red-600 rounded-full">
-                        {{ $notificationCount }}
+                        {{ $dropdownNotifications->count() }}
                     </span>
                 </button>
 
@@ -35,7 +35,10 @@
                             class="max-h-60 overflow-y-auto text-sm text-gray-600 dark:text-gray-300 divide-y divide-gray-200 dark:divide-gray-700">
                             @forelse ($dropdownNotifications as $notif)
                                 <li class="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                    🔔 {{ $notif->data['message'] ?? 'Notifikasi baru' }}
+                                    <a href="{{ route('dashboard.admin.training.show', $notif->data['training_id']) }}"
+                                        class="block text-sm">
+                                        🔔 {{ $notif->data['message'] ?? 'Notifikasi baru' }}
+                                    </a>
                                 </li>
                             @empty
                                 <li class="px-4 py-2">Tidak ada notifikasi baru.</li>
