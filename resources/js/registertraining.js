@@ -105,7 +105,7 @@ function submitForm1() {
 
         // Clear previous response message
         $("#responseMessage").removeClass("hidden").text("");
-
+        showLoading();
         $.ajax({
             url: "/dashboard/user/training/form/save", // URL untuk save
             type: "POST",
@@ -114,6 +114,7 @@ function submitForm1() {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
             },
             success: function (response) {
+                showSuccess(response.message, true);
                 if (response.success) {
                     $("#responseMessage")
                         .addClass("text-green-500")

@@ -22,22 +22,22 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        View::composer('*', function ($view) {
-            if (Auth::check()) {
-                $notifications = TrainingNotification::with('training')
-                    ->where('user_id', Auth::id())
-                    ->where(function ($q) {
-                        $q->whereNull('viewed_at')
-                            ->orWhereHas('training', function ($query) {
-                                $query->whereColumn('updated_at', '>', 'training_notifications.viewed_at');
-                            });
-                    })
-                    ->latest()
-                    ->take(5)
-                    ->get();
+        // View::composer('*', function ($view) {
+        //     if (Auth::check()) {
+        //         $notifications = TrainingNotification::with('training')
+        //             ->where('user_id', Auth::id())
+        //             ->where(function ($q) {
+        //                 $q->whereNull('viewed_at')
+        //                     ->orWhereHas('training', function ($query) {
+        //                         $query->whereColumn('updated_at', '>', 'training_notifications.viewed_at');
+        //                     });
+        //             })
+        //             ->latest()
+        //             ->take(5)
+        //             ->get();
 
-                $view->with('dropdownNotifications', $notifications);
-            }
-        });
+        //         $view->with('dropdownNotifications', $notifications);
+        //     }
+        // });
     }
 }
