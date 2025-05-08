@@ -47,4 +47,9 @@ class DashboardAdminController extends Controller
             'training' => $training
         ]);
     }
+    public function showNotifications()
+    {
+        $notifications = Auth::user()->notifications; // atau ->unreadNotifications jika hanya yang belum dibaca
+        return view('dashboard.admin.notifications', compact('notifications'));
+    }
 }

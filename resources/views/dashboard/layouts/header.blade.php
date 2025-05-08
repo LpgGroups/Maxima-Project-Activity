@@ -7,8 +7,7 @@
 
             <!-- Notifikasi -->
             <div class="relative">
-                <button id="notifBtn" type="button"
-                    class="mt-2 text-gray-700 dark:text-white hover:text-gray-900">
+                <button id="notifBtn" type="button" class="mt-2 text-gray-700 dark:text-white hover:text-gray-900">
                     <!-- Icon Bell -->
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
                         xmlns="http://www.w3.org/2000/svg">
@@ -20,7 +19,7 @@
                     <!-- Badge jumlah notifikasi -->
                     <span
                         class="absolute -top-1 -right-1 inline-flex items-center justify-center w-4 h-4 text-xs font-bold text-white bg-red-600 rounded-full">
-                        3
+                        {{ $notificationCount }}
                     </span>
                 </button>
 
@@ -31,16 +30,18 @@
                         class="px-4 py-3 text-sm font-semibold text-gray-700 dark:text-white border-b dark:border-gray-700">
                         Notifikasi
                     </div>
-                    {{-- @isset($dropdownNotifications)
+                    @isset($dropdownNotifications)
                         <ul
                             class="max-h-60 overflow-y-auto text-sm text-gray-600 dark:text-gray-300 divide-y divide-gray-200 dark:divide-gray-700">
                             @forelse ($dropdownNotifications as $notif)
-                                <li>🔔 {{ $notif->training->activity }}</li>
+                                <li class="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                    🔔 {{ $notif->data['message'] ?? 'Notifikasi baru' }}
+                                </li>
                             @empty
-                                <li>Tidak ada notifikasi baru.</li>
+                                <li class="px-4 py-2">Tidak ada notifikasi baru.</li>
                             @endforelse
                         </ul>
-                    @endisset --}}
+                    @endisset
                     <div class="px-4 py-2 text-sm text-center text-indigo-600 hover:underline dark:text-indigo-400">
                         <a href="#">Lihat semua notifikasi</a>
                     </div>

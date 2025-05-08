@@ -5,7 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Auth;
-use App\Models\TrainingNotification;
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -20,24 +20,21 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      */
-    public function boot(): void
+    public function boot()
     {
-        // View::composer('*', function ($view) {
-        //     if (Auth::check()) {
-        //         $notifications = TrainingNotification::with('training')
-        //             ->where('user_id', Auth::id())
-        //             ->where(function ($q) {
-        //                 $q->whereNull('viewed_at')
-        //                     ->orWhereHas('training', function ($query) {
-        //                         $query->whereColumn('updated_at', '>', 'training_notifications.viewed_at');
-        //                     });
-        //             })
-        //             ->latest()
-        //             ->take(5)
-        //             ->get();
+        View::composer('*', function ($view) {
+            if (Auth::check() && Auth::user()->role === 'admin') {
+                $notifications = Auth::user()->unreadNotifications()->take(5)->get();
+                $notificationCount = $notifications->count();
+            } else {
+                $notifications = collect();
+                $notificationCount = 0;
+            }
 
-        //         $view->with('dropdownNotifications', $notifications);
-        //     }
-        // });
+            $view->with([
+                'dropdownNotifications' => $notifications,
+                'notificationCount' => $notificationCount
+            ]);
+        });
     }
 }
