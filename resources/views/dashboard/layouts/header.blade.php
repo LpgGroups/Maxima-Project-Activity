@@ -33,16 +33,15 @@
                     @isset($dropdownNotifications)
                         <ul
                             class="max-h-60 overflow-y-auto text-sm text-gray-600 dark:text-gray-300 divide-y divide-gray-200 dark:divide-gray-700">
-                            @forelse ($dropdownNotifications as $notif)
-                                <li class="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">
+                            @foreach ($dropdownNotifications as $notif)
+                                <li
+                                    class="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 {{ $notif->read_at ? 'bg-gray-200 dark:bg-gray-800' : '' }}">
                                     <a href="{{ route('dashboard.admin.training.show', $notif->data['training_id']) }}"
                                         class="block text-sm">
                                         🔔 {{ $notif->data['message'] ?? 'Notifikasi baru' }}
                                     </a>
                                 </li>
-                            @empty
-                                <li class="px-4 py-2">Tidak ada notifikasi baru.</li>
-                            @endforelse
+                            @endforeach
                         </ul>
                     @endisset
                     <div class="px-4 py-2 text-sm text-center text-indigo-600 hover:underline dark:text-indigo-400">

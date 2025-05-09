@@ -27,7 +27,7 @@ class DashboardAdminController extends Controller
             'title' => 'Dashboard Admin',
             'trainingAll' => $trainingAll,
             'totalTraining' => $totalTraining,
-            'admin' => $admin, // opsional kalau mau pakai di blade
+            'admin' => $admin,
         ]);
     }
     public function show($id)
@@ -41,6 +41,15 @@ class DashboardAdminController extends Controller
             ['user_id' => $userId, 'reg_training_id' => $training->id],
             ['viewed_at' => now()]
         );
+
+        $notification = Auth::user()->unreadNotifications
+            ->where('data.training_id', $training->id)
+            ->first();
+
+
+        if ($notification) {
+            $notification->markAsRead();
+        }
 
         return view('dashboard.admin.cektraining.showtraining', [
             'title' => 'Detail Pelatihan',
