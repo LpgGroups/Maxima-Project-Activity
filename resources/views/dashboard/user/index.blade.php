@@ -38,20 +38,61 @@
                                         {{ $training->activity }}
 
                                         @php
-                                            $notif = $training->trainingNotifications
+                                            $notification = $training->trainingNotifications
                                                 ->where('user_id', auth()->id())
                                                 ->first();
-                                            $isNew = !$notif || !$notif->viewed_at;
+                                            $isNew = !$notification || !$notification->viewed_at;
+
+                                            // Jika bukan new, cek apakah ada update setelah dilihat
+                                            $isUpdated = false;
+                                            if (
+                                                $notification &&
+                                                $notification->viewed_at &&
+                                                $training->updated_at > $notification->viewed_at
+                                            ) {
+                                                $isUpdated = true;
+                                            }
                                         @endphp
 
                                         @if ($isNew)
-                                            <span
-                                                class="ml-2 text-red-600 font-semibold text-xs bg-red-100 px-2 py-0.5 rounded-full">NEW</span>
+                                            <img src="/img/gif/new.gif" alt="New" class="w-5 h-3 -mt-3 inline-block">
+                                        @elseif ($isUpdated)
+                                            <img src="/img/gif/update.gif" alt="Updated"
+                                                class="w-5 h-3 -mt-3 inline-block">
                                         @endif
                                     </td>
 
                                     <td>Aktif</td>
-                                    <td>{{ \Carbon\Carbon::parse($training->date)->locale('id')->translatedFormat('d F Y') }}
+                                    <td>
+                                        @php
+                                            $start = \Carbon\Carbon::parse($training->date)->locale('id');
+                                            $end = \Carbon\Carbon::parse($training->date_end)->locale('id');
+
+                                            if ($start->year != $end->year) {
+                                                // Beda tahun: tampilkan full untuk keduanya
+                                                $date =
+                                                    $start->translatedFormat('d F Y') .
+                                                    ' - ' .
+                                                    $end->translatedFormat('d F Y');
+                                            } else {
+                                                // Tahun sama
+                                                if ($start->month == $end->month) {
+                                                    // Bulan sama → 12 - 15 Mei 2025
+                                                    $date =
+                                                        $start->translatedFormat('d F') .
+                                                        ' - ' .
+                                                        $end->translatedFormat('d F Y');
+                                                } else {
+                                                    // Bulan beda → 30 Mei - 1 Juni 2025
+                                                    $date =
+                                                        $start->translatedFormat('d F') .
+                                                        ' - ' .
+                                                        $end->translatedFormat('d F Y');
+                                                }
+                                            }
+                                        @endphp
+
+                                        {{ $date }}
                                     </td>
                                     <td>
                                         @php

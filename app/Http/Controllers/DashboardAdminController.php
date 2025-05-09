@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use App\Models\RegTraining;
 use App\Models\TrainingNotification;
@@ -14,20 +15,16 @@ class DashboardAdminController extends Controller
 {
     public function index()
     {
-        $admin = Auth::user(); // Admin yang login
+        $admin = Auth::user();
 
-        // Mengubah eager loading untuk menggunakan 'trainingNotifications'
-        $trainingAll = RegTraining::with('trainingNotifications') // Ganti 'notification' jadi 'trainingNotifications'
-            ->latest()
-            ->get();
-
+        $trainingAll = RegTraining::with('trainingNotifications')->latest()->get();
         $totalTraining = RegTraining::count();
 
         return view('dashboard.admin.index', [
             'title' => 'Dashboard Admin',
             'trainingAll' => $trainingAll,
             'totalTraining' => $totalTraining,
-            'admin' => $admin, // opsional kalau mau pakai di blade
+            'admin' => $admin,
         ]);
     }
     public function show($id)
@@ -42,9 +39,24 @@ class DashboardAdminController extends Controller
             ['viewed_at' => now()]
         );
 
+        $notification = Auth::user()->unreadNotifications
+            ->where('data.training_id', $training->id)
+            ->first();
+
+
+        if ($notification) {
+            $notification->markAsRead();
+        }
+
         return view('dashboard.admin.cektraining.showtraining', [
             'title' => 'Detail Pelatihan',
             'training' => $training
         ]);
+    }
+    public function showDashboard()
+    {
+        $notifications = Auth::user()->unreadNotifications;
+
+        return view('dashboard.admin.index', compact('notifications'));
     }
 }

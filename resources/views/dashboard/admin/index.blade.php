@@ -22,6 +22,7 @@
                         <thead>
                             <tr class="bg-slate-600 lg:text-sm text-white text-[10px]">
                                 <th class="rounded-l-lg">No</th>
+                                <th>Pengguna</th>
                                 <th>Nama PIC</th>
                                 <th>Nama Perusahaan</th>
                                 <th>Nama Pelatihan</th>
@@ -35,6 +36,7 @@
                                 <tr onclick="window.location='{{ route('dashboard.admin.training.show', ['id' => $training->id]) }}'"
                                     class="odd:bg-white even:bg-gray-300 cursor-pointer hover:bg-red-500 hover:text-white leading-loose">
                                     <td>{{ $index + 1 }}</td>
+                                    <td>{{ $training->user->name ?? '-' }}</td>
                                     <td>{{ $training->name_pic }}</td>
                                     <td>
                                         {{ $training->name_company }}
@@ -59,11 +61,10 @@
                                         @endphp
 
                                         @if ($isNew)
-                                            <span
-                                                class="ml-2 text-red-600 font-semibold text-xs bg-red-100 px-2 py-0.5 rounded-full">NEW</span>
+                                            <img src="/img/gif/new.gif" alt="New" class="w-5 h-3 -mt-3 inline-block">
                                         @elseif ($isUpdated)
-                                            <span
-                                                class="ml-2 text-blue-600 font-semibold text-xs bg-blue-100 px-2 py-0.5 rounded-full">UPDATED</span>
+                                            <img src="/img/gif/update.gif" alt="Updated"
+                                                class="w-5 h-3 -mt-3 inline-block">
                                         @endif
                                     </td>
 
@@ -76,7 +77,7 @@
 
                                             if ($start->year != $end->year) {
                                                 // Beda tahun: tampilkan full untuk keduanya
-                                                $tanggal =
+                                                $date =
                                                     $start->translatedFormat('d F Y') .
                                                     ' - ' .
                                                     $end->translatedFormat('d F Y');
@@ -84,13 +85,13 @@
                                                 // Tahun sama
                                                 if ($start->month == $end->month) {
                                                     // Bulan sama → 12 - 15 Mei 2025
-                                                    $tanggal =
+                                                    $date =
                                                         $start->translatedFormat('d F') .
                                                         ' - ' .
                                                         $end->translatedFormat('d F Y');
                                                 } else {
                                                     // Bulan beda → 30 Mei - 1 Juni 2025
-                                                    $tanggal =
+                                                    $date =
                                                         $start->translatedFormat('d F') .
                                                         ' - ' .
                                                         $end->translatedFormat('d F Y');
@@ -98,7 +99,7 @@
                                             }
                                         @endphp
 
-                                        {{ $tanggal }}
+                                        {{ $date }}
                                     </td>
 
                                     </td>

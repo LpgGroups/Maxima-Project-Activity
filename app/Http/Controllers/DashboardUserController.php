@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Models\RegTraining;
+use App\Notifications\NewTrainingRegistered;
 use App\Models\User;
 
 class DashboardUserController extends Controller
@@ -75,6 +76,13 @@ class DashboardUserController extends Controller
             $booking->isprogress = max($booking->isprogress, $validated['isprogress']);
 
             $booking->save();
+            $booking->load('user');
+
+            $admins = User::where('role', 'admin')->get();
+
+            foreach ($admins as $admin) {
+                $admin->notify(new NewTrainingRegistered($booking));
+            }
 
             return response()->json([
                 'success' => true,
@@ -86,4 +94,6 @@ class DashboardUserController extends Controller
             return response()->json(['success' => false, 'message' => $e->getMessage()]);
         }
     }
+
+    public function showProfile() {}
 }
