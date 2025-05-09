@@ -75,7 +75,7 @@
 
                                             if ($start->year != $end->year) {
                                                 // Beda tahun: tampilkan full untuk keduanya
-                                                $tanggal =
+                                                $date =
                                                     $start->translatedFormat('d F Y') .
                                                     ' - ' .
                                                     $end->translatedFormat('d F Y');
@@ -83,13 +83,13 @@
                                                 // Tahun sama
                                                 if ($start->month == $end->month) {
                                                     // Bulan sama → 12 - 15 Mei 2025
-                                                    $tanggal =
+                                                    $date =
                                                         $start->translatedFormat('d F') .
                                                         ' - ' .
                                                         $end->translatedFormat('d F Y');
                                                 } else {
                                                     // Bulan beda → 30 Mei - 1 Juni 2025
-                                                    $tanggal =
+                                                    $date =
                                                         $start->translatedFormat('d F') .
                                                         ' - ' .
                                                         $end->translatedFormat('d F Y');
@@ -97,7 +97,7 @@
                                             }
                                         @endphp
 
-                                        {{ $tanggal }}
+                                        {{ $date }}
                                     </td>
 
                                     </td>

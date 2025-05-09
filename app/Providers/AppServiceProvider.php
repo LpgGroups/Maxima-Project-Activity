@@ -22,21 +22,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        // View::composer('*', function ($view) {
-
-        //     if (Auth::check() && Auth::user()->role === 'admin') {
-        //         $notifications = Auth::user()->unreadNotifications()->take(5)->get(); // ✅
-        //         $notificationCount = $notifications->count();
-        //     } else {
-        //         $notifications = collect();
-        //         $notificationCount = 0;
-        //     }
-
-        //     $view->with([
-        //         'dropdownNotifications' => $notifications,
-        //         'notificationCount' => $notificationCount
-        //     ]);
-        // });
         View::composer('*', function ($view) {
             if (Auth::check()) {
                 $view->with('dropdownNotifications', Auth::user()->unreadNotifications);

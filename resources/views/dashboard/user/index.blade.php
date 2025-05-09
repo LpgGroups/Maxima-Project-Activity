@@ -63,7 +63,36 @@
                                     </td>
 
                                     <td>Aktif</td>
-                                    <td>{{ \Carbon\Carbon::parse($training->date)->locale('id')->translatedFormat('d F Y') }}
+                                    <td>
+                                        @php
+                                            $start = \Carbon\Carbon::parse($training->date)->locale('id');
+                                            $end = \Carbon\Carbon::parse($training->date_end)->locale('id');
+
+                                            if ($start->year != $end->year) {
+                                                // Beda tahun: tampilkan full untuk keduanya
+                                                $date =
+                                                    $start->translatedFormat('d F Y') .
+                                                    ' - ' .
+                                                    $end->translatedFormat('d F Y');
+                                            } else {
+                                                // Tahun sama
+                                                if ($start->month == $end->month) {
+                                                    // Bulan sama → 12 - 15 Mei 2025
+                                                    $date =
+                                                        $start->translatedFormat('d F') .
+                                                        ' - ' .
+                                                        $end->translatedFormat('d F Y');
+                                                } else {
+                                                    // Bulan beda → 30 Mei - 1 Juni 2025
+                                                    $date =
+                                                        $start->translatedFormat('d F') .
+                                                        ' - ' .
+                                                        $end->translatedFormat('d F Y');
+                                                }
+                                            }
+                                        @endphp
+
+                                        {{ $date }}
                                     </td>
                                     <td>
                                         @php
