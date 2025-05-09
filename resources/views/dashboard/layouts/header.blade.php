@@ -1,8 +1,6 @@
 <nav class="h-14 bg-[#EBEAFF] border-b-2 border-[#CAC9FF]">
     <div class="max-w-screen-xl flex items-center justify-between mx-auto p-4">
-        <!-- Konten kiri navbar (opsional) -->
 
-        <!-- Konten kanan: notifikasi & profil -->
         <div class="flex items-center space-x-4 ml-auto">
 
             <!-- Notifikasi -->
@@ -17,10 +15,16 @@
                     </svg>
 
                     <!-- Badge jumlah notifikasi -->
-                    <span
-                        class="absolute -top-1 -right-1 inline-flex items-center justify-center w-4 h-4 text-xs font-bold text-white bg-red-600 rounded-full">
-                        {{ $dropdownNotifications->count() }}
-                    </span>
+                    @php
+                        $unreadCount = Auth::user()->unreadNotifications->count();
+                    @endphp
+
+                    @if ($unreadCount > 0)
+                        <span
+                            class="badge absolute -top-1 -right-1 inline-flex items-center justify-center w-4 h-4 text-xs font-bold text-white bg-red-600 rounded-full">
+                            {{ $unreadCount }}
+                        </span>
+                    @endif
                 </button>
 
                 <!-- Dropdown Notifikasi -->
@@ -31,19 +35,23 @@
                         Notifikasi
                     </div>
                     @isset($dropdownNotifications)
-                        <ul
-                            class="max-h-60 overflow-y-auto text-sm text-gray-600 dark:text-gray-300 divide-y divide-gray-200 dark:divide-gray-700">
-                            @foreach ($dropdownNotifications as $notif)
-                                <li
-                                    class="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 {{ $notif->read_at ? 'bg-gray-200 dark:bg-gray-800' : '' }}">
-                                    <a href="{{ route('dashboard.admin.training.show', $notif->data['training_id']) }}"
-                                        class="block text-sm">
-                                        🔔 {{ $notif->data['message'] ?? 'Notifikasi baru' }}
-                                    </a>
-                                </li>
-                            @endforeach
-                        </ul>
+                        <div class="max-h-60 overflow-y-auto">
+                            <ul>
+                                @foreach ($dropdownNotifications->take(5) as $notif)
+                                    <li class="border-b border-gray-200 dark:border-gray-700">
+                                        <a href="{{ route('dashboard.admin.training.show', $notif->data['training_id']) }}"
+                                            class="{{ $notif->read_at ? 'text-gray-400 font-normal text-[14px]' : 'text-black font-bold dark:text-white text-[14px]' }} block px-4 py-2">
+                                            🔔 {{ $notif->data['message'] ?? 'Notifikasi baru' }}
+                                            <span class="block text-xs text-gray-500 dark:text-gray-400">
+                                                {{ \Carbon\Carbon::parse($notif->created_at)->diffForHumans() }}
+                                            </span>
+                                        </a>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
                     @endisset
+
                     <div class="px-4 py-2 text-sm text-center text-indigo-600 hover:underline dark:text-indigo-400">
                         <a href="#">Lihat semua notifikasi</a>
                     </div>

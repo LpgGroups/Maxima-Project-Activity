@@ -22,6 +22,7 @@
                         <thead>
                             <tr class="bg-slate-600 lg:text-sm text-white text-[10px]">
                                 <th class="rounded-l-lg">No</th>
+                                <th>Pengguna</th>
                                 <th>Nama PIC</th>
                                 <th>Nama Perusahaan</th>
                                 <th>Nama Pelatihan</th>
@@ -35,6 +36,7 @@
                                 <tr onclick="window.location='{{ route('dashboard.admin.training.show', ['id' => $training->id]) }}'"
                                     class="odd:bg-white even:bg-gray-300 cursor-pointer hover:bg-red-500 hover:text-white leading-loose">
                                     <td>{{ $index + 1 }}</td>
+                                    <td>{{ $training->user->name ?? '-' }}</td>
                                     <td>{{ $training->name_pic }}</td>
                                     <td>
                                         {{ $training->name_company }}

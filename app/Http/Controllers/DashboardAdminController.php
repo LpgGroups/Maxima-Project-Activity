@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use App\Models\RegTraining;
 use App\Models\TrainingNotification;
@@ -14,13 +15,9 @@ class DashboardAdminController extends Controller
 {
     public function index()
     {
-        $admin = Auth::user(); // Admin yang login
+        $admin = Auth::user();
 
-        // Mengubah eager loading untuk menggunakan 'trainingNotifications'
-        $trainingAll = RegTraining::with('trainingNotifications') // Ganti 'notification' jadi 'trainingNotifications'
-            ->latest()
-            ->get();
-
+        $trainingAll = RegTraining::with('trainingNotifications')->latest()->get();
         $totalTraining = RegTraining::count();
 
         return view('dashboard.admin.index', [
