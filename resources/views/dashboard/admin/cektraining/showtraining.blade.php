@@ -91,7 +91,13 @@
                         class="absolute text-base rounded-lg bg-[#ffffff] text-[#515151] transition-all duration-300 transform -translate-y-4 scale-75 top-3 left-2.5 ml-2 z-10 origin-[0] peer-focus:text-[#1E6E9E] peer-focus:scale-75 peer-focus:-translate-y-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0">
                         Tanggal Kegiatan
                     </label>
+                    <div class="flex items-center gap-2 mt-1">
+                        <p class="text-sm font-medium text-red-600 text-[10px]">Selesai Pada:</p>
+                        <input type="text" id="end_date" name="end_date" readonly
+                            class="border border-gray-300 rounded-md px-3 py-2 text-sm w-28 bg-gray-100 text-gray-700" />
+                    </div>
                 </div>
+
             </div>
             <label class="block mt-2 mb-2 text-sm font-medium text-gray-900">Tempat Pelatihan:</label>
             <div class="flex min-h-5">
@@ -112,11 +118,25 @@
                     </div>
                 </div>
             </div>
-            <button id="submitBtn" class="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+
+            <div class="mt-4 flex items-center gap-2">
+                <input type="checkbox" id="confirmEdit"
+                    class="h-5 w-5 appearance-none border-2 border-gray-400 rounded-sm checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200" />
+                <label for="confirmEdit" class="text-sm text-gray-700">
+                    Saya yakin data yang diubah sudah benar
+                </label>
+            </div>
+
+            <button id="submitBtn" disabled
+                class="mt-4 px-4 py-2 bg-gray-400 text-white rounded-md cursor-not-allowed transition disabled:opacity-50">
                 Update Data
             </button>
         </form>
     </div>
+
+
+     <div class="p-4 border border-t-0 border-gray-300 bg-white rounded-lg mt-4">
+     </div>
 
     @push('scripts')
         @vite('resources/js/edittrainingadmin.js')
