@@ -53,6 +53,34 @@ class DashboardAdminController extends Controller
             'training' => $training
         ]);
     }
+
+    public function update(Request $request, $id)
+    {
+        $training = RegTraining::findOrFail($id);
+
+        // Validasi dan update data
+        $validated = $request->validate([
+            'name_pic' => 'required|string',
+            'name_company' => 'required|string',
+            'email_pic' => 'required|email',
+            'phone_pic' => 'required|string',
+            'activity' => 'required|string',
+            'date' => 'required|date',
+            'place' => 'required|string',
+        ]);
+
+        $training->update([
+            'name_pic' => $validated['name_pic'],
+            'name_company' => $validated['name_company'],
+            'email_pic' => $validated['email_pic'],
+            'phone_pic' => $validated['phone_pic'],
+            'activity' => $validated['activity'],
+            'date' => Carbon::parse($validated['date'])->format('Y-m-d'),
+            'place' => $validated['place'],
+        ]);
+
+        return response()->json(['message' => 'Data berhasil diperbarui.']);
+    }
     // public function showDashboard()
     // {
     //     $notifications = Auth::user()->unreadNotifications;

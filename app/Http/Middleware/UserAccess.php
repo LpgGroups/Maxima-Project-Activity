@@ -10,15 +10,15 @@ use Illuminate\Support\Facades\Session;
 
 class UserAccess
 {
-    
+
     /**
      * Handle an incoming request.
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next , $role): Response
+    public function handle(Request $request, Closure $next, $role): Response
     {
-        $timeout = 3600;
+        $timeout = 86400;
         if (Auth::check()) {
             $lastActivity = Session::get('lastActivityTime');
             $currentTime = time();

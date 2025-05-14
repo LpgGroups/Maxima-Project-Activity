@@ -10,10 +10,9 @@ export default defineConfig({
                 "resources/js/authentifikasi.js",
                 "resources/js/datepicker.js",
                 "resources/js/registertraining.js",
+                "resources/js/edittrainingadmin.js",
             ],
             refresh: true,
         }),
     ],
-
-
 });

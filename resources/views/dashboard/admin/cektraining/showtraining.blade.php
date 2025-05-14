@@ -5,7 +5,8 @@
         <p class="text-[15px]">Lengkapi data form ini untuk mengikuti pelatihan yang akan diselenggarakan oleh PT
             Maxima Aksara Jaya Utama, pastikan Anda mengisi form aplikasi pendaftaran dengan benar dan sesuai data
             yang valid.</p>
-        <form id="editFormbyAdmin" action="#" method="POST">
+        <form id="editFormbyAdmin" action="/dashboard/admin/training/{{ $training->id }}" method="POST"
+            data-training-id="{{ $training->id }}">
             @csrf
             <div class="flex gap-x-4">
                 <!-- Nama PIC Perusahaan -->
@@ -76,11 +77,17 @@
                 </div>
 
                 <div class="relative mt-4 w-64">
-                    <input id="date" name="date" type="date"
+                    @php
+                        use Carbon\Carbon;
+                        $formattedDate = old(
+                            'date',
+                            $training->date ? Carbon::parse($training->date)->format('Y-m-d') : '',
+                        );
+                    @endphp
+                    <input id="date" name="date" type="text"
+                        value="{{ \Carbon\Carbon::parse($training->date)->format('d-m-Y') }}"
                         class="peer block w-full appearance-none border border-[#515151] bg-transparent px-2.5 py-3 text-sm text-[#515151] rounded-md focus:border-[#1E6E9E] focus:outline-none focus:ring-1 focus:ring-[#1E6E9E] placeholder-transparent"
-                        placeholder="" required
-                        value="{{ old('date', isset($training->date) ? \Carbon\Carbon::parse($training->date)->format('Y-m-d') : '') }}" />
-                    <label for="date"
+                        placeholder="" required /> <label for="date"
                         class="absolute text-base rounded-lg bg-[#ffffff] text-[#515151] transition-all duration-300 transform -translate-y-4 scale-75 top-3 left-2.5 ml-2 z-10 origin-[0] peer-focus:text-[#1E6E9E] peer-focus:scale-75 peer-focus:-translate-y-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0">
                         Tanggal Kegiatan
                     </label>
@@ -99,12 +106,19 @@
                     <div class="flex items-center me-4">
                         <input id="green-radio" type="radio" value="Offline" name="colored-radio"
                             class="w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                            {{ $training->place == 'Online' ? 'checked' : '' }}>
+                            {{ $training->place == 'Offline' ? 'checked' : '' }}>
                         <label for="green-radio"
                             class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Offline</label>
                     </div>
                 </div>
             </div>
+            <button id="submitBtn" class="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                Update Data
+            </button>
         </form>
     </div>
+
+    @push('scripts')
+        @vite('resources/js/edittrainingadmin.js')
+    @endpush
 @endsection
