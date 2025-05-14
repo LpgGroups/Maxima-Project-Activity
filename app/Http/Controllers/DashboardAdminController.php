@@ -53,10 +53,10 @@ class DashboardAdminController extends Controller
             'training' => $training
         ]);
     }
-    public function showDashboard()
-    {
-        $notifications = Auth::user()->unreadNotifications;
+    // public function showDashboard()
+    // {
+    //     $notifications = Auth::user()->unreadNotifications;
 
-        return view('dashboard.admin.index', compact('notifications'));
-    }
+    //     return view('dashboard.admin.index', compact('notifications'));
+    // }
 }
