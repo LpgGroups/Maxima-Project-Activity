@@ -9,7 +9,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use App\Models\RegTraining;
 use App\Models\TrainingNotification;
-
+use Illuminate\Support\Facades\Log;
 
 
 class DashboardAdminController extends Controller
@@ -83,28 +83,43 @@ class DashboardAdminController extends Controller
         return response()->json(['message' => 'Data berhasil diperbarui.']);
     }
 
-    public function updateParticipants(Request $request)
+    public function updateForm2User(Request $request)
     {
-        // Validasi input jika perlu
         $validated = $request->validate([
+            'participants' => 'required|array',
             'participants.*.name' => 'required|string|max:255',
-            'participants.*.status' => 'required|integer',
+            'participants.*.status' => 'required|in:0,1,2',
             'participants.*.reason' => 'nullable|string|max:255',
         ]);
 
-        // Loop over each participant and update their data
+        // Proses update
         foreach ($request->participants as $id => $data) {
             $participant = RegParticipant::find($id);
             if ($participant) {
-                $participant->update([
-                    'name' => $data['name'],
-                    'status' => $data['status'],
-                    'reason' => $data['reason'],
-                ]);
+                $participant->update($data);
             }
         }
 
-        return back()->with('success', 'Data peserta berhasil diperbarui');
+        // ✅ Kembalikan JSON, bukan redirect atau view
+        return response()->json(['success' => true]);
+    }
+    public function addParticipant(Request $request)
+    {
+        Log::info('Data yang diterima:', $request->all());
+        $validated = $request->validate([
+            'form_id' => 'required|integer',
+            'name' => 'required|string|max:255',
+        ]);
+
+        // Proses penyimpanan peserta baru
+        $participant = new RegParticipant();
+        $participant->form_id = $validated['form_id'];
+        $participant->name = $validated['name'];
+        $participant->status = 1; // Status default
+        $participant->reason = null; // Alasan default
+        $participant->save();
+
+        return response()->json(['success' => true]);
     }
     // public function showDashboard()
     // {
