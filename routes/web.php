@@ -23,6 +23,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/dashboard/admin/training/{id}', [DashboardAdminController::class, 'show'])->name('dashboard.admin.training.show');
         // Rute untuk memperbarui data training menggunakan POST
         Route::post('/dashboard/admin/training/{id}/update', [DashboardAdminController::class, 'update'])->name('dashboard.training.update');
+        Route::post('/dashboard/admin/training/{id}/update2', [DashboardAdminController::class, 'updateFrom2'])->name('dashboard.training.update2');
+  Route::post('/update-participants', [DashboardAdminController::class, 'updateParticipants'])->name('updateParticipants');
     });
     Route::middleware([UserAccess::class . ':user'])->group(function () {
         // user

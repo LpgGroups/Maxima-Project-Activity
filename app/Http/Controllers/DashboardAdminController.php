@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\RegParticipant;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -80,6 +81,30 @@ class DashboardAdminController extends Controller
         ]);
 
         return response()->json(['message' => 'Data berhasil diperbarui.']);
+    }
+
+    public function updateParticipants(Request $request)
+    {
+        // Validasi input jika perlu
+        $validated = $request->validate([
+            'participants.*.name' => 'required|string|max:255',
+            'participants.*.status' => 'required|integer',
+            'participants.*.reason' => 'nullable|string|max:255',
+        ]);
+
+        // Loop over each participant and update their data
+        foreach ($request->participants as $id => $data) {
+            $participant = RegParticipant::find($id);
+            if ($participant) {
+                $participant->update([
+                    'name' => $data['name'],
+                    'status' => $data['status'],
+                    'reason' => $data['reason'],
+                ]);
+            }
+        }
+
+        return back()->with('success', 'Data peserta berhasil diperbarui');
     }
     // public function showDashboard()
     // {

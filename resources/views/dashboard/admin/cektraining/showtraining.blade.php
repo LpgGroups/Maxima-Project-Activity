@@ -157,32 +157,60 @@
             yang valid.</p>
 
         <div class="rounded-2xl p-2 w-full">
-            <table class="table-auto w-full text-center align-middle">
-                <thead>
-                    <tr class="bg-slate-600 text-white text-[8px] lg:text-sm">
-                        <th class="rounded-l-lg w-[10px]">No</th>
-                        <th class="w-[100px]">Peserta</th>
-                        <th class="w-[80px]">Status</th>
-                        <th class="rounded-r-lg w-[200px]">Informasi</th>
-                    </tr>
-                </thead>
-                <tbody class="text-[8px] lg:text-[12px]">
-                    @forelse ($training->participants as $index => $participant)
-                        <tr>
-                            <td class="w-[10px]">{{ $index + 1 }}</td>
-                            <td class="w-[100px]">{{ $participant->name }}</td>
-                            <td class="w-[80px]">
-                               </td>
-                            <td class="w-[200px]">{{ $participant->reason }}</td>
+            <button id="submitParticipation" class="mb-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                Tambah Peserta
+            </button>
+            <form action="{{ route('updateParticipants') }}" method="POST">
+                @csrf
+                <table class="table-auto w-full text-center align-middle">
+                    <thead>
+                        <tr class="bg-slate-600 text-white text-[8px] lg:text-sm">
+                            <th class="rounded-l-lg w-[10px]">No</th>
+                            <th class="w-[100px]">Peserta</th>
+                            <th class="w-[80px]">Status</th>
+                            <th class="">Catatan</th>
+                            <th class="rounded-r-lg w-[200px]">Action</th>
                         </tr>
-                    @empty
-                        <tr>
-                            <td colspan="4" class="text-center py-2">Tidak ada peserta</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody class="text-[8px] lg:text-[12px]">
+                        @forelse ($training->participants as $index => $participant)
+                            <tr>
+                                <td class="w-[10px]">{{ $index + 1 }}</td>
+                                <td class="w-[100px]">
+                                    <input type="text" name="participants[{{ $participant->id }}][name]"
+                                        value="{{ $participant->name }}" class="border px-2 py-1 rounded w-full">
+                                </td>
+                                <td class="w-[80px] flex items-center space-x-2">
+                                    <div class="dropdown relative inline-block w-48 text-[10px]">
+                                        <select name="participants[{{ $participant->id }}][status]"
+                                            class="w-28 px-4 py-2 bg-white border border-gray-300 rounded shadow-sm">
+                                            <option value="1" {{ $participant->status == 1 ? 'selected' : '' }}>
+                                                Waiting</option>
+                                            <option value="0" {{ $participant->status == 0 ? 'selected' : '' }}>
+                                                Rejected</option>
+                                            <option value="2" {{ $participant->status == 2 ? 'selected' : '' }}>
+                                                Success</option>
+                                        </select>
+                                    </div>
+                                </td>
+                                <td class="w-[200px]">
+                                    <input type="text" name="participants[{{ $participant->id }}][reason]"
+                                        value="{{ $participant->reason }}" class="border px-2 py-1 rounded w-full">
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="4" class="text-center py-2">Tidak ada peserta</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+                <button type="submit" class="mt-4 px-4 py-2 bg-green-400 text-white rounded-md">
+                    Update Data
+                </button>
+            </form>
         </div>
+
     </div>
 
     @push('scripts')
