@@ -168,9 +168,10 @@
                 <table class="table-auto w-full text-center align-middle">
                     <thead>
                         <tr class="bg-slate-600 text-white text-[8px] lg:text-sm">
-                            <th>No</th>
-                            <th>Peserta</th>
-                            <th>Status</th>
+                            <th class="w-[10px]">No</th>
+                            <th class="w-[200px]">Peserta</th>
+                            <th class="w-[120px]">Status</th>
+                            <th>Catatan</th>
                             <th>Catatan</th>
                         </tr>
                     </thead>
