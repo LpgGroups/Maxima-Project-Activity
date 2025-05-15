@@ -1,7 +1,7 @@
 @extends('dashboard.layouts.dashboardmain')
 @section('container')
     <div class="p-4 border border-t-0 border-gray-300 bg-white rounded-lg mt-6">
-        <h3 class="text-[24px] font-semibold">Daftar Pelatihan</h3>
+        <h1 class="text-[24px] font-semibold">Daftar Pelatihan</h1>
         <p class="text-[15px]">Lengkapi data form ini untuk mengikuti pelatihan yang akan diselenggarakan oleh PT
             Maxima Aksara Jaya Utama, pastikan Anda mengisi form aplikasi pendaftaran dengan benar dan sesuai data
             yang valid.</p>
@@ -67,11 +67,27 @@
 
             <div class="flex gap-x-4 mt-2">
                 <div class="relative mt-4 w-64">
-                    <input id="activity" name="activity" type="activity"
-                        class="peer block w-full appearance-none border border-[#515151] bg-transparent px-2.5 py-3 text-sm text-[#515151] rounded-md focus:border-[#1E6E9E] focus:outline-none focus:ring-1 focus:ring-[#1E6E9E] placeholder-transparent"
-                        placeholder="" required value="{{ old('activity', $training->activity ?? '') }}" />
+                    <select id="activity" name="activity"
+                        class="peer block w-full appearance-none border border-[#515151] bg-transparent px-2.5 py-3 text-sm text-[#515151] rounded-md focus:border-[#1E6E9E] focus:outline-none focus:ring-1 focus:ring-[#1E6E9E]"
+                        required>
+                        <option value="" disabled selected hidden></option>
+                        <option value="TKPK1"
+                            {{ old('activity', $training->activity ?? '') == 'TKPK1' ? 'selected' : '' }}>TKPK1</option>
+                        <option value="TKPK2"
+                            {{ old('activity', $training->activity ?? '') == 'TKPK2' ? 'selected' : '' }}>TKPK2</option>
+                        <option value="TKBT1"
+                            {{ old('activity', $training->activity ?? '') == 'TKBT1' ? 'selected' : '' }}>TKBT1</option>
+                        <option value="TKBT2"
+                            {{ old('activity', $training->activity ?? '') == 'TKBT2' ? 'selected' : '' }}>TKBT2</option>
+                        <option value="BE" {{ old('activity', $training->activity ?? '') == 'BE' ? 'selected' : '' }}>
+                            BE</option>
+                        <option value="AK3U"
+                            {{ old('activity', $training->activity ?? '') == 'AK3U' ? 'selected' : '' }}>
+                            AK3U</option>
+                    </select>
+
                     <label for="activity"
-                        class="absolute text-base rounded-lg bg-[#ffffff] text-[#515151] transition-all duration-300 transform -translate-y-4 scale-75 top-3 left-2.5 ml-2 z-10 origin-[0] peer-focus:text-[#1E6E9E] peer-focus:scale-75 peer-focus:-translate-y-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0">
+                        class="absolute text-base rounded-lg bg-[#ffffff] text-[#515151] transition-all duration-300 transform scale-75 -translate-y-4 top-3 left-2.5 ml-2 z-10 origin-[0] peer-focus:text-[#1E6E9E] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0">
                         Kegiatan
                     </label>
                 </div>
@@ -134,9 +150,69 @@
         </form>
     </div>
 
+    <div class="p-4 border border-t-0 border-gray-300 bg-white rounded-lg mt-4">
+        <h1 class="text-[24px] font-semibold">Peserta Terdaftar</h1>
+        <p class="text-[15px]">Lengkapi data form ini untuk mengikuti pelatihan yang akan diselenggarakan oleh PT
+            Maxima Aksara Jaya Utama, pastikan Anda mengisi form aplikasi pendaftaran dengan benar dan sesuai data
+            yang valid.</p>
 
-     <div class="p-4 border border-t-0 border-gray-300 bg-white rounded-lg mt-4">
-     </div>
+        <div class="rounded-2xl p-2 w-full">
+            <!-- Form untuk menambah peserta -->
+            <button id="submitParticipation" class="mb-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                Tambah Peserta
+            </button>
+
+            <!-- Form untuk update semua peserta -->
+            <form id="updateParticipantsForm" data-form-id="{{ $training->id }}">
+                @csrf
+                <table class="table-auto w-full text-center align-middle">
+                    <thead>
+                        <tr class="bg-slate-600 text-white text-[8px] lg:text-sm">
+                            <th class="w-[10px]">No</th>
+                            <th class="w-[200px]">Peserta</th>
+                            <th class="w-[120px]">Status</th>
+                            <th>Catatan</th>
+                            <th>Catatan</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($training->participants as $index => $participant)
+                            <tr>
+                                <td>{{ $index + 1 }}</td>
+                                <td>
+                                    <input type="text" name="participants[{{ $participant->id }}][name]"
+                                        value="{{ $participant->name }}" class="border px-2 py-1 rounded w-full">
+                                </td>
+                                <td>
+                                    <select name="participants[{{ $participant->id }}][status]"
+                                        class="px-4 py-1 border rounded w-full">
+                                        <option value="1" {{ $participant->status == 1 ? 'selected' : '' }}>Waiting
+                                        </option>
+                                        <option value="0" {{ $participant->status == 0 ? 'selected' : '' }}>Rejected
+                                        </option>
+                                        <option value="2" {{ $participant->status == 2 ? 'selected' : '' }}>Success
+                                        </option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="text" name="participants[{{ $participant->id }}][reason]"
+                                        value="{{ $participant->reason }}" class="border px-2 py-1 rounded w-full">
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+
+                <!-- Tombol Submit AJAX -->
+                <button type="button" id="submitParticipantBtn"
+                    class="mt-4 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
+                    Simpan Semua Peserta
+                </button>
+            </form>
+
+        </div>
+
+    </div>
 
     @push('scripts')
         @vite('resources/js/edittrainingadmin.js')

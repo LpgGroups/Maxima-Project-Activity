@@ -13,6 +13,7 @@ class RegParticipant extends Model
     protected $fillable = [
         'id',
         'name',
+        'status',
         'reason',
         'isprogress',
         'form_id',

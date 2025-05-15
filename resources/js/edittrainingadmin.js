@@ -16,6 +16,7 @@ function updateEndDate() {
         TKBT1: 4,
         TKBT2: 4,
         BE: 2,
+        AK3U: 12,
     };
 
     const startDateStr = dateInput.value;
@@ -105,6 +106,102 @@ function updateForm1User(event) {
         });
 }
 
+function updateForm2User() {
+    const form = document.getElementById("updateParticipantsForm");
+    const csrfToken = document.querySelector('input[name="_token"]').value;
+    const formData = new FormData(form);
+
+    fetch("/dashboard/admin/training/update-participant", {
+        method: "POST",
+        headers: {
+            "X-CSRF-TOKEN": csrfToken,
+            Accept: "application/json",
+            "X-Requested-With": "XMLHttpRequest",
+        },
+        body: formData,
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.success) {
+                alert("✅ Data peserta berhasil diperbarui!");
+            } else {
+                alert("❌ Gagal memperbarui data!");
+            }
+        })
+        .catch((error) => {
+            console.error("Error:", error);
+            alert("⚠️ Terjadi kesalahan, coba lagi.");
+        });
+}
+
+function addParticipants() {
+    $("#submitParticipation").on("click", function () {
+        // Menampilkan SweetAlert untuk memasukkan nama peserta
+        Swal.fire({
+            title: "Tambah Peserta Baru",
+            input: "text",
+            inputPlaceholder: "Nama Peserta",
+            showCancelButton: true,
+            confirmButtonText: "Tambah",
+            preConfirm: (name) => {
+                // Validasi input
+                if (!name) {
+                    Swal.showValidationMessage("Nama peserta wajib diisi!");
+                    return false;
+                }
+                return name;
+            },
+        }).then((result) => {
+            if (result.isConfirmed && result.value) {
+                const name = result.value;
+
+                // Mengambil form_id yang saat ini (misalnya bisa ditarik dari elemen form)
+                const form_id = $("#updateParticipantsForm").data("form-id");
+
+                // Mengirimkan data ke server via AJAX
+                fetch("/dashboard/admin/training/add-participant", {
+                    method: "POST",
+                    headers: {
+                        "X-CSRF-TOKEN": document.querySelector(
+                            'meta[name="csrf-token"]'
+                        ).content,
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        form_id: form_id,
+                        name: name,
+                    }),
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        if (data.success) {
+                            Swal.fire(
+                                "✅ Peserta berhasil ditambahkan!",
+                                "",
+                                "success"
+                            );
+                        } else {
+                            Swal.fire(
+                                "❌ Gagal menambahkan peserta!",
+                                "",
+                                "error"
+                            );
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("Error:", error);
+                        Swal.fire(
+                            "⚠️ Terjadi kesalahan, coba lagi.",
+                            "",
+                            "error"
+                        );
+                    });
+            }
+        });
+    });
+}
+
+
 // ============ INIT ================
 $(document).ready(function () {
     datePicker(); // Inisialisasi date picker
@@ -112,4 +209,6 @@ $(document).ready(function () {
     setupConfirmationCheckbox(); // Aktifkan/Nonaktifkan tombol submit
     $("#submitBtn").click(updateForm1User); // Tombol submit
     $("#activity").on("change", updateEndDate); // Update end date saat activity berubah
+    $("#submitParticipantBtn").on("click", updateForm2User);
+    addParticipants();
 });

@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\RegParticipant;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use App\Models\RegTraining;
 use App\Models\TrainingNotification;
-
+use Illuminate\Support\Facades\Log;
 
 
 class DashboardAdminController extends Controller
@@ -80,6 +81,45 @@ class DashboardAdminController extends Controller
         ]);
 
         return response()->json(['message' => 'Data berhasil diperbarui.']);
+    }
+
+    public function updateForm2User(Request $request)
+    {
+        $validated = $request->validate([
+            'participants' => 'required|array',
+            'participants.*.name' => 'required|string|max:255',
+            'participants.*.status' => 'required|in:0,1,2',
+            'participants.*.reason' => 'nullable|string|max:255',
+        ]);
+
+        // Proses update
+        foreach ($request->participants as $id => $data) {
+            $participant = RegParticipant::find($id);
+            if ($participant) {
+                $participant->update($data);
+            }
+        }
+
+        // ✅ Kembalikan JSON, bukan redirect atau view
+        return response()->json(['success' => true]);
+    }
+    public function addParticipant(Request $request)
+    {
+        Log::info('Data yang diterima:', $request->all());
+        $validated = $request->validate([
+            'form_id' => 'required|integer',
+            'name' => 'required|string|max:255',
+        ]);
+
+        // Proses penyimpanan peserta baru
+        $participant = new RegParticipant();
+        $participant->form_id = $validated['form_id'];
+        $participant->name = $validated['name'];
+        $participant->status = 1; // Status default
+        $participant->reason = null; // Alasan default
+        $participant->save();
+
+        return response()->json(['success' => true]);
     }
     // public function showDashboard()
     // {
