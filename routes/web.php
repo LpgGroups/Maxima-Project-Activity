@@ -6,6 +6,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Middleware\UserAccess;
 use App\Http\Controllers\DashboardUserController;
 use App\Http\Controllers\RegTrainingController;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 
 Route::get('/', [LoginController::class, 'index'])->name('login.index');
@@ -26,6 +27,16 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/dashboard/admin/training/{id}/update2', [DashboardAdminController::class, 'updateFrom2'])->name('dashboard.training.update2');
         Route::post('/dashboard/admin/training/update-participant', [DashboardAdminController::class, 'updateForm2User']);
         Route::post('/dashboard/admin/training/add-participant', [DashboardAdminController::class, 'addParticipant']);
+        Route::get('/download/file-mou/{id}', function ($id) {
+            $file = \App\Models\FileRequirement::findOrFail($id);
+
+            // Pastikan file_mou tidak kosong
+            if (!$file->file_mou || !Storage::disk('public')->exists($file->file_mou)) {
+                abort(404, 'File tidak ditemukan.');
+            }
+
+            return Storage::disk('public');
+        })->name('download.file.mou');
     });
     Route::middleware([UserAccess::class . ':user'])->group(function () {
         // user

@@ -15,4 +15,9 @@ class FileRequirement extends Model
         'file_quotation',
         'file_id',
     ];
+
+    public function training()
+    {
+        return $this->belongsTo(RegTraining::class, 'id');
+    }
 }
