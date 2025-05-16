@@ -201,8 +201,17 @@
                                             value="{{ $participant->reason ?? '' }}"
                                             class="border px-2 py-1 w-full bg-transparent">
                                     </td>
-                                    <td>
-                                        untuk delete
+                                    <td class="text-center">
+                                        <button type="button" onclick="deleteParticipant({{ $participant->id }})"
+                                            class="text-red-600 hover:text-red-800" title="Hapus Peserta">
+                                            <!-- Trash SVG -->
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block"
+                                                fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                                                stroke-width="2">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M6 18L18 6M6 6l12 12" />
+                                            </svg>
+                                        </button>
                                     </td>
                                 </tr>
                             @endforeach
