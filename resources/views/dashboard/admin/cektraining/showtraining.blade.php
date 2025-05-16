@@ -165,52 +165,89 @@
             <!-- Form untuk update semua peserta -->
             <form id="updateParticipantsForm" data-form-id="{{ $training->id }}">
                 @csrf
-                <table class="table-auto w-full text-center align-middle">
-                    <thead>
-                        <tr class="bg-slate-600 text-white text-[8px] lg:text-sm">
-                            <th class="w-[10px]">No</th>
-                            <th class="w-[200px]">Peserta</th>
-                            <th class="w-[120px]">Status</th>
-                            <th>Catatan</th>
-                            <th>Catatan</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($training->participants as $index => $participant)
-                            <tr>
-                                <td>{{ $index + 1 }}</td>
-                                <td>
-                                    <input type="text" name="participants[{{ $participant->id }}][name]"
-                                        value="{{ $participant->name }}" class="border px-2 py-1 rounded w-full">
-                                </td>
-                                <td>
-                                    <select name="participants[{{ $participant->id }}][status]"
-                                        class="px-4 py-1 border rounded w-full">
-                                        <option value="1" {{ $participant->status == 1 ? 'selected' : '' }}>Waiting
-                                        </option>
-                                        <option value="0" {{ $participant->status == 0 ? 'selected' : '' }}>Rejected
-                                        </option>
-                                        <option value="2" {{ $participant->status == 2 ? 'selected' : '' }}>Success
-                                        </option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <input type="text" name="participants[{{ $participant->id }}][reason]"
-                                        value="{{ $participant->reason }}" class="border px-2 py-1 rounded w-full">
-                                </td>
+                <div class="overflow-y-auto max-h-[300px] shadow-lg rounded-md border bg-white">
+                    <table class="table-auto w-full text-center align-middle">
+                        <thead>
+                            <tr class="bg-slate-600 text-white text-[10px] lg:text-sm">
+                                <th class="w-[24px]">No</th>
+                                <th class="w-[200px]">Peserta</th>
+                                <th class="w-[120px]">Status</th>
+                                <th>Catatan</th>
+                                <th>Catatan</th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach ($training->participants as $index => $participant)
+                                <tr class="odd:bg-red-400 even:bg-white text-[12px]">
+                                    <td>{{ $index + 1 }}</td>
+                                    <td>
+                                        <input type="text" name="participants[{{ $participant->id }}][name]"
+                                            value="{{ $participant->name }}"
+                                            class="border px-2 py-1 w-full bg-transparent">
+                                    </td>
+                                    <td>
+                                        <select name="participants[{{ $participant->id }}][status]"
+                                            class="px-4 py-1 w-full bg-transparent">
+                                            <option value="1" {{ $participant->status == 1 ? 'selected' : '' }}>
+                                                🔄Waiting</option>
+                                            <option value="0" {{ $participant->status == 0 ? 'selected' : '' }}>
+                                                ❌Rejected</option>
+                                            <option value="2" {{ $participant->status == 2 ? 'selected' : '' }}>
+                                                ✅Success</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input type="text" name="participants[{{ $participant->id }}][reason]"
+                                            value="{{ $participant->reason ?? '' }}"
+                                            class="border px-2 py-1 w-full bg-transparent">
+                                    </td>
+                                    <td>
+                                        untuk delete
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
 
-                <!-- Tombol Submit AJAX -->
-                <button type="button" id="submitParticipantBtn"
-                    class="mt-4 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
-                    Simpan Semua Peserta
-                </button>
             </form>
-
         </div>
+
+        <div class="mt-4">
+            <h2>PIC yang telah mendaftarkan pesertanya pada tabel diatas telah melampirkan link berkas file yang telah
+                diupload untuk ditinjau oleh admin.</h2>
+
+            <h1 class="mt-2">
+                <a href="{{ $training->link }}"
+                    class="text-blue-600 underline inline-flex items-center gap-2 max-w-xs truncate" target="_blank"
+                    title="{{ $training->link }}">
+
+                    <!-- Ikon SVG dari file lokal -->
+                    <img src="/img/svg/attachment.svg" alt="attachment" class="h-4 w-4 shrink-0">
+
+                    <!-- Teks link -->
+                    <span class="truncate">{{ $training->link }}</span>
+                </a>
+            </h1>
+        </div>
+        <div class="mt-4 flex items-center gap-2">
+            <input type="checkbox" id="confirmEdit2"
+                class="h-5 w-5 appearance-none border-2 border-gray-400 rounded-sm checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200" />
+            <label for="confirmEdit2" class="text-sm text-gray-700">
+                Saya yakin data yang diubah sudah benar
+            </label>
+        </div>
+        <button type="button" id="submitParticipantBtn"
+            class="mt-4 px-4 py-2 bg-gray-400 text-white rounded-md cursor-not-allowed transition disabled:opacity-50">
+            Simpan Semua Peserta
+        </button>
+    </div>
+
+    <div class="p-4 border border-t-0 border-gray-300 bg-white rounded-lg mt-4">
+        <h1 class="text-[24px] font-semibold">Upload persetujuan</h1>
+        <p class="text-[15px]">Lengkapi data form ini untuk mengikuti pelatihan yang akan diselenggarakan oleh PT
+            Maxima Aksara Jaya Utama, pastikan Anda mengisi form aplikasi pendaftaran dengan benar dan sesuai data
+            yang valid.</p>
 
     </div>
 

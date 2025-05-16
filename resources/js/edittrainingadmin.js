@@ -41,10 +41,13 @@ function updateEndDate() {
 function setupConfirmationCheckbox() {
     const checkbox = document.getElementById("confirmEdit");
     const submitBtn = document.getElementById("submitBtn");
-
+    const checkbox2 = document.getElementById("confirmEdit2");
+    const submitBtn2 = document.getElementById("submitParticipantBtn");
     // Set awal: disabled
     submitBtn.disabled = true;
     submitBtn.classList.add("bg-gray-400", "cursor-not-allowed");
+    submitBtn2.disabled = true;
+    submitBtn2.classList.add("bg-gray-400", "cursor-not-allowed");
 
     checkbox.addEventListener("change", function () {
         if (checkbox.checked) {
@@ -63,6 +66,25 @@ function setupConfirmationCheckbox() {
                 "cursor-pointer"
             );
             submitBtn.classList.add("bg-gray-400", "cursor-not-allowed");
+        }
+    });
+    checkbox2.addEventListener("change", function () {
+        if (checkbox2.checked) {
+            submitBtn2.disabled = false;
+            submitBtn2.classList.remove("bg-gray-400", "cursor-not-allowed");
+            submitBtn2.classList.add(
+                "bg-blue-600",
+                "hover:bg-blue-700",
+                "cursor-pointer"
+            );
+        } else {
+            submitBtn2.disabled = true;
+            submitBtn2.classList.remove(
+                "bg-blue-600",
+                "hover:bg-blue-700",
+                "cursor-pointer"
+            );
+            submitBtn2.classList.add("bg-gray-400", "cursor-not-allowed");
         }
     });
 }
@@ -201,12 +223,37 @@ function addParticipants() {
     });
 }
 
+function initParticipantStatusWatcher() {
+    // Cari semua select status peserta
+    const statusSelects = document.querySelectorAll(
+        "select[name^='participants'][name$='[status]']"
+    );
 
+    statusSelects.forEach((select) => {
+        select.addEventListener("change", function () {
+            const selectedValue = this.value;
+
+            // Cari elemen <tr> induk (baris) dari select ini
+            const row = this.closest("tr");
+
+            // Cari input reason dalam baris yang sama
+            const reasonInput = row.querySelector(
+                "input[name^='participants'][name$='[reason]']"
+            );
+
+            if (selectedValue === "2") {
+                // Jika status "Success", kosongkan reason
+                reasonInput.value = "";
+            }
+        });
+    });
+}
 // ============ INIT ================
 $(document).ready(function () {
     datePicker(); // Inisialisasi date picker
     updateEndDate(); // Hitung end date saat halaman dimuat
     setupConfirmationCheckbox(); // Aktifkan/Nonaktifkan tombol submit
+    initParticipantStatusWatcher();
     $("#submitBtn").click(updateForm1User); // Tombol submit
     $("#activity").on("change", updateEndDate); // Update end date saat activity berubah
     $("#submitParticipantBtn").on("click", updateForm2User);
