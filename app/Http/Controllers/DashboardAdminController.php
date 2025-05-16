@@ -103,6 +103,8 @@ class DashboardAdminController extends Controller
         // ✅ Kembalikan JSON, bukan redirect atau view
         return response()->json(['success' => true]);
     }
+
+    
     public function addParticipant(Request $request)
     {
         Log::info('Data yang diterima:', $request->all());
