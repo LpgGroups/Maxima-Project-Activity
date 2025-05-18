@@ -27,6 +27,8 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/dashboard/admin/training/{id}/update2', [DashboardAdminController::class, 'updateFrom2'])->name('dashboard.training.update2');
         Route::post('/dashboard/admin/training/update-participant', [DashboardAdminController::class, 'updateForm2User']);
         Route::post('/dashboard/admin/training/add-participant', [DashboardAdminController::class, 'addParticipant']);
+        Route::post('/dashboard/admin/training/finish/{id}', [DashboardAdminController::class, 'trainingFinish']);
+
         Route::get('/download/file-mou/{id}', function ($id) {
             $file = \App\Models\FileRequirement::findOrFail($id);
 
