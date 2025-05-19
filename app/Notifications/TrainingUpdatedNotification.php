@@ -14,14 +14,16 @@ class TrainingUpdatedNotification extends Notification
     use Queueable;
     protected $training;
     protected $triggeredBy;
+    protected $formName;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct(RegTraining $training, string $triggeredBy = 'user')
+    public function __construct(RegTraining $training, string $triggeredBy = 'user', string $formName = '')
     {
         $this->training = $training;
         $this->triggeredBy = $triggeredBy;
+        $this->formName = $formName;
     }
 
     /**
@@ -39,11 +41,16 @@ class TrainingUpdatedNotification extends Notification
      */
     public function toDatabase($notifiable)
     {
+
+        $userName = $this->training->user->name ?? 'User';
+        $activity = $this->training->activity ?? 'Training';
+
+        $formText = $this->formName ? " pada {$this->formName}" : '';
         if ($this->triggeredBy === 'user') {
             return [
                 'type' => 'update',
                 'title' => 'Training Diperbarui oleh User',
-                'message' => $this->training->user->name . ' telah memperbarui training ' . $this->training->activity,
+                'message' => "{$userName} telah memperbarui training {$activity} {$formText}",
                 'training_id' => $this->training->id,
                 'url' => route('dashboard.admin.training.show', $this->training->id),
             ];
@@ -51,9 +58,9 @@ class TrainingUpdatedNotification extends Notification
 
         return [
             'title' => 'Status Training Anda Telah Diubah',
-            'message' => 'Admin telah memperbarui status training ' . $this->training->activity,
+            'message' => "Admin telah memperbarui status training {$activity}{$formText}",
             'training_id' => $this->training->id,
-            'url' => route('user.training.status', $this->training->id), // ganti sesuai route kamu
+            'url' => route('dashboard.form', $this->training->id), // ganti sesuai route kamu
         ];
     }
     public function toArray(object $notifiable): array

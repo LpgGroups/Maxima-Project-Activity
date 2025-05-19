@@ -54,8 +54,18 @@ class RegTrainingController extends Controller
             'reg_training_id' => $training->id,
         ]);
 
+
         if (!$notification->viewed_at || $training->updated_at > $notification->viewed_at) {
             $notification->update(['viewed_at' => now()]);
+        }
+
+        $notifications = Auth::user()->unreadNotifications
+            ->where('data.training_id', $training->id)
+            ->first();
+
+        // Jika notifikasi ditemukan, tandai sebagai dibaca
+        if ($notifications) {
+            $notifications->markAsRead();
         }
         return view('dashboard.user.registertraining.formreg', [
             'title' => 'Form Register',
@@ -107,7 +117,7 @@ class RegTrainingController extends Controller
                 ]);
                 $admins = User::where('role', 'admin')->get();
                 foreach ($admins as $admin) {
-                    $admin->notify(new TrainingUpdatedNotification($trainingData, 'user'));
+                    $admin->notify(new TrainingUpdatedNotification($trainingData, 'user', 'Daftar Pelatihan'));
                 }
             } else {
                 // Simpan data baru jika belum ada
@@ -123,8 +133,7 @@ class RegTrainingController extends Controller
 
             return response()->json(['success' => true, 'message' => 'Data berhasil disimpan/diupdate!']);
         } catch (\Exception $e) {
-            // Log error jika terjadi masalah
-            Log::error("Error while saving/updating form: " . $e->getMessage());
+
             return response()->json(['success' => false, 'message' => 'Terjadi kesalahan, coba lagi.']);
         }
     }
@@ -169,7 +178,7 @@ class RegTrainingController extends Controller
         $training->touch();
         $admins = User::where('role', 'admin')->get();
         foreach ($admins as $admin) {
-            $admin->notify(new TrainingUpdatedNotification($training, 'user'));
+            $admin->notify(new TrainingUpdatedNotification($training, 'user', 'Peserta Terdaftar'));
         }
 
 
@@ -229,7 +238,7 @@ class RegTrainingController extends Controller
         $admins = User::where('role', 'admin')->get();
 
         foreach ($admins as $admin) {
-            $admin->notify(new TrainingUpdatedNotification($training, 'user'));
+            $admin->notify(new TrainingUpdatedNotification($training, 'user', 'Upload Persetujuan'));
         }
 
         return response()->json(['message' => 'File berhasil diperbarui!']);

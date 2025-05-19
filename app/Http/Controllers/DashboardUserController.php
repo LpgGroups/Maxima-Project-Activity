@@ -35,6 +35,7 @@ class DashboardUserController extends Controller
             'totalTrainings' => $totalTrainings,
             'totalParticipants' => $totalParticipants,
         ]);
+        
     }
 
     public function bookingDate(Request $request)
