@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use App\Models\RegTraining;
 use App\Models\TrainingNotification;
+use App\Models\User;
 use Illuminate\Support\Facades\Log;
 use App\Notifications\TrainingUpdatedNotification;
 use Illuminate\Support\Facades\Notification;
@@ -57,19 +58,11 @@ class DashboardAdminController extends Controller
         ]);
     }
 
-    public function trainingFinish(Request $request, $id)
-    {
-        $training = RegTraining::findOrFail($id);
-        $currentProgress = $training->isprogress;
-        $newProgress = $request->input('isprogress');
-        $training->update([
-            'isprogress' => max($currentProgress, $newProgress),
-        ]);
-        return response()->json(['message' => 'Progress berhasil diperbarui.']);
-    }
+
     public function update(Request $request, $id)
     {
-        $training = RegTraining::findOrFail($id);
+        // $training = RegTraining::findOrFail($id);
+        $training = RegTraining::where('id', $id)->firstOrFail();
 
         // Validasi dan update data
         $validated = $request->validate([
@@ -91,6 +84,12 @@ class DashboardAdminController extends Controller
             'date' => Carbon::parse($validated['date'])->format('Y-m-d'),
             'place' => $validated['place'],
         ]);
+
+        $users = User::where('role', 'user')->get();
+
+        foreach ($users as $user) {
+            $user->notify(new TrainingUpdatedNotification($training, 'admin', 'test'));
+        }
 
         return response()->json(['message' => 'Data berhasil diperbarui.']);
     }
@@ -116,6 +115,16 @@ class DashboardAdminController extends Controller
         return response()->json(['success' => true]);
     }
 
+    public function trainingFinish(Request $request, $id)
+    {
+        $training = RegTraining::findOrFail($id);
+        $currentProgress = $training->isprogress;
+        $newProgress = $request->input('isprogress');
+        $training->update([
+            'isprogress' => max($currentProgress, $newProgress),
+        ]);
+        return response()->json(['message' => 'Progress berhasil diperbarui.']);
+    }
 
     public function addParticipant(Request $request)
     {
