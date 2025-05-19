@@ -300,7 +300,17 @@
             </div>
         @endforelse
 
-
+        <div class="mt-4 flex items-center gap-2">
+            <input type="checkbox" id="confirmEdit3"
+                class="h-5 w-5 appearance-none border-2 border-gray-400 rounded-sm checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200" />
+            <label for="confirmEdit2" class="text-sm text-gray-700">
+                Saya yakin data yang diubah sudah benar
+            </label>
+        </div>
+        <button type="button" id="submitFinish" data-form-id="{{ $training->id }}"
+            class="mt-4 px-4 py-2 bg-gray-400 text-white rounded-md ">
+            Approve Pelatihan
+        </button>
 
     </div>
 

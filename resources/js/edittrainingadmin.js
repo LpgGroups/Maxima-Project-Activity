@@ -156,6 +156,31 @@ function updateForm2User() {
         });
 }
 
+function updateTrainingFinish(event) {
+    const id = event.target.dataset.formId; // ambil ID dari atribut data-id
+    console.log("ID Training:", id); // seharusnya keluar angka, misal: 123
+    const csrfToken = document.querySelector('input[name="_token"]').value;
+    const formData = new FormData();
+    formData.append("isprogress", 5);
+
+    fetch(`/dashboard/admin/training/finish/${id}`, {
+        method: "POST",
+        headers: {
+            "X-CSRF-TOKEN": csrfToken,
+            Accept: "application/json",
+            "X-Requested-With": "XMLHttpRequest",
+        },
+        body: formData,
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            console.log("Sukses:", data);
+        })
+        .catch((error) => {
+            console.error("Terjadi kesalahan:", error);
+        });
+}
+
 function addParticipants() {
     $("#submitParticipation").on("click", function () {
         // Menampilkan SweetAlert untuk memasukkan nama peserta
@@ -257,5 +282,6 @@ $(document).ready(function () {
     $("#submitBtn").click(updateForm1User); // Tombol submit
     $("#activity").on("change", updateEndDate); // Update end date saat activity berubah
     $("#submitParticipantBtn").on("click", updateForm2User);
+    $("#submitFinish").on("click", updateTrainingFinish);
     addParticipants();
 });

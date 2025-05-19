@@ -38,6 +38,7 @@ class NewTrainingRegistered extends Notification
     public function toDatabase($notifiable)
     {
         return [
+            'type' => 'new',
             'title' => 'Training Baru Telah Didaftarkan',
             'message' => $this->training->user->name . ' telah mendaftarkan training ' . $this->training->activity,
             'training_id' => $this->training->id,

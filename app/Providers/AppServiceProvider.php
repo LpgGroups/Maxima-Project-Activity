@@ -28,13 +28,16 @@ class AppServiceProvider extends ServiceProvider
 
         View::composer('*', function ($view) {
             if (Auth::check()) {
-                $dropdownNotifications = Auth::user()->notifications
+                $user = Auth::user();
+
+                // Ambil semua notifikasi terbaru (misal 5 hari terakhir atau unread)
+                $notifications = $user->notifications
                     ->sortByDesc('created_at')
                     ->filter(function ($notif) {
-                        return !$notif->read_at || $notif->read_at->gt(now()->subDays(5));
+                        return !$notif->read_at || $notif->created_at->gt(now()->subDays(5));
                     });
 
-                $view->with('dropdownNotifications', $dropdownNotifications);
+                $view->with('dropdownNotifications', $notifications);
             }
         });
     }
