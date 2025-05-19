@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Models\RegTraining;
 use App\Notifications\NewTrainingRegistered;
+use App\Notifications\TrainingUpdatedNotification;
 use App\Models\User;
 
 class DashboardUserController extends Controller

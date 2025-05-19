@@ -39,15 +39,28 @@
                             <ul>
                                 @foreach ($dropdownNotifications->take(5) as $notif)
                                     <li class="border-b border-gray-200 dark:border-gray-700">
-                                        <a href="{{ route('dashboard.admin.training.show', $notif->data['training_id']) }}"
+                                        <a href="{{ $notif->data['url'] ?? '#' }}"
                                             class="{{ $notif->read_at ? 'text-gray-400 font-normal text-[14px]' : 'text-black font-bold dark:text-white text-[14px]' }} block px-4 py-2">
-                                            🔔 {{ $notif->data['message'] ?? 'Notifikasi baru' }}
+
+                                            {{-- Ikon berbeda berdasarkan type --}}
+                                            @php
+                                                $icon = match ($notif->data['type'] ?? 'default') {
+                                                    'new' => '🔔',
+                                                    'update' => '✏️',
+                                                    'status-update' => '📋',
+                                                    default => '🔔',
+                                                };
+                                            @endphp
+                                            {{ $icon }} {{ $notif->data['message'] ?? 'Notifikasi baru' }}
+
                                             <span class="block text-xs text-gray-500 dark:text-gray-400">
+                                                {{ $notif->data['from'] ?? '' }}
                                                 {{ \Carbon\Carbon::parse($notif->created_at)->diffForHumans() }}
                                             </span>
                                         </a>
                                     </li>
                                 @endforeach
+
                             </ul>
                         </div>
                     @endisset

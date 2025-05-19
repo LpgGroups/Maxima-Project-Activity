@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\RegTraining;
 use App\Models\TrainingNotification;
 use Illuminate\Support\Facades\Log;
+use App\Notifications\TrainingUpdatedNotification;
+use Illuminate\Support\Facades\Notification;
 
 
 class DashboardAdminController extends Controller

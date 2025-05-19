@@ -12,7 +12,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
-
+use App\Models\User;
+use App\Notifications\TrainingUpdatedNotification;
 
 
 class RegTrainingController extends Controller
@@ -104,6 +105,10 @@ class RegTrainingController extends Controller
                     'phone_pic' => $request->input('phone_pic'),
                     'isprogress' => max($currentProgress, $newProgress),
                 ]);
+                $admins = User::where('role', 'admin')->get();
+                foreach ($admins as $admin) {
+                    $admin->notify(new TrainingUpdatedNotification($trainingData, 'user'));
+                }
             } else {
                 // Simpan data baru jika belum ada
                 RegTraining::create([
@@ -133,7 +138,8 @@ class RegTrainingController extends Controller
 
         $formId = $request->form_id;
 
-        $training = RegTraining::find($formId);
+        // $training = RegTraining::findOrFail($formId);
+        $training = RegTraining::where('id', $formId)->firstOrFail();
         if ($training) {
             $training->isprogress = max($training->isprogress, 3);
             $training->link = $request->link;
@@ -160,6 +166,11 @@ class RegTrainingController extends Controller
                 ]);
             }
         }
+        $training->touch();
+        $admins = User::where('role', 'admin')->get();
+        foreach ($admins as $admin) {
+            $admin->notify(new TrainingUpdatedNotification($training, 'user'));
+        }
 
 
         return response()->json(['message' => 'Data peserta berhasil ditambahkan']);
@@ -174,7 +185,7 @@ class RegTrainingController extends Controller
         ]);
 
         $record = FileRequirement::where('file_id', $request->file_id)->first();
-        $training = RegTraining::find($request->file_id); // ← ambil data untuk nama file
+        $training = RegTraining::where('id', $request->file_id)->firstOrFail(); // ← ambil data untuk nama file
 
         // Ganti dengan field yang sesuai dari DB kamu
         $nameCompany = Str::slug($training->name_company ?? 'Company', '_');
@@ -212,6 +223,13 @@ class RegTrainingController extends Controller
                 'file_mou' => $mouPath,
                 'file_quotation' => $quotationPath,
             ]);
+        }
+
+        $training->touch();
+        $admins = User::where('role', 'admin')->get();
+
+        foreach ($admins as $admin) {
+            $admin->notify(new TrainingUpdatedNotification($training, 'user'));
         }
 
         return response()->json(['message' => 'File berhasil diperbarui!']);
