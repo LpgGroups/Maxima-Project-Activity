@@ -179,7 +179,8 @@
                         </thead>
                         <tbody>
                             @foreach ($training->participants as $index => $participant)
-                                <tr class="odd:bg-[#d9f6fd] even:bg-white text-[12px]">
+                                <tr class="odd:bg-[#d9f6fd] even:bg-white text-[12px]"
+                                    data-participant-id="{{ $participant->id }}">
                                     <td>{{ $index + 1 }}</td>
                                     <td>
                                         <input type="text" name="participants[{{ $participant->id }}][name]"
@@ -203,8 +204,9 @@
                                             class="border px-2 py-1 w-full bg-transparent">
                                     </td>
                                     <td class="text-center">
-                                        <button type="button" class="text-red-600 hover:text-red-800"
-                                            title="Hapus Peserta" onclick="deleteParticipant({{ $participant->id }})">
+                                        <button type="button"
+                                            class="text-red-600 hover:text-red-800 deleteButtonParticipant"
+                                            data-id="{{ $participant->id }}" title="Hapus Peserta">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block"
                                                 fill="none" viewBox="0 0 24 24" stroke="currentColor"
                                                 stroke-width="2">

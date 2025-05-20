@@ -39,6 +39,8 @@ Route::middleware(['auth'])->group(function () {
 
             return Storage::disk('public');
         })->name('download.file.mou');
+
+        Route::delete('/dashboard/admin/training/delete-participant/{id}', [DashboardAdminController::class, 'destroyParticipant']);
     });
     Route::middleware([UserAccess::class . ':user'])->group(function () {
         // user

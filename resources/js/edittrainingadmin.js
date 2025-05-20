@@ -347,6 +347,63 @@ function initParticipantStatusWatcher() {
     });
 }
 
+function deleteParticipant(id) {
+    Swal.fire({
+        title: "Konfirmasi Penghapusan",
+        text: "Peserta yang dihapus tidak dapat dikembalikan. Anda yakin ingin melanjutkan?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "Ya, hapus!",
+        cancelButtonText: "Batal",
+        reverseButtons: true,
+    }).then((result) => {
+        if (result.isConfirmed) {
+            showLoadingSwal("Menghapus...", "Sedang menghapus data peserta.");
+
+            fetch(`/dashboard/admin/training/delete-participant/${id}`, {
+                method: "DELETE",
+                headers: {
+                    "X-CSRF-TOKEN": document.querySelector(
+                        'meta[name="csrf-token"]'
+                    ).content,
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                },
+            })
+                .then(async (response) => {
+                    const data = await response.json();
+                    Swal.close();
+
+                    if (response.ok && data.success) {
+                        showSuccessSwal(
+                            "Berhasil",
+                            data.message || "Peserta berhasil dihapus."
+                        );
+                        const row = document.querySelector(
+                            `[data-participant-id="${id}"]`
+                        );
+                        if (row) row.remove();
+                    } else {
+                        showErrorSwal(
+                            "Gagal",
+                            data.message || "Gagal menghapus peserta."
+                        );
+                    }
+                })
+                .catch((error) => {
+                    Swal.close();
+                    console.error("Error:", error);
+                    showErrorSwal(
+                        "Kesalahan",
+                        "Terjadi kesalahan saat menghapus peserta."
+                    );
+                });
+        }
+    });
+}
+
 function showLoadingSwal(
     title = "Memproses...",
     text = "Mohon tunggu sebentar!!",
@@ -409,5 +466,9 @@ $(document).ready(function () {
     $("#activity").on("change", updateEndDate); // Update end date saat activity berubah
     $("#submitParticipantBtn").on("click", updateForm2User);
     $("#submitFinish").on("click", updateTrainingFinish);
+    $(document).on("click", ".deleteButtonParticipant", function () {
+        const id = $(this).data("id");
+        deleteParticipant(id);
+    });
     addParticipants();
 });

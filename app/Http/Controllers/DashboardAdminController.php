@@ -203,7 +203,10 @@ class DashboardAdminController extends Controller
             ));
         }
 
-        return back()->with('success', 'Peserta berhasil dihapus.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Peserta berhasil dihapus.'
+        ]);
     }
 
     // public function showDashboard()
