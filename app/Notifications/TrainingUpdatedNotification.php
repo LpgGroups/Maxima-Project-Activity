@@ -15,15 +15,16 @@ class TrainingUpdatedNotification extends Notification
     protected $training;
     protected $triggeredBy;
     protected $formName;
+    protected $customMessage;
+    protected $customType;
 
-    /**
-     * Create a new notification instance.
-     */
-    public function __construct(RegTraining $training, string $triggeredBy = 'user', string $formName = '')
+    public function __construct(RegTraining $training, string $triggeredBy = 'user', string $formName = '', string $customMessage = '', string $customType = '')
     {
         $this->training = $training;
         $this->triggeredBy = $triggeredBy;
         $this->formName = $formName;
+        $this->customMessage = $customMessage;
+        $this->customType = $customType;
     }
 
     /**
@@ -56,6 +57,17 @@ class TrainingUpdatedNotification extends Notification
             ];
         }
 
+        if (!empty($this->customMessage)) {
+            return [
+                'type' => $this->customType ?: 'success',
+                'title' => 'Informasi Pelatihan',
+                'message' => $this->customMessage,
+                'training_id' => $this->training->id,
+                'url' => route('dashboard.form', $this->training->id),
+            ];
+        }
+
+        // Default message admin → user (jangan diubah)
         return [
             'title' => 'Status Training Anda Telah Diubah',
             'message' => "Admin telah memperbarui status training {$activity}{$formText}",
