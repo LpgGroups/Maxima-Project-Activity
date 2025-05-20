@@ -156,6 +156,7 @@
             Maxima Aksara Jaya Utama, pastikan Anda mengisi form aplikasi pendaftaran dengan benar dan sesuai data
             yang valid.</p>
 
+
         <div class="rounded-2xl p-2 w-full">
             <!-- Form untuk menambah peserta -->
             <button id="submitParticipation" class="mb-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
@@ -173,12 +174,12 @@
                                 <th class="w-[200px]">Peserta</th>
                                 <th class="w-[120px]">Status</th>
                                 <th>Catatan</th>
-                                <th>Catatan</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($training->participants as $index => $participant)
-                                <tr class="odd:bg-red-400 even:bg-white text-[12px]">
+                                <tr class="odd:bg-[#d9f6fd] even:bg-white text-[12px]">
                                     <td>{{ $index + 1 }}</td>
                                     <td>
                                         <input type="text" name="participants[{{ $participant->id }}][name]"

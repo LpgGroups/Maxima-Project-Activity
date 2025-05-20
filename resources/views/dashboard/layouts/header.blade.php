@@ -42,26 +42,37 @@
                                         <a href="{{ $notif->data['url'] ?? '#' }}"
                                             class="{{ $notif->read_at ? 'text-gray-400 font-normal text-[14px]' : 'text-black font-bold dark:text-white text-[14px]' }} block px-4 py-2">
 
-                                            {{-- Ikon berbeda berdasarkan type --}}
-                                            @php
-                                                $icon = match ($notif->data['type'] ?? 'default') {
-                                                    'new' => '🔔',
-                                                    'update' => '✏️',
-                                                    'status-update' => '📋',
-                                                    default => '🔔',
-                                                };
-                                            @endphp
-                                            {{ $icon }} {{ $notif->data['message'] ?? 'Notifikasi baru' }}
+                                            {{-- Flex container for icon and content --}}
+                                            <div class="flex items-start gap-3">
+                                                @php
+                                                    $icon = match ($notif->data['type'] ?? 'default') {
+                                                        'new' => '🔔',
+                                                        'update' => '✏️',
+                                                        'success' => '🎉',
+                                                        default => '🔔',
+                                                    };
+                                                @endphp
 
-                                            <span class="block text-xs text-gray-500 dark:text-gray-400">
-                                                {{ $notif->data['from'] ?? '' }}
-                                                {{ \Carbon\Carbon::parse($notif->created_at)->diffForHumans() }}
-                                            </span>
+                                                {{-- Icon --}}
+                                                <div class="text-xl flex-shrink-0">
+                                                    {{ $icon }}
+                                                </div>
+
+                                                {{-- Message and metadata --}}
+                                                <div class="flex flex-col">
+                                                    <span>{{ $notif->data['message'] ?? 'Notifikasi baru' }}</span>
+                                                    <span class="text-xs text-gray-500 dark:text-gray-400">
+                                                        {{ $notif->data['from'] ?? '' }}
+                                                        {{ \Carbon\Carbon::parse($notif->created_at)->diffForHumans() }}
+                                                    </span>
+                                                </div>
+                                            </div>
                                         </a>
                                     </li>
                                 @endforeach
 
                             </ul>
+
                         </div>
                     @endisset
 

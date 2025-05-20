@@ -88,7 +88,7 @@ class DashboardAdminController extends Controller
         $users = User::where('role', 'user')->get();
 
         foreach ($users as $user) {
-            $user->notify(new TrainingUpdatedNotification($training, 'admin', 'test'));
+            $user->notify(new TrainingUpdatedNotification($training, 'admin', 'Daftar Pelatihan'));
         }
 
         return response()->json(['message' => 'Data berhasil diperbarui.']);
@@ -111,21 +111,20 @@ class DashboardAdminController extends Controller
             }
         }
 
+        $participant = RegParticipant::find(array_key_first($request->participants));
+        if ($participant && $participant->training && $participant->training->user) {
+            $participant->training->user->notify(new TrainingUpdatedNotification(
+                $participant->training,
+                'admin',
+                'Daftar Peserta',
+                'Data Peserta telah kami perbarui cek kembali untuk kelengkapan dan kekurangannya' . $participant->training->activity,
+                'info'
+            ));
+        }
+
         // ✅ Kembalikan JSON, bukan redirect atau view
         return response()->json(['success' => true]);
     }
-
-    public function trainingFinish(Request $request, $id)
-    {
-        $training = RegTraining::findOrFail($id);
-        $currentProgress = $training->isprogress;
-        $newProgress = $request->input('isprogress');
-        $training->update([
-            'isprogress' => max($currentProgress, $newProgress),
-        ]);
-        return response()->json(['message' => 'Progress berhasil diperbarui.']);
-    }
-
     public function addParticipant(Request $request)
     {
         Log::info('Data yang diterima:', $request->all());
@@ -142,8 +141,45 @@ class DashboardAdminController extends Controller
         $participant->reason = null; // Alasan default
         $participant->save();
 
+        $training = $participant->training;
+        if ($training && $training->user) {
+            $training->user->notify(new TrainingUpdatedNotification(
+                $training,
+                'admin',
+                'Daftar Peserta',
+                'Admin telah menambahkan peserta baru ke pelatihan ' . $training->activity,
+                'info'
+            ));
+        }
+
         return response()->json(['success' => true]);
     }
+
+    public function trainingFinish(Request $request, $id)
+    {
+        $training = RegTraining::where('id', $id)->firstOrFail();
+        $currentProgress = $training->isprogress;
+        $newProgress = $request->input('isprogress');
+        $training->update([
+            'isprogress' => max($currentProgress, $newProgress),
+        ]);
+        $users = User::where('role', 'user')->get();
+        $activity = $training->activity; // Ambil nama pelatihan
+        $customMessage = "Selamat, Pelatihan {$activity} Telah Disetujui!";
+        foreach ($users as $user) {
+            $user->notify(new TrainingUpdatedNotification(
+                $training,
+                'admin',
+                'Daftar Pelatihan',
+                $customMessage,
+                'success'
+            ));
+        }
+
+        return response()->json(['message' => 'Progress berhasil diperbarui.']);
+    }
+
+
 
 
     // public function showDashboard()
