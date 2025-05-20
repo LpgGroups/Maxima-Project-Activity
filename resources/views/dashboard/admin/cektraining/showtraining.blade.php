@@ -203,9 +203,8 @@
                                             class="border px-2 py-1 w-full bg-transparent">
                                     </td>
                                     <td class="text-center">
-                                        <button type="button" onclick="deleteParticipant({{ $participant->id }})"
-                                            class="text-red-600 hover:text-red-800" title="Hapus Peserta">
-                                            <!-- Trash SVG -->
+                                        <button type="button" class="text-red-600 hover:text-red-800"
+                                            title="Hapus Peserta" onclick="deleteParticipant({{ $participant->id }})">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block"
                                                 fill="none" viewBox="0 0 24 24" stroke="currentColor"
                                                 stroke-width="2">
@@ -304,7 +303,7 @@
         <div class="mt-4 flex items-center gap-2">
             <input type="checkbox" id="confirmEdit3"
                 class="h-5 w-5 appearance-none border-2 border-gray-400 rounded-sm checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200" />
-            <label for="confirmEdit2" class="text-sm text-gray-700">
+            <label for="confirmEdit3" class="text-sm text-gray-700">
                 Saya yakin data yang diubah sudah benar
             </label>
         </div>

@@ -43,11 +43,15 @@ function setupConfirmationCheckbox() {
     const submitBtn = document.getElementById("submitBtn");
     const checkbox2 = document.getElementById("confirmEdit2");
     const submitBtn2 = document.getElementById("submitParticipantBtn");
+    const checkbox3 = document.getElementById("confirmEdit3");
+    const submitBtn3 = document.getElementById("submitFinish");
     // Set awal: disabled
     submitBtn.disabled = true;
     submitBtn.classList.add("bg-gray-400", "cursor-not-allowed");
     submitBtn2.disabled = true;
     submitBtn2.classList.add("bg-gray-400", "cursor-not-allowed");
+    submitBtn3.disabled = true;
+    submitBtn3.classList.add("bg-gray-400", "cursor-not-allowed");
 
     checkbox.addEventListener("change", function () {
         if (checkbox.checked) {
@@ -87,6 +91,25 @@ function setupConfirmationCheckbox() {
             submitBtn2.classList.add("bg-gray-400", "cursor-not-allowed");
         }
     });
+    checkbox3.addEventListener("change", function () {
+        if (checkbox3.checked) {
+            submitBtn3.disabled = false;
+            submitBtn3.classList.remove("bg-gray-400", "cursor-not-allowed");
+            submitBtn3.classList.add(
+                "bg-blue-600",
+                "hover:bg-blue-700",
+                "cursor-pointer"
+            );
+        } else {
+            submitBtn3.disabled = true;
+            submitBtn3.classList.remove(
+                "bg-blue-600",
+                "hover:bg-blue-700",
+                "cursor-pointer"
+            );
+            submitBtn3.classList.add("bg-gray-400", "cursor-not-allowed");
+        }
+    });
 }
 
 function updateForm1User(event) {
@@ -102,6 +125,8 @@ function updateForm1User(event) {
     const trainingId = form.dataset.trainingId;
     const csrfToken = document.querySelector('input[name="_token"]').value;
 
+    showLoadingSwal(); // Tampilkan loading Swal
+
     fetch(`/dashboard/admin/training/${trainingId}/update`, {
         method: "POST",
         headers: {
@@ -111,20 +136,25 @@ function updateForm1User(event) {
         },
         body: formData,
     })
-        .then((response) =>
-            response.ok
-                ? response.json()
-                : response.json().then((e) => Promise.reject(e))
-        )
-        .then((data) => {
-            alert(data.message || "Data berhasil diperbarui.");
-            location.reload(); // reload halaman
+        .then(async (response) => {
+            const data = await response.json();
+
+            Swal.close(); // Tutup loading Swal setelah dapat response
+
+            if (response.ok && data.success) {
+                showSuccessSwal(
+                    "Berhasil",
+                    "Data peserta berhasil diperbarui!"
+                );
+            } else {
+                const message = data.message || "Gagal memperbarui data.";
+                showErrorSwal("Gagal", message);
+            }
         })
         .catch((error) => {
-            const errorMsg = error?.errors
-                ? Object.values(error.errors).join("\n")
-                : "Terjadi kesalahan.";
-            alert(errorMsg);
+            Swal.close(); // Tutup loading meskipun error
+            console.error("Error:", error);
+            showErrorSwal("Kesalahan", "Terjadi kesalahan, coba lagi nanti.");
         });
 }
 
@@ -132,6 +162,8 @@ function updateForm2User() {
     const form = document.getElementById("updateParticipantsForm");
     const csrfToken = document.querySelector('input[name="_token"]').value;
     const formData = new FormData(form);
+
+    showLoadingSwal("Menyimpan...", "Mohon tunggu sebentar");
 
     fetch("/dashboard/admin/training/update-participant", {
         method: "POST",
@@ -142,43 +174,84 @@ function updateForm2User() {
         },
         body: formData,
     })
-        .then((response) => response.json())
-        .then((data) => {
-            if (data.success) {
-                alert("✅ Data peserta berhasil diperbarui!");
+        .then(async (response) => {
+            const data = await response.json();
+            Swal.close();
+
+            if (response.ok && data.success) {
+                showSuccessSwal(
+                    "Berhasil",
+                    data.message || "Data peserta berhasil diperbarui!"
+                );
             } else {
-                alert("❌ Gagal memperbarui data!");
+                showErrorSwal(
+                    "Gagal",
+                    data.message || "Gagal memperbarui data."
+                );
             }
         })
         .catch((error) => {
+            Swal.close();
             console.error("Error:", error);
-            alert("⚠️ Terjadi kesalahan, coba lagi.");
+            showErrorSwal("Kesalahan", "Terjadi kesalahan, coba lagi nanti.");
         });
 }
 
 function updateTrainingFinish(event) {
-    const id = event.target.dataset.formId; // ambil ID dari atribut data-id
-    console.log("ID Training:", id); // seharusnya keluar angka, misal: 123
+    const id = event.target.dataset.formId;
     const csrfToken = document.querySelector('input[name="_token"]').value;
-    const formData = new FormData();
-    formData.append("isprogress", 5);
 
-    fetch(`/dashboard/admin/training/finish/${id}`, {
-        method: "POST",
-        headers: {
-            "X-CSRF-TOKEN": csrfToken,
-            Accept: "application/json",
-            "X-Requested-With": "XMLHttpRequest",
-        },
-        body: formData,
-    })
-        .then((response) => response.json())
-        .then((data) => {
-            console.log("Sukses:", data);
-        })
-        .catch((error) => {
-            console.error("Terjadi kesalahan:", error);
-        });
+    Swal.fire({
+        title: "Konfirmasi Penyelesaian",
+        text: "Apakah Anda yakin data peserta dan pelatihan telah diperiksa dengan benar sebelum menyelesaikan pelatihan?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Ya, selesai",
+        cancelButtonText: "Batal",
+        reverseButtons: true,
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const formData = new FormData();
+            formData.append("isprogress", 5);
+
+            showLoadingSwal("Memproses", "Menyelesaikan pelatihan...");
+
+            fetch(`/dashboard/admin/training/finish/${id}`, {
+                method: "POST",
+                headers: {
+                    "X-CSRF-TOKEN": csrfToken,
+                    Accept: "application/json",
+                    "X-Requested-With": "XMLHttpRequest",
+                },
+                body: formData,
+            })
+                .then(async (response) => {
+                    const data = await response.json();
+                    Swal.close();
+
+                    if (response.ok && data.success) {
+                        showSuccessSwal(
+                            "Pelatihan Diselesaikan",
+                            data.message ||
+                                "Data pelatihan berhasil diselesaikan."
+                        );
+                    } else {
+                        showErrorSwal(
+                            "Gagal",
+                            data.message || "Gagal menyelesaikan pelatihan."
+                        );
+                    }
+                })
+                .catch((error) => {
+                    Swal.close();
+                    console.error("Terjadi kesalahan:", error);
+                    showErrorSwal(
+                        "Kesalahan",
+                        "Terjadi kesalahan saat memproses permintaan."
+                    );
+                });
+        }
+    });
 }
 
 function addParticipants() {
@@ -271,6 +344,59 @@ function initParticipantStatusWatcher() {
                 reasonInput.value = "";
             }
         });
+    });
+}
+
+function showLoadingSwal(
+    title = "Memproses...",
+    text = "Mohon tunggu sebentar!!",
+    duration = 10000
+) {
+    Swal.fire({
+        title: title,
+        text: text,
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading();
+        },
+        timer: duration,
+        showConfirmButton: false,
+    });
+}
+
+// Tampilkan notifikasi sukses
+function showSuccessSwal(title = "Berhasil", text = "Sukses") {
+    Swal.fire({
+        icon: "success",
+        title: title,
+        text: text,
+        confirmButtonText: "Oke",
+        timer: 10000,
+        timerProgressBar: true,
+        allowOutsideClick: false,
+        willClose: () => {
+            setTimeout(() => {
+                location.reload();
+            }, 200);
+        },
+    });
+}
+
+// Tampilkan notifikasi error
+function showErrorSwal(title = "Gagal", text = "Terjadi kesalahan.") {
+    Swal.fire({
+        icon: "error",
+        title: title,
+        text: text,
+    });
+}
+
+// Tampilkan notifikasi warning (optional)
+function showWarningSwal(title = "Peringatan", text = "Ada yang salah.") {
+    Swal.fire({
+        icon: "warning",
+        title: title,
+        text: text,
     });
 }
 // ============ INIT ================

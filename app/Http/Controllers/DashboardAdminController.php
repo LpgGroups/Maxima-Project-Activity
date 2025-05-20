@@ -85,13 +85,17 @@ class DashboardAdminController extends Controller
             'place' => $validated['place'],
         ]);
 
-        $users = User::where('role', 'user')->get();
 
-        foreach ($users as $user) {
-            $user->notify(new TrainingUpdatedNotification($training, 'admin', 'Daftar Pelatihan'));
+        $targetUser = $training->user;
+
+        if ($targetUser) {
+            $targetUser->notify(new TrainingUpdatedNotification($training, 'admin', 'Daftar Pelatihan'));
         }
 
-        return response()->json(['message' => 'Data berhasil diperbarui.']);
+        return response()->json([
+            'success' => true,
+            'message' => 'Data berhasil diperbarui.'
+        ]);
     }
 
     public function updateForm2User(Request $request)
@@ -103,26 +107,28 @@ class DashboardAdminController extends Controller
             'participants.*.reason' => 'nullable|string|max:255',
         ]);
 
-        // Proses update
-        foreach ($request->participants as $id => $data) {
+        // Update semua peserta yang diberikan
+        foreach ($validated['participants'] as $id => $data) {
             $participant = RegParticipant::find($id);
             if ($participant) {
                 $participant->update($data);
             }
         }
 
-        $participant = RegParticipant::find(array_key_first($request->participants));
-        if ($participant && $participant->training && $participant->training->user) {
-            $participant->training->user->notify(new TrainingUpdatedNotification(
-                $participant->training,
+        // Ambil salah satu peserta untuk ambil relasi training & user
+        $firstParticipant = RegParticipant::find(array_key_first($validated['participants']));
+        $training = $firstParticipant?->training;
+
+        if ($training && $training->user) {
+            $training->user->notify(new TrainingUpdatedNotification(
+                $training,
                 'admin',
                 'Daftar Peserta',
-                'Data Peserta telah kami perbarui cek kembali untuk kelengkapan dan kekurangannya' . $participant->training->activity,
+                'Data peserta pada pelatihan "' . $training->activity . '" telah diperbarui. Silakan cek kembali.',
                 'info'
             ));
         }
 
-        // ✅ Kembalikan JSON, bukan redirect atau view
         return response()->json(['success' => true]);
     }
     public function addParticipant(Request $request)
@@ -148,7 +154,7 @@ class DashboardAdminController extends Controller
                 'admin',
                 'Daftar Peserta',
                 'Admin telah menambahkan peserta baru ke pelatihan ' . $training->activity,
-                'info'
+                'update'
             ));
         }
 
@@ -176,11 +182,29 @@ class DashboardAdminController extends Controller
             ));
         }
 
-        return response()->json(['message' => 'Progress berhasil diperbarui.']);
+        return response()->json(['success' => true, 'message' => 'Progress berhasil diperbarui.']);
     }
 
+    public function destroyParticipant($id)
+    {
+        $participant = RegParticipant::findOrFail($id);
+        $training = $participant->training;
 
+        $participant->delete();
 
+        // Kirim notifikasi ke pemilik pelatihan
+        if ($training && $training->user) {
+            $training->user->notify(new TrainingUpdatedNotification(
+                $training,
+                'admin',
+                'Daftar Peserta',
+                'Satu peserta telah dihapus dari pelatihan "' . $training->activity . '".',
+                'update'
+            ));
+        }
+
+        return back()->with('success', 'Peserta berhasil dihapus.');
+    }
 
     // public function showDashboard()
     // {
