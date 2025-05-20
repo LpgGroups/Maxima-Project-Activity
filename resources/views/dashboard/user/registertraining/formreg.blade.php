@@ -19,7 +19,7 @@
     <div class="container mx-auto">
         <!-- Tab Navigation -->
         <div class="rounded-lg">
-            <ul class="flex border-b border-gray-300">
+            <ul class="flex flex-col sm:flex-row border-b border-gray-300">
                 <li class="flex-1">
                     <a href="#" id="tab1"
                         class="flex justify-center items-center gap-2 text-violet-400 py-2 px-4 bg-gray-400 rounded-tl-lg text-center">

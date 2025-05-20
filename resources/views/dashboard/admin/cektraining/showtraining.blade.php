@@ -2,9 +2,9 @@
 @section('container')
     <div class="p-4 border border-t-0 border-gray-300 bg-white rounded-lg mt-6">
         <h1 class="text-[24px] font-semibold">Daftar Pelatihan</h1>
-        <p class="text-[15px]">Lengkapi data form ini untuk mengikuti pelatihan yang akan diselenggarakan oleh PT
+        <h2 class="text-[15px]">Lengkapi data form ini untuk mengikuti pelatihan yang akan diselenggarakan oleh PT
             Maxima Aksara Jaya Utama, pastikan Anda mengisi form aplikasi pendaftaran dengan benar dan sesuai data
-            yang valid.</p>
+            yang valid.</h2>
         <form id="editFormbyAdmin" action="/dashboard/admin/training/{{ $training->id }}" method="POST"
             data-training-id="{{ $training->id }}">
             @csrf
@@ -138,8 +138,9 @@
             <div class="mt-4 flex items-center gap-2">
                 <input type="checkbox" id="confirmEdit"
                     class="h-5 w-5 appearance-none border-2 border-gray-400 rounded-sm checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200" />
-                <label for="confirmEdit" class="text-sm text-gray-700">
-                    Saya yakin data yang diubah sudah benar
+                <label for="confirmEdit" class="text-[12px] text-gray-700">
+                    Saya telah memverifikasi dan memastikan bahwa seluruh data yang diinput telah sesuai dengan informasi
+                    peserta yang valid. Jika terdapat perubahan, telah dilakukan berdasarkan konfirmasi dan bukti yang sah
                 </label>
             </div>
 
@@ -152,12 +153,9 @@
 
     <div class="p-4 border border-t-0 border-gray-300 bg-white rounded-lg mt-4">
         <h1 class="text-[24px] font-semibold">Peserta Terdaftar</h1>
-        <p class="text-[15px]">Lengkapi data form ini untuk mengikuti pelatihan yang akan diselenggarakan oleh PT
-            Maxima Aksara Jaya Utama, pastikan Anda mengisi form aplikasi pendaftaran dengan benar dan sesuai data
-            yang valid.</p>
-
-
-        <div class="rounded-2xl p-2 w-full">
+        <h2 class="text-[15px]">Sebelum menyimpan atau mengirim data pelatihan, pastikan hal-hal berikut telah diperiksa
+            dan sesuai dengan data peserta:</h2>
+        <div class="rounded-2xl p-2 w-full mt-4">
             <!-- Form untuk menambah peserta -->
             <button id="submitParticipation" class="mb-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
                 Tambah Peserta
@@ -178,7 +176,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($training->participants as $index => $participant)
+                            @forelse ($training->participants as $index => $participant)
                                 <tr class="odd:bg-[#d9f6fd] even:bg-white text-[12px]"
                                     data-participant-id="{{ $participant->id }}">
                                     <td>{{ $index + 1 }}</td>
@@ -216,7 +214,13 @@
                                         </button>
                                     </td>
                                 </tr>
-                            @endforeach
+                            @empty
+                                <tr>
+                                    <td colspan="5" class="text-center py-4 text-gray-500 italic">
+                                        Data peserta belum tersedia.
+                                    </td>
+                                </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>
@@ -244,8 +248,9 @@
         <div class="mt-4 flex items-center gap-2">
             <input type="checkbox" id="confirmEdit2"
                 class="h-5 w-5 appearance-none border-2 border-gray-400 rounded-sm checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200" />
-            <label for="confirmEdit2" class="text-sm text-gray-700">
-                Saya yakin data yang diubah sudah benar
+            <label for="confirmEdit2" class="text-[12px] text-gray-700">
+                Saya telah memverifikasi dan memastikan bahwa seluruh data yang diinput telah sesuai dengan informasi
+                peserta yang valid. Jika terdapat perubahan, telah dilakukan berdasarkan konfirmasi dan bukti yang sah
             </label>
         </div>
         <button type="button" id="submitParticipantBtn"
@@ -256,9 +261,9 @@
 
     <div class="p-4 border border-t-0 border-gray-300 bg-white rounded-lg mt-4">
         <h1 class="text-[24px] font-semibold">Upload persetujuan</h1>
-        <p class="text-[15px]">Lengkapi data form ini untuk mengikuti pelatihan yang akan diselenggarakan oleh PT
-            Maxima Aksara Jaya Utama, pastikan Anda mengisi form aplikasi pendaftaran dengan benar dan sesuai data
-            yang valid.</p>
+        <p class="text-[15px]">Pastikan bahwa dokumen MoU (Memorandum of Understanding) dan Quotation (Penawaran Harga)
+            dari client
+            diperiksa dengan cermat:</p>
 
         @forelse ($training->files as $file)
             {{-- File MOU --}}
