@@ -348,7 +348,7 @@
                             </form>
                         </div>
 
-                        <hr class="h-px mt-2 bg-gray-200 border-0 w-[600px]">
+                        <hr class="h-px mt-2 bg-gray-200 border-0 dark:bg-gray-700 w-[600px]">
 
                         <!-- Daftar Peserta -->
                         <div class="border border-gray-300 w-[600px] mt-4 rounded-lg p-2">
@@ -372,9 +372,57 @@
                                             <tr>
                                                 <td class="w-[10px]">{{ $index + 1 }}</td>
                                                 <td class="w-[100px]">{{ $participant->name }}</td>
-                                                <td class="w-[80px]">
-                                                    {{ $participant->isprogress ? 'Aktif' : 'Belum Aktif' }}</td>
-                                                <td class="w-[200px]">{{ $participant->reason }}</td>
+                                                @php
+                                                    $statusInfo = [
+                                                        0 => ['file' => 'rejected.svg', 'label' => 'Rejected'],
+                                                        1 => ['file' => 'waiting.svg', 'label' => 'Waiting'],
+                                                        2 => ['file' => 'success.svg', 'label' => 'Success'],
+                                                    ];
+                                                    $info = $statusInfo[$participant->status] ?? [
+                                                        'file' => 'unknown.svg',
+                                                        'label' => 'Unknown',
+                                                    ];
+                                                @endphp
+
+                                                <td class="w-[80px] text-center relative group">
+                                                    <img src="{{ asset('img/svg/' . $info['file']) }}"
+                                                        alt="{{ $info['label'] }}"
+                                                        class="w-4 h-4 mx-auto cursor-pointer">
+
+                                                    <div
+                                                        class="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10">
+                                                        {{ $info['label'] }}
+                                                    </div>
+                                                </td>
+                                                <td class="w-[200px]">
+                                                    @php
+                                                        $statusReasonMap = [
+                                                            1 => 'Dalam Pemeriksaan', // Waiting
+                                                            2 => 'Berhasil Terverifikasi', // Success
+                                                        ];
+
+                                                        // Tentukan apakah reason kosong
+                                                        $rawReason = $participant->reason;
+
+                                                        if (!empty($rawReason)) {
+                                                            // Ada reason dari user, tampilkan langsung
+                                                            $displayReason = e($rawReason);
+                                                        } else {
+                                                            // Tidak ada reason, ambil dari status
+                                                            $statusBasedReason =
+                                                                $statusReasonMap[$participant->status] ??
+                                                                'tidak ada catatan';
+
+                                                            // Tambahkan gaya pudar + miring
+                                                            $displayReason =
+                                                                '<span class="text-gray-400 italic">' .
+                                                                e($statusBasedReason) .
+                                                                '</span>';
+                                                        }
+                                                    @endphp
+
+                                                    {!! $displayReason !!}
+                                                </td>
                                             </tr>
                                         @empty
                                             <tr>

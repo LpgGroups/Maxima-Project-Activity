@@ -142,7 +142,7 @@ class RegTrainingController extends Controller
     {
         $request->validate([
             'form_id' => 'required|integer',
-            'link' => 'required|string',
+            
         ]);
 
         $formId = $request->form_id;
@@ -193,16 +193,18 @@ class RegTrainingController extends Controller
             'file_quotation' => 'nullable|file|mimes:pdf|max:2048',
         ]);
 
-        $record = FileRequirement::where('file_id', $request->file_id)->first();
-        $training = RegTraining::where('id', $request->file_id)->firstOrFail(); // ← ambil data untuk nama file
+        $training = RegTraining::where('id', $request->file_id)->firstOrFail();
 
-        // Ganti dengan field yang sesuai dari DB kamu
+        $record = FileRequirement::where('file_id', $request->file_id)->first();
+
+        // Siapkan nama file
         $nameCompany = Str::slug($training->name_company ?? 'Company', '_');
         $nameTraining = Str::slug($training->activity ?? 'Training', '_');
 
         $mouPath = $record->file_mou ?? null;
         $quotationPath = $record->file_quotation ?? null;
 
+        // Simpan file MoU
         if ($request->hasFile('file_mou')) {
             if ($record && $record->file_mou) {
                 Storage::disk('public')->delete($record->file_mou);
@@ -212,6 +214,7 @@ class RegTrainingController extends Controller
             $mouPath = $request->file('file_mou')->storeAs('uploads/mou', $fileName, 'public');
         }
 
+        // Simpan file Quotation
         if ($request->hasFile('file_quotation')) {
             if ($record && $record->file_quotation) {
                 Storage::disk('public')->delete($record->file_quotation);
@@ -221,6 +224,7 @@ class RegTrainingController extends Controller
             $quotationPath = $request->file('file_quotation')->storeAs('uploads/quotation', $fileName, 'public');
         }
 
+        // Simpan atau update ke table file_requirement
         if ($record) {
             $record->update([
                 'file_mou' => $mouPath,
@@ -234,15 +238,22 @@ class RegTrainingController extends Controller
             ]);
         }
 
-        $training->touch();
-        $admins = User::where('role', 'admin')->get();
+        // ✅ Update progress training (minimal tetap 4)
+        $training->isprogress = max($training->isprogress, 4);
+        $training->save();
 
+        // Sentuh updated_at
+        $training->touch();
+
+        // Notifikasi ke admin
+        $admins = User::where('role', 'admin')->get();
         foreach ($admins as $admin) {
             $admin->notify(new TrainingUpdatedNotification($training, 'user', 'Upload Persetujuan'));
         }
 
         return response()->json(['message' => 'File berhasil diperbarui!']);
     }
+
 
     public function destroyUser($id)
     {

@@ -42,25 +42,24 @@
                                         {{ $training->name_company }}
 
                                         @php
-                                            // Ambil semua notifikasi training yang sudah dilihat oleh ADMIN siapa pun
-                                            $adminSeen = $training->trainingNotifications
-                                                ->filter(function ($notif) {
-                                                    return $notif->viewed_at &&
-                                                        $notif->user &&
-                                                        $notif->user->role === 'admin';
-                                                })
-                                                ->isNotEmpty();
-
-                                            $isNew = !$adminSeen;
-
-                                            $isUpdated = false;
-                                            if (
-                                                $adminSeen &&
-                                                $training->updated_at >
-                                                    $training->trainingNotifications->first()?->viewed_at
+                                            // Ambil semua notifikasi training yang sudah dilihat oleh ADMIN
+                                            $adminNotifications = $training->trainingNotifications->filter(function (
+                                                $notif,
                                             ) {
-                                                $isUpdated = true;
-                                            }
+                                                return $notif->viewed_at &&
+                                                    $notif->user &&
+                                                    $notif->user->role === 'admin';
+                                            });
+
+                                            // Apakah sudah dibaca oleh minimal satu admin?
+                                            $adminSeen = $adminNotifications->isNotEmpty();
+
+                                            // Ambil waktu terakhir admin melihat training
+                                            $lastAdminViewedAt = $adminNotifications->max('viewed_at');
+
+                                            // Logika badge
+                                            $isNew = !$adminSeen;
+                                            $isUpdated = $adminSeen && $training->updated_at > $lastAdminViewedAt;
                                         @endphp
 
                                         @if ($isNew)
