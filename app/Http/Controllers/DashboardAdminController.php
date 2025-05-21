@@ -43,13 +43,29 @@ class DashboardAdminController extends Controller
             ['viewed_at' => now()]
         );
 
-        $notification = Auth::user()->unreadNotifications
-            ->where('data.training_id', $training->id)
-            ->first();
+        $user = Auth::user();
+        $trainingId = $training->id;
 
+        // Jika role admin, tandai semua notifikasi admin terkait training ini sebagai terbaca
+        if ($user->role === 'admin') {
+            $adminUsers = User::where('role', 'admin')->get();
 
-        if ($notification) {
-            $notification->markAsRead();
+            foreach ($adminUsers as $admin) {
+                $admin->unreadNotifications
+                    ->where('data.training_id', $trainingId)
+                    ->each(function ($notif) {
+                        $notif->markAsRead();
+                    });
+            }
+        } else {
+            // Kalau bukan admin (misalnya user biasa), tandai notifikasi miliknya saja
+            $notification = $user->unreadNotifications
+                ->where('data.training_id', $trainingId)
+                ->first();
+
+            if ($notification) {
+                $notification->markAsRead();
+            }
         }
 
         return view('dashboard.admin.cektraining.showtraining', [

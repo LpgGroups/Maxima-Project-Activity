@@ -42,19 +42,22 @@
                                         {{ $training->name_company }}
 
                                         @php
-                                            $notification = $training->trainingNotifications->firstWhere(
-                                                'user_id',
-                                                auth()->id(),
-                                            );
+                                            // Ambil semua notifikasi training yang sudah dilihat oleh ADMIN siapa pun
+                                            $adminSeen = $training->trainingNotifications
+                                                ->filter(function ($notif) {
+                                                    return $notif->viewed_at &&
+                                                        $notif->user &&
+                                                        $notif->user->role === 'admin';
+                                                })
+                                                ->isNotEmpty();
 
-                                            $isNew = !$notification || !$notification->viewed_at;
+                                            $isNew = !$adminSeen;
 
-                                            // Jika bukan new, cek apakah ada update setelah dilihat
                                             $isUpdated = false;
                                             if (
-                                                $notification &&
-                                                $notification->viewed_at &&
-                                                $training->updated_at > $notification->viewed_at
+                                                $adminSeen &&
+                                                $training->updated_at >
+                                                    $training->trainingNotifications->first()?->viewed_at
                                             ) {
                                                 $isUpdated = true;
                                             }

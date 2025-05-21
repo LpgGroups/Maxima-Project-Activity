@@ -23,10 +23,10 @@ class UserDummy extends Seeder
             ],
             [
                 'name' => 'Nandar',
-                'email' => 'nandar',
+                'email' => 'admin2',
                 'perusahaan' => 'SPV IT',
-                'role' => 'superadmin',
-                'password' => bcrypt('12345')
+                'role' => 'admin',
+                'password' => bcrypt('54321')
             ],
             [
                 'name' => 'user1',
