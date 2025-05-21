@@ -114,6 +114,7 @@ function submitForm1() {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
             },
             success: function (response) {
+                Swal.close(); // Tutup loading saat sukses
                 showSuccess(response.message, true);
                 if (response.success) {
                     $("#responseMessage")
@@ -128,15 +129,17 @@ function submitForm1() {
                 }
             },
             error: function (xhr, status, error) {
+                Swal.close(); // Tutup loading saat error
+
                 if (xhr.status === 422) {
                     let errors = xhr.responseJSON.errors;
 
                     // Kosongkan semua error lama
-                    $(".text-error").remove(); // Atau buat class khusus untuk error text biar gampang bersihin
+                    $(".text-error").remove();
 
                     // Tampilkan semua error
                     $.each(errors, function (key, value) {
-                        let inputField = $("#" + key); // Sesuai ID field input
+                        let inputField = $("#" + key);
                         inputField.after(
                             '<div class="text-red-500 text-sm text-error mt-1">' +
                                 value[0] +
@@ -148,6 +151,10 @@ function submitForm1() {
                         .addClass("text-red-500")
                         .removeClass("text-green-500")
                         .text("Terjadi kesalahan. Coba lagi.");
+
+                    showError(
+                        "Gagal mengirim data ke server. Silakan coba lagi."
+                    );
                 }
             },
         });
