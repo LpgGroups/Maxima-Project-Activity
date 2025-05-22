@@ -50,29 +50,40 @@ class RegTrainingController extends Controller
             ->firstOrFail();
 
         $notification = TrainingNotification::firstOrCreate([
-            'user_id' => Auth::id(),
+            'user_id' => $user->id,
             'reg_training_id' => $training->id,
         ]);
-
 
         if (!$notification->viewed_at || $training->updated_at > $notification->viewed_at) {
             $notification->update(['viewed_at' => now()]);
         }
 
-        $notifications = Auth::user()->unreadNotifications
+        $notifications = $user->unreadNotifications
             ->where('data.training_id', $training->id)
             ->first();
 
-        // Jika notifikasi ditemukan, tandai sebagai dibaca
         if ($notifications) {
             $notifications->markAsRead();
         }
+
+        // Tentukan max tab berdasarkan status form
+        $maxTab = 1;
+        if ($training->isComplete()) {
+            $maxTab = 2;
+        }
+        if ($training->isComplete() && $training->isLinkFilled()) {
+            $maxTab = 3;
+        }
+        session(['maxTab' => $maxTab]);
+
         return view('dashboard.user.registertraining.formreg', [
             'title' => 'Form Register',
             'training' => $training,
-            'trainingId' => $id
+            'trainingId' => $id,
+            'maxTab' => $maxTab,
         ]);
     }
+
     public function saveForm1(Request $request)
     {
         // Validasi input
@@ -142,7 +153,7 @@ class RegTrainingController extends Controller
     {
         $request->validate([
             'form_id' => 'required|integer',
-            
+
         ]);
 
         $formId = $request->form_id;

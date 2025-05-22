@@ -1,5 +1,5 @@
 function showTabs() {
-    const savedTab = "1";
+    const savedTab = maxTab;
     showTab(savedTab);
     document
         .getElementById("nextBtnform1")

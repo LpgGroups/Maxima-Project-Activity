@@ -469,6 +469,41 @@
 
     </div>
 @endsection
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const maxTab = @json($maxTab);
+        const defaultTab = 1;
+
+        // Ambil tab terakhir dari localStorage (opsional)
+        let lastTab = localStorage.getItem("lastTab");
+        let targetTab = parseInt(lastTab) || defaultTab;
+
+        // Batasi agar tidak melewati maxTab
+        if (targetTab > maxTab) {
+            targetTab = maxTab;
+        }
+
+        showTab(targetTab);
+
+        // Simpan tab yang diklik (untuk refresh nanti)
+        document.querySelectorAll("ul li a").forEach(function(tabEl, idx) {
+            tabEl.addEventListener("click", function() {
+                const tabNum = idx + 1;
+                if (tabNum <= maxTab) {
+                    localStorage.setItem("lastTab", tabNum);
+                    showTab(tabNum);
+                }
+            });
+        });
+    });
+</script>
+<script>
+    // Get the maxTab value from the session passed from the controller
+    const maxTab = @json(session('maxTab'));
+
+    // Use the maxTab value in your JavaScript logic
+    showTabs(maxTab);
+</script>
 @push('scripts')
     @vite('resources/js/registertraining.js')
 @endpush
