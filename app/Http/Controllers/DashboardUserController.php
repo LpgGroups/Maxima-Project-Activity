@@ -35,7 +35,6 @@ class DashboardUserController extends Controller
             'totalTrainings' => $totalTrainings,
             'totalParticipants' => $totalParticipants,
         ]);
-        
     }
 
     public function bookingDate(Request $request)
@@ -77,6 +76,14 @@ class DashboardUserController extends Controller
             $booking->place = $validated['place'];
             $booking->isprogress = max($booking->isprogress, $validated['isprogress']);
 
+            $countSameDay = RegTraining::where('date', $startDate->toDateString())->count();
+
+            if ($countSameDay >= 2) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Kuota Pendaftaran pelatihan pada tanggal tersebut sudah penuh. Silakan pilih tanggal lain.'
+                ]);
+            }
             $booking->save();
             $booking->load('user');
 

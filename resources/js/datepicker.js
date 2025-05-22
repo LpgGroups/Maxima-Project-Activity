@@ -271,8 +271,10 @@ document.addEventListener("DOMContentLoaded", function () {
                                     } else {
                                         Swal.fire({
                                             icon: "error",
-                                            title: "Gagal membuat booking",
-                                            text: "Terjadi kesalahan saat membuat jadwal booking.",
+                                            title: "Gagal Membuat Jadwal Pelatihan",
+                                            text:
+                                                response.message ||
+                                                "Terjadi kesalahan saat membuat jadwal booking.",
                                         });
                                     }
                                 },

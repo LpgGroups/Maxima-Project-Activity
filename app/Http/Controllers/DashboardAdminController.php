@@ -185,11 +185,14 @@ class DashboardAdminController extends Controller
         $training->update([
             'isprogress' => max($currentProgress, $newProgress),
         ]);
-        $users = User::where('role', 'user')->get();
-        $activity = $training->activity; // Ambil nama pelatihan
-        $customMessage = "Selamat, Pelatihan {$activity} Telah Disetujui!";
-        foreach ($users as $user) {
-            $user->notify(new TrainingUpdatedNotification(
+
+        $targetUser = $training->user;
+
+        if ($targetUser) {
+            $activity = $training->activity;
+            $customMessage = "Selamat, Pelatihan {$activity} Telah Disetujui!";
+
+            $targetUser->notify(new TrainingUpdatedNotification(
                 $training,
                 'admin',
                 'Daftar Pelatihan',
