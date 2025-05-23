@@ -312,7 +312,36 @@
                                 <div>: {{ $training->activity }}</div>
 
                                 <div class="font-semibold">Tanggal Kegiatan</div>
-                                <div>: {{ \Carbon\Carbon::parse($training->date)->format('d-F-Y') }}</div>
+                                <div>:
+                                    @php
+                                        $start = \Carbon\Carbon::parse($training->date)->locale('id');
+                                        $end = \Carbon\Carbon::parse($training->date_end)->locale('id');
+
+                                        if ($start->year != $end->year) {
+                                            // Beda tahun: tampilkan full untuk keduanya
+                                            $date =
+                                                $start->translatedFormat('d F Y') .
+                                                ' - ' .
+                                                $end->translatedFormat('d F Y');
+                                        } else {
+                                            // Tahun sama
+                                            if ($start->month == $end->month) {
+                                                // Bulan sama → 12 - 15 Mei 2025
+                                                $date =
+                                                    $start->translatedFormat('d F') .
+                                                    ' - ' .
+                                                    $end->translatedFormat('d F Y');
+                                            } else {
+                                                // Bulan beda → 30 Mei - 1 Juni 2025
+                                                $date =
+                                                    $start->translatedFormat('d F') .
+                                                    ' - ' .
+                                                    $end->translatedFormat('d F Y');
+                                            }
+                                        }
+                                    @endphp
+                                    {{ $date }}
+                                </div>
 
                                 <div class="font-semibold">Tempat Kegiatan</div>
                                 <div>: {{ $training->place }}</div>
@@ -332,7 +361,7 @@
 
                             <form id="form3" enctype="multipart/form-data">
                                 @csrf
-                                <input type="" name="file_id" value="{{ $training->id }}">
+                                <input class="hidden" type="" name="file_id" value="{{ $training->id }}">
 
                                 <div class="mt-2">
                                     <label class="block mb-2 mt-2 text-sm font-medium text-gray-900" for="file_mou">Upload

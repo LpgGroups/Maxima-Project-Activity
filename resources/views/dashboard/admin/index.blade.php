@@ -31,7 +31,7 @@
                                 <th class="rounded-r-lg">Progress</th>
                             </tr>
                         </thead>
-                        <tbody class="lg:text-[14px] text-[10px]">
+                        <tbody id="live-training-body" class="lg:text-[14px] text-[10px]">
                             @forelse ($trainingAll as $index => $training)
                                 <tr onclick="window.location='{{ route('dashboard.admin.training.show', ['id' => $training->id]) }}'"
                                     class="odd:bg-white even:bg-gray-300 cursor-pointer hover:bg-red-500 hover:text-white leading-loose">
@@ -153,3 +153,91 @@
         </div>
     </div>
 @endsection
+<script>
+    function fetchTrainingData() {
+        fetch("{{ route('admin.training.live') }}")
+            .then(response => response.json())
+            .then(response => {
+                const trainings = response.data;
+                let html = '';
+
+                trainings.forEach((training, index) => {
+                    const userName = training.user?.name || '';
+                    const dateStart = new Date(training.date);
+                    const dateEnd = new Date(training.date_end);
+
+                    const dateOptions = {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                    };
+                    let formattedDate = '';
+
+                    if (dateStart.getFullYear() !== dateEnd.getFullYear()) {
+                        formattedDate = dateStart.toLocaleDateString('id-ID', dateOptions) + ' - ' + dateEnd
+                            .toLocaleDateString('id-ID', dateOptions);
+                    } else if (dateStart.getMonth() === dateEnd.getMonth()) {
+                        formattedDate =
+                            `${dateStart.getDate()} - ${dateEnd.toLocaleDateString('id-ID', dateOptions)}`;
+                    } else {
+                        formattedDate =
+                            `${dateStart.toLocaleDateString('id-ID', dateOptions)} - ${dateEnd.toLocaleDateString('id-ID', dateOptions)}`;
+                    }
+
+                    const progressMap = {
+                        1: {
+                            percent: 10,
+                            color: 'bg-red-600'
+                        },
+                        2: {
+                            percent: 30,
+                            color: 'bg-orange-500'
+                        },
+                        3: {
+                            percent: 50,
+                            color: 'bg-yellow-400'
+                        },
+                        4: {
+                            percent: 75,
+                            color: 'bg-[#bffb4e]'
+                        },
+                        5: {
+                            percent: 100,
+                            color: 'bg-green-600'
+                        },
+                    };
+
+                    const progress = progressMap[training.isprogress] || {
+                        percent: 0,
+                        color: 'bg-gray-400'
+                    };
+
+                    html += `
+                        <tr onclick="window.location='/dashboard/admin/training/${training.id}'"
+                            class="odd:bg-white even:bg-gray-300 cursor-pointer hover:bg-red-500 hover:text-white leading-loose">
+                            <td>${index + 1}</td>
+                            <td>${userName}</td>
+                            <td>${training.name_pic}</td>
+                            <td>${training.name_company}</td>
+                            <td>${training.activity}</td>
+                            <td>Aktif</td>
+                            <td>${formattedDate}</td>
+                            <td>
+                                <div class="w-[80px] h-2 bg-gray-200 rounded-full dark:bg-gray-700 mx-auto">
+                                    <div class="${progress.color} text-[8px] font-medium text-white text-center leading-none rounded-full"
+                                        style="width: ${progress.percent}%; height:8px">
+                                        ${progress.percent}%
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>`;
+                });
+
+                document.getElementById('live-training-body').innerHTML = html;
+            });
+    }
+
+    // Load awal dan auto-refresh tiap 15 detik
+    fetchTrainingData();
+    setInterval(fetchTrainingData, 15000);
+</script>

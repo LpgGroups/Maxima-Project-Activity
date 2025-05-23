@@ -176,7 +176,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 confirmButtonText: "Ya, Register Pelatihan!",
                 cancelButtonText: "Batal",
                 html: `
-                <label for="training-select" class="block mb-2 text-sm font-medium text-gray-900 dark:text-red-500">Pilih Pelatihan:</label>
+                <label for="training-select" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-700">Pilih Pelatihan:</label>
                 <select id="training-select" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block mx-auto w-[300px] p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     <option value="TKPK1">TKPK 1</option>
                     <option value="TKPK2">TKPK 2</option>
@@ -187,16 +187,16 @@ document.addEventListener("DOMContentLoaded", function () {
                     <option value="AK3U">AK3U</option>
                 </select>
 
-               <label class="block mt-2 mb-2 text-sm font-medium text-gray-900 dark:text-red-500">Tempat Pelatihan:</label>
+               <label class="block mt-2 mb-2 text-sm font-medium text-gray-900 dark:text-gray-700">Tempat Pelatihan:</label>
                <div class="flex items-center justify-center min-h-5">
                 <div class="flex flex-wrap items-center justify-center border border-gray-300 rounded-lg h-12 w-[200px]">
                 <div class="flex me-4 ">
                         <input id="red-radio" type="radio" value="Online" name="colored-radio" class="w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                        <label for="red-radio" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Online</label>
+                        <label for="red-radio" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-700">Online</label>
                     </div>
                     <div class="flex items-center me-4">
                         <input id="green-radio" type="radio" value="Offline" name="colored-radio" class="w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                        <label for="green-radio" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Offline</label>
+                        <label for="green-radio" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-700">Offline</label>
                     </div>
                 </div>
                 </div>
@@ -238,6 +238,14 @@ document.addEventListener("DOMContentLoaded", function () {
                     }).then((confirmResult) => {
                         if (confirmResult.isConfirmed) {
                             // Lakukan proses booking ke server
+                            Swal.fire({
+                                title: "Memproses...",
+                                html: "Mohon tunggu sebentar",
+                                allowOutsideClick: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                },
+                            });
                             $.ajax({
                                 url: "/dashboard/booking",
                                 method: "POST",
@@ -254,11 +262,11 @@ document.addEventListener("DOMContentLoaded", function () {
                                     if (response.success) {
                                         Swal.fire({
                                             icon: "success",
-                                            title: "Booking Berhasil!",
-                                            text: `Jadwal booking untuk tanggal ${selectedDay} ${new Date(
+                                            title: "Pendaftaran Berhasil!",
+                                            text: `Jadwal Pelatihan ${trainingType} untuk tanggal ${selectedDay} ${new Date(
                                                 currentDate.getFullYear(),
                                                 currentDate.getMonth()
-                                            ).toLocaleString("default", {
+                                            ).toLocaleString("id-ID", {
                                                 month: "long",
                                             })} ${currentDate.getFullYear()} berhasil dibuat!`,
                                         }).then(() => {
@@ -279,6 +287,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                     }
                                 },
                                 error: function (xhr, status, error) {
+                                    Swal.close();
                                     console.error("Error:", error);
                                     Swal.fire({
                                         icon: "error",

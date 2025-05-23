@@ -31,6 +31,14 @@ class DashboardAdminController extends Controller
             'admin' => $admin,
         ]);
     }
+    public function getLiveTraining()
+    {
+        $trainingAll = RegTraining::with(['user', 'trainingNotifications'])->latest()->get();
+
+        return response()->json([
+            'data' => $trainingAll
+        ]);
+    }
     public function show($id)
     {
         $training = RegTraining::with(['participants', 'trainingNotifications'])
