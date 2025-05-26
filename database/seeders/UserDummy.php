@@ -29,6 +29,13 @@ class UserDummy extends Seeder
                 'password' => bcrypt('54321')
             ],
             [
+                'name' => 'Uknown',
+                'email' => 'admin3',
+                'perusahaan' => 'SPV IT',
+                'role' => 'admin',
+                'password' => bcrypt('54321')
+            ],
+            [
                 'name' => 'user1',
                 'email' => 'user1',
                 'perusahaan' => 'Markom',
@@ -38,6 +45,20 @@ class UserDummy extends Seeder
             [
                 'name' => 'user2',
                 'email' => 'user2',
+                'perusahaan' => 'Human Resource',
+                'role' => 'user',
+                'password' => bcrypt('12345')
+            ],
+            [
+                'name' => 'user3',
+                'email' => 'user3',
+                'perusahaan' => 'Human Resource',
+                'role' => 'user',
+                'password' => bcrypt('12345')
+            ],
+             [
+                'name' => 'user4',
+                'email' => 'user4',
                 'perusahaan' => 'Human Resource',
                 'role' => 'user',
                 'password' => bcrypt('12345')

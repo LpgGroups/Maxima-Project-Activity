@@ -19,6 +19,14 @@ Route::post('/logout', function () {
 })->name('logout');
 
 Route::middleware(['auth'])->group(function () {
+
+    Route::get('/notification', function () {
+        $user = Auth::user();
+        $notifications = $user->notifications->sortByDesc('created_at');
+        return view('dashboard.notification.index', ['title' => 'Notifikasi',], compact('notifications'));
+    })->name('notification');
+
+
     Route::middleware([UserAccess::class . ':admin'])->group(function () {
         Route::get('/admin/training/live', [DashboardAdminController::class, 'getLiveTraining'])->name('admin.training.live');
         Route::get('/dashboard/admin', [DashboardAdminController::class, 'index'])->name('dashboard.admin.index');

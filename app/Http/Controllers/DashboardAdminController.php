@@ -33,10 +33,38 @@ class DashboardAdminController extends Controller
     }
     public function getLiveTraining()
     {
-        $trainingAll = RegTraining::with(['user', 'trainingNotifications'])->latest()->get();
+        $trainings = RegTraining::with(['user', 'trainingNotifications.user'])->get();
+
+        $data = $trainings->map(function ($training) {
+            
+            $adminNotifications = $training->trainingNotifications->filter(function ($notif) {
+                return $notif->viewed_at &&
+                    $notif->user &&
+                    $notif->user->role === 'admin';
+            });
+
+            $adminSeen = $adminNotifications->isNotEmpty();
+            $lastAdminViewedAt = $adminNotifications->max('viewed_at');
+
+            $isNew = !$adminSeen;
+            $isUpdated = $adminSeen && $training->updated_at > $lastAdminViewedAt;
+
+            return [
+                'id' => $training->id,
+                'user' => $training->user,
+                'name_pic' => $training->name_pic,
+                'name_company' => $training->name_company,
+                'activity' => $training->activity,
+                'date' => $training->date,
+                'date_end' => $training->date_end,
+                'isprogress' => $training->isprogress,
+                'isNew' => $isNew,
+                'isUpdated' => $isUpdated,
+            ];
+        });
 
         return response()->json([
-            'data' => $trainingAll
+            'data' => $data,
         ]);
     }
     public function show($id)
