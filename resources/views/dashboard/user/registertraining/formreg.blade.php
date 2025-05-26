@@ -216,9 +216,9 @@
                         @endif
 
                         <ul class="list-decimal list-inside space-y-1 text-sm text-gray-700 max-h-60 overflow-y-auto pr-2">
-                            @forelse ($training->participants->sortBy('name') as $index => $participant)
+                            @forelse ($training->participants->sortBy('name') as $participant)
                                 <li
-                                    class="flex items-center justify-between px-2 py-1 {{ $index % 2 === 0 ? 'bg-gray-200' : 'bg-[#fffef5]' }}">
+                                    class="flex items-center justify-between px-2 py-1 {{ $loop->even ? 'bg-gray-200' : 'bg-[#fffef5]' }}">
                                     <span>{{ $loop->iteration }}. {{ $participant->name }}</span>
                                     <form action="{{ route('dashboard.form2.destroy', $participant->id) }}"
                                         method="POST" onsubmit="return confirm('Yakin ingin menghapus peserta ini?')">
