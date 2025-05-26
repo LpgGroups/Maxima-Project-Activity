@@ -12,7 +12,7 @@
             <!-- Elemen Total Peserta -->
             <div class="lg:w-[276px] sm:w-full h-auto bg-white rounded-2xl shadow-md p-4">
                 <div class="text-violet-400 text-2xl font-bold">Total Peserta</div>
-                <div class="text-black text-[52px] font-bold"></div>
+                <div class="text-black text-[52px] font-bold">{{ $totalParticipants }}</div>
             </div>
 
             <div class="w-full h-auto bg-white rounded-2xl shadow-md p-4 sm:mb-0">

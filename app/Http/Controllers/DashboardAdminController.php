@@ -23,11 +23,15 @@ class DashboardAdminController extends Controller
 
         $trainingAll = RegTraining::with('trainingNotifications')->latest()->get();
         $totalTraining = RegTraining::count();
+        $totalParticipants = $trainingAll->sum(function ($training) {
+            return $training->participants->count(); // ganti 'participants' dengan nama relasi kamu
+        });
 
         return view('dashboard.admin.index', [
             'title' => 'Dashboard Admin',
             'trainingAll' => $trainingAll,
             'totalTraining' => $totalTraining,
+            'totalParticipants' => $totalParticipants,
             'admin' => $admin,
         ]);
     }
@@ -36,7 +40,7 @@ class DashboardAdminController extends Controller
         $trainings = RegTraining::with(['user', 'trainingNotifications.user'])->get();
 
         $data = $trainings->map(function ($training) {
-            
+
             $adminNotifications = $training->trainingNotifications->filter(function ($notif) {
                 return $notif->viewed_at &&
                     $notif->user &&
