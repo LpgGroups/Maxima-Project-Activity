@@ -31,7 +31,8 @@
                                 <th class="rounded-r-lg">Progress</th>
                             </tr>
                         </thead>
-                        <tbody class="lg:text-[14px] text-[10px]">
+                        <tbody id="live-training-body" class="lg:text-[14px] text-[10px]">
+                            {{-- tidak akan di perlukan lagi untuk foreelse karena sudah di handle js --}}
                             @forelse ($trainingAll as $index => $training)
                                 <tr onclick="window.location='{{ route('dashboard.admin.training.show', ['id' => $training->id]) }}'"
                                     class="odd:bg-white even:bg-gray-300 cursor-pointer hover:bg-red-500 hover:text-white leading-loose">
@@ -153,3 +154,118 @@
         </div>
     </div>
 @endsection
+<script>
+    function fetchTrainingData() {
+        fetch("{{ route('admin.training.live') }}")
+            .then(response => response.json())
+            .then(response => {
+                const trainings = response.data.reverse();
+                let html = '';
+
+                trainings.forEach((training, index) => {
+                    const userName = training.user?.name || '-';
+                    const namePic = training.name_pic || '-';
+                    const nameCompany = training.name_company || '-';
+                    const activity = training.activity || '';
+
+                    const dateStart = training.date ? new Date(training.date) : null;
+                    const dateEnd = training.date_end ? new Date(training.date_end) : null;
+
+                    // Format tanggal custom
+                    let formattedDate = '';
+                    if (dateStart && dateEnd) {
+                        const dayStart = dateStart.getDate();
+                        const dayEnd = dateEnd.getDate();
+                        const monthStart = dateStart.toLocaleDateString('id-ID', {
+                            month: 'long'
+                        });
+                        const monthEnd = dateEnd.toLocaleDateString('id-ID', {
+                            month: 'long'
+                        });
+                        const yearStart = dateStart.getFullYear();
+                        const yearEnd = dateEnd.getFullYear();
+
+                        if (yearStart !== yearEnd) {
+                            formattedDate =
+                                `${dayStart} ${monthStart} ${yearStart} - ${dayEnd} ${monthEnd} ${yearEnd}`;
+                        } else if (dateStart.getMonth() === dateEnd.getMonth()) {
+                            formattedDate = `${dayStart}-${dayEnd} ${monthStart} ${yearStart}`;
+                        } else {
+                            formattedDate =
+                                `${dayStart} ${monthStart} - ${dayEnd} ${monthEnd} ${yearStart}`;
+                        }
+                    }
+
+                    const progressMap = {
+                        1: {
+                            percent: 10,
+                            color: 'bg-red-600'
+                        },
+                        2: {
+                            percent: 30,
+                            color: 'bg-orange-500'
+                        },
+                        3: {
+                            percent: 50,
+                            color: 'bg-yellow-400'
+                        },
+                        4: {
+                            percent: 75,
+                            color: 'bg-[#bffb4e]'
+                        },
+                        5: {
+                            percent: 100,
+                            color: 'bg-green-600'
+                        },
+                    };
+
+                    const progress = progressMap[training.isprogress] || {
+                        percent: 0,
+                        color: 'bg-gray-400'
+                    };
+
+                    let badgeHTML = '';
+                    if (training.isNew) {
+                        badgeHTML =
+                            `<img src="/img/gif/new.gif" alt="New" class="w-5 h-3 -mt-3 inline-block">`;
+                    } else if (training.isUpdated) {
+                        badgeHTML =
+                            `<img src="/img/gif/update.gif" alt="Updated" class="w-5 h-3 -mt-3 inline-block">`;
+                    }
+
+                    html += `
+                    <tr onclick="window.location='/dashboard/admin/training/${training.id}'"
+                        class="odd:bg-white even:bg-gray-300 cursor-pointer hover:bg-red-500 hover:text-white leading-loose">
+                        <td>${index + 1}</td>
+                        <td>${userName}</td>
+                        <td>${namePic}</td>
+                        <td>
+                            ${nameCompany} 
+                            ${badgeHTML}
+                        </td>
+                        <td>${activity}</td>
+                        <td>Aktif</td>
+                        <td>${formattedDate}</td>
+                        <td>
+                            <div class="w-[80px] h-2 bg-gray-200 rounded-full dark:bg-gray-700 mx-auto">
+                                <div class="${progress.color} text-[8px] font-medium text-white text-center leading-none rounded-full"
+                                    style="width: ${progress.percent}%; height:8px">
+                                    ${progress.percent}%
+                                </div>
+                            </div>
+                        </td>
+                    </tr>`;
+                });
+
+                document.getElementById('live-training-body').innerHTML = html;
+            })
+            .catch(error => {
+                console.error('Error fetching training data:', error);
+            });
+    }
+
+    fetchTrainingData();
+
+    // Refresh data setiap 2 detik
+    setInterval(fetchTrainingData, 2000);
+</script>

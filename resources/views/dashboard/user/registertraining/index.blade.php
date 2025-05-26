@@ -22,7 +22,32 @@
                         <tr onclick="window.location='{{ route('dashboard.form', ['id' => $training->id]) }}'"
                             class="odd:bg-white even:bg-gray-300 cursor-pointer hover:bg-red-500 hover:text-white leading-loose">
                             <td>{{ $trainings->firstItem() + $index }}</td>
-                            <td>{{ $training->activity }}</td>
+                            <td>
+                                {{ $training->activity }}
+
+                                @php
+                                    $notification = $training->trainingNotifications
+                                        ->where('user_id', auth()->id())
+                                        ->first();
+                                    $isNew = !$notification || !$notification->viewed_at;
+
+                                    // Jika bukan new, cek apakah ada update setelah dilihat
+                                    $isUpdated = false;
+                                    if (
+                                        $notification &&
+                                        $notification->viewed_at &&
+                                        $training->updated_at > $notification->viewed_at
+                                    ) {
+                                        $isUpdated = true;
+                                    }
+                                @endphp
+
+                                @if ($isNew)
+                                    <img src="/img/gif/new.gif" alt="New" class="w-5 h-3 -mt-3 inline-block">
+                                @elseif ($isUpdated)
+                                    <img src="/img/gif/update.gif" alt="Updated" class="w-5 h-3 -mt-3 inline-block">
+                                @endif
+                            </td>
                             <td>{{ $training->status }}</td>
                             <td>{{ $training->participants->count() }} peserta</td>
                             <td>

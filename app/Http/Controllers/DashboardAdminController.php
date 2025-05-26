@@ -31,6 +31,42 @@ class DashboardAdminController extends Controller
             'admin' => $admin,
         ]);
     }
+    public function getLiveTraining()
+    {
+        $trainings = RegTraining::with(['user', 'trainingNotifications.user'])->get();
+
+        $data = $trainings->map(function ($training) {
+            
+            $adminNotifications = $training->trainingNotifications->filter(function ($notif) {
+                return $notif->viewed_at &&
+                    $notif->user &&
+                    $notif->user->role === 'admin';
+            });
+
+            $adminSeen = $adminNotifications->isNotEmpty();
+            $lastAdminViewedAt = $adminNotifications->max('viewed_at');
+
+            $isNew = !$adminSeen;
+            $isUpdated = $adminSeen && $training->updated_at > $lastAdminViewedAt;
+
+            return [
+                'id' => $training->id,
+                'user' => $training->user,
+                'name_pic' => $training->name_pic,
+                'name_company' => $training->name_company,
+                'activity' => $training->activity,
+                'date' => $training->date,
+                'date_end' => $training->date_end,
+                'isprogress' => $training->isprogress,
+                'isNew' => $isNew,
+                'isUpdated' => $isUpdated,
+            ];
+        });
+
+        return response()->json([
+            'data' => $data,
+        ]);
+    }
     public function show($id)
     {
         $training = RegTraining::with(['participants', 'trainingNotifications'])
@@ -185,11 +221,14 @@ class DashboardAdminController extends Controller
         $training->update([
             'isprogress' => max($currentProgress, $newProgress),
         ]);
-        $users = User::where('role', 'user')->get();
-        $activity = $training->activity; // Ambil nama pelatihan
-        $customMessage = "Selamat, Pelatihan {$activity} Telah Disetujui!";
-        foreach ($users as $user) {
-            $user->notify(new TrainingUpdatedNotification(
+
+        $targetUser = $training->user;
+
+        if ($targetUser) {
+            $activity = $training->activity;
+            $customMessage = "Selamat, Pelatihan {$activity} Telah Disetujui!";
+
+            $targetUser->notify(new TrainingUpdatedNotification(
                 $training,
                 'admin',
                 'Daftar Pelatihan',

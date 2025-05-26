@@ -77,7 +77,7 @@
                     @endisset
 
                     <div class="px-4 py-2 text-sm text-center text-indigo-600 hover:underline dark:text-indigo-400">
-                        <a href="#">Lihat semua notifikasi</a>
+                        <a href="{{ route('notification') }}">Lihat semua notifikasi</a>
                     </div>
                 </div>
             </div>

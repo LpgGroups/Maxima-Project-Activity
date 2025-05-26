@@ -42,8 +42,13 @@
                 </li>
                 <li class="flex-1">
                     <a href="#" id="tab3"
-                        class="block text-gray-600  py-2 px-4 bg-gray-400 rounded-tr-lg text-center">Submit
-                        Data</a>
+                        class="flex justify-center items-center gap-2 text-violet-400 py-2 px-4 bg-gray-400 text-center">Submit
+                        Data
+                        @if ($training->isprogress == 5)
+                            <img src="{{ asset('img/svg/success.svg') }}" alt="Success" class="w-4 h-4">
+                        @endif
+                    </a>
+
                 </li>
             </ul>
         </div>
@@ -211,10 +216,10 @@
                         @endif
 
                         <ul class="list-decimal list-inside space-y-1 text-sm text-gray-700 max-h-60 overflow-y-auto pr-2">
-                            @forelse ($training->participants as $index => $participant)
+                            @forelse ($training->participants->sortBy('name') as $index => $participant)
                                 <li
                                     class="flex items-center justify-between px-2 py-1 {{ $index % 2 === 0 ? 'bg-gray-200' : 'bg-[#fffef5]' }}">
-                                    <span>{{ $index + 1 }}. {{ $participant->name }}</span>
+                                    <span>{{ $loop->iteration }}. {{ $participant->name }}</span>
                                     <form action="{{ route('dashboard.form2.destroy', $participant->id) }}"
                                         method="POST" onsubmit="return confirm('Yakin ingin menghapus peserta ini?')">
                                         @csrf
@@ -307,7 +312,36 @@
                                 <div>: {{ $training->activity }}</div>
 
                                 <div class="font-semibold">Tanggal Kegiatan</div>
-                                <div>: {{ \Carbon\Carbon::parse($training->date)->format('d-F-Y') }}</div>
+                                <div>:
+                                    @php
+                                        $start = \Carbon\Carbon::parse($training->date)->locale('id');
+                                        $end = \Carbon\Carbon::parse($training->date_end)->locale('id');
+
+                                        if ($start->year != $end->year) {
+                                            // Beda tahun: tampilkan full untuk keduanya
+                                            $date =
+                                                $start->translatedFormat('d F Y') .
+                                                ' - ' .
+                                                $end->translatedFormat('d F Y');
+                                        } else {
+                                            // Tahun sama
+                                            if ($start->month == $end->month) {
+                                                // Bulan sama → 12 - 15 Mei 2025
+                                                $date =
+                                                    $start->translatedFormat('d F') .
+                                                    ' - ' .
+                                                    $end->translatedFormat('d F Y');
+                                            } else {
+                                                // Bulan beda → 30 Mei - 1 Juni 2025
+                                                $date =
+                                                    $start->translatedFormat('d F') .
+                                                    ' - ' .
+                                                    $end->translatedFormat('d F Y');
+                                            }
+                                        }
+                                    @endphp
+                                    {{ $date }}
+                                </div>
 
                                 <div class="font-semibold">Tempat Kegiatan</div>
                                 <div>: {{ $training->place }}</div>
@@ -327,7 +361,7 @@
 
                             <form id="form3" enctype="multipart/form-data">
                                 @csrf
-                                <input type="" name="file_id" value="{{ $training->id }}">
+                                <input class="hidden" type="" name="file_id" value="{{ $training->id }}">
 
                                 <div class="mt-2">
                                     <label class="block mb-2 mt-2 text-sm font-medium text-gray-900" for="file_mou">Upload
@@ -368,10 +402,11 @@
                                         </tr>
                                     </thead>
                                     <tbody class="text-[8px] lg:text-[12px]">
-                                        @forelse ($training->participants as $index => $participant)
-                                            <tr>
-                                                <td class="w-[10px]">{{ $index + 1 }}</td>
+                                        @forelse ($training->participants->sortBy('name') as $index => $participant)
+                                            <tr class="odd:bg-white even:bg-gray-100">
+                                                <td class="w-[10px]">{{ $loop->iteration }}</td>
                                                 <td class="w-[100px]">{{ $participant->name }}</td>
+
                                                 @php
                                                     $statusInfo = [
                                                         0 => ['file' => 'rejected.svg', 'label' => 'Rejected'],
@@ -384,36 +419,31 @@
                                                     ];
                                                 @endphp
 
-                                                <td class="w-[80px] text-center relative group">
+                                                <td class="w-[80px] text-center relative group py-1">
                                                     <img src="{{ asset('img/svg/' . $info['file']) }}"
                                                         alt="{{ $info['label'] }}"
                                                         class="w-4 h-4 mx-auto cursor-pointer">
-
                                                     <div
                                                         class="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10">
                                                         {{ $info['label'] }}
                                                     </div>
                                                 </td>
+
                                                 <td class="w-[200px]">
                                                     @php
                                                         $statusReasonMap = [
-                                                            1 => 'Dalam Pemeriksaan', // Waiting
-                                                            2 => 'Berhasil Terverifikasi', // Success
+                                                            1 => 'Dalam Pemeriksaan',
+                                                            2 => 'Berhasil Terverifikasi',
                                                         ];
 
-                                                        // Tentukan apakah reason kosong
                                                         $rawReason = $participant->reason;
 
                                                         if (!empty($rawReason)) {
-                                                            // Ada reason dari user, tampilkan langsung
                                                             $displayReason = e($rawReason);
                                                         } else {
-                                                            // Tidak ada reason, ambil dari status
                                                             $statusBasedReason =
                                                                 $statusReasonMap[$participant->status] ??
                                                                 'tidak ada catatan';
-
-                                                            // Tambahkan gaya pudar + miring
                                                             $displayReason =
                                                                 '<span class="text-gray-400 italic">' .
                                                                 e($statusBasedReason) .
@@ -431,6 +461,7 @@
                                         @endforelse
                                     </tbody>
                                 </table>
+
                             </div>
                         </div>
                     </div>
@@ -439,18 +470,35 @@
 
             <!-- ASIDE -->
             <aside id="side-panel" class="w-[300px] sticky top-0 h-screen bg-gray-50 border-l border-gray-300 p-4 hidden">
-                <div class="w-70 h-50 rounded-[20px] text-red-600 border-2 border-red-600 p-2">
-                    <h3 class="text-xl font-bold mb-2">Informasi Data</h3>
-                    <ul class="list-disc text-xs ml-2">
-                        <li>Harap lengkapi data-data peserta H-3 sebelum hari pelatihan di mulai.</li>
-                        <li>Data dapat di ubah H-3 sebelum hari pelatihan.</li>
-                        <li>Mohon untuk input data dengan baik dan benar</li>
-                        <li>PIC diharapkan Mengupload kembali MoU dan Quotation yang telah ditanda tangan.</li>
-                    </ul>
+
+                <div class="w-70 h-auto rounded-[20px] text-red-600 border-2 border-red-600 p-4">
+                    @if ($training->isprogress == 5)
+                        <h3 class="text-xl font-bold mb-2 text-green-600">🎉 Selamat!</h3>
+                        <p class="text-sm text-gray-700">
+                            Terima kasih telah melengkapi seluruh data pelatihan. <br>
+                            Kami menghargai dedikasi dan kerja keras Anda dalam memastikan semua informasi yang dibutuhkan
+                            telah terpenuhi.
+                            <br><br>
+                            Semoga pelatihannya berjalan lancar dan membawa manfaat maksimal untuk seluruh peserta.
+                        </p>
+                    @else
+                        <h3 class="text-xl font-bold mb-2">Informasi Data</h3>
+                        <ul class="list-disc text-xs ml-2">
+                            <li>Harap lengkapi data-data peserta H-3 sebelum hari pelatihan di mulai.</li>
+                            <li>Data dapat di ubah H-3 sebelum hari pelatihan.</li>
+                            <li>Mohon untuk input data dengan baik dan benar</li>
+                            <li>PIC diharapkan Mengupload kembali MoU dan Quotation yang telah ditanda tangan.</li>
+                        </ul>
+                    @endif
                 </div>
 
+                <div class="text-center">
+                    @if ($training->isprogress == 5)
+                        <img class="mt-4 w-[250px] h-[200px] mx-auto" src="/img/complete.png" alt="LPG">
+                    @endif
+                </div>
 
-                <div class="mt-60 flex justify-between">
+                <div class="mt-4 flex justify-between">
                     <!-- Previous Button -->
                     <button type="button" id="prevBtnForm3"
                         class="bg-gray-500 text-white px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-400">
@@ -465,10 +513,43 @@
                 </div>
             </aside>
 
+
         </div>
 
     </div>
 @endsection
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const maxTab = @json($maxTab);
+        const defaultTab = 1;
+
+        // Ambil tab terakhir dari localStorage (opsional)
+        let lastTab = localStorage.getItem("lastTab");
+        let targetTab = parseInt(lastTab) || defaultTab;
+
+        // Batasi agar tidak melewati maxTab
+        if (targetTab > maxTab) {
+            targetTab = maxTab;
+        }
+
+        showTab(targetTab);
+
+        // Simpan tab yang diklik (untuk refresh nanti)
+        document.querySelectorAll("ul li a").forEach(function(tabEl, idx) {
+            tabEl.addEventListener("click", function() {
+                const tabNum = idx + 1;
+                if (tabNum <= maxTab) {
+                    localStorage.setItem("lastTab", tabNum);
+                    showTab(tabNum);
+                }
+            });
+        });
+    });
+</script>
+<script>
+    const maxTab = @json(session('maxTab'));
+    showTabs(maxTab);
+</script>
 @push('scripts')
     @vite('resources/js/registertraining.js')
 @endpush
