@@ -17,7 +17,7 @@ function updateEndDate() {
         TKBT2: 4,
         BE: 2,
         AK3U: 12,
-        P3K:3,
+        P3K: 3,
     };
 
     const startDateStr = dateInput.value;

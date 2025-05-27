@@ -81,6 +81,7 @@ class RegTrainingController extends Controller
             'training' => $training,
             'trainingId' => $id,
             'maxTab' => $maxTab,
+            'fileRequirement' => $training->files->first(),
         ]);
     }
 
@@ -202,6 +203,9 @@ class RegTrainingController extends Controller
             'file_id' => 'required|exists:reg_training,id',
             'file_mou' => 'nullable|file|mimes:pdf|max:2048',
             'file_quotation' => 'nullable|file|mimes:pdf|max:2048',
+        ], [
+            'file_mou.max' => 'File melebihi batas 2MB.',
+            'file_quotation.max' => 'File melebihi batas 2MB.',
         ]);
 
         $training = RegTraining::where('id', $request->file_id)->firstOrFail();
