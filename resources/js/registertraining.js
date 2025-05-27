@@ -277,7 +277,25 @@ function sendForm3() {
             showSuccess(response.message, true);
         },
         error: function (xhr) {
-            showError("Terjadi kesalahan saat mengirim data.");
+            if (xhr.status === 422) {
+                // Tangani error validasi Laravel
+                var errors = xhr.responseJSON.errors;
+                var messages = [];
+
+                if (errors.file_mou) {
+                    messages.push("File MoU: " + errors.file_mou.join(", "));
+                }
+                if (errors.file_quotation) {
+                    messages.push(
+                        "File Quotation: " + errors.file_quotation.join(", ")
+                    );
+                }
+
+                showError(messages.join("<br>"));
+            } else {
+                showError("Terjadi kesalahan saat mengirim data.");
+            }
+
             console.log(xhr.responseText);
         },
     });
@@ -327,7 +345,6 @@ function showWarning(message) {
         text: message || "Ada data yang belum diisi.",
     });
 }
-
 
 // function send data
 $(document).ready(function () {

@@ -176,32 +176,113 @@ document.addEventListener("DOMContentLoaded", function () {
                 confirmButtonText: "Ya, Register Pelatihan!",
                 cancelButtonText: "Batal",
                 html: `
-                <label for="training-select" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-700">Pilih Pelatihan:</label>
-                <select id="training-select" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block mx-auto w-[300px] p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                    <option value="TKPK1">TKPK 1</option>
-                    <option value="TKPK2">TKPK 2</option>
-                    <option value="TKBT1">TKBT 1</option>
-                    <option value="TKBT2">TKBT 2</option>
-                    <option value="BE">Basic Electrical</option>
-                    <option value="P3K">First Aid(P3K)</option>
-                    <option value="AK3U">AK3U</option>
-                </select>
+        <label for="training-select" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-700">Pilih Pelatihan:</label>
+        <select id="training-select" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block mx-auto w-[300px] p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+            <option value="TKPK1">TKPK 1</option>
+            <option value="TKPK2">TKPK 2</option>
+            <option value="TKBT1">TKBT 1</option>
+            <option value="TKBT2">TKBT 2</option>
+            <option value="BE">Basic Electrical</option>
+            <option value="P3K">First Aid(P3K)</option>
+            <option value="AK3U">AK3U</option>
+        </select>
 
-               <label class="block mt-2 mb-2 text-sm font-medium text-gray-900 dark:text-gray-700">Tempat Pelatihan:</label>
-               <div class="flex items-center justify-center min-h-5">
-                <div class="flex flex-wrap items-center justify-center border border-gray-300 rounded-lg h-12 w-[200px]">
-                <div class="flex me-4 ">
-                        <input id="red-radio" type="radio" value="Online" name="colored-radio" class="w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                        <label for="red-radio" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-700">Online</label>
-                    </div>
-                    <div class="flex items-center me-4">
-                        <input id="green-radio" type="radio" value="Offline" name="colored-radio" class="w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                        <label for="green-radio" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-700">Offline</label>
-                    </div>
-                </div>
-                </div>
-                </div>
-            `,
+        <label class="block mt-2 mb-2 text-sm font-medium text-gray-900 dark:text-gray-700">Tempat Pelatihan:</label>
+        <div class="flex items-center justify-center min-h-5">
+           <div class="flex items-center me-4">
+  <input
+    id="radio-online"
+    type="radio"
+    value="Online"
+    name="training-mode"
+   class="w-4 h-4 text-blue-600 bg-gray-100 border border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
+  />
+  <label for="radio-online" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-700">Online</label>
+</div>
+
+<div class="flex items-center me-4">
+  <input
+    id="radio-offline"
+    type="radio"
+    value="Offline"
+    name="training-mode"
+    class="w-4 h-4 text-blue-600 bg-gray-100 border border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
+  />
+  <label for="radio-offline" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-700">Offline</label>
+</div>
+
+<div class="flex items-center me-4">
+  <input
+    id="radio-blended"
+    type="radio"
+    value="Blended"
+    name="training-mode"
+   class="w-4 h-4 text-blue-600 bg-gray-100 border border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
+  />
+  <label for="radio-blended" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-700">Blended</label>
+</div>
+
+        </div>
+    `,
+                didOpen: () => {
+                    const select = document.getElementById("training-select");
+                    const online = document.getElementById("radio-online");
+                    const offline = document.getElementById("radio-offline");
+                    const blended = document.getElementById("radio-blended");
+
+                    function updateRadioState(training) {
+                        // Reset disable semua radio
+                        online.disabled = false;
+                        offline.disabled = false;
+                        blended.disabled = false;
+
+                        // Reset checked semua radio
+                        online.checked = false;
+                        offline.checked = false;
+                        blended.checked = false;
+
+                        // Atur sesuai pelatihan
+                        if (
+                            ["TKPK1", "TKPK2", "TKBT1", "TKBT2"].includes(
+                                training
+                            )
+                        ) {
+                            blended.checked = true;
+                            online.disabled = true;
+                            offline.disabled = true;
+                            blended.disabled = false;
+                        } else if (training === "AK3U") {
+                            online.checked = true;
+                            online.disabled = false;
+                            offline.disabled = true;
+                            blended.disabled = true;
+                        } else if (training === "BE" || training === "P3K") {
+                            // Bebas pilih, tidak ada yang diceklis otomatis
+                            online.checked = false;
+                            offline.checked = false;
+                            blended.checked = false;
+                            online.disabled = false;
+                            offline.disabled = false;
+                            blended.disabled = false;
+                        } else {
+                            // Default: semua aktif, tidak diceklis otomatis
+                            online.checked = false;
+                            offline.checked = false;
+                            blended.checked = false;
+                            online.disabled = false;
+                            offline.disabled = false;
+                            blended.disabled = false;
+                        }
+                    }
+
+                    // Set default pertama saat swal muncul
+                    updateRadioState(select.value);
+
+                    // Update setiap kali user ganti pilihan pelatihan
+                    select.addEventListener("change", function () {
+                        updateRadioState(this.value);
+                    });
+                },
             }).then((result) => {
                 if (result.isConfirmed) {
                     // Ambil jenis pelatihan yang dipilih
@@ -210,7 +291,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     const formattedDate = bookingDate; // Format date untuk dikirim\
                     const progres = "1";
                     const trainingPlace = document.querySelector(
-                        'input[name="colored-radio"]:checked'
+                        'input[name="training-mode"]:checked'
                     )?.value;
 
                     if (!trainingPlace) {

@@ -109,7 +109,7 @@
                     </label>
                     <div class="flex items-center gap-2 mt-1">
                         <p class="text-sm font-medium text-red-600 text-[10px]">Selesai Pada:</p>
-                        <input type="text" id="end_date" name="end_date" readonly
+                        <input type="text" id="end_date" name="end_date" readonly value="{{ old('end_date', \Carbon\Carbon::parse($training->date_end)->format('Y-m-d')) }}"
                             class="border border-gray-300 rounded-md px-3 py-2 text-sm w-28 bg-gray-100 text-gray-700" />
                     </div>
                 </div>
@@ -117,23 +117,31 @@
             </div>
             <label class="block mt-2 mb-2 text-sm font-medium text-gray-900">Tempat Pelatihan:</label>
             <div class="flex min-h-5">
-                <div class="flex flex-wrap items-center justify-center border border-gray-300 rounded-lg h-12 w-[200px]">
-                    <div class="flex me-4 ">
-                        <input id="red-radio" type="radio" value="Online" name="colored-radio"
+                <div class="flex items-center justify-center gap-x-4 border border-gray-300 rounded-lg h-12 px-4">
+                    <div class="flex items-center">
+                        <input id="radio-online" type="radio" value="Online" name="colored-radio"
                             class="w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                             {{ $training->place == 'Online' ? 'checked' : '' }}>
-                        <label for="red-radio"
-                            class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Online</label>
+                        <label for="radio-online"
+                            class="ms-2 text-sm font-medium text-gray-900 ">Online</label>
                     </div>
-                    <div class="flex items-center me-4">
-                        <input id="green-radio" type="radio" value="Offline" name="colored-radio"
+                    <div class="flex items-center">
+                        <input id="radio-offline" type="radio" value="Offline" name="colored-radio"
                             class="w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                             {{ $training->place == 'Offline' ? 'checked' : '' }}>
-                        <label for="green-radio"
-                            class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Offline</label>
+                        <label for="radio-offline"
+                            class="ms-2 text-sm font-medium text-gray-900 ">Offline</label>
+                    </div>
+                    <div class="flex items-center">
+                        <input id="radio-blended" type="radio" value="Blended" name="colored-radio"
+                            class="w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                            {{ $training->place == 'Blended' ? 'checked' : '' }}>
+                        <label for="radio-blended"
+                            class="ms-2 text-sm font-medium text-gray-900 ">Blended</label>
                     </div>
                 </div>
             </div>
+
 
             <div class="mt-4 flex items-center gap-2">
                 <input type="checkbox" id="confirmEdit"
