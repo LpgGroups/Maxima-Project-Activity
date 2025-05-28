@@ -154,35 +154,41 @@
                     </div>
 
                     <!-- Submit Button -->
-                    <div class="mt-4 flex">
+                    <div class="mt-4 flex flex-col lg:flex-row gap-2 w-full max-w-[1920px] p-4">
+                        <!-- Tombol Simpan -->
                         <button type="button" id="submitBtn"
-                            class="bg-blue-500 text-white px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400">
+                            class="bg-blue-500 text-white px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            data-training-date="{{ $training->date }}">
                             Simpan Data
                         </button>
+
+                        <!-- Info Update -->
                         @if ($training->updated_at)
-                            <div class="ml-2 text-green-400">
+                            <div class="text-green-400 text-sm">
                                 <strong>Update Terakhir:</strong><br>
                                 {{ $training->updated_at->setTimezone('Asia/Jakarta')->format('d-F-Y H:i') }} WIB
                             </div>
                         @else
-                            <div class="ml-2 text-red-400">
+                            <div class="text-red-400 text-sm">
                                 <strong>Update Terakhir:</strong><br>
                                 Belum pernah diupdate
                             </div>
                         @endif
-                        <input type="date" id="dateInput" name="date" />
+
+                        <!-- Tombol Selanjutnya -->
                         <button type="button" id="nextBtnform1"
-                            class="
-                            {{ $training->isComplete() ? 'bg-green-500' : 'bg-gray-400' }}
-                            text-white px-4 py-2 ml-[500px] rounded-md
-                            focus:outline-none focus:ring-2
-                            {{ $training->isComplete() ? 'focus:ring-green-400' : 'focus:ring-gray-400' }}
-                            {{ $training->isComplete() ? '' : 'opacity-50 cursor-not-allowed' }}"
+                            class="mt-2 lg:mt-0 lg:ml-auto
+                                {{ $training->isComplete() ? 'bg-green-500' : 'bg-gray-400' }}
+                         text-white px-4 py-2 rounded-md
+                             focus:outline-none focus:ring-2
+                                {{ $training->isComplete() ? 'focus:ring-green-400' : 'focus:ring-gray-400' }}
+                                {{ $training->isComplete() ? '' : 'opacity-50 cursor-not-allowed' }}"
                             data-enabled="{{ $training->isComplete() ? 'true' : 'false' }}">
                             Selanjutnya
                         </button>
-
                     </div>
+
+
                 </form>
             </div>
         </div>
@@ -264,11 +270,12 @@
                     <div class="flex">
                         <div class="mt-4">
                             <button type="button" id="submitBtnForm2"
-                                class="w-48 bg-blue-500 text-white px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400">
+                                class="w-48 bg-blue-500 text-white px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                data-training-date="{{ $training->date }}">
                                 Simpan Data
                             </button>
                         </div>
-                        <div class="mt-4 flex ml-[500px] gap-x-2">
+                        <div class="flex justify-end gap-x-2 w-full items-end max-w-[1920px] p-4">
                             <!-- Tombol Previous -->
                             <button type="button" id="prevBtnForm2"
                                 class="bg-gray-500 text-white px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-400">
@@ -284,9 +291,9 @@
                                 Selanjutnya
                             </button>
                         </div>
-
-
                     </div>
+
+
                 </div>
             </div>
         </div>
@@ -517,7 +524,7 @@
                     @endif
                 </div>
 
-                <div class="mt-4 flex justify-between">
+                <div class="mt-4 flex gap-x-1">
                     <!-- Previous Button -->
                     <button type="button" id="prevBtnForm3"
                         class="bg-gray-500 text-white px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-400">
@@ -526,7 +533,8 @@
 
                     <!-- Next Button -->
                     <button type="button" id="submitBtnForm3"
-                        class="bg-blue-500 text-white px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400">
+                        class="bg-blue-500 text-white px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        data-training-date="{{ $training->date }}">
                         Simpan Data
                     </button>
                 </div>

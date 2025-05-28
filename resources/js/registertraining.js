@@ -346,11 +346,38 @@ function showWarning(message) {
     });
 }
 
+function checkSubmitBtnDeadline() {
+    const btnSelectors = ["#submitBtn", "#submitBtnForm2", "#submitBtnForm3"];
+
+    btnSelectors.forEach((selector) => {
+        const btn = $(selector);
+        const trainingDateStr = btn.data("training-date");
+
+        if (trainingDateStr) {
+            const trainingDate = new Date(trainingDateStr);
+            const now = new Date();
+
+            // Hitung H-3 sebelum tanggal pelatihan
+            const hMinus3 = new Date(trainingDate);
+            hMinus3.setDate(trainingDate.getDate() - 3);
+
+            if (now >= hMinus3) {
+                btn.prop("disabled", true);
+                btn
+                    .removeClass("bg-blue-500")
+                    .addClass("bg-gray-400 cursor-not-allowed");
+                btn.text("Pendaftaran Ditutup");
+            }
+        }
+    });
+}
+
 // function send data
 $(document).ready(function () {
     showTabs();
     submitForm1();
     addInputField();
+    checkSubmitBtnDeadline();
     $("#submitBtnForm2").click(function (e) {
         e.preventDefault(); // Mencegah form submit default
         sendForm2(); // Panggil fungsi sendForm2 saat tombol diklik
