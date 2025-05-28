@@ -353,20 +353,95 @@ function checkSubmitBtnDeadline() {
         const btn = $(selector);
         const trainingDateStr = btn.data("training-date");
 
-        if (trainingDateStr) {
-            const trainingDate = new Date(trainingDateStr);
-            const now = new Date();
+        if (!trainingDateStr) return; // kalau ga ada tanggal, skip
 
-            // Hitung H-3 sebelum tanggal pelatihan
-            const hMinus3 = new Date(trainingDate);
-            hMinus3.setDate(trainingDate.getDate() - 3);
+        // pastikan parent tombol punya posisi relative agar tooltip absolute bisa pasang dengan benar
+        const parent = btn.parent();
+        if (parent.css("position") === "static") {
+            parent.css("position", "relative");
+        }
 
-            if (now >= hMinus3) {
-                btn.prop("disabled", true);
-                btn
-                    .removeClass("bg-blue-500")
-                    .addClass("bg-gray-400 cursor-not-allowed");
-                btn.text("Pendaftaran Ditutup");
+        const trainingDate = new Date(trainingDateStr);
+        const now = new Date();
+
+        const hMinus3 = new Date(trainingDate);
+        hMinus3.setDate(trainingDate.getDate() - 3);
+
+        if (now >= hMinus3) {
+            // disable tombol dan ubah style
+            btn.prop("disabled", true);
+            btn.removeClass("bg-blue-500").addClass(
+                "bg-gray-400 cursor-not-allowed"
+            );
+            btn.text("Pendaftaran Ditutup");
+
+            // hilangkan tooltip kalau ada
+            parent.find(".tooltip-btn").remove();
+        } else {
+            // buat tooltip, kalau sudah ada jangan duplikat
+            if (parent.find(".tooltip-btn").length === 0) {
+                const tooltip = $(`
+                    <div class="tooltip-btn absolute bg-gray-800 text-white text-xs px-3 py-2 rounded shadow-md flex justify-between items-start gap-2 w-max max-w-[250px]">
+                        <div>
+                            <div class="font-semibold">Pendaftaran dibuka sampai: ${trainingDateStr}</div>
+                            <div class="text-yellow-300" id="countdown-${selector.replace(
+                                "#",
+                                ""
+                            )}"></div>
+                        </div>
+                        <button class="text-white hover:text-red-400 text-lg font-bold leading-none" style="line-height: 1;" data-tooltip-close>&times;</button>
+                    </div>
+                `);
+
+                btn.after(tooltip);
+
+                tooltip.css({
+                    top: "100%",
+                    left: 0,
+                    marginTop: "8px",
+                    position: "absolute",
+                    zIndex: 50,
+                });
+
+                // fungsi close tooltip
+                tooltip.find("[data-tooltip-close]").on("click", function () {
+                    tooltip.remove();
+                });
+
+                // countdown update
+                const countdownEl = tooltip.find(
+                    `#countdown-${selector.replace("#", "")}`
+                )[0];
+
+                function updateCountdown() {
+                    const now = new Date();
+                    const distance = hMinus3 - now;
+
+                    if (distance <= 0) {
+                        tooltip.remove();
+                        // disable tombol juga kalau lewat deadline
+                        btn.prop("disabled", true);
+                        btn.removeClass("bg-blue-500").addClass(
+                            "bg-gray-400 cursor-not-allowed"
+                        );
+                        btn.text("Pendaftaran Ditutup");
+                        return;
+                    }
+
+                    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor(
+                        (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+                    );
+                    const minutes = Math.floor(
+                        (distance % (1000 * 60 * 60)) / (1000 * 60)
+                    );
+                    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                    countdownEl.innerText = `Sisa waktu: ${days}h ${hours}j ${minutes}m ${seconds}d`;
+                }
+
+                updateCountdown();
+                setInterval(updateCountdown, 1000);
             }
         }
     });
