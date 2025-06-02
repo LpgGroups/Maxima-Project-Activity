@@ -35,6 +35,54 @@ class DashboardAdminController extends Controller
             'admin' => $admin,
         ]);
     }
+
+    public function trainingAll(Request $request)
+    {
+        $admin = Auth::user();
+
+        // Query builder awal
+        $query = RegTraining::with(['trainingNotifications', 'user', 'participants']);
+
+        // 🔍 Filter: Search name_company
+        if ($request->filled('search')) {
+            $search = $request->search;
+
+            $query->where(function ($q) use ($search) {
+                $q->where('name_company', 'like', '%' . $search . '%')
+                    ->orWhere('name_pic', 'like', '%' . $search . '%')
+                    ->orWhere('activity', 'like', '%' . $search . '%')
+                    ->orWhereHas('user', function ($uq) use ($search) {
+                        $uq->where('name', 'like', '%' . $search . '%');
+                    });
+            });
+        }
+
+        // 📅 Filter: Tanggal
+        if ($request->filled('start_date') && $request->filled('end_date')) {
+            $query->whereBetween('date', [$request->start_date, $request->end_date]);
+        }
+
+        // 🔠 Sort A-Z
+        if ($request->filled('sort') && $request->sort == 'az') {
+            $query->orderBy('name_company', 'asc');
+        } else {
+            $query->latest();
+        }
+
+        // Ambil data paginasi
+        $trainingAll = $query->paginate(20)->appends(request()->query());
+
+        // Ambil semua training (untuk total peserta), tidak dipengaruhi paginasi
+        $allTrainings = $query->get(); // note: ini sesuai filter
+        $totalParticipants = $allTrainings->sum(fn($training) => $training->participants->count());
+
+        return view('dashboard.admin.cektraining.tabletraining', [
+            'title' => 'Dashboard Admin',
+            'trainingAll' => $trainingAll,
+            'admin' => $admin,
+            'totalParticipants' => $totalParticipants,
+        ]);
+    }
     public function getLiveTraining()
     {
         $trainings = RegTraining::with(['user', 'trainingNotifications.user'])->get();
@@ -140,7 +188,7 @@ class DashboardAdminController extends Controller
             'activity' => $validated['activity'],
             'date' => Carbon::parse($validated['date'])->format('Y-m-d'),
             'place' => $validated['place'],
-             'date_end' => $validated['end_date'] ? Carbon::parse($validated['end_date'])->format('Y-m-d') : null,
+            'date_end' => $validated['end_date'] ? Carbon::parse($validated['end_date'])->format('Y-m-d') : null,
         ]);
 
 

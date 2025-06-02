@@ -29,6 +29,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::middleware([UserAccess::class . ':admin'])->group(function () {
         Route::get('/admin/training/live', [DashboardAdminController::class, 'getLiveTraining'])->name('admin.training.live');
+        Route::get('/dashboard/admin/training/alltraining', [DashboardAdminController::class, 'trainingAll'])->name('admin.training.alltraining');
         Route::get('/dashboard/admin', [DashboardAdminController::class, 'index'])->name('dashboard.admin.index');
         Route::get('/dashboard/admin/training/{id}', [DashboardAdminController::class, 'show'])->name('dashboard.admin.training.show');
         // Rute untuk memperbarui data training menggunakan POST

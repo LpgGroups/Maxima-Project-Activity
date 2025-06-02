@@ -383,7 +383,7 @@ function checkSubmitBtnDeadline() {
                 const tooltip = $(`
                     <div class="tooltip-btn absolute bg-gray-800 text-white text-xs px-3 py-2 rounded shadow-md flex justify-between items-start gap-2 w-max max-w-[250px]">
                         <div>
-                            <div class="font-semibold">Pendaftaran dibuka sampai: ${trainingDateStr}</div>
+                            <div class="font-semibold">Pendaftaran Dapat Diubah Hingga</div>
                             <div class="text-yellow-300" id="countdown-${selector.replace(
                                 "#",
                                 ""

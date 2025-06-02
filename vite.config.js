@@ -11,6 +11,7 @@ export default defineConfig({
                 "resources/js/datepicker.js",
                 "resources/js/registertraining.js",
                 "resources/js/edittrainingadmin.js",
+                "resources/js/livedata.js",
             ],
             refresh: true,
         }),
