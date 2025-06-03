@@ -4,8 +4,8 @@
         <!-- Container untuk informasi -->
         <div class="flex flex-wrap gap-4 w-full lg:w-[570px] h-auto">
             <!-- Elemen Total Pelatihan -->
-            <div class="bg-no-repeat bg-center relative lg:w-[276px] sm:w-full h-[150px] rounded-2xl shadow-md overflow-hidden"
-                style="background-image: url('/img/trainingindex.png'); background-size: 70% auto; background-position: right center;">
+            <div
+                class="bg-white bg-center relative lg:w-[276px] sm:w-full h-[150px] rounded-2xl shadow-md overflow-hidden">
 
                 <!-- overlay putih transparan -->
                 <div class="absolute inset-0 bg-white/10"></div>
@@ -156,8 +156,7 @@
 
             <!-- Navigasi Bulan -->
             <div class="flex justify-between items-center mt-4">
-                <button id="prev-month"
-                    class="bg-red-500 text-white py-2 px-4 rounded-lg flex items-center justify-center">
+                <button id="prev-month" class="bg-red-500 text-white py-2 px-4 rounded-lg flex items-center justify-center">
                     <!-- Panah kiri -->
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor" stroke-width="2">
@@ -165,8 +164,7 @@
                     </svg>
                 </button>
                 <p id="month-name" class="text-[18px]"></p>
-                <button id="next-month"
-                    class="bg-red-500 text-white py-2 px-4 rounded-lg flex items-center justify-center">
+                <button id="next-month" class="bg-red-500 text-white py-2 px-4 rounded-lg flex items-center justify-center">
                     <!-- Panah kanan -->
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor" stroke-width="2">
