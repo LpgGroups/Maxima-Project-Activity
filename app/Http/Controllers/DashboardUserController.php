@@ -60,8 +60,8 @@ class DashboardUserController extends Controller
                 'TKBT1' => 4,
                 'TKBT2' => 4,
                 'BE' => 2,
-                'AK3U'=>12,
-                'P3K'=>3
+                'AK3U' => 12,
+                'P3K' => 3
             ];
 
             $duration = $durationMap[$validated['activity']] ?? 1; // default 1 hari
@@ -78,8 +78,9 @@ class DashboardUserController extends Controller
             $booking->place = $validated['place'];
             $booking->isprogress = max($booking->isprogress, $validated['isprogress']);
 
-            $countSameDay = RegTraining::where('date', $startDate->toDateString())->count();
-
+            $countSameDay = RegTraining::where('date', $startDate->toDateString())
+                ->where('user_id', $user->id)
+                ->count();
             if ($countSameDay >= 2) {
                 return response()->json([
                     'success' => false,

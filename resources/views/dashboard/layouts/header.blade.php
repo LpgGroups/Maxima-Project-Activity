@@ -5,7 +5,7 @@
 
             <!-- Notifikasi -->
             <div class="relative">
-                <button id="notifBtn" type="button" class="mt-2 text-gray-700 dark:text-white hover:text-gray-900">
+                <button id="notifBtn" type="button" class="mb-2 text-gray-700 dark:text-white hover:text-gray-900">
                     <!-- Icon Bell -->
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
                         xmlns="http://www.w3.org/2000/svg">
@@ -29,7 +29,7 @@
 
                 <!-- Dropdown Notifikasi -->
                 <div id="notifDropdown"
-                    class="hidden absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg z-50 dark:bg-gray-800">
+                    class="hidden absolute right-0 w-80 bg-white rounded-lg shadow-lg z-50 dark:bg-gray-800">
                     <div
                         class="px-4 py-3 text-sm font-semibold text-gray-700 dark:text-white border-b dark:border-gray-700">
                         Notifikasi
@@ -94,7 +94,7 @@
 
                 <!-- Dropdown Profil -->
                 <div
-                    class="absolute right-0 z-50 mt-2 w-64 bg-white rounded-lg shadow-lg opacity-0 group-hover:opacity-100 invisible group-hover:visible transition-all duration-200 dark:bg-gray-800">
+                    class="mb-4 absolute right-0 z-50 mt-2 w-64 bg-white rounded-lg shadow-lg opacity-0 group-hover:opacity-100 invisible group-hover:visible transition-all duration-200 dark:bg-gray-800">
                     <div class="px-4 py-3 text-sm text-gray-900 dark:text-white">
                         <div class="font-medium truncate">{{ Auth::user()->name }}</div>
                         <div class="truncate text-sm text-gray-500 dark:text-gray-400">{{ Auth::user()->email }}</div>
