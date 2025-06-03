@@ -12,10 +12,8 @@
                     <option value="az" {{ request('sort') == 'az' ? 'selected' : '' }}>A - Z (Perusahaan)</option>
                 </select>
 
-                <input type="date" name="start_date" value="{{ request('start_date') }}"
-                    class="border rounded px-2 py-1 text-sm" />
-                <input type="date" name="end_date" value="{{ request('end_date') }}"
-                    class="border rounded px-2 py-1 text-sm" />
+                <input type="date" id="start_date" name="start_date" class="border rounded px-2 py-1 text-sm" />
+                <input type="date" id="end_date" name="end_date" class="border rounded px-2 py-1 text-sm" />
 
                 <button type="submit"
                     class="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600">Filter</button>
@@ -24,6 +22,17 @@
                     class="text-sm text-gray-600 underline hover:text-red-500">Reset</a>
             </form>
             <table class="table-auto w-full text-center align-middle">
+                <form method="GET" class="mb-2">
+                    <label for="per_page" class="text-sm">Tampilkan:</label>
+                    <select name="per_page" id="per_page" class="border rounded px-2 py-1 text-sm w-[60px]"
+                        onchange="this.form.submit()">
+                        @foreach ([20, 30, 50, 100] as $size)
+                            <option value="{{ $size }}" {{ request('per_page', 20) == $size ? 'selected' : '' }}>
+                                {{ $size }}
+                            </option>
+                        @endforeach
+                    </select> data per halaman
+                </form>
                 <thead>
                     <tr class="bg-slate-600 lg:text-sm text-white text-[10px]">
                         <th class="rounded-l-lg">No</th>
@@ -37,15 +46,19 @@
                         <th class="rounded-r-lg">Progress</th>
                     </tr>
                 </thead>
-                <tbody id="live-training-user" class="lg:text-[14px] text-[10px]">
-                    {{-- tidak akan di perlukan lagi untuk foreelse karena sudah di handle js --}}
+                <tbody class="lg:text-[14px] text-[10px]">
                     @forelse ($trainingAll as $index => $training)
                         <tr onclick="window.location='{{ route('dashboard.admin.training.show', ['id' => $training->id]) }}'"
                             class="odd:bg-white even:bg-gray-300 cursor-pointer hover:bg-red-500 hover:text-white leading-loose">
-                            <td>{{ $index + 1 }}</td>
-                            <td>{{ $training->user->name ?? '-' }}</td>
-                            <td>{{ $training->name_pic }}</td>
-                            <td>
+                            <td>{{ $trainingAll->firstItem() + $index }}</td>
+                            <td class="max-w-[100px] truncate whitespace-nowrap" title="{{ $training->user->name }}">
+                                {{ $training->user->name ?? '-' }}
+                            </td>
+
+                            <td class="max-w-[100px] truncate whitespace-nowrap" title="{{ $training->name_pic }}">
+                                {{ $training->name_pic ?? '-' }}
+                            </td>
+                            <td class="max-w-[100px] truncate whitespace-nowrap" title="{{ $training->name_company }}">
                                 {{ $training->name_company }}
 
                                 @php
@@ -74,26 +87,34 @@
 
                             <td>{{ $training->activity }}</td>
                             <td>{{ $training->participants->count() }}</td>
-                            <td>Aktif</td>
-                            <td>
+                            <td class="p-1">
+                                @if ($training->isprogress < 5)
+                                    <span
+                                        class="bg-yellow-400 text-black font-semibold text-[10px] px-2 py-[2px] rounded inline-block w-[70px] text-center">
+                                        Menunggu
+                                    </span>
+                                @else
+                                    <span
+                                        class="bg-green-600 text-white font-semibold text-[10px] px-2 py-[2px] rounded inline-block w-[70px] text-center">
+                                        Selesai
+                                    </span>
+                                @endif
+                            </td>
+                            <td class="max-w-[140px] truncate whitespace-nowrap">
                                 @php
                                     $start = \Carbon\Carbon::parse($training->date)->locale('id');
                                     $end = \Carbon\Carbon::parse($training->date_end)->locale('id');
 
                                     if ($start->year != $end->year) {
-                                        // Beda tahun: tampilkan full untuk keduanya
                                         $date =
                                             $start->translatedFormat('d F Y') . ' - ' . $end->translatedFormat('d F Y');
                                     } else {
-                                        // Tahun sama
                                         if ($start->month == $end->month) {
-                                            // Bulan sama → 12 - 15 Mei 2025
                                             $date =
                                                 $start->translatedFormat('d F') .
                                                 ' - ' .
                                                 $end->translatedFormat('d F Y');
                                         } else {
-                                            // Bulan beda → 30 Mei - 1 Juni 2025
                                             $date =
                                                 $start->translatedFormat('d F') .
                                                 ' - ' .
@@ -103,8 +124,6 @@
                                 @endphp
 
                                 {{ $date }}
-                            </td>
-
                             </td>
                             <td>
                                 @php
