@@ -62,6 +62,34 @@ function fetchTrainingDataAdmin() {
                 } else if (training.isUpdated) {
                     badgeHTML = `<img src="/img/gif/update.gif" alt="Updated" class="w-5 h-3 -mt-3 inline-block">`;
                 }
+                const statusMap = {
+                    waiting: {
+                        label: "Menunggu",
+                        bgColor:
+                            "bg-yellow-400 text-black font-semibold rounded",
+                    },
+                    selesai: {
+                        label: "Selesai",
+                        bgColor:
+                            "bg-green-600 text-white font-semibold rounded",
+                    },
+                };
+
+                // Tentukan status berdasarkan isprogress
+                let statusText = "";
+                let statusBgClass = "";
+
+                if ([1, 2, 3, 4].includes(training.isprogress)) {
+                    statusText = statusMap.waiting.label;
+                    statusBgClass = statusMap.waiting.bgColor;
+                } else if (training.isprogress === 5) {
+                    statusText = statusMap.selesai.label;
+                    statusBgClass = statusMap.selesai.bgColor;
+                } else {
+                    statusText = "Unknown";
+                    statusBgClass =
+                        "bg-gray-400 text-white font-semibold rounded";
+                }
 
                 html += `
                     <tr onclick="window.location='/dashboard/admin/training/${
@@ -69,12 +97,26 @@ function fetchTrainingDataAdmin() {
                     }'"
                         class="odd:bg-white even:bg-gray-300 cursor-pointer hover:bg-red-500 hover:text-white leading-loose">
                         <td>${index + 1}</td>
-                        <td>${userName}</td>
-                        <td>${namePic}</td>
-                        <td>${nameCompany} ${badgeHTML}</td>
+                       <td class="max-w-[120px] truncate whitespace-nowrap" title="${userName}">
+                            ${userName}
+                        </td>
+        
+                        <td class="max-w-[120px] truncate whitespace-nowrap" title="${namePic}">
+                            ${namePic}
+                        </td>
+        
+                        <td class="max-w-[150px] truncate whitespace-nowrap" title="${nameCompany}">
+                            ${nameCompany} ${badgeHTML}
+                        </td>
                         <td>${activity}</td>
-                        <td>Aktif</td>
-                        <td>${formattedDate}</td>
+                       <td class="p-1">
+                        <span class="${statusBgClass} text-[10px] px-2 py-[2px] rounded inline-block w-[70px] text-center">
+                          ${statusText}
+                        </span>
+                        </td>
+                        <td class="max-w-[160px] truncate whitespace-nowrap" title="${formattedDate}">
+                            ${formattedDate}
+                        </td>
                         <td>
                             <div class="w-[80px] h-2 bg-gray-200 rounded-full dark:bg-gray-700 mx-auto">
                                 <div class="${
@@ -110,124 +152,8 @@ function fetchTrainingDataAdmin() {
         });
 }
 
-function fetchTrainingDataUser() {
-    fetch("/admin/training/live")
-        .then((response) => response.json())
-        .then((response) => {
-            const trainings = response.data.reverse();
-            let html = "";
-
-            trainings.forEach((training, index) => {
-                const userName = training.user?.name || "-";
-                const namePic = training.name_pic || "-";
-                const nameCompany = training.name_company || "-";
-                const activity = training.activity || "";
-
-                const dateStart = training.date
-                    ? new Date(training.date)
-                    : null;
-                const dateEnd = training.date_end
-                    ? new Date(training.date_end)
-                    : null;
-
-                // Format tanggal custom
-                let formattedDate = "";
-                if (dateStart && dateEnd) {
-                    const dayStart = dateStart.getDate();
-                    const dayEnd = dateEnd.getDate();
-                    const monthStart = dateStart.toLocaleDateString("id-ID", {
-                        month: "long",
-                    });
-                    const monthEnd = dateEnd.toLocaleDateString("id-ID", {
-                        month: "long",
-                    });
-                    const yearStart = dateStart.getFullYear();
-                    const yearEnd = dateEnd.getFullYear();
-
-                    if (yearStart !== yearEnd) {
-                        formattedDate = `${dayStart} ${monthStart} ${yearStart} - ${dayEnd} ${monthEnd} ${yearEnd}`;
-                    } else if (dateStart.getMonth() === dateEnd.getMonth()) {
-                        formattedDate = `${dayStart}-${dayEnd} ${monthStart} ${yearStart}`;
-                    } else {
-                        formattedDate = `${dayStart} ${monthStart} - ${dayEnd} ${monthEnd} ${yearStart}`;
-                    }
-                }
-
-                const progressMap = {
-                    1: {
-                        percent: 10,
-                        color: "bg-red-600",
-                    },
-                    2: {
-                        percent: 30,
-                        color: "bg-orange-500",
-                    },
-                    3: {
-                        percent: 50,
-                        color: "bg-yellow-400",
-                    },
-                    4: {
-                        percent: 75,
-                        color: "bg-[#bffb4e]",
-                    },
-                    5: {
-                        percent: 100,
-                        color: "bg-green-600",
-                    },
-                };
-
-                const progress = progressMap[training.isprogress] || {
-                    percent: 0,
-                    color: "bg-gray-400",
-                };
-
-                let badgeHTML = "";
-                if (training.isNew) {
-                    badgeHTML = `<img src="/img/gif/new.gif" alt="New" class="w-5 h-3 -mt-3 inline-block">`;
-                } else if (training.isUpdated) {
-                    badgeHTML = `<img src="/img/gif/update.gif" alt="Updated" class="w-5 h-3 -mt-3 inline-block">`;
-                }
-
-                html += `
-                    <tr onclick="window.location='/dashboard/admin/training/${
-                        training.id
-                    }'"
-                        class="odd:bg-white even:bg-gray-300 cursor-pointer hover:bg-red-500 hover:text-white leading-loose">
-                        <td>${index + 1}</td>
-                        <td>${userName}</td>
-                        <td>${namePic}</td>
-                        <td>
-                            ${nameCompany} 
-                            ${badgeHTML}
-                        </td>
-                        <td>${activity}</td>
-                        <td>Aktif</td>
-                        <td>${formattedDate}</td>
-                        <td>
-                            <div class="w-[80px] h-2 bg-gray-200 rounded-full dark:bg-gray-700 mx-auto">
-                                <div class="${
-                                    progress.color
-                                } text-[8px] font-medium text-white text-center leading-none rounded-full"
-                                    style="width: ${
-                                        progress.percent
-                                    }%; height:8px">
-                                    ${progress.percent}%
-                                </div>
-                            </div>
-                        </td>
-                    </tr>`;
-            });
-
-            document.getElementById("live-training-user").innerHTML = html;
-        })
-        .catch((error) => {
-            console.error("Error fetching training data:", error);
-        });
-}
 // ============ INIT ================
 $(document).ready(function () {
     fetchTrainingDataAdmin();
-    fetchTrainingDataUser();
     setInterval(fetchTrainingDataAdmin, 2000);
-    setInterval(fetchTrainingDataUser, 2000);
 });

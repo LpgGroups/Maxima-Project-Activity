@@ -40,10 +40,8 @@ class DashboardAdminController extends Controller
     {
         $admin = Auth::user();
 
-        // Query builder awal
         $query = RegTraining::with(['trainingNotifications', 'user', 'participants']);
 
-        // 🔍 Filter: Search name_company
         if ($request->filled('search')) {
             $search = $request->search;
 
@@ -57,24 +55,22 @@ class DashboardAdminController extends Controller
             });
         }
 
-        // 📅 Filter: Tanggal
         if ($request->filled('start_date') && $request->filled('end_date')) {
             $query->whereBetween('date', [$request->start_date, $request->end_date]);
         }
 
-        // 🔠 Sort A-Z
         if ($request->filled('sort') && $request->sort == 'az') {
             $query->orderBy('name_company', 'asc');
         } else {
             $query->latest();
         }
 
-        // Ambil data paginasi
-        $trainingAll = $query->paginate(20)->appends(request()->query());
-
-        // Ambil semua training (untuk total peserta), tidak dipengaruhi paginasi
-        $allTrainings = $query->get(); // note: ini sesuai filter
+        // Ambil semua data untuk hitung total participants
+        $allTrainings = $query->get();
         $totalParticipants = $allTrainings->sum(fn($training) => $training->participants->count());
+
+        $perPage = $request->get('per_page', 20); // default 20 jika tidak diisi
+        $trainingAll = $query->paginate($perPage)->appends(request()->query());
 
         return view('dashboard.admin.cektraining.tabletraining', [
             'title' => 'Dashboard Admin',
@@ -83,9 +79,10 @@ class DashboardAdminController extends Controller
             'totalParticipants' => $totalParticipants,
         ]);
     }
+
     public function getLiveTraining()
     {
-        $trainings = RegTraining::with(['user', 'trainingNotifications.user'])->get();
+        $trainings = RegTraining::with(['user', 'trainingNotifications.user', 'participants'])->get();
 
         $data = $trainings->map(function ($training) {
 
@@ -112,6 +109,7 @@ class DashboardAdminController extends Controller
                 'isprogress' => $training->isprogress,
                 'isNew' => $isNew,
                 'isUpdated' => $isUpdated,
+                'participants_count' => $training->participants->count(),  // <-- tambahkan ini
             ];
         });
 
@@ -119,6 +117,7 @@ class DashboardAdminController extends Controller
             'data' => $data,
         ]);
     }
+
     public function show($id)
     {
         $training = RegTraining::with(['participants', 'trainingNotifications'])
