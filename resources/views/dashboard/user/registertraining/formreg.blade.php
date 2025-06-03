@@ -63,7 +63,7 @@
 
                 <form id="registrationForm" action="{{ route('dashboard.form.save') }}" method="POST">
                     @csrf
-                    <input type="" id="trainingId" name="id" value="{{ old('id', $training->id ?? '') }}">
+                    <input type="hidden" id="trainingId" name="id" value="{{ old('id', $training->id ?? '') }}">
                     <div class="flex gap-x-4">
                         <!-- Nama PIC Perusahaan -->
                         <div class="relative mt-4 w-64">
