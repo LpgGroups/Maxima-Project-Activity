@@ -152,6 +152,7 @@ function fetchTrainingDataAdmin() {
         });
 }
 
+
 // ============ INIT ================
 $(document).ready(function () {
     fetchTrainingDataAdmin();

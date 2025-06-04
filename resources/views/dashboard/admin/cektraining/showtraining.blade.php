@@ -274,36 +274,18 @@
             diperiksa dengan cermat:</p>
 
         @forelse ($training->files as $file)
-            {{-- File MOU --}}
-            @if ($file->file_mou)
+           
+            @if ($file->file_approval)
                 <div class="flex mt-4">
-                    <!-- PDF Icon -->
+                   
                     <img src="{{ asset('img/icon_pdf_mou.png') }}" alt="PDF Icon" width="50"
                         style="margin-right: 15px;">
 
-                    <!-- File Name + Link -->
+                  
                     <div>
-                        <div><strong>File MOU:</strong> {{ basename($file->file_mou) }}</div>
-                        <a href="{{ asset('storage/' . $file->file_mou) }}" target="_blank"
+                        <div><strong>File MOU:</strong> {{ basename($file->file_approval) }}</div>
+                        <a href="{{ asset('storage/' . $file->file_approval) }}" target="_blank"
                             class="w-full h-20 p-1 bg-red-500 rounded mt-2 text-[10px]">
-                            Download
-                        </a>
-                    </div>
-                </div>
-            @endif
-
-            {{-- File Quotation --}}
-            @if ($file->file_quotation)
-                <div class="flex mt-4">
-                    <!-- PDF Icon -->
-                    <img src="{{ asset('img/icon_pdf_quotation.png') }}" alt="PDF Icon" width="50"
-                        style="margin-right: 15px;">
-
-                    <!-- File Name + Link -->
-                    <div>
-                        <div><strong>File Quotation:</strong> {{ basename($file->file_quotation) }}</div>
-                        <a href="{{ asset('storage/' . $file->file_quotation) }}" target="_blank"
-                            class="w-full h-20 p-1 bg-blue-500 rounded mt-2 text-[10px]">
                             Download
                         </a>
                     </div>
@@ -311,7 +293,7 @@
             @endif
         @empty
             <div class="mt-4 text-gray-500">
-                <strong>Data MOU dan Quotation Belum Tersedia</strong>
+                <strong>Data File Belum Tersedia</strong>
             </div>
         @endforelse
 

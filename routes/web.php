@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardAdminController;
+use App\Http\Controllers\DashboardManagementController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Middleware\UserAccess;
@@ -19,14 +20,6 @@ Route::post('/logout', function () {
 })->name('logout');
 
 Route::middleware(['auth'])->group(function () {
-
-    Route::get('/notification', function () {
-        $user = Auth::user();
-        $notifications = $user->notifications->sortByDesc('created_at');
-        return view('dashboard.notification.index', ['title' => 'Notifikasi',], compact('notifications'));
-    })->name('notification');
-
-
     Route::middleware([UserAccess::class . ':admin'])->group(function () {
         Route::get('/admin/training/live', [DashboardAdminController::class, 'getLiveTraining'])->name('admin.training.live');
         Route::get('/dashboard/admin/training/alltraining', [DashboardAdminController::class, 'trainingAll'])->name('admin.training.alltraining');
@@ -65,8 +58,16 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/dashboard/user/training/form2/save', [RegTrainingController::class, 'saveForm2'])->name('dashboard.form2.save');
         Route::post('/dashboard/user/training/form3/save', [RegTrainingController::class, 'saveForm3'])->name('dashboard.form3.save');
         Route::delete('/dashboard/user/training/form2/{id}', [RegTrainingController::class, 'destroyUser'])->name('dashboard.form2.destroy');
-
-
-        // Route::post('/dashboard/user/pelatihan/form/send',[RegTrainingController::class,'formReg'])->name('dashboard.form.send');
     });
+
+    Route::middleware([UserAccess::class . ':management'])->group(function () {
+        Route::get('/dashboard/management', [DashboardManagementController::class, 'index'])->name('dashboard.management.index');
+        Route::get('/dashboard/management/get', [DashboardManagementController::class, 'getData'])->name('dashboard.management.getdata');
+    });
+    
+    Route::get('/notification', function () {
+        $user = Auth::user();
+        $notifications = $user->notifications->sortByDesc('created_at');
+        return view('dashboard.notification.index', ['title' => 'Notifikasi',], compact('notifications'));
+    })->name('notification');
 });

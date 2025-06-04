@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="user-role" content="{{ Auth::user()->role }}">
     @vite('resources/css/app.css')
     @vite('resources/js/app.js')
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
@@ -14,7 +15,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    
+
 
     <!-- Flatpickr JS -->
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
@@ -29,12 +30,21 @@
 
     <!-- Sidebar -->
     <div class="flex flex-1">
-        @include('dashboard.layouts.sidebar')
+        @if (auth()->user()->role === 'management')
+            {{-- Sidebar hanya untuk md dan lg --}}
+            <div class="hidden md:block">
+                @include('dashboard.layouts.sidebarM')
+            </div>
+            <div id="main-content" class="flex-1 p-4 transition-all duration-300 md:ml-64 lg:ml-64">
+                @yield('container')
+            </div>
+        @else
+            @include('dashboard.layouts.sidebar')
+            <div id="main-content" class="flex-1 p-4 transition-all duration-300 ml-64">
+                @yield('container')
+            </div>
+        @endif
 
-        <!-- Main content -->
-        <div id="main-content" class="flex-1 p-4 transition-all duration-300 ml-64">
-            @yield('container')
-        </div>
     </div>
     @stack('scripts')
 </body>

@@ -1,5 +1,3 @@
-console.log("✅ Auth.js loaded ssss");
-
 document.addEventListener("DOMContentLoaded", () => {
     const loginBtn = document.getElementById("loginBtn");
     const loginForm = document.getElementById("loginForm");
@@ -8,10 +6,8 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log("✅ JavaScript loaded and login button found."); // 🔍 Untuk memastikan JS nyala
         loginForm.addEventListener("submit", (e) => {
             showLoader("Sedang memuat halaman...");
-            console.log("🌀 Login button clicked, loader shown."); // 🔍 Untuk debug
         });
     } else {
-        console.log("⚠️ Login button or form not found.");
     }
 });
 
