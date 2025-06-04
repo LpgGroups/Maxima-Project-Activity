@@ -201,11 +201,9 @@ class RegTrainingController extends Controller
     {
         $request->validate([
             'file_id' => 'required|exists:reg_training,id',
-            'file_mou' => 'nullable|file|mimes:pdf|max:2048',
-            'file_quotation' => 'nullable|file|mimes:pdf|max:2048',
+            'file_approval' => 'nullable|file|mimes:pdf|max:2048',
         ], [
-            'file_mou.max' => 'File melebihi batas 2MB.',
-            'file_quotation.max' => 'File melebihi batas 2MB.',
+            'file_approval.max' => 'File melebihi batas 2MB.',
         ]);
 
         $training = RegTraining::where('id', $request->file_id)->firstOrFail();
@@ -216,40 +214,27 @@ class RegTrainingController extends Controller
         $nameCompany = Str::slug($training->name_company ?? 'Company', '_');
         $nameTraining = Str::slug($training->activity ?? 'Training', '_');
 
-        $mouPath = $record->file_mou ?? null;
-        $quotationPath = $record->file_quotation ?? null;
+        $filePath = $record->file_approval ?? null;
 
         // Simpan file MoU
-        if ($request->hasFile('file_mou')) {
-            if ($record && $record->file_mou) {
-                Storage::disk('public')->delete($record->file_mou);
+        if ($request->hasFile('file_approval')) {
+            if ($record && $record->file_approval) {
+                Storage::disk('public')->delete($record->file_approval);
             }
 
-            $fileName = "MoU_{$nameCompany}_{$nameTraining}." . $request->file('file_mou')->getClientOriginalExtension();
-            $mouPath = $request->file('file_mou')->storeAs('uploads/mou', $fileName, 'public');
-        }
-
-        // Simpan file Quotation
-        if ($request->hasFile('file_quotation')) {
-            if ($record && $record->file_quotation) {
-                Storage::disk('public')->delete($record->file_quotation);
-            }
-
-            $fileName = "Quotation_{$nameCompany}_{$nameTraining}." . $request->file('file_quotation')->getClientOriginalExtension();
-            $quotationPath = $request->file('file_quotation')->storeAs('uploads/quotation', $fileName, 'public');
+            $fileName = "File_{$nameCompany}_{$nameTraining}." . $request->file('file_approval')->getClientOriginalExtension();
+            $filePath = $request->file('file_approval')->storeAs('uploads/fileapproval', $fileName, 'public');
         }
 
         // Simpan atau update ke table file_requirement
         if ($record) {
             $record->update([
-                'file_mou' => $mouPath,
-                'file_quotation' => $quotationPath,
+                'file_approval' => $filePath,
             ]);
         } else {
             FileRequirement::create([
                 'file_id' => $request->file_id,
-                'file_mou' => $mouPath,
-                'file_quotation' => $quotationPath,
+                'file_approval' => $filePath,
             ]);
         }
 

@@ -282,13 +282,8 @@ function sendForm3() {
                 var errors = xhr.responseJSON.errors;
                 var messages = [];
 
-                if (errors.file_mou) {
-                    messages.push("File MoU: " + errors.file_mou.join(", "));
-                }
-                if (errors.file_quotation) {
-                    messages.push(
-                        "File Quotation: " + errors.file_quotation.join(", ")
-                    );
+                if (errors.file_approval) {
+                    messages.push("File: " + errors.file_approval.join(", "));
                 }
 
                 showError(messages.join("<br>"));
@@ -365,7 +360,7 @@ function checkSubmitBtnDeadline() {
         const now = new Date();
 
         const hMinus3 = new Date(trainingDate);
-        hMinus3.setDate(trainingDate.getDate() - 3);
+        hMinus3.setDate(trainingDate.getDate() - 5);
 
         if (now >= hMinus3) {
             // disable tombol dan ubah style

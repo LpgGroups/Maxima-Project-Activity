@@ -376,32 +376,17 @@
                                 <input class="hidden" type="hidden" name="file_id" value="{{ $training->id }}">
 
                                 <div class="mt-2">
-                                    <label class="block mb-2 mt-2 text-sm font-medium text-gray-900" for="file_mou">
-                                        Upload file MoU
+                                    <label class="block mb-2 mt-2 text-sm font-medium text-gray-900" for="file_approval">
+                                        Upload File Mou/Quotation/PO
                                     </label>
-                                    <input name="file_mou" id="file_mou" type="file" accept="application/pdf"
-                                        class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none">
-                                    <p class="mt-1 text-sm text-gray-500">Format File: PDF (Maks Size: 2MB).</p>
-
-                                    @if (!empty($fileRequirement?->file_mou))
-                                        <p class="text-sm text-green-600">File MoU sudah diupload:
-                                            <strong>{{ basename($fileRequirement->file_mou) }}</strong>
-                                        </p>
-                                    @endif
-                                </div>
-
-                                <div class="mt-2">
-                                    <label class="block mb-2 text-sm font-medium text-gray-900" for="file_quotation">
-                                        Upload file Quotation
-                                    </label>
-                                    <input name="file_quotation" id="file_quotation" type="file"
+                                    <input name="file_approval" id="file_approval" type="file"
                                         accept="application/pdf"
                                         class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none">
                                     <p class="mt-1 text-sm text-gray-500">Format File: PDF (Maks Size: 2MB).</p>
 
-                                    @if (!empty($fileRequirement?->file_quotation))
-                                        <p class="text-sm text-green-600">File Quotation sudah diupload:
-                                            <strong>{{ basename($fileRequirement->file_quotation) }}</strong>
+                                    @if (!empty($fileRequirement?->file_approval))
+                                        <p class="text-sm text-green-600">File sudah diupload:
+                                            <strong>{{ basename($fileRequirement->file_approval) }}</strong>
                                         </p>
                                     @endif
                                 </div>
