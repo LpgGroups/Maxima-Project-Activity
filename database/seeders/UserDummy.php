@@ -56,11 +56,18 @@ class UserDummy extends Seeder
                 'role' => 'user',
                 'password' => bcrypt('12345')
             ],
-             [
+            [
                 'name' => 'user4',
                 'email' => 'user4',
                 'perusahaan' => 'Human Resource',
                 'role' => 'user',
+                'password' => bcrypt('12345')
+            ],
+            [
+                'name' => 'Dewa Ennel',
+                'email' => 'management1',
+                'perusahaan' => 'Dewa',
+                'role' => 'management',
                 'password' => bcrypt('12345')
             ]
         ];

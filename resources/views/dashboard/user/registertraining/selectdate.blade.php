@@ -32,5 +32,4 @@
 
 @push('scripts')
 @vite('resources/js/datepicker.js')
-
 @endpush

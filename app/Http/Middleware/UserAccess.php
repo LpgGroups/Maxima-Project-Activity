@@ -34,7 +34,7 @@ class UserAccess
             $user = Auth::user();
             if ($user->role !== $role) {
                 // Redirect jika role tidak sesuai
-                return redirect('/dashboard/user')->with('message', 'Anda tidak memiliki akses ke halaman ini.');
+                 return redirect('/')->with('message', 'Akses ditolak. Anda telah dikeluarkan.');
             }
         } else {
             return redirect('/');

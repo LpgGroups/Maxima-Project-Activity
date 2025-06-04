@@ -36,7 +36,10 @@ class LoginController extends Controller
                 return redirect()->route('dashboard.user.index');
             } else if ((Auth::user()->role == 'admin')) {
                 return redirect()->route('dashboard.admin.index');
-            } else {
+            }else if ((Auth::user()->role == 'management')) {
+                return redirect()->route('dashboard.management.index');
+            } 
+            else {
                 Auth::logout();
                 return redirect('/')->withErrors('Periksa Akun Kembali');
             }
