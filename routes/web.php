@@ -9,6 +9,7 @@ use App\Http\Controllers\DashboardUserController;
 use App\Http\Controllers\RegTrainingController;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 Route::get('/', [LoginController::class, 'index'])->name('login.index');
 Route::post('/', [LoginController::class, 'authenticate'])->name('login');
@@ -63,8 +64,10 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware([UserAccess::class . ':management'])->group(function () {
         Route::get('/dashboard/management', [DashboardManagementController::class, 'index'])->name('dashboard.management.index');
         Route::get('/dashboard/management/get', [DashboardManagementController::class, 'getData'])->name('dashboard.management.getdata');
+        Route::get('/dashboard/management/detail/{id}', [DashboardManagementController::class, 'showDetail']);
+        Route::put('/dashboard/management/approve/{id}', [DashboardManagementController::class, 'approve']);
     });
-    
+
     Route::get('/notification', function () {
         $user = Auth::user();
         $notifications = $user->notifications->sortByDesc('created_at');

@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('place')->nullable();
             $table->string('link')->nullable();
             $table->integer('isprogress')->default(0);
+            $table->boolean('isfinish')->default(false);
             $table->unsignedBigInteger('user_id')->nullable(); 
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
