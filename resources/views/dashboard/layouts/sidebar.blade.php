@@ -129,7 +129,7 @@
                         </a>
                     </li>
                 @elseif ($role == 'management')
-                 {{-- Menu untuk Management --}}
+                    {{-- Menu untuk Management --}}
                     <li class="my-1">
                         <a href="/dashboard/management"
                             class="flex items-center space-x-2 menu-item-hover 
@@ -149,7 +149,7 @@
 
         <!-- Version Info -->
         <div class="p-4 mt-auto">
-            <span class="text-sm">Testing:V1.9.0</span>
+            <span class="text-sm">Testing:V1.10.0</span>
         </div>
     </div>
 </div>

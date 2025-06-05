@@ -50,10 +50,15 @@ class DashboardManagementController extends Controller
             }),
         ]);
     }
-    public function approve($id)
+    public function approve(Request $request, $id)
     {
         $training = RegTraining::findOrFail($id);
-        $training->isfinish = true;
+
+        // Baca nilai dari request body
+        $isfinish = $request->input('isfinish', false);
+
+        // Simpan nilai ke database
+        $training->isfinish = $isfinish;
         $training->save();
 
         return response()->json(['success' => true]);
