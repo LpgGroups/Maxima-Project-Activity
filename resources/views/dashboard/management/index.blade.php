@@ -1,13 +1,31 @@
 @extends('dashboard.layouts.dashboardmain')
 @section('container')
+  @php
+        $activityMap = [
+            'TKPK1' => 'Pelatihan Tenaga Kerja Pada Ketinggian Tingkat 1',
+            'TKPK2' => 'Pelatihan Tenaga Kerja Pada Ketinggian Tingkat 2',
+            'TKBT1' => 'Pelatihan Tenaga Kerja Bangunan Tinggi 1',
+            'TKBT2' => 'Pelatihan Tenaga Kerja Bangunan Tinggi 2',
+            'BE' => 'Pelatihan Basic Electrical',
+            'P3K' => 'Pelatihan Pertolongan Pertama Pada Kecelakaan (P3K)',
+            'AK3U' => 'Pelatihan Ahli K3 Umum (AK3U) ',
+        ];
+    @endphp
     <div class="space-y-4">
         @foreach ($data as $training)
             <div class="w-full h-24 bg-green-500 rounded-lg shadow-md relative overflow-hidden">
                 <div class="absolute inset-0 bg-white rounded-lg p-3 flex flex-col justify-between">
                     <div class="flex justify-between items-start">
                         <div>
-                            <p class="text-zinc-800 text-sm font-semibold">{{ $training->activity }}</p>
-                            <p class="text-zinc-800 text-xs">{{ $training->name_pic ?? 'M' }} -
+                            @if($training->isfinish == true)
+                            <div class="flex">
+                                <p class="text-zinc-800 text-sm font-semibold">{{$activityMap[$training->activity]??'null'}}</p>
+                                 <img src="{{ asset('img/svg/success.svg') }}" alt="Success" class="ml-2 w-4 h-4">
+                            </div>
+                            @else
+                            <p class="text-zinc-800 text-sm font-semibold">{{$activityMap[$training->activity]??'null'}}</p>
+                            @endif
+                            <p class="text-zinc-800 text-xs">{{ $training->name_pic ?? 'null' }} -
                                 {{ $training->name_company ?? '-' }}</p>
                             <p class="text-zinc-800 text-[12px] mt-1">{{ $training->participants->count() }} Peserta</p>
                         </div>

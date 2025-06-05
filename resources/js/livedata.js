@@ -104,16 +104,21 @@ function fetchTrainingDataAdmin() {
                         <td class="max-w-[120px] truncate whitespace-nowrap" title="${namePic}">
                             ${namePic}
                         </td>
-        
+                    
                         <td class="max-w-[150px] truncate whitespace-nowrap" title="${nameCompany}">
                             ${nameCompany} ${badgeHTML}
                         </td>
                         <td>${activity}</td>
-                       <td class="p-1">
-                        <span class="${statusBgClass} text-[10px] px-2 py-[2px] rounded inline-block w-[70px] text-center">
-                          ${statusText}
-                        </span>
-                        </td>
+                    <td class="relative p-1 pr-1">
+  <span class="${statusBgClass} text-[10px] px-2 py-[2px] rounded inline-block w-[70px] text-center truncate">
+    ${statusText}
+  </span>
+  ${
+    ["true", true, 1, "1"].includes(training.isfinish)
+      ? `<img src="/img/svg/success.svg" alt="Success" class="w-4 h-4 absolute top-1 right-1">`
+      : ""
+  }
+</td>
                         <td class="max-w-[160px] truncate whitespace-nowrap" title="${formattedDate}">
                             ${formattedDate}
                         </td>
