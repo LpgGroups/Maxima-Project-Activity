@@ -48,10 +48,16 @@
                             {{ \Carbon\Carbon::parse($training->date)->translatedFormat('d F Y') }}
                             -
                             {{ \Carbon\Carbon::parse($training->date_end)->translatedFormat('d F Y') }}</span>
-                        <a href="#" class="text-indigo-600 text-xs">View Details</a>
+                        <a href="#" class="text-indigo-600 text-xs view-detail-btn" data-id="{{ $training->id }}">
+                            View Details
+                        </a>
+
                     </div>
                 </div>
             </div>
         @endforeach
     </div>
 @endsection
+@push('scripts')
+    @vite('resources/js/management.js')
+@endpush

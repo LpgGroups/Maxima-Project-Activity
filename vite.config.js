@@ -12,6 +12,7 @@ export default defineConfig({
                 "resources/js/registertraining.js",
                 "resources/js/edittrainingadmin.js",
                 "resources/js/livedata.js",
+                "resources/js/management.js",
             ],
             refresh: true,
         }),

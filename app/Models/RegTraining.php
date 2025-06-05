@@ -24,6 +24,7 @@ class RegTraining extends Model
         'link',
         'place',
         'isprogress',
+        'isfinish',
         'user_id',
     ];
 
@@ -56,5 +57,9 @@ class RegTraining extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+    public function approvalFiles()
+    {
+        return $this->hasMany(FileRequirement::class, 'file_id', 'id');
     }
 }
