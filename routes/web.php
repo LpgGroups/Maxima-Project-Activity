@@ -73,4 +73,29 @@ Route::middleware(['auth'])->group(function () {
         $notifications = $user->notifications->sortByDesc('created_at');
         return view('dashboard.notification.index', ['title' => 'Notifikasi',], compact('notifications'));
     })->name('notification');
+
+    Route::get('/fetch-notifications', function () {
+        $user = Auth::user();
+
+        if (!$user) {
+            return response()->json(['count' => 0, 'notifications' => []]);
+        }
+
+        $notifications = $user->unreadNotifications
+            ->sortByDesc('created_at')
+            ->take(5);
+
+        return response()->json([
+            'count' => $notifications->count(),
+            'notifications' => $notifications->map(function ($notif) {
+                return [
+                    'id' => $notif->id,
+                    'message' => $notif->data['message'] ?? 'Notifikasi baru',
+                    'url' => $notif->data['url'] ?? '#',
+                    'type' => $notif->data['type'] ?? 'default',
+                    'created_at' => $notif->created_at->diffForHumans(),
+                ];
+            })->values(),
+        ]);
+    })->middleware('auth');
 });

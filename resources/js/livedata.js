@@ -114,9 +114,9 @@ function fetchTrainingDataAdmin() {
     ${statusText}
   </span>
   ${
-    ["true", true, 1, "1"].includes(training.isfinish)
-      ? `<img src="/img/svg/success.svg" alt="Success" class="w-4 h-4 absolute top-1 right-1">`
-      : ""
+      ["true", true, 1, "1"].includes(training.isfinish)
+          ? `<img src="/img/svg/success.svg" alt="Success" class="w-4 h-4 absolute top-1 right-1">`
+          : ""
   }
 </td>
                         <td class="max-w-[160px] truncate whitespace-nowrap" title="${formattedDate}">
@@ -160,5 +160,5 @@ function fetchTrainingDataAdmin() {
 // ============ INIT ================
 $(document).ready(function () {
     fetchTrainingDataAdmin();
-    setInterval(fetchTrainingDataAdmin, 10000);
+    setInterval(fetchTrainingDataAdmin, 20000);
 });

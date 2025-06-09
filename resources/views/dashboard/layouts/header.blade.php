@@ -119,18 +119,52 @@
     </div>
 </nav>
 <script>
-    const notifBtn = document.getElementById('notifBtn');
-    const notifDropdown = document.getElementById('notifDropdown');
+    let notifOpen = false; // Status dropdown terbuka
 
-    notifBtn.addEventListener('click', function(e) {
-        e.stopPropagation();
-        notifDropdown.classList.toggle('hidden');
-    });
+    function initNotifEvents() {
+        const notifBtn = document.getElementById('notifBtn');
+        const notifDropdown = document.getElementById('notifDropdown');
 
-    // Tutup dropdown kalau klik di luar
-    document.addEventListener('click', function(e) {
-        if (!notifDropdown.contains(e.target) && !notifBtn.contains(e.target)) {
-            notifDropdown.classList.add('hidden');
-        }
-    });
+        if (!notifBtn || !notifDropdown) return;
+
+        notifBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            notifDropdown.classList.toggle('hidden');
+
+            // Update status berdasarkan apakah dropdown terlihat
+            notifOpen = !notifDropdown.classList.contains('hidden');
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!notifDropdown.contains(e.target) && !notifBtn.contains(e.target)) {
+                notifDropdown.classList.add('hidden');
+                notifOpen = false; // Dropdown ditutup
+            }
+        });
+    }
+
+    // Jalankan saat awal
+    initNotifEvents();
+
+    // Auto-refresh setiap 10 detik, tapi hanya jika dropdown TERTUTUP
+    setInterval(() => {
+        if (notifOpen) return; // Jika sedang terbuka, jangan refresh
+
+        fetch(window.location.href, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(res => res.text())
+            .then(html => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const newNotifHTML = doc.querySelector('.relative').outerHTML;
+                document.querySelector('.relative').outerHTML = newNotifHTML;
+
+                // Setelah diganti, pasang ulang event
+                initNotifEvents();
+            })
+            .catch(err => console.error('Gagal refresh notifikasi:', err));
+    }, 20000);
 </script>
