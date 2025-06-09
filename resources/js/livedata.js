@@ -47,7 +47,7 @@ function fetchTrainingDataAdmin() {
                     1: { percent: 10, color: "bg-red-600" },
                     2: { percent: 30, color: "bg-orange-500" },
                     3: { percent: 50, color: "bg-yellow-400" },
-                    4: { percent: 75, color: "bg-[#bffb4e]" },
+                    4: { percent: 75, color: "bg-[#e6e600]" },
                     5: { percent: 100, color: "bg-green-600" },
                 };
 

@@ -23,7 +23,7 @@
                 <div class="text-black text-[52px] font-bold">{{ $totalParticipants }}</div>
             </div>
 
-            <!-- Elemen Total Kehadiran (Dibawah Total Pelatihan & Peserta) -->
+           
             <div class="lg:w-[568px] sm:w-full h-auto bg-white rounded-2xl shadow-md p-4 sm:mb-0 lg:mb-[500px]">
                 {{-- table --}}
                 <div class="rounded-2xl p-2 w-full">
@@ -112,7 +112,7 @@
                                                 1 => ['percent' => 10, 'color' => 'bg-red-600'],
                                                 2 => ['percent' => 30, 'color' => 'bg-orange-500'],
                                                 3 => ['percent' => 50, 'color' => 'bg-yellow-400'],
-                                                4 => ['percent' => 75, 'color' => 'bg-[#bffb4e]'],
+                                                4 => ['percent' => 75, 'color' => 'bg-[#e6e600]'],
                                                 5 => ['percent' => 100, 'color' => 'bg-green-600'],
                                             ];
 

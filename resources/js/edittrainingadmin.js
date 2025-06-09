@@ -257,7 +257,6 @@ function updateTrainingFinish(event) {
 
 function addParticipants() {
     $("#submitParticipation").on("click", function () {
-        // Menampilkan SweetAlert untuk memasukkan nama peserta
         Swal.fire({
             title: "Tambah Peserta Baru",
             input: "text",
@@ -265,7 +264,6 @@ function addParticipants() {
             showCancelButton: true,
             confirmButtonText: "Tambah",
             preConfirm: (name) => {
-                // Validasi input
                 if (!name) {
                     Swal.showValidationMessage("Nama peserta wajib diisi!");
                     return false;
@@ -275,11 +273,14 @@ function addParticipants() {
         }).then((result) => {
             if (result.isConfirmed && result.value) {
                 const name = result.value;
-
-                // Mengambil form_id yang saat ini (misalnya bisa ditarik dari elemen form)
                 const form_id = $("#updateParticipantsForm").data("form-id");
 
-                // Mengirimkan data ke server via AJAX
+                // Tampilkan loading Swal sebelum request
+                showLoadingSwal(
+                    "Menambahkan Peserta",
+                    "Mohon tunggu sebentar..."
+                );
+
                 fetch("/dashboard/admin/training/add-participant", {
                     method: "POST",
                     headers: {
@@ -296,25 +297,19 @@ function addParticipants() {
                     .then((response) => response.json())
                     .then((data) => {
                         if (data.success) {
-                            Swal.fire(
-                                "✅ Peserta berhasil ditambahkan!",
-                                "",
-                                "success"
-                            );
+                            showSuccessSwal("Peserta berhasil ditambahkan!");
                         } else {
-                            Swal.fire(
-                                "❌ Gagal menambahkan peserta!",
-                                "",
-                                "error"
+                            showErrorSwal(
+                                "Gagal menambahkan peserta",
+                                data.message || "Silakan coba lagi."
                             );
                         }
                     })
                     .catch((error) => {
                         console.error("Error:", error);
-                        Swal.fire(
-                            "⚠️ Terjadi kesalahan, coba lagi.",
-                            "",
-                            "error"
+                        showErrorSwal(
+                            "Terjadi kesalahan",
+                            "Silakan coba beberapa saat lagi."
                         );
                     });
             }

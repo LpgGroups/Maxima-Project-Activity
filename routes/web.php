@@ -50,6 +50,8 @@ Route::middleware(['auth'])->group(function () {
         // user
         Route::get('/dashboard/user', [DashboardUserController::class, 'index'])->name('dashboard.user.index');
         Route::post('/dashboard/booking', [DashboardUserController::class, 'bookingDate'])->name('dashboard.user.booking');
+        Route::get('/dashboard/user/live-data', [DashboardUserController::class, 'getLiveDataUser'])
+            ->name('dashboard.user.liveData');
 
         // registertraining
         Route::get('/dashboard/user/training', [RegTrainingController::class, 'index'])->name('dashboard.training');
