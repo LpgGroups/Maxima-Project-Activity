@@ -34,7 +34,7 @@ class AppServiceProvider extends ServiceProvider
                 $notifications = $user->notifications
                     ->sortByDesc('created_at')
                     ->filter(function ($notif) {
-                        return !$notif->read_at || $notif->created_at->gt(now()->subMinutes(10));
+                        return !$notif->read_at || $notif->created_at->gt(now()->subDays(7));
                     });
 
                 $view->with('dropdownNotifications', $notifications);

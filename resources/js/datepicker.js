@@ -451,7 +451,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Contoh: load saat halaman ready atau tiap 30 detik
-    setInterval(() => loadLiveTrainings(), 20000);
+    setInterval(() => loadLiveTrainings(), 230000);
 
     renderCalendar();
 });
