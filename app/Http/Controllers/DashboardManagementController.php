@@ -9,13 +9,32 @@ use Illuminate\Http\Request;
 
 class DashboardManagementController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $data = RegTraining::with(['participants', 'files', 'trainingNotifications', 'user'])->where('isprogress', 5)->get();
+        $query = RegTraining::with(['participants', 'files', 'trainingNotifications', 'user'])
+            ->where('isprogress', 5);
+
+        // Filter tanggal mulai
+        if ($request->filled('startDate')) {
+            $query->whereDate('date', '>=', $request->startDate);
+        }
+
+        // Filter tanggal selesai
+        if ($request->filled('endDate')) {
+            $query->whereDate('date_end', '<=', $request->endDate);
+        }
+
+        // Sorting berdasarkan nama perusahaan (name_company)
+        if ($request->filled('sortCompany')) {
+            $sortDirection = $request->sortCompany === 'desc' ? 'desc' : 'asc';
+            $query->orderBy('name_company', $sortDirection);
+        }
+
+        $data = $query->get();
 
         return view('dashboard.management.index', [
             'title' => 'Management Summary',
-            'data' => $data
+            'data' => $data,
         ]);
     }
 
