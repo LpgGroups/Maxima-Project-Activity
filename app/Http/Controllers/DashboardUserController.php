@@ -106,6 +106,62 @@ class DashboardUserController extends Controller
             return response()->json(['success' => false, 'message' => $e->getMessage()]);
         }
     }
+    public function getLiveDataUser()
+    {
+        $user = Auth::user();
+
+        $trainings = RegTraining::where('user_id', $user->id)
+            ->latest()
+            ->take(10)
+            ->get();
+
+        $data = $trainings->map(function ($training, $index) use ($user) {
+            $notification = $training->trainingNotifications
+                ->where('user_id', $user->id)
+                ->first();
+
+            $isNew = !$notification || !$notification->viewed_at;
+            $isUpdated = $notification && $notification->viewed_at && $training->updated_at > $notification->viewed_at;
+
+            // Format tanggal
+            $start = \Carbon\Carbon::parse($training->date)->locale('id');
+            $end = \Carbon\Carbon::parse($training->date_end)->locale('id');
+            if ($start->year != $end->year) {
+                $date = $start->translatedFormat('d F Y') . ' - ' . $end->translatedFormat('d F Y');
+            } elseif ($start->month == $end->month) {
+                $date = $start->translatedFormat('d F') . ' - ' . $end->translatedFormat('d F Y');
+            } else {
+                $date = $start->translatedFormat('d F') . ' - ' . $end->translatedFormat('d F Y');
+            }
+
+            $progressMap = [
+                1 => ['percent' => 10, 'color' => 'bg-red-600'],
+                2 => ['percent' => 30, 'color' => 'bg-orange-500'],
+                3 => ['percent' => 50, 'color' => 'bg-yellow-400'],
+                4 => ['percent' => 75, 'color' => 'bg-[#bffb4e]'],
+                5 => ['percent' => 100, 'color' => 'bg-green-600'],
+            ];
+
+            $progress = $progressMap[$training->isprogress] ?? ['percent' => 0, 'color' => 'bg-gray-400'];
+
+            return [
+                'no' => $index + 1,
+                'activity' => $training->activity,
+                'isNew' => $isNew,
+                'isUpdated' => $isUpdated,
+                'status' => 'Aktif',
+                'date' => $date,
+                'progress_percent' => $progress['percent'],
+                'progress_color' => $progress['color'],
+                'url' => route('dashboard.form', ['id' => $training->id])
+            ];
+        });
+
+        return response()->json([
+            'success' => true,
+            'data' => $data
+        ]);
+    }
 
     public function showProfile() {}
 }

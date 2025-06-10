@@ -21,18 +21,40 @@ class RegTrainingController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $trainings = RegTraining::with('participants') // <--- ini bagian penting
-            ->where('user_id', Auth::id())
-            ->latest()
-            ->paginate(10);
+        $query = RegTraining::with('participants')
+            ->where('user_id', Auth::id());
+
+        // Filter: Search
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('activity', 'like', '%' . $search . '%');
+            });
+        }
+
+        // Filter: Tanggal
+        if ($request->filled('start_date') && $request->filled('end_date')) {
+            $query->whereBetween('date', [$request->start_date, $request->end_date]);
+        }
+
+        // Sort: A-Z berdasarkan nama pelatihan
+        if ($request->filled('sort') && $request->sort == 'az') {
+            $query->orderBy('activity', 'asc');
+        } else {
+            $query->latest();
+        }
+
+        $perPage = $request->get('per_page', 10);
+        $trainings = $query->paginate($perPage)->appends(request()->query());
 
         return view('dashboard.user.registertraining.index', [
             'title' => 'Daftar Training',
             'trainings' => $trainings
         ]);
     }
+
 
     public function selectDate()
     {

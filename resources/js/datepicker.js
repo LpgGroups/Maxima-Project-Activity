@@ -398,6 +398,60 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         }
     });
+    
+    function loadLiveTrainings() {
+        fetch("/dashboard/user/live-data")
+            .then((response) => response.json())
+            .then((result) => {
+                if (!result.success) return;
+
+                const tableBody = document.querySelector("tbody");
+                tableBody.innerHTML = ""; // Kosongkan dulu
+
+                result.data.forEach((item) => {
+                    const tr = document.createElement("tr");
+                    tr.className =
+                        "odd:bg-white even:bg-gray-300 cursor-pointer hover:bg-red-500 hover:text-white leading-loose";
+                    tr.onclick = () => (window.location = item.url);
+
+                    tr.innerHTML = `
+                    <td>${item.no}</td>
+                    <td>
+                        ${item.activity}
+                        ${
+                            item.isNew
+                                ? '<img src="/img/gif/new.gif" class="w-5 h-3 -mt-3 inline-block">'
+                                : ""
+                        }
+                        ${
+                            !item.isNew && item.isUpdated
+                                ? '<img src="/img/gif/update.gif" class="w-5 h-3 -mt-3 inline-block">'
+                                : ""
+                        }
+                    </td>
+                    <td>${item.status}</td>
+                    <td>${item.date}</td>
+                    <td>
+                        <div class="w-[80px] h-2 bg-gray-200 rounded-full dark:bg-gray-700 mx-auto">
+                            <div class="${
+                                item.progress_color
+                            } text-[8px] font-medium text-white text-center leading-none rounded-full"
+                                style="width: ${
+                                    item.progress_percent
+                                }%; height:8px">
+                                ${item.progress_percent}%
+                            </div>
+                        </div>
+                    </td>
+                `;
+                    tableBody.appendChild(tr);
+                });
+            })
+            .catch((err) => console.error("Gagal memuat data:", err));
+    }
+
+    // Contoh: load saat halaman ready atau tiap 30 detik
+    setInterval(() => loadLiveTrainings(), 230000);
 
     renderCalendar();
 });

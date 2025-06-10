@@ -3,7 +3,42 @@
     <div class="lg:w-full sm:w-full h-auto bg-white rounded-2xl shadow-md p-4 sm:mb-0 lg:mb-[500px]">
         <a href="{{ route('dashboard.selectDate') }}">Tambah</a>
 
+        <form method="GET" class="mb-4 flex flex-wrap gap-2 items-end">
+            <input type="text" name="search" placeholder="Search..." value="{{ request('search') }}"
+                class="border rounded px-2 py-1 text-sm" />
 
+            <select name="sort" class="border w-40 rounded px-2 py-1 text-sm">
+                <option value="">Urutkan</option>
+                <option value="az" {{ request('sort') == 'az' ? 'selected' : '' }}>A - Z (Nama Pelatihan)</option>
+            </select>
+
+            <input type="date" name="start_date" class="border rounded px-2 py-1 text-sm"
+                value="{{ request('start_date') }}" />
+            <input type="date" name="end_date" class="border rounded px-2 py-1 text-sm"
+                value="{{ request('end_date') }}" />
+
+            <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600">Filter</button>
+
+            <a href="{{ '/dashboard/user/training' }}"
+                class="text-sm text-gray-600 underline
+                hover:text-red-500">Reset</a>
+        </form>
+
+        {{-- Per Page Form --}}
+        <form method="GET" class="mb-2">
+            <label for="per_page" class="text-sm">Tampilkan:</label>
+            <select name="per_page" id="per_page" class="border rounded px-2 py-1 text-sm w-[60px]"
+                onchange="this.form.submit()">
+                @foreach ([10, 20, 30, 50] as $size)
+                    <option value="{{ $size }}" {{ request('per_page', 10) == $size ? 'selected' : '' }}>
+                        {{ $size }}
+                    </option>
+                @endforeach
+            </select> data per halaman
+            @foreach (request()->except('per_page') as $key => $value)
+                <input type="hidden" name="{{ $key }}" value="{{ $value }}">
+            @endforeach
+        </form>
         <!-- Table -->
         <div class="lg:h-auto h-[225px] rounded-2xl p-2 w-full">
             <table class="table-auto w-full text-center align-middle">
@@ -89,7 +124,7 @@
                                         1 => ['percent' => 10, 'color' => 'bg-red-600'],
                                         2 => ['percent' => 30, 'color' => 'bg-orange-500'],
                                         3 => ['percent' => 50, 'color' => 'bg-yellow-400'],
-                                        4 => ['percent' => 75, 'color' => 'bg-[#bffb4e]'],
+                                        4 => ['percent' => 75, 'color' => 'bg-[#e6e600]'],
                                         5 => ['percent' => 100, 'color' => 'bg-green-600'],
                                     ];
 

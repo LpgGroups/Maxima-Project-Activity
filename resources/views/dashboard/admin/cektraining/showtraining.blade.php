@@ -109,7 +109,8 @@
                     </label>
                     <div class="flex items-center gap-2 mt-1">
                         <p class="text-sm font-medium text-red-600 text-[10px]">Selesai Pada:</p>
-                        <input type="text" id="end_date" name="end_date" readonly value="{{ old('end_date', \Carbon\Carbon::parse($training->date_end)->format('Y-m-d')) }}"
+                        <input type="text" id="end_date" name="end_date" readonly
+                            value="{{ old('end_date', \Carbon\Carbon::parse($training->date_end)->format('Y-m-d')) }}"
                             class="border border-gray-300 rounded-md px-3 py-2 text-sm w-28 bg-gray-100 text-gray-700" />
                     </div>
                 </div>
@@ -122,22 +123,19 @@
                         <input id="radio-online" type="radio" value="Online" name="colored-radio"
                             class="w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                             {{ $training->place == 'Online' ? 'checked' : '' }}>
-                        <label for="radio-online"
-                            class="ms-2 text-sm font-medium text-gray-900 ">Online</label>
+                        <label for="radio-online" class="ms-2 text-sm font-medium text-gray-900 ">Online</label>
                     </div>
                     <div class="flex items-center">
                         <input id="radio-offline" type="radio" value="Offline" name="colored-radio"
                             class="w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                             {{ $training->place == 'Offline' ? 'checked' : '' }}>
-                        <label for="radio-offline"
-                            class="ms-2 text-sm font-medium text-gray-900 ">Offline</label>
+                        <label for="radio-offline" class="ms-2 text-sm font-medium text-gray-900 ">Offline</label>
                     </div>
                     <div class="flex items-center">
                         <input id="radio-blended" type="radio" value="Blended" name="colored-radio"
                             class="w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                             {{ $training->place == 'Blended' ? 'checked' : '' }}>
-                        <label for="radio-blended"
-                            class="ms-2 text-sm font-medium text-gray-900 ">Blended</label>
+                        <label for="radio-blended" class="ms-2 text-sm font-medium text-gray-900 ">Blended</label>
                     </div>
                 </div>
             </div>
@@ -274,14 +272,13 @@
             diperiksa dengan cermat:</p>
 
         @forelse ($training->files as $file)
-           
             @if ($file->file_approval)
                 <div class="flex mt-4">
-                   
+
                     <img src="{{ asset('img/icon_pdf_mou.png') }}" alt="PDF Icon" width="50"
                         style="margin-right: 15px;">
 
-                  
+
                     <div>
                         <div><strong>File MOU:</strong> {{ basename($file->file_approval) }}</div>
                         <a href="{{ asset('storage/' . $file->file_approval) }}" target="_blank"
@@ -296,18 +293,44 @@
                 <strong>Data File Belum Tersedia</strong>
             </div>
         @endforelse
+        <div class="mt-4 flex flex-col gap-2">
+            <!-- Checkbox di atas -->
+            <div class="flex items-center gap-2">
+                <input type="checkbox" id="confirmEdit3"
+                    class="h-5 w-5 appearance-none border-2 border-gray-400 rounded-sm checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200" />
+                <label for="confirmEdit3" class="text-sm text-gray-700">
+                    Saya yakin data yang diubah sudah benar
+                </label>
+            </div>
 
-        <div class="mt-4 flex items-center gap-2">
-            <input type="checkbox" id="confirmEdit3"
-                class="h-5 w-5 appearance-none border-2 border-gray-400 rounded-sm checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200" />
-            <label for="confirmEdit3" class="text-sm text-gray-700">
-                Saya yakin data yang diubah sudah benar
-            </label>
+            <!-- Tombol dan Progress Bar di satu baris -->
+            <div class="flex items-center gap-4">
+                <button type="button" id="submitFinish" data-form-id="{{ $training->id }}"
+                    class="px-4 py-2 bg-gray-400 text-white rounded-md">
+                    Approve Pelatihan
+                </button>
+
+                @php
+                    $progressValue = $training->isprogress;
+                    $progressMap = [
+                        1 => ['percent' => 10, 'color' => 'bg-red-600'],
+                        2 => ['percent' => 30, 'color' => 'bg-orange-500'],
+                        3 => ['percent' => 50, 'color' => 'bg-yellow-400'],
+                        4 => ['percent' => 75, 'color' => 'bg-lime-600'],
+                        5 => ['percent' => 100, 'color' => 'bg-green-600'],
+                    ];
+                    $progress = $progressMap[$progressValue] ?? ['percent' => 0, 'color' => 'bg-gray-400'];
+                @endphp
+
+                <div class="w-[100px] h-2 bg-gray-200 rounded-full dark:bg-gray-700">
+                    <div class="{{ $progress['color'] }} text-[8px] font-medium text-white text-center leading-none rounded-full"
+                        style="width: {{ $progress['percent'] }}%; height:8px">
+                        {{ $progress['percent'] }}%
+                    </div>
+                </div>
+            </div>
         </div>
-        <button type="button" id="submitFinish" data-form-id="{{ $training->id }}"
-            class="mt-4 px-4 py-2 bg-gray-400 text-white rounded-md ">
-            Approve Pelatihan
-        </button>
+
 
     </div>
 

@@ -47,7 +47,7 @@ function fetchTrainingDataAdmin() {
                     1: { percent: 10, color: "bg-red-600" },
                     2: { percent: 30, color: "bg-orange-500" },
                     3: { percent: 50, color: "bg-yellow-400" },
-                    4: { percent: 75, color: "bg-[#bffb4e]" },
+                    4: { percent: 75, color: "bg-[#e6e600]" },
                     5: { percent: 100, color: "bg-green-600" },
                 };
 
@@ -104,16 +104,21 @@ function fetchTrainingDataAdmin() {
                         <td class="max-w-[120px] truncate whitespace-nowrap" title="${namePic}">
                             ${namePic}
                         </td>
-        
+                    
                         <td class="max-w-[150px] truncate whitespace-nowrap" title="${nameCompany}">
                             ${nameCompany} ${badgeHTML}
                         </td>
                         <td>${activity}</td>
-                       <td class="p-1">
-                        <span class="${statusBgClass} text-[10px] px-2 py-[2px] rounded inline-block w-[70px] text-center">
-                          ${statusText}
-                        </span>
-                        </td>
+                    <td class="relative p-1 pr-1">
+  <span class="${statusBgClass} text-[10px] px-2 py-[2px] rounded inline-block w-[70px] text-center truncate">
+    ${statusText}
+  </span>
+  ${
+      ["true", true, 1, "1"].includes(training.isfinish)
+          ? `<img src="/img/svg/success.svg" alt="Success" class="w-4 h-4 absolute top-1 right-1">`
+          : ""
+  }
+</td>
                         <td class="max-w-[160px] truncate whitespace-nowrap" title="${formattedDate}">
                             ${formattedDate}
                         </td>
@@ -155,5 +160,5 @@ function fetchTrainingDataAdmin() {
 // ============ INIT ================
 $(document).ready(function () {
     fetchTrainingDataAdmin();
-    setInterval(fetchTrainingDataAdmin, 10000);
+    setInterval(fetchTrainingDataAdmin, 20000);
 });

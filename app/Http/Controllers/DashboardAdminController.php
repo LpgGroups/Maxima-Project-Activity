@@ -109,7 +109,8 @@ class DashboardAdminController extends Controller
                 'isprogress' => $training->isprogress,
                 'isNew' => $isNew,
                 'isUpdated' => $isUpdated,
-                'participants_count' => $training->participants->count(),  // <-- tambahkan ini
+                'participants_count' => $training->participants->count(),
+                'isfinish' => $training->isfinish,
             ];
         });
 
