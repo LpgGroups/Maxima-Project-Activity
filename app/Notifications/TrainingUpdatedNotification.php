@@ -5,8 +5,10 @@ namespace App\Notifications;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Notifications\Notification;
 use App\Models\RegTraining;
+use Illuminate\Support\Facades\Log;
 
 
 class TrainingUpdatedNotification extends Notification
@@ -56,6 +58,8 @@ class TrainingUpdatedNotification extends Notification
                 'url' => route('dashboard.admin.training.show', $this->training->id),
             ];
         }
+        $waMessage = "Status training {$activity} telah diperbarui oleh Admin{$formText}. Silakan cek dashboard.";
+        $this->sendWhatsAppNotification($waMessage);
 
         if (!empty($this->customMessage)) {
             return [
@@ -82,5 +86,34 @@ class TrainingUpdatedNotification extends Notification
             'message' => 'Ada update data pelatihan dari user.',
             'from' => $this->triggeredBy, // "user" atau "admin"
         ];
+    }
+    protected function sendWhatsAppNotification($message)
+    {
+        $token = config('services.maxchat.token');
+        $phone = 6285780004039;
+
+        if (!$phone) {
+            Log::warning('WhatsApp not sent: No phone number for user ID ' . $this->training->user_id);
+            return;
+        }
+
+        $phone = preg_replace('/^0/', '62', $phone);
+        $phone = preg_replace('/[^0-9]/', '', $phone);
+
+        try {
+            $response = Http::withToken($token)->post('https://app.maxchat.id/api/messages/push', [
+                'to' => $phone,
+                'type' => 'text',
+                'message' => $message,
+            ]);
+
+            if ($response->successful()) {
+                Log::info("WA sent to {$phone}");
+            } else {
+                Log::error("WA failed: " . $response->body());
+            }
+        } catch (\Exception $e) {
+            Log::error('Failed to send WhatsApp message: ' . $e->getMessage());
+        }
     }
 }
