@@ -8,6 +8,8 @@
     @vite('resources/js/app.js')
     {{-- @vite('resources/js/authentifikasi.js') --}}
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
 </head>
 <title>Maxima</title>
 

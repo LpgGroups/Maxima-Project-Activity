@@ -90,7 +90,7 @@ class TrainingUpdatedNotification extends Notification
     protected function sendWhatsAppNotification($message)
     {
         $token = config('services.maxchat.token');
-        $phone = 6285780004039;
+        $phone = 6285780004039 ;
 
         if (!$phone) {
             Log::warning('WhatsApp not sent: No phone number for user ID ' . $this->training->user_id);

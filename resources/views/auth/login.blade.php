@@ -31,14 +31,14 @@
                 </div>
 
                 <!-- Password Field -->
-                <div class="relative mb-6">
+                <div class="relative mb-2">
                     <input id="password" name="password" type="password"
                         class="peer block w-full appearance-none border border-[#515151] bg-transparent px-2.5 py-3 text-sm text-[#515151] rounded-md focus:border-[#1E6E9E] focus:outline-none focus:ring-1 focus:ring-[#1E6E9E] placeholder-transparent"
                         placeholder=" " />
                     <label for="password"
                         class="absolute text-base bg-[#fffefe] text-[#515151] transition-all duration-300 transform -translate-y-6 scale-75 top-3 left-2.5 ml-2 z-10 origin-[0] peer-focus:text-[#1E6E9E] peer-focus:scale-75 peer-focus:-translate-y-6 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0">Password</label>
                 </div>
-                <p class="mt-10 text-center text-xs text-gray-500">
+                <p class="text-right text-xs text-gray-500">
                     Lupa Password?
                     <a href="#" class="text-xs font-semibold text-indigo-600 hover:text-indigo-500">Klik Disini</a>
                 </p>
@@ -46,12 +46,17 @@
                 <!-- Submit Button -->
                 <div>
                     <button id="loginBtn" type="submit"
-                        class="flex w-full justify-center rounded-md px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-indigo-600"
+                        class="flex w-full justify-center rounded-md px-2 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-indigo-600"
                         style="background: linear-gradient(180deg, #ffc815 0%, #ff0000 100%);">
                         Login
                     </button>
                 </div>
             </form>
+            <div>
+                <p class="text-center justify-center mt-2 text-xs text-gray-500">Belum Memiliki Akun? <a
+                        href="{{ '/register' }}"
+                        class="text-xs font-semibold text-indigo-600 hover:text-indigo-500">Daftar</a></p>
+            </div>
         </div>
     </div>
     <div id="page-loader" class="fixed inset-0 z-50 bg-white bg-opacity-60 backdrop-blur-sm hidden">
