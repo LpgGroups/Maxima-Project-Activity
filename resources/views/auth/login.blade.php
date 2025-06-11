@@ -40,7 +40,8 @@
                 </div>
                 <p class="text-right text-xs text-gray-500">
                     Lupa Password?
-                    <a href="#" class="text-xs font-semibold text-indigo-600 hover:text-indigo-500">Klik Disini</a>
+                    <a href="{{ route('password.request') }}"
+                        class="text-xs font-semibold text-indigo-600 hover:text-indigo-500">Klik Disini</a>
                 </p>
 
                 <!-- Submit Button -->
