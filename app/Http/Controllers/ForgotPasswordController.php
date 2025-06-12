@@ -47,9 +47,9 @@ class ForgotPasswordController extends Controller
                 'required',
                 'confirmed',
                 'min:8',
-                'regex:/[a-z]/',    // huruf kecil
-                'regex:/[A-Z]/',    // huruf besar
-                'regex:/[0-9]/',    // angka
+                'regex:/[a-z]/',
+                'regex:/[A-Z]/',
+                'regex:/[0-9]/',
             ]
         ], [
             'password.required' => 'Password wajib diisi.',
