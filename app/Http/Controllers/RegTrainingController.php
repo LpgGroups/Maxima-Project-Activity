@@ -131,6 +131,12 @@ class RegTrainingController extends Controller
                 return response()->json(['success' => false, 'message' => 'User not authenticated or found.']);
             }
 
+            // Normalisasi nomor WA: ubah awalan 0 menjadi 62
+            $phone = $request->input('phone_pic');
+            if (substr($phone, 0, 1) === '0') {
+                $phone = '62' . substr($phone, 1);
+            }
+
             // Cek apakah record sudah ada berdasarkan ID dan user_id
             $trainingData = RegTraining::where('user_id', $user->id)
                 ->where('id', $request->input('id'))
@@ -146,9 +152,11 @@ class RegTrainingController extends Controller
                     'name_pic' => $request->input('name_pic'),
                     'name_company' => $request->input('name_company'),
                     'email_pic' => $request->input('email_pic'),
-                    'phone_pic' => $request->input('phone_pic'),
+                    'phone_pic' => $phone,
                     'isprogress' => max($currentProgress, $newProgress),
                 ]);
+
+                // Kirim notifikasi ke admin
                 $admins = User::where('role', 'admin')->get();
                 foreach ($admins as $admin) {
                     $admin->notify(new TrainingUpdatedNotification($trainingData, 'user', 'Daftar Pelatihan'));
@@ -160,17 +168,18 @@ class RegTrainingController extends Controller
                     'name_pic' => $request->input('name_pic'),
                     'name_company' => $request->input('name_company'),
                     'email_pic' => $request->input('email_pic'),
-                    'phone_pic' => $request->input('phone_pic'),
+                    'phone_pic' => $phone,
                     'isprogress' => $request->input('isprogress'),
                 ]);
             }
 
             return response()->json(['success' => true, 'message' => 'Data berhasil disimpan/diupdate!']);
         } catch (\Exception $e) {
-
+            Log::error('Error in saveForm1: ' . $e->getMessage());
             return response()->json(['success' => false, 'message' => 'Terjadi kesalahan, coba lagi.']);
         }
     }
+
 
     public function saveForm2(Request $request)
     {
