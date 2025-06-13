@@ -1,5 +1,5 @@
 function fetchTrainingDataAdmin() {
-    fetch("/admin/training/live")
+    return fetch("/admin/training/live")
         .then((response) => response.json())
         .then((response) => {
             const trainings = response.data.reverse();
@@ -75,7 +75,6 @@ function fetchTrainingDataAdmin() {
                     },
                 };
 
-                // Tentukan status berdasarkan isprogress
                 let statusText = "";
                 let statusBgClass = "";
 
@@ -97,31 +96,23 @@ function fetchTrainingDataAdmin() {
                     }'"
                         class="odd:bg-white even:bg-gray-300 cursor-pointer hover:bg-red-500 hover:text-white leading-loose">
                         <td>${index + 1}</td>
-                       <td class="max-w-[120px] truncate whitespace-nowrap" title="${userName}">
-                            ${userName}
-                        </td>
-        
-                        <td class="max-w-[120px] truncate whitespace-nowrap" title="${namePic}">
-                            ${namePic}
-                        </td>
-                    
-                        <td class="max-w-[150px] truncate whitespace-nowrap" title="${nameCompany}">
-                            ${nameCompany} ${badgeHTML}
-                        </td>
+                        <td class="max-w-[120px] truncate whitespace-nowrap" title="${userName}">${userName}</td>
+                        <td class="max-w-[120px] truncate whitespace-nowrap" title="${namePic}">${namePic}</td>
+                        <td class="max-w-[150px] truncate whitespace-nowrap" title="${nameCompany}">${nameCompany} ${badgeHTML}</td>
                         <td>${activity}</td>
-                    <td class="relative p-1 pr-1">
-  <span class="${statusBgClass} text-[10px] px-2 py-[2px] rounded inline-block w-[70px] text-center truncate">
-    ${statusText}
-  </span>
-  ${
-      ["true", true, 1, "1"].includes(training.isfinish)
-          ? `<img src="/img/svg/success.svg" alt="Success" class="w-4 h-4 absolute top-1 right-1">`
-          : ""
-  }
-</td>
-                        <td class="max-w-[160px] truncate whitespace-nowrap" title="${formattedDate}">
-                            ${formattedDate}
+                        <td class="relative p-1 pr-1">
+                            <span class="${statusBgClass} text-[10px] px-2 py-[2px] rounded inline-block w-[70px] text-center truncate">
+                                ${statusText}
+                            </span>
+                            ${
+                                ["true", true, 1, "1"].includes(
+                                    training.isfinish
+                                )
+                                    ? `<img src="/img/svg/success.svg" alt="Success" class="w-4 h-4 absolute top-1 right-1">`
+                                    : ""
+                            }
                         </td>
+                        <td class="max-w-[160px] truncate whitespace-nowrap" title="${formattedDate}">${formattedDate}</td>
                         <td>
                             <div class="w-[80px] h-2 bg-gray-200 rounded-full dark:bg-gray-700 mx-auto">
                                 <div class="${
@@ -137,13 +128,11 @@ function fetchTrainingDataAdmin() {
                     </tr>`;
             });
 
-            // Jika data lebih dari 10, tambahkan tombol "Tampilkan Lebih Banyak"
             if (trainings.length > maxDisplay) {
                 html += `
                     <tr>
                         <td colspan="8" class="text-center py-2">
-                            <a href="/dashboard/admin/training/alltraining"
-                               class="text-blue-600 hover:underline font-semibold">
+                            <a href="/dashboard/admin/training/alltraining" class="text-blue-600 hover:underline font-semibold">
                                 Tampilkan Lebih Banyak
                             </a>
                         </td>
@@ -151,14 +140,21 @@ function fetchTrainingDataAdmin() {
             }
 
             document.getElementById("live-training-body").innerHTML = html;
-        })
-        .catch((error) => {
-            console.error("Error fetching training data:", error);
         });
 }
 
-// ============ INIT ================
+function startPolling() {
+    const pollingInterval = 20000; // 20 detik
+    fetchTrainingDataAdmin()
+        .then(() => {
+            setTimeout(startPolling, pollingInterval);
+        })
+        .catch((error) => {
+            setTimeout(startPolling, pollingInterval * 2);
+        });
+}
+
+// DOM Ready hanya untuk trigger awal
 $(document).ready(function () {
-    fetchTrainingDataAdmin();
-    setInterval(fetchTrainingDataAdmin, 20000);
+    startPolling();
 });

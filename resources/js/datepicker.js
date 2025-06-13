@@ -52,6 +52,8 @@ document.addEventListener("DOMContentLoaded", function () {
             const dayCell = document.createElement("div");
             dayCell.classList.add(
                 "text-center",
+                "border",
+                "border-black",
                 "py-1",
                 "px-2",
                 "rounded-lg",
@@ -70,8 +72,6 @@ document.addEventListener("DOMContentLoaded", function () {
             );
             const dayOfWeek = currentDay.getDay();
             const isWeekend = dayOfWeek === 0;
-            // const isPastDate =
-            //     currentDay < today && currentDay.getMonth() === today.getMonth();
             const isPastDate = currentDay < today;
 
             const isWithinNextTenDays =
@@ -178,7 +178,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 html: `
         <label for="training-select" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-700">Pilih Pelatihan:</label>
         <select id="training-select" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block mx-auto w-[300px] p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-            <option value="TKPK1">TKPK 1</option>
+            <option value="TKPK1" style="background-color: #fbbf24;">TKPK 1</option>
             <option value="TKPK2">TKPK 2</option>
             <option value="TKBT1">TKBT 1</option>
             <option value="TKBT2">TKBT 2</option>
@@ -398,7 +398,7 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         }
     });
-    
+
     function loadLiveTrainings() {
         fetch("/dashboard/user/live-data")
             .then((response) => response.json())

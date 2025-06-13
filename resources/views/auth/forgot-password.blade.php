@@ -1,4 +1,5 @@
 @extends('layout.main')
+
 @section('container')
     <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
         <div class="w-full max-w-sm mx-auto bg-white shadow-lg rounded-2xl p-8">
@@ -20,7 +21,7 @@
                 </div>
             @endif
 
-            <form method="POST" action="{{ route('password.email') }}">
+            <form method="POST" action="{{ route('password.email') }}" id="forgot-password-form">
                 @csrf
                 <div class="mb-3">
                     <label for="email" class="block text-xs font-medium text-[#10496C]">Email</label>
@@ -37,4 +38,23 @@
             </div>
         </div>
     </div>
+
+    <!-- SweetAlert2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Script Show Loading -->
+    <script>
+        document.getElementById('forgot-password-form').addEventListener('submit', function(e) {
+            Swal.fire({
+                title: 'Mengirim...',
+                text: 'Kami sedang mengirimkan link reset password ke email kamu.',
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                allowEnterKey: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+        });
+    </script>
 @endsection

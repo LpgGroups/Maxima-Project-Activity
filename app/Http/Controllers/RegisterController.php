@@ -14,11 +14,7 @@ class RegisterController extends Controller
 {
     public function index()
     {
-        $angka1 = rand(1, 10);
-        $angka2 = rand(1, 10);
-        session(['captcha_result' => $angka1 + $angka2]);
-
-        return view('auth.register', compact('angka1', 'angka2'));
+        return view('auth.register');
     }
 
     public function store(Request $request)

@@ -73,7 +73,7 @@ class ForgotPasswordController extends Controller
         );
 
         if ($status == Password::PASSWORD_RESET) {
-            return redirect()->route('login.index')->with('success', 'Password berhasil direset. Silakan login.');
+            return back()->with('success', 'Password berhasil direset. Silakan login.');
         } else {
             return back()->withErrors(['email' => __($status)]);
         }

@@ -4,26 +4,20 @@
         <!-- Container untuk informasi -->
         <div class="flex flex-wrap gap-4 w-full lg:w-[570px] h-auto">
             <!-- Elemen Total Pelatihan -->
-            <div
-                class="bg-white bg-center relative lg:w-[276px] sm:w-full h-[150px] rounded-2xl shadow-md overflow-hidden">
-
-                <!-- overlay putih transparan -->
-                <div class="absolute inset-0 bg-white/10"></div>
-
-                <div class="relative z-10 p-4 text-black"> <!-- teks diganti hitam supaya kontras -->
-                    <div class="text-violet-600 text-2xl font-bold">Total Pelatihan</div>
-                    <div class="text-black text-[52px] font-bold">{{ $totalTrainings }}</div>
-                </div>
+            <div class="lg:w-[276px] sm:w-full h-auto bg-white rounded-2xl shadow-md p-4"
+                style="background-image: url('/img/logo_training.png'); background-repeat: no-repeat; background-position: right bottom; background-size: 140px 140px;">
+                <div class="text-violet-600 text-2xl font-bold">Total Pelatihan</div>
+                <div class="text-black text-[52px] font-bold">{{ $totalTrainings }}</div>
             </div>
 
-
             <!-- Elemen Total Peserta -->
-            <div class="lg:w-[276px] sm:w-full h-auto bg-white rounded-2xl shadow-md p-4">
+            <div class="lg:w-[276px] sm:w-full h-auto bg-white rounded-2xl shadow-md p-4"
+                style="background-image: url('/img/logo_participant.png'); background-repeat: no-repeat; background-position: right bottom; background-size: 140px 140px;">
                 <div class="text-violet-400 text-2xl font-bold">Total Peserta</div>
                 <div class="text-black text-[52px] font-bold">{{ $totalParticipants }}</div>
             </div>
 
-           
+
             <div class="lg:w-[568px] sm:w-full h-auto bg-white rounded-2xl shadow-md p-4 sm:mb-0 lg:mb-[500px]">
                 {{-- table --}}
                 <div class="rounded-2xl p-2 w-full">
@@ -153,7 +147,6 @@
         <!-- Elemen Kalender di Sebelah Kanan -->
         <div class="w-full lg:w-96 h-[534px] bg-white rounded-2xl shadow-md p-4">
             <p class="text-[18px] font-semibold">Kalender Maxima Academy</p>
-
             <!-- Navigasi Bulan -->
             <div class="flex justify-between items-center mt-4">
                 <button id="prev-month" class="bg-red-500 text-white py-2 px-4 rounded-lg flex items-center justify-center">
@@ -210,6 +203,7 @@
             </div>
             <button id="booking-button" class="bg-gray-300 text-white py-2 px-4 rounded-lg cursor-not-allowed mt-4"
                 disabled>Pilih Jadwal Pelatihan</button>
+
         </div>
     </div>
 @endsection
