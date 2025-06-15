@@ -83,7 +83,19 @@
                                     <img src="/img/gif/update.gif" alt="Updated" class="w-5 h-3 -mt-3 inline-block">
                                 @endif
                             </td>
-                            <td>{{ $training->status }}</td>
+                            <td class="p-1">
+                                @if ($training->isprogress < 5)
+                                    <span
+                                        class="bg-yellow-400 text-black font-semibold text-[10px] px-2 py-[2px] rounded inline-block w-[70px] text-center">
+                                        Menunggu
+                                    </span>
+                                @else
+                                    <span
+                                        class="bg-green-600 text-white font-semibold text-[10px] px-2 py-[2px] rounded inline-block w-[70px] text-center">
+                                        Selesai
+                                    </span>
+                                @endif
+                            </td>
                             <td>{{ $training->participants->count() }} peserta</td>
                             <td>
                                 @php

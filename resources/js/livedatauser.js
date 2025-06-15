@@ -4,7 +4,6 @@ function liveDataUser() {
         .then((result) => {
             if (!result.success) return;
 
-            // Pastikan selector tbody sesuai dengan tabel kamu
             var $tbody = $("table tbody");
             $tbody.empty();
 
@@ -16,6 +15,37 @@ function liveDataUser() {
             }
 
             result.data.forEach((item) => {
+                // Menentukan status label dan warna
+                const statusMap = {
+                    waiting: {
+                        label: "Menunggu",
+                        bgColor:
+                            "bg-yellow-400 text-black font-semibold rounded",
+                    },
+                    selesai: {
+                        label: "Selesai",
+                        bgColor:
+                            "bg-green-600 text-white font-semibold rounded",
+                    },
+                };
+
+                let statusText = "";
+                let statusBgClass = "";
+
+                const isprogress = Number(item.isprogress); // konversi ke number
+
+                if ([1, 2, 3, 4].includes(isprogress)) {
+                    statusText = statusMap.waiting.label;
+                    statusBgClass = statusMap.waiting.bgColor;
+                } else if (isprogress === 5) {
+                    statusText = statusMap.selesai.label;
+                    statusBgClass = statusMap.selesai.bgColor;
+                } else {
+                    statusText = "Unknown";
+                    statusBgClass =
+                        "bg-gray-400 text-white font-semibold rounded";
+                }
+
                 let notifIcon = "";
                 if (item.isNew) {
                     notifIcon = `<img src="/img/gif/new.gif" alt="New" class="w-5 h-3 -mt-3 inline-block">`;
@@ -31,7 +61,11 @@ function liveDataUser() {
                             ${item.activity}
                             ${notifIcon}
                         </td>
-                        <td>${item.isprogress}</td>
+                        <td>
+                            <span class="${statusBgClass} text-[10px] mt-2 px-2 py-[2px] rounded inline-block w-[70px] text-center truncate">
+                                ${statusText}
+                            </span>
+                        </td>
                         <td>${item.date}</td>
                         <td>
                             <div class="w-[80px] h-2 bg-gray-200 rounded-full dark:bg-gray-700 mx-auto">
@@ -54,33 +88,6 @@ function liveDataUser() {
             );
             console.error("Gagal memuat data:", err);
         });
-}
-
-function textStatus() {
-    const statusMap = {
-        waiting: {
-            label: "Menunggu",
-            bgColor: "bg-yellow-400 text-black font-semibold rounded",
-        },
-        selesai: {
-            label: "Selesai",
-            bgColor: "bg-green-600 text-white font-semibold rounded",
-        },
-    };
-
-    let statusText = "";
-    let statusBgClass = "";
-
-    if ([1, 2, 3, 4].includes(training.isprogress)) {
-        statusText = statusMap.waiting.label;
-        statusBgClass = statusMap.waiting.bgColor;
-    } else if (training.isprogress === 5) {
-        statusText = statusMap.selesai.label;
-        statusBgClass = statusMap.selesai.bgColor;
-    } else {
-        statusText = "Unknown";
-        statusBgClass = "bg-gray-400 text-white font-semibold rounded";
-    }
 }
 
 // Panggil fungsi ini setiap kali halaman ready, dan bisa di-set interval untuk auto-refresh
