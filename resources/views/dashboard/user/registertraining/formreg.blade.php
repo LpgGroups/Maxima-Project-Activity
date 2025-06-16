@@ -56,7 +56,25 @@
         <!-- Tab Content -->
         <div id="content1" class="tab-content">
             <div class="p-4 border border-t-0 border-gray-300 bg-white">
-                <h3 class="text-[24px] font-semibold">Daftar Pelatihan</h3>
+                <div class="relative flex items-start space-x-2">
+                    <h3 class="text-[24px] font-semibold">Daftar Pelatihan</h3>
+
+                    <!-- Icon + Tooltip -->
+                    <div class="relative group">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-blue-500 mt-1 cursor-pointer"
+                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8.228 9c.313-1.17 1.29-2 2.522-2 1.54 0 2.75 1.21 2.75 2.75 0 1.052-.597 1.976-1.469 2.406a2.25 2.25 0 00-1.281 2.156m0 3h.008M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" />
+                        </svg>
+
+                        <!-- Tooltip container -->
+                        <div class="absolute top-0 left-full ml-2 w-32 hidden group-hover:flex z-10">
+                            <img src="/img/gif/new.gif" alt="GIF Tooltip" class="w-full h-auto rounded shadow-lg" />
+                        </div>
+                    </div>
+                </div>
+
+
                 <p class="text-[15px]">Lengkapi data form ini untuk mengikuti pelatihan yang akan diselenggarakan oleh PT
                     Maxima Aksara Jaya Utama, pastikan Anda mengisi form aplikasi pendaftaran dengan benar dan sesuai data
                     yang valid.</p>
@@ -105,10 +123,13 @@
 
                         <!-- No WhatsApp -->
                         <div class="relative mt-4 w-64">
-                            <input id="phone_pic" name="phone_pic" type="text"
+                            <input id="phone_pic" name="phone_pic" type="tel"
+                                pattern="^\+\d{1,3}\s\d{1,4}-\d{1,4}-\d{4}$"
                                 class="peer block w-full appearance-none border border-[#515151] bg-transparent px-2.5 py-3 text-sm text-[#515151] rounded-md focus:border-[#1E6E9E] focus:outline-none focus:ring-1 focus:ring-[#1E6E9E] placeholder-transparent"
                                 placeholder="" required title="No WhatsApp harus berupa nomor telepon yang valid."
-                                value="{{ old('phone_pic', $training->phone_pic ?? '') }}" />
+                                value="{{ old('phone_pic', $training->phone_pic ?? '') }}"
+                                oninput="this.value = this.value.replace(/[^0-9+]/g, '')" />
+
                             <label for="phone_pic"
                                 class="absolute text-base rounded-lg bg-[#ffffff] text-[#515151] transition-all duration-300 transform -translate-y-4 scale-75 top-3 left-2.5 ml-2 z-10 origin-[0] peer-focus:text-[#1E6E9E] peer-focus:scale-75 peer-focus:-translate-y-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0">
                                 No WhatsApp
@@ -195,7 +216,23 @@
 
         <div id="content2" class="tab-content hidden">
             <div class="p-4 border border-t-0 border-gray-300 bg-white">
-                <h1 class="text-xl font-semibold">Submit Peserta</h1>
+                <div class="relative flex items-start space-x-2">
+                    <h3 class="text-[24px] font-semibold">Submit Peserta</h3>
+
+                    <!-- Icon + Tooltip -->
+                    <div class="relative group">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-blue-500 mt-1 cursor-pointer"
+                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8.228 9c.313-1.17 1.29-2 2.522-2 1.54 0 2.75 1.21 2.75 2.75 0 1.052-.597 1.976-1.469 2.406a2.25 2.25 0 00-1.281 2.156m0 3h.008M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" />
+                        </svg>
+
+                        <!-- Tooltip container -->
+                        <div class="absolute top-0 left-full ml-2 w-32 hidden group-hover:flex z-10">
+                            <img src="/img/gif/new.gif" alt="GIF Tooltip" class="w-full h-auto rounded shadow-lg" />
+                        </div>
+                    </div>
+                </div>
                 <p>Lengkapi Data Peserta yang akan mengikuti pelatihan yang diselenggarakan oleh PT. Maxima Aksara Jaya
                     Utama</p>
 
@@ -204,7 +241,7 @@
                 <div class="flex gap-6 mt-4">
                     <!-- KIRI: Form Input Peserta -->
                     <div class="w-1/2">
-                        <h2 class="text-lg font-medium mb-2">Input Nama Peserta</h2>
+                        <h2 class="text-lg font-semibold mb-2">Masukan Nama Peserta</h2>
                         <div id="input-fields-container" class="max-h-80 overflow-y-auto space-y-2">
                             <div class="flex items-center space-x-2 mb-2">
                                 <input type="text" class="form-control px-3 py-2 border border-gray-300 rounded-md"
@@ -251,6 +288,23 @@
 
                 <!-- Link GDrive -->
                 <div class="border-b-2 border-[#CAC9FF] mt-4"></div>
+                <div class="relative flex items-start space-x-2">
+                    <h3 class="text-[24px] font-semibold mt-2">Link Persyaratan Dokumen Peserta</h3>
+
+                    <!-- Icon + Tooltip -->
+                    <div class="relative group">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-blue-500 mt-2 cursor-pointer"
+                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8.228 9c.313-1.17 1.29-2 2.522-2 1.54 0 2.75 1.21 2.75 2.75 0 1.052-.597 1.976-1.469 2.406a2.25 2.25 0 00-1.281 2.156m0 3h.008M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" />
+                        </svg>
+
+                        <!-- Tooltip container -->
+                        <div class="absolute top-0 left-full ml-2 w-32 hidden group-hover:flex z-10">
+                            <img src="/img/gif/new.gif" alt="GIF Tooltip" class="w-full h-auto rounded shadow-lg" />
+                        </div>
+                    </div>
+                </div>
                 <div class="container">
                     <p class="mt-2">
                         Upload data peserta melalui Google Drive dengan download template yang telah Kami sediakan, lalu
@@ -369,7 +423,25 @@
 
                         <!-- Upload Persetujuan -->
                         <div class="border border-gray-300 w-[600px] mt-4 rounded-lg p-2">
-                            <h3 class="text-[24px] font-semibold">Upload Persetujuan</h3>
+                            <div class="relative flex items-start space-x-2">
+                                <h3 class="text-[24px] font-semibold">Upload File Persetujuan</h3>
+
+                                <!-- Icon + Tooltip -->
+                                <div class="relative group">
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                        class="w-5 h-5 text-blue-500 mt-1 cursor-pointer" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M8.228 9c.313-1.17 1.29-2 2.522-2 1.54 0 2.75 1.21 2.75 2.75 0 1.052-.597 1.976-1.469 2.406a2.25 2.25 0 00-1.281 2.156m0 3h.008M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" />
+                                    </svg>
+
+                                    <!-- Tooltip container -->
+                                    <div class="absolute top-0 left-full ml-2 w-32 hidden group-hover:flex z-10">
+                                        <img src="/img/gif/new.gif" alt="GIF Tooltip"
+                                            class="w-full h-auto rounded shadow-lg border border-gray-300" />
+                                    </div>
+                                </div>
+                            </div>
                             <p class="text-[12px]">PIC diharapkan untuk mengupload kembali berkas MoU dan Quotation yang
                                 telah disetujui dan ditandatangani oleh PIC.</p>
 
@@ -515,7 +587,7 @@
                     <!-- Previous Button -->
                     <button type="button" id="prevBtnForm3"
                         class="bg-gray-500 text-white px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-400">
-                        Previous
+                        Sebelumnya
                     </button>
 
                     <!-- Next Button -->
