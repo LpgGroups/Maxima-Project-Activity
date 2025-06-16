@@ -136,69 +136,154 @@ $(document).ready(function () {
             confirmButtonText: "Ya, Register Pelatihan!",
             cancelButtonText: "Batal",
             html: `
-                <label for="training-select" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-700">Pilih Pelatihan:</label>
-                <select id="training-select" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block mx-auto w-[300px] p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                    <option value="TKPK1">TKPK 1</option>
-                    <option value="TKPK2">TKPK 2</option>
-                    <option value="TKBT1">TKBT 1</option>
-                    <option value="TKBT2">TKBT 2</option>
-                    <option value="BE">Basic Electrical</option>
-                    <option value="P3K">First Aid(P3K)</option>
-                    <option value="AK3U">AK3U</option>
-                </select>
-                <label class="block mt-2 mb-2 text-sm font-medium text-gray-900 dark:text-gray-700">Tempat Pelatihan:</label>
-                <div class="flex items-center justify-center min-h-5">
-                    <div class="flex items-center me-4">
-                        <input id="radio-online" type="radio" value="Online" name="training-mode" class="w-4 h-4 text-blue-600 bg-gray-100 border border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"/>
-                        <label for="radio-online" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-700">Online</label>
+            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-700">Pilih Pelatihan:</label>
+            <div class="border shadow-lg rounded-lg overflow-y-auto max-h-44 bg-white">
+                <div id="training-list" class="flex flex-col gap-2 mx-auto w-[300px] mt-2 mb-2">
+                    <div class="training-option px-4 py-2 border rounded-lg cursor-pointer text-white relative overflow-hidden"
+                        data-value="TKPK1"
+                        style="background-image: url('/img/tkpk1_training.png'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+                        <div class="relative z-10 text-white">
+                            TKPK 1
+                            <div class="text-xs text-white">Pelatihan Tenaga Kerja Pada Ketinggian Tingkat I</div>
+                        </div>
+                        <div class="absolute inset-0 bg-black/50 z-0"></div>
                     </div>
-                    <div class="flex items-center me-4">
-                        <input id="radio-offline" type="radio" value="Offline" name="training-mode" class="w-4 h-4 text-blue-600 bg-gray-100 border border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"/>
-                        <label for="radio-offline" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-700">Offline</label>
+
+                    <div class="training-option px-4 py-2 border rounded-lg cursor-pointer text-white relative overflow-hidden"
+                        data-value="TKPK2"
+                        style="background-image: url('/img/tkpk2_training.png'); background-size: cover; background-position: center center; background-repeat: no-repeat; height: 80px;">
+
+                        <div class="relative z-10 text-white">
+                            TKPK 2
+                            <div class="text-xs text-white">Pelatihan Tenaga Kerja Pada Ketinggian Tingkat II</div>
+                        </div>
+
+                        <div class="absolute inset-0 bg-black/50 z-0"></div>
                     </div>
-                    <div class="flex items-center me-4">
-                        <input id="radio-blended" type="radio" value="Blended" name="training-mode" class="w-4 h-4 text-blue-600 bg-gray-100 border border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"/>
-                        <label for="radio-blended" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-700">Blended</label>
+
+
+                    <div class="training-option px-4 py-2 border rounded-lg cursor-pointer text-white relative overflow-hidden"
+                        data-value="TKBT1"
+                        style="background-image: url('/img/tkbt1_training.png'); background-size: cover; background-position: center;">
+                        <div class="relative z-10 text-white">
+                            TKBT 1
+                            <div class="text-xs text-white">Pelatihan Tenaga Kerja Bangunan Tinggi I</div>
+                        </div>
+                        <div class="absolute inset-0 bg-black/50 z-0"></div>
                     </div>
+
+                    <div class="training-option px-4 py-2 border rounded-lg cursor-pointer text-white relative overflow-hidden"
+                        data-value="TKBT2"
+                        style="background-image: url('/img/tkbt2_training.png'); background-size: cover; background-position: center;">
+                        <div class="relative z-10 text-white">
+                            TKBT 2
+                            <div class="text-xs text-white">Pelatihan Tenaga Kerja Bangunan Tinggi II</div>
+                        </div>
+                        <div class="absolute inset-0 bg-black/50 z-0"></div>
+                    </div>
+
+                    <div class="training-option px-4 py-2 border rounded-lg cursor-pointer text-white relative overflow-hidden"
+                        data-value="BE"
+                        style="background-image: url('/img/be_training.png'); background-size: cover; background-position: center;">
+                        <div class="relative z-10 text-white">
+                            Basic Electrical
+                            <div class="text-xs text-white">Pelatihan Basic Electrical</div>
+                        </div>
+                        <div class="absolute inset-0 bg-black/50 z-0"></div>
+                    </div>
+
+                    <div class="training-option px-4 py-2 border rounded-lg cursor-pointer text-white relative overflow-hidden"
+                        data-value="P3K"
+                        style="background-image: url('/img/p3k_training.png'); background-size: cover; background-position: center;">
+                        <div class="relative z-10 text-white">
+                            First Aid (P3K)
+                            <div class="text-xs text-white">Pelatihan Pertolongan Pertama Pada Kecelakaan (P3K)</div>
+                        </div>
+                        <div class="absolute inset-0 bg-black/50 z-0"></div>
+                    </div>
+
+                    <div class="training-option px-4 py-2 border rounded-lg cursor-pointer text-white relative overflow-hidden"
+                        data-value="AK3U"
+                        style="background-image: url('/img/ak3u_training.png'); background-size: cover; background-position: center;">
+                        <div class="relative z-10 text-white">
+                            AK3U
+                            <div class="text-xs text-white">Pelatihan Ahli K3 Umum</div>
+                        </div>
+                        <div class="absolute inset-0 bg-black/50 z-0"></div>
+                    </div>
+
                 </div>
+            </div>
+
+
+            <label class="block mt-2 mb-2 text-sm font-medium text-gray-900 dark:text-gray-700">Tempat
+                Pelatihan:</label>
+            <div class="flex items-center justify-center min-h-5">
+                <div class="flex items-center me-4">
+                    <input id="radio-online" type="radio" value="Online" name="training-mode"
+                        class="w-4 h-4 text-blue-600 bg-gray-100 border border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 disabled:opacity-50 disabled:cursor-not-allowed" />
+                    <label for="radio-online"
+                        class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-700">Online</label>
+                </div>
+                <div class="flex items-center me-4">
+                    <input id="radio-offline" type="radio" value="Offline" name="training-mode"
+                        class="w-4 h-4 text-blue-600 bg-gray-100 border border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 disabled:opacity-50 disabled:cursor-not-allowed" />
+                    <label for="radio-offline"
+                        class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-700">Offline</label>
+                </div>
+                <div class="flex items-center me-4">
+                    <input id="radio-blended" type="radio" value="Blended" name="training-mode"
+                        class="w-4 h-4 text-blue-600 bg-gray-100 border border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 disabled:opacity-50 disabled:cursor-not-allowed" />
+                    <label for="radio-blended"
+                        class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-700">Blended</label>
+                </div>
+            </div>
             `,
-            didOpen: setTrainingRadioStateHandler,
+            didOpen: () => {
+                // Handler untuk memilih training
+                $("#training-list .training-option").on("click", function () {
+                    $("#training-list .training-option").removeClass(
+                        "ring-2 ring-red-700 animate-pulse"
+                    );
+                    $(this).addClass("ring-2 ring-red-700 animate-pulse");
+                    $("#training-list").data("selected", $(this).data("value"));
+                    updateRadioStateCustom($(this).data("value"));
+                });
+
+                // Set default (pilih pertama)
+                const $first = $("#training-list .training-option").first();
+                $first.addClass("ring-2 ring-red-700 animate-pulse");
+                $("#training-list").data("selected", $first.data("value"));
+                updateRadioStateCustom($first.data("value"));
+            },
         }).then(handleBookingDialogConfirm(bookingDate));
     }
 
-    function setTrainingRadioStateHandler() {
-        const select = document.getElementById("training-select");
+    function updateRadioStateCustom(training) {
         const online = document.getElementById("radio-online");
         const offline = document.getElementById("radio-offline");
         const blended = document.getElementById("radio-blended");
-
-        function updateRadioState(training) {
-            online.disabled = false;
-            offline.disabled = false;
-            blended.disabled = false;
-            online.checked = false;
-            offline.checked = false;
-            blended.checked = false;
-            if (["TKPK1", "TKPK2", "TKBT1", "TKBT2"].includes(training)) {
-                blended.checked = true;
-                online.disabled = true;
-                offline.disabled = true;
-            } else if (training === "AK3U") {
-                online.checked = true;
-                offline.disabled = true;
-                blended.disabled = true;
-            }
+        online.disabled = false;
+        offline.disabled = false;
+        blended.disabled = false;
+        online.checked = false;
+        offline.checked = false;
+        blended.checked = false;
+        if (["TKPK1", "TKPK2", "TKBT1", "TKBT2"].includes(training)) {
+            blended.checked = true;
+            online.disabled = true;
+            offline.disabled = true;
+        } else if (training === "AK3U") {
+            online.checked = true;
+            offline.disabled = true;
+            blended.disabled = true;
         }
-        updateRadioState(select.value);
-        select.addEventListener("change", function () {
-            updateRadioState(this.value);
-        });
     }
 
     function handleBookingDialogConfirm(bookingDate) {
         return (result) => {
             if (result.isConfirmed) {
-                const trainingType = $("#training-select").val();
+                const trainingType = $("#training-list").data("selected");
                 const progres = "1";
                 const trainingPlace = $(
                     'input[name="training-mode"]:checked'
@@ -337,35 +422,35 @@ $(document).ready(function () {
                             "odd:bg-white even:bg-gray-300 cursor-pointer hover:bg-red-500 hover:text-white leading-loose"
                         )
                         .click(() => (window.location = item.url)).html(`
-                            <td>${item.no}</td>
-                            <td>
-                                ${item.activity}
-                                ${
-                                    item.isNew
-                                        ? '<img src="/img/gif/new.gif" class="w-5 h-3 -mt-3 inline-block">'
-                                        : ""
-                                }
-                                ${
-                                    !item.isNew && item.isUpdated
-                                        ? '<img src="/img/gif/update.gif" class="w-5 h-3 -mt-3 inline-block">'
-                                        : ""
-                                }
-                            </td>
-                            <td>${item.status}</td>
-                            <td>${item.date}</td>
-                            <td>
-                                <div class="w-[80px] h-2 bg-gray-200 rounded-full dark:bg-gray-700 mx-auto">
-                                    <div class="${
-                                        item.progress_color
-                                    } text-[8px] font-medium text-white text-center leading-none rounded-full"
-                                        style="width: ${
-                                            item.progress_percent
-                                        }%; height:8px">
-                                        ${item.progress_percent}%
-                                    </div>
-                                </div>
-                            </td>
-                        `);
+                <td>${item.no}</td>
+                <td>
+                    ${item.activity}
+                    ${
+                        item.isNew
+                            ? '<img src="/img/gif/new.gif" class="w-5 h-3 -mt-3 inline-block">'
+                            : ""
+                    }
+                    ${
+                        !item.isNew && item.isUpdated
+                            ? '<img src="/img/gif/update.gif" class="w-5 h-3 -mt-3 inline-block">'
+                            : ""
+                    }
+                </td>
+                <td>${item.status}</td>
+                <td>${item.date}</td>
+                <td>
+                    <div class="w-[80px] h-2 bg-gray-200 rounded-full dark:bg-gray-700 mx-auto">
+                        <div class="${
+                            item.progress_color
+                        } text-[8px] font-medium text-white text-center leading-none rounded-full"
+                            style="width: ${
+                                item.progress_percent
+                            }%; height:8px">
+                            ${item.progress_percent}%
+                        </div>
+                    </div>
+                </td>
+                `);
                     $tableBody.append($tr);
                 });
             })
