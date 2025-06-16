@@ -42,7 +42,7 @@
                 </li>
                 <li class="flex-1">
                     <a href="#" id="tab3"
-                        class="flex justify-center items-center gap-2 text-violet-400 py-2 px-4 bg-gray-400 text-center">Submit
+                        class="flex justify-center items-center gap-2 text-violet-400 py-2 px-4 bg-gray-400 text-center rounded-r-lg">Submit
                         Data
                         @if ($training->isprogress == 5)
                             <img src="{{ asset('img/svg/success.svg') }}" alt="Success" class="w-4 h-4">
