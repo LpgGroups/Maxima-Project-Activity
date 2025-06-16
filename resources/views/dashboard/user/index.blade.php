@@ -4,21 +4,21 @@
         <!-- Container untuk informasi -->
         <div class="flex flex-wrap gap-4 w-full lg:w-[570px] h-auto">
             <!-- Elemen Total Pelatihan -->
-            <div class="lg:w-[276px] sm:w-full h-auto bg-white rounded-2xl shadow-md p-4"
+            <div class="w-[276px] sm:w-full md:w-[276px] h-auto bg-white rounded-2xl shadow-md p-4"
                 style="background-image: url('/img/logo_training.png'); background-repeat: no-repeat; background-position: right bottom; background-size: 140px 140px;">
                 <div class="text-violet-600 text-2xl font-bold">Total Pelatihan</div>
                 <div class="text-black text-[52px] font-bold">{{ $totalTrainings }}</div>
             </div>
 
             <!-- Elemen Total Peserta -->
-            <div class="lg:w-[276px] sm:w-full h-auto bg-white rounded-2xl shadow-md p-4"
+            <div class="lg:w-[276px] sm:w-full w-[276px] h-auto bg-white rounded-2xl shadow-md p-4"
                 style="background-image: url('/img/logo_participant.png'); background-repeat: no-repeat; background-position: right bottom; background-size: 140px 140px;">
                 <div class="text-violet-400 text-2xl font-bold">Total Peserta</div>
                 <div class="text-black text-[52px] font-bold">{{ $totalParticipants }}</div>
             </div>
 
 
-            <div class="lg:w-[568px] sm:w-full h-auto bg-white rounded-2xl shadow-md p-4 sm:mb-0 lg:mb-[500px]">
+            <div class="lg:w-[568px] sm:w-full w-[276px] h-auto bg-white rounded-2xl shadow-md p-4 sm:mb-0 lg:mb-[500px]">
                 {{-- table --}}
                 <div class="rounded-2xl p-2 w-full">
                     <table class="table-auto w-full text-center align-middle ">
@@ -33,7 +33,6 @@
                         </thead>
                         <tbody class="lg:text-[14px] text-[10px]">
                             @forelse ($trainings as $index => $training)
-                                
                             @empty
                                 <tr>
                                     <td colspan="5" class="text-gray-500 py-2">Belum ada data pelatihan</td>
@@ -55,7 +54,7 @@
         </div>
 
         <!-- Elemen Kalender di Sebelah Kanan -->
-        <div class="w-full lg:w-96 h-[534px] bg-white rounded-2xl shadow-md p-4">
+        <div class="lg:w-96 sm:w-full md:w-[276px] w-[276px] h-[534px] bg-white rounded-2xl shadow-md p-4">
             <p class="text-[18px] font-semibold">Kalender Maxima Academy</p>
             <!-- Navigasi Bulan -->
             <div class="flex justify-between items-center mt-4">
@@ -89,7 +88,7 @@
 
             <div class="grid grid-cols-7 gap-2 p-2" id="days"></div>
 
-            <div class="flex space-x-2 items-center mt-4 ml-4">
+            <div class="flex flex-wrap space-x-2 items-center mt-4">
                 <div class="flex items-center space-x-1">
                     <div class="w-4 h-2 bg-[#9694FF] rounded-sm"></div>
                     <span class="text-[12px]">Hari Ini</span>
@@ -122,4 +121,3 @@
     @vite('resources/js/datepicker.js')
     @vite('resources/js/livedatauser.js')
 @endpush
-
