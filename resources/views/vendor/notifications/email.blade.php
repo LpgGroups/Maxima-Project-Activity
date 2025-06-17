@@ -11,7 +11,8 @@
         style="max-width:600px; margin:40px auto; background-color:#ffffff; border-radius:8px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.05);">
         <!-- Logo -->
         <div style="text-align:center; padding:32px 20px 16px;">
-            <img src="https://maximagroup.co.id/logo.png" alt="Maxima Logo" style="width:120px; margin:0 auto;">
+            <img src="https://e-registrasi.maximagroup.co.id/img/maximalog.png" alt="Maxima Logo"
+                style="width:120px; margin:0 auto;">
         </div>
 
         <!-- Body -->
