@@ -4,7 +4,7 @@
         <!-- Container untuk informasi -->
         <div class="flex flex-wrap gap-4 w-full lg:w-[570px] h-auto">
             <!-- Elemen Total Pelatihan -->
-            <div class="w-[276px] sm:w-full md:w-[276px] h-auto bg-white rounded-2xl shadow-md p-4"
+            <div class="w-[276px] sm:w-full h-auto bg-white rounded-2xl shadow-md p-4"
                 style="background-image: url('/img/logo_training.png'); background-repeat: no-repeat; background-position: right bottom; background-size: 140px 140px;">
                 <div class="text-violet-600 text-2xl font-bold">Total Pelatihan</div>
                 <div class="text-black text-[52px] font-bold">{{ $totalTrainings }}</div>
@@ -54,7 +54,7 @@
         </div>
 
         <!-- Elemen Kalender di Sebelah Kanan -->
-        <div class="lg:w-96 sm:w-full md:w-[276px] w-[276px] h-[534px] bg-white rounded-2xl shadow-md p-4">
+        <div class="lg:w-96 sm:w-full w-[276px] h-[534px] bg-white rounded-2xl shadow-md p-4">
             <p class="text-[18px] font-semibold">Kalender Maxima Academy</p>
             <!-- Navigasi Bulan -->
             <div class="flex justify-between items-center mt-4">
