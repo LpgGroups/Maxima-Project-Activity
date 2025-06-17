@@ -17,7 +17,10 @@ class ForgotPasswordController extends Controller
 
     public function sendReset(Request $request)
     {
-        $request->validate(['email' => 'required|email|exists:users,email'], [
+        // Validasi: Jika gagal, Laravel otomatis return 422 (AJAX akan tangkap)
+        $request->validate([
+            'email' => 'required|email|exists:users,email'
+        ], [
             'email.required' => 'Email wajib diisi.',
             'email.email' => 'Format email tidak valid.',
             'email.exists' => 'Email tidak terdaftar.',
@@ -28,10 +31,15 @@ class ForgotPasswordController extends Controller
         );
 
         if ($status === Password::RESET_LINK_SENT) {
-            return back()->with('status', 'Link reset password telah dikirim ke email kamu.');
+            return response()->json([
+                'message' => 'Link reset password telah dikirim ke email anda. silahkan periksa email.'
+            ], 200);
         }
 
-        return back()->withErrors(['email' => 'Terjadi kesalahan saat mengirim link reset. Coba lagi nanti.']);
+        // Gagal kirim link
+        return response()->json([
+            'message' => 'Terjadi kesalahan saat mengirim link reset. Coba lagi nanti.'
+        ], 500);
     }
 
     public function showResetForm(Request $request, $token)

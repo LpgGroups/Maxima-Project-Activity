@@ -27,10 +27,6 @@ Route::get('/forgot-password', [ForgotPasswordController::class, 'showForm'])->n
 Route::post('/forgot-password', [ForgotPasswordController::class, 'sendReset'])->name('password.email');
 Route::get('/reset-password/{token}', [ForgotPasswordController::class, 'showResetForm'])->name('password.reset');
 Route::post('/reset-password', [ForgotPasswordController::class, 'reset'])->name('password.update');
-
-
-
-
 Route::middleware(['auth'])->group(function () {
     Route::middleware([UserAccess::class . ':admin'])->group(function () {
         Route::get('/admin/training/live', [DashboardAdminController::class, 'getLiveTraining'])->name('admin.training.live');

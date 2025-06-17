@@ -309,8 +309,9 @@
                     <p class="mt-2">
                         Upload data peserta melalui Google Drive dengan download template yang telah Kami sediakan, lalu
                         copy link Google Drive untuk dipaste ke dalam box di bawah ini.
-                        (<a href="https://maximagroup.co.id/" target="_blank" rel="noopener noreferrer"
-                            class="text-blue-700 underline">download template</a>)
+                        (<a href="http://maximagroup.co.id/wp-content/uploads/2025/06/Template-Pengajuan-Pelatihan.zip"
+                            target="_blank" rel="noopener noreferrer" class="text-blue-700 underline">download
+                            template</a>)
                     </p>
 
                     <div class="relative mt-4 w-64">
@@ -556,19 +557,31 @@
             <!-- ASIDE -->
             <aside id="side-panel" class="w-[300px] sticky top-0 h-screen bg-gray-50 border-l border-gray-300 p-4 hidden">
 
-                <div class="w-70 h-auto rounded-[20px] text-red-600 border-2 border-red-600 p-4">
+                <div @class([
+                    'w-auto h-auto rounded-[20px] p-4 border-2',
+                    'text-green-600 border-green-600' => $training->isprogress == 5,
+                    'text-red-600 border-red-600' => $training->isprogress != 5,
+                ])>
                     @if ($training->isprogress == 5)
-                        <h3 class="text-xl font-bold mb-2 text-green-600">🎉 Selamat!</h3>
-                        <p class="text-sm text-gray-700">
-                            Terima kasih telah melengkapi seluruh data pelatihan. <br>
-                            Kami menghargai dedikasi dan kerja keras Anda dalam memastikan semua informasi yang dibutuhkan
-                            telah terpenuhi.
+                        <h3 class="text-xl font-bold mb-2 text-green-600">Halo Sobat Maxima,</h3>
+                        <p class="text-[10px] text-gray-700 text-justify">
+                            Kami mengucapkan terima kasih atas kerja sama dan perhatian Bapak/Ibu dalam melengkapi
+                            berkas-berkas persyaratan pengajuan pelatihan dengan baik dan tepat waktu. Berkat kelengkapan
+                            dokumen tersebut, proses pengajuan pelatihan kini dapat kami lanjutkan ke tahap berikutnya.
+
                             <br><br>
-                            Semoga pelatihannya berjalan lancar dan membawa manfaat maksimal untuk seluruh peserta.
+                            Apabila terdapat pertanyaan atau informasi tambahan yang diperlukan, jangan sungkan untuk
+                            menghubungi kami.
+                            <br><br>
+                            Terima kasih atas perhatian dan kerja sama yang luar biasa.
+                            <br><br>
+                            Hormat kami,
+                            <br>
+                            Maxima Group
                         </p>
                     @else
-                        <h3 class="text-xl font-bold mb-2">Informasi Data</h3>
-                        <ul class="list-disc text-xs ml-2">
+                        <h3 class="text-xl font-bold mb-2 text-red-600">Informasi Data</h3>
+                        <ul class="list-disc text-xs ml-2 text-red-600">
                             <li>Harap lengkapi data-data peserta H-3 sebelum hari pelatihan di mulai.</li>
                             <li>Data dapat di ubah H-3 sebelum hari pelatihan.</li>
                             <li>Mohon untuk input data dengan baik dan benar</li>
@@ -577,9 +590,10 @@
                     @endif
                 </div>
 
+
                 <div class="text-center">
                     @if ($training->isprogress == 5)
-                        <img class="mt-4 w-[250px] h-[200px] mx-auto" src="/img/complete.png" alt="LPG">
+                        <img class="mt-4 w-[250px] h-[150px] mx-auto" src="/img/complete.png" alt="LPG">
                     @endif
                 </div>
 
