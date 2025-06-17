@@ -148,10 +148,90 @@ function showDetail(id) {
         });
 }
 
+function filterSearch() {
+    const toggleBtn = document.getElementById("filterToggleBtn");
+    const filterPanel = document.getElementById("filterPanel");
+
+    if (toggleBtn && filterPanel) {
+        toggleBtn.addEventListener("click", function () {
+            filterPanel.classList.toggle("hidden");
+        });
+    }
+}
+function liveSearch() {
+    const query = $("#searchInput").val().toLowerCase();
+
+    $(".training-card").each(function () {
+        const activityText = $(this)
+            .find("p.text-sm.font-semibold")
+            .text()
+            .toLowerCase();
+        const infoText = $(this).find("p.text-xs").text().toLowerCase();
+
+        const combinedText = activityText + " " + infoText;
+
+        const isMatch = combinedText.includes(query);
+        $(this).toggle(isMatch);
+    });
+}
+function applyTrainingFilters() {
+    const searchTerm = $('#searchInput').val().toLowerCase();
+    const sortValue = $('#sortCompany').val();
+    const start = $('#startDate').val() ? new Date($('#startDate').val()) : null;
+    const end = $('#endDate').val() ? new Date($('#endDate').val()) : null;
+
+    const cards = $('.training-card');
+
+    // Filtering
+    cards.each(function () {
+        const card = $(this);
+        const companyText = card.find('p.text-zinc-800.text-xs').text().split(' - ')[1]?.trim().toLowerCase();
+        const dateRangeText = card.find('.text-violet-400').text();
+        const [startText, endText] = dateRangeText.split(' - ');
+
+        const cardStart = new Date(startText);
+        const cardEnd = new Date(endText);
+
+        const matchesSearch = card.text().toLowerCase().includes(searchTerm);
+        const matchesStart = !start || cardStart >= start;
+        const matchesEnd = !end || cardEnd <= end;
+
+        if (matchesSearch && matchesStart && matchesEnd) {
+            card.show();
+        } else {
+            card.hide();
+        }
+    });
+
+    // Sorting
+    if (sortValue) {
+        const container = $('.space-y-4');
+        const visibleCards = cards.filter(function () {
+            return $(this).is(':visible');
+        }).get();
+
+        visibleCards.sort(function (a, b) {
+            const nameA = $(a).find('p.text-zinc-800.text-xs').text().split(' - ')[1]?.trim().toLowerCase();
+            const nameB = $(b).find('p.text-zinc-800.text-xs').text().split(' - ')[1]?.trim().toLowerCase();
+            return sortValue === 'asc' ? nameA.localeCompare(nameB) : nameB.localeCompare(nameA);
+        });
+
+        // Append sorted cards back to the container
+        $.each(visibleCards, function (_, card) {
+            container.append(card);
+        });
+    }
+}
 $(document).ready(function () {
     $(".view-detail-btn").on("click", function (e) {
         e.preventDefault();
         const trainingId = $(this).data("id");
         showDetail(trainingId);
     });
+    $("#searchInput").on("input", function () {
+        liveSearch();
+    });
+    filterSearch();
+
+    
 });

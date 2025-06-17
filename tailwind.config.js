@@ -11,6 +11,7 @@ export default {
         "./resources/**/*.vue",
         "./public/**/*.css",
     ],
+    safelist: ["cursor-not-allowed"],
     theme: {
         extend: {
             keyframes: {
