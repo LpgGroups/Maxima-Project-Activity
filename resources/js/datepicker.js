@@ -320,7 +320,7 @@ $(document).ready(function () {
             } ${currentDate.getFullYear()}</strong><br>Jenis Pelatihan: <strong>${trainingType}</strong>`,
             icon: "info",
             showCancelButton: true,
-            confirmButtonText: "OK (10)",
+            confirmButtonText: "OK",
             cancelButtonText: "Batal",
         }).then((confirmResult) => {
             if (confirmResult.isConfirmed) {

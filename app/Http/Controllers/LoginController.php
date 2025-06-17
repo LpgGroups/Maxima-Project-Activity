@@ -44,7 +44,7 @@ class LoginController extends Controller
                 return redirect('/')->withErrors('Periksa Akun Kembali');
             }
         } else {
-            return redirect('/')->withErrors('Username atau Password yang Anda masukan salah!')->withInput();
+            return redirect('/')->withErrors('Email atau Password yang Anda masukan salah!')->withInput();
         }
     }
 }
