@@ -96,8 +96,7 @@
                 </div>
 
                 <div class="mb-4">
-                    <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}">
-
+                    <div class="g-recaptcha" data-sitekey="6LcubmMrAAAAAHY1Xf9mLy2S1n3VMS3gKkn1k8vX">
                         @error('g-recaptcha-response')
                             <span class="text-red-500 text-xs">{{ $message }}</span>
                         @enderror
