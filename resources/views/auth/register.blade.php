@@ -96,15 +96,16 @@
                 </div>
 
                 <div class="mb-4">
-                    <div class="g-recaptcha" data-sitekey={{ config('services.recaptcha.site_key')}}></div>
-                    @error('g-recaptcha-response')
-                        <span class="text-red-500 text-xs">{{ $message }}</span>
-                    @enderror
-                </div>
-                <button type="submit"
-                    class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition text-base font-semibold mt-3">
-                    Register
-                </button>
+                    <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}">
+
+                        @error('g-recaptcha-response')
+                            <span class="text-red-500 text-xs">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <button type="submit"
+                        class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition text-base font-semibold mt-3">
+                        Register
+                    </button>
             </form>
         </div>
     </div>
