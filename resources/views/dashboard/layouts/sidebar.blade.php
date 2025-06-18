@@ -133,7 +133,7 @@
                     <li class="my-1">
                         <a href="/dashboard/management"
                             class="flex items-center space-x-2 menu-item-hover 
-                                  @if (request()->is('dashboard/admin')) bg-red-500 text-white @else hover:bg-red-500 @endif 
+                               @if (request()->is('dashboard/management*')) bg-red-500 text-white @else hover:bg-red-500 @endif 
                                   rounded-lg p-2">
                             <svg xmlns="http://www.w3.org/2000/svg" class="size-6" fill="none" viewBox="0 0 24 24"
                                 stroke-width="1.5" stroke="currentColor">
@@ -149,7 +149,7 @@
 
         <!-- Version Info -->
         <div class="p-4 mt-auto">
-            <span class="text-sm">Version:Beta V1.0.0</span>
+            <span class="text-sm">Version: Beta V1.0.0</span>
         </div>
     </div>
 </div>

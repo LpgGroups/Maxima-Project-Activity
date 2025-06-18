@@ -28,6 +28,9 @@ class DashboardManagementController extends Controller
         if ($request->filled('sortCompany')) {
             $sortDirection = $request->sortCompany === 'desc' ? 'desc' : 'asc';
             $query->orderBy('name_company', $sortDirection);
+        } else {
+            // Default: sorting berdasarkan created_at terbaru
+            $query->orderBy('created_at', 'desc');
         }
 
         $data = $query->get();
@@ -38,10 +41,12 @@ class DashboardManagementController extends Controller
         ]);
     }
 
+
     public function getData()
     {
         $data = RegTraining::with(['participants', 'files', 'trainingNotifications', 'user'])
             ->where('isprogress', 5)
+            ->orderBy('created_at', 'desc') // Menampilkan data terbaru duluan
             ->get();
 
         return response()->json($data);

@@ -81,7 +81,7 @@
     <div class="space-y-4">
 
         @foreach ($data as $training)
-            <div class="training-card w-full h-24 bg-green-500 rounded-lg shadow-md relative overflow-hidden">
+            <div class="training-card w-full h-[120px] bg-green-500 rounded-lg shadow-md relative overflow-hidden">
                 <div class="absolute inset-0 bg-white rounded-lg p-3 flex flex-col justify-between">
                     <div class="flex justify-between items-start">
                         <div>
@@ -89,7 +89,7 @@
                                 <div class="flex">
                                     <p class="text-zinc-800 text-sm font-semibold">
                                         {{ $activityMap[$training->activity] ?? 'null' }}</p>
-                                    <img src="{{ asset('img/svg/success.svg') }}" alt="Success" class="ml-2 w-4 h-4">
+                                    <img src="{{ asset('img/svg/success.svg') }}" alt="Success" class="ml-1 w-4 h-4">
                                 </div>
                             @else
                                 <p class="text-zinc-800 text-sm font-semibold">
