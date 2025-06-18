@@ -82,7 +82,10 @@
 
                         <!-- Password hints -->
                         <div id="password-hint" class="mt-2 space-y-1 text-[10px] sm:text-[10px]">
-                            <!-- Hints... -->
+                            <div><span id="icon-length">⬜</span> Minimal 8 karakter</div>
+                            <div><span id="icon-upper">⬜</span> Mengandung huruf kapital</div>
+                            <div><span id="icon-lower">⬜</span> Mengandung huruf kecil</div>
+                            <div><span id="icon-number">⬜</span> Mengandung angka(0-10)</div>
                         </div>
                     </div>
 
@@ -96,7 +99,7 @@
                 </div>
 
                 <div class="mb-4">
-                    <div class="g-recaptcha" data-sitekey="6LcubmMrAAAAAHY1Xf9mLy2S1n3VMS3gKkn1k8vX">
+                    <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}">
                         @error('g-recaptcha-response')
                             <span class="text-red-500 text-xs">{{ $message }}</span>
                         @enderror
