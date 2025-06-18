@@ -107,4 +107,7 @@ Route::middleware(['auth'])->group(function () {
             })->values(),
         ]);
     })->middleware('auth');
+
+    Route::get('/profile/settings', [App\Http\Controllers\ProfileController::class, 'edit'])->name('profile.edit');
+    Route::post('/profile/settings', [App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
 });

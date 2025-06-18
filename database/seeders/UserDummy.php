@@ -18,7 +18,7 @@ class UserDummy extends Seeder
                 'name' => 'Admin Ops Maxima 1',
                 'email' => 'ana@maximagroup.co.id',
                 'company' => 'Maxima',
-                'phone'=>'62895321678104',
+                'phone' => '62895321678104',
                 'role' => 'admin',
                 'password' => bcrypt('4dm1nMaxima')
             ],
@@ -26,7 +26,7 @@ class UserDummy extends Seeder
                 'name' => 'Admin Ops Maxima 2',
                 'email' => 'temank3.maxima@gmail.com',
                 'company' => 'Maxima',
-                'phone'=>'6285283051168',
+                'phone' => '6285283051168',
                 'role' => 'admin',
                 'password' => bcrypt('0psM4xima')
             ],
@@ -34,21 +34,21 @@ class UserDummy extends Seeder
                 'name' => 'Dewa Dev Kps',
                 'email' => 'tmspprt.lpg@gmail.com',
                 'company' => 'Langgeng Perkasa Group',
-                'phone'=> '628118509001',
+                'phone' => '628118509001',
                 'role' => 'dev',
                 'password' => bcrypt('DevLp6Kps')
             ],
             [
                 'name' => 'Management LPG',
                 'email' => 'management@gmail.com',
-                'company' => 'Dewa',
+                'company' => 'Langgeng Perkasa Group',
                 'role' => 'management',
                 'password' => bcrypt('LPGr0up1')
             ],
             [
                 'name' => 'Management LPG 2',
                 'email' => 'management1@gmail.com',
-                'company' => 'Dewa',
+                'company' => 'Langgeng Perkasa Group',
                 'role' => 'management',
                 'password' => bcrypt('LPGr0up1')
             ]
