@@ -81,6 +81,8 @@
                             {{ old('activity', $training->activity ?? '') == 'TKBT2' ? 'selected' : '' }}>TKBT2</option>
                         <option value="BE" {{ old('activity', $training->activity ?? '') == 'BE' ? 'selected' : '' }}>
                             BE</option>
+                        <option value="P3K" {{ old('activity', $training->activity ?? '') == 'P3K' ? 'selected' : '' }}>
+                            P3K</option>
                         <option value="AK3U"
                             {{ old('activity', $training->activity ?? '') == 'AK3U' ? 'selected' : '' }}>
                             AK3U</option>
