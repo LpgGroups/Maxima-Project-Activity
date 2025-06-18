@@ -37,4 +37,7 @@ return [
     'maxchat' => [
         'token' => env('MAXCHAT_TOKEN'),
     ],
+    'recaptcha' => [
+    'site_key' => env('CAPTHA_TOKENSITE'),
+],
 ];

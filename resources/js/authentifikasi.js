@@ -3,7 +3,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const loginForm = document.getElementById("loginForm");
 
     if (loginBtn && loginForm) {
-        console.log("✅ JavaScript loaded and login button found."); // 🔍 Untuk memastikan JS nyala
         loginForm.addEventListener("submit", (e) => {
             showLoader("Sedang memuat halaman...");
         });

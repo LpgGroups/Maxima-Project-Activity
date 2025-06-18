@@ -55,7 +55,23 @@
 
         <!-- Elemen Kalender di Sebelah Kanan -->
         <div class="lg:w-96 sm:w-full w-[276px] h-[534px] bg-white rounded-2xl shadow-md p-4">
-            <p class="text-[18px] font-semibold">Kalender Maxima Academy</p>
+            <div class="relative flex items-start space-x-2">
+                    <h3 class="text-[18px] font-semibold mt-2">Kalender Maxima Academy</h3>
+
+                    <!-- Icon + Tooltip -->
+                    <div class="relative group">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-blue-500 mt-3 cursor-pointer"
+                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8.228 9c.313-1.17 1.29-2 2.522-2 1.54 0 2.75 1.21 2.75 2.75 0 1.052-.597 1.976-1.469 2.406a2.25 2.25 0 00-1.281 2.156m0 3h.008M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" />
+                        </svg>
+
+                        <!-- Tooltip container -->
+                        <div class="absolute top-0 left-full ml-2 w-32 hidden group-hover:flex z-10">
+                            <img src="/img/gif/new.gif" alt="GIF Tooltip" class="w-full h-auto rounded shadow-lg" />
+                        </div>
+                    </div>
+                </div>
             <!-- Navigasi Bulan -->
             <div class="flex justify-between items-center mt-4">
                 <button id="prev-month" class="bg-red-500 text-white py-2 px-4 rounded-lg flex items-center justify-center">

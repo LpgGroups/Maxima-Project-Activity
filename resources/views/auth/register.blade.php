@@ -96,7 +96,7 @@
                 </div>
 
                 <div class="mb-4">
-                    <div class="g-recaptcha" data-sitekey="6LfonFwrAAAAAND5QBUOo83OcNtOzWE-S1Ti4g3t"></div>
+                    <div class="g-recaptcha" data-sitekey={{ config('services.recaptcha.site_key')}}></div>
                     @error('g-recaptcha-response')
                         <span class="text-red-500 text-xs">{{ $message }}</span>
                     @enderror
@@ -109,7 +109,6 @@
         </div>
     </div>
     <script>
-        // Kriteria password
         function checkPassword(pw) {
             return {
                 length: pw.length >= 8,

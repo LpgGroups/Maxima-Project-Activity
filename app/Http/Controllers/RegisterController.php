@@ -34,7 +34,7 @@ class RegisterController extends Controller
             ],
             'g-recaptcha-response' => ['required', function ($attribute, $value, $fail) {
                 $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
-                    'secret' => '6LfonFwrAAAAAIaBbBNZu4yB03NxQ8VjXREbzEpr',
+                    'secret' => '6LcubmMrAAAAAHfIUTLFlV-lTgpURvmuknwWDTn4',
                     'response' => $value,
                 ]);
                 if (!$response->json('success')) {
