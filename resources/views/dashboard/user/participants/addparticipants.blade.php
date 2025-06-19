@@ -82,7 +82,7 @@
                             </svg>
                         </span>
                     </div>
-                    <div class="file-info-photo mt-1 text-xs text-blue-700"></div>
+                    <div class="file-info-photo mt-1 text-xs text-green-700"></div>
                 </div>
 
                 {{-- IJAZAH --}}
@@ -97,6 +97,7 @@
                             </svg>
                         </span>
                     </div>
+                    <div class="file-info-ijazah mt-1 text-xs text-green-700"></div>
                 </div>
 
                 {{-- SURAT KARYAWAN --}}
@@ -113,6 +114,7 @@
                             </svg>
                         </span>
                     </div>
+                    <div class="file-info-letter_employee mt-1 text-xs text-green-700"></div>
                 </div>
 
                 {{-- SURAT SEHAT --}}
@@ -130,6 +132,7 @@
                             </svg>
                         </span>
                     </div>
+                    <div class="file-info-letter_health mt-1 text-xs text-green-700"></div>
                 </div>
 
                 {{-- CV --}}
@@ -146,6 +149,7 @@
                             </svg>
                         </span>
                     </div>
+                    <div class="file-info-cv mt-1 text-xs text-green-700"></div>
                 </div>
 
                 <div>
@@ -208,6 +212,7 @@
     </div>
 
     <script>
+        // Edit tombol
         document.querySelectorAll('.edit-btn').forEach(function(btn) {
             btn.addEventListener('click', function() {
                 document.getElementById('participant_id').value = btn.getAttribute('data-id');
@@ -245,6 +250,28 @@
                 document.getElementById('form-submit-btn').textContent = "Simpan Edit";
             });
         });
+
+        // Reset pesan file saat reset form
+        function resetForm() {
+            document.getElementById('participant_id').value = '';
+            document.getElementById('form2').reset();
+            document.getElementById('form-title').innerHTML = `
+        <svg class="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 11c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm0 2c-2.67 0-8 1.34-8 4v3h16v-3c0-2.66-5.33-4-8-4z" />
+        </svg>
+        Pendaftaran Peserta
+    `;
+            document.getElementById('form-submit-btn').textContent = "Kirim";
+
+            // Hapus info file
+            document.querySelector('.file-info-photo').innerHTML = '';
+            document.querySelector('.file-info-ijazah').innerHTML = '';
+            document.querySelector('.file-info-letter_employee').innerHTML = '';
+            document.querySelector('.file-info-letter_health').innerHTML = '';
+            document.querySelector('.file-info-cv').innerHTML = '';
+        }
+
 
         // Preview file upload (optional, sesuai kebutuhanmu)
         document.querySelectorAll('.file-upload-group input[type="file"]').forEach(function(input) {

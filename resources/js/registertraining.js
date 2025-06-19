@@ -177,7 +177,7 @@ function sendForm3() {
         },
         error: function (xhr) {
             if (xhr.status === 422) {
-                // Tangani error validasi Laravel
+                
                 var errors = xhr.responseJSON.errors;
                 var messages = [];
 

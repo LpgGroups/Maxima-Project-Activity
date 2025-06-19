@@ -239,7 +239,7 @@
 
 
 
-                <a href="{{ route('dashboard.addparticipant', ['form_id' => $training->id]) }}"
+                <a  href="{{ route('dashboard.addparticipant', ['form_id' => $training->id]) }}"
                     class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm px-5 py-2 rounded-lg shadow-md transition duration-200 ease-in-out mt-4 mb-2">
                     Tambah Peserta
                 </a>
@@ -286,13 +286,13 @@
                 </div>
 
                 <div class="flex">
-                    <div class="mt-4">
+                    {{-- <div class="mt-4">
                         <button type="button" id="submitBtnForm2"
                             class="w-48 bg-blue-500 text-white px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
                             data-training-date="{{ $training->date }}">
                             Simpan Data
                         </button>
-                    </div>
+                    </div> --}}
                     <div class="flex justify-end gap-x-2 w-full items-end max-w-[1920px] p-4">
                         <!-- Tombol Previous -->
                         <button type="button" id="prevBtnForm2"
