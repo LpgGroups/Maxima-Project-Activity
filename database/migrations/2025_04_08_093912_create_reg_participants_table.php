@@ -14,6 +14,13 @@ return new class extends Migration
         Schema::create('reg_participants', function (Blueprint $table) {
             $table->id();
             $table->string('name')->nullable();
+            $table->integer('nik')->nullable();
+            $table->date('date_birth')->nullable();
+            $table->string('photo')->nullable(); 
+            $table->string('ijazah')->nullable(); 
+            $table->string('letter_employee')->nullable(); 
+            $table->string('letter_health')->nullable(); 
+            $table->string('cv')->nullable(); 
             $table->string('reason')->nullable();
             $table->integer('status')->default(1);
             $table->unsignedBigInteger('form_id')->nullable();
@@ -22,9 +29,6 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('reg_participants');

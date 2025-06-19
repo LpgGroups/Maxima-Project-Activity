@@ -8,16 +8,21 @@ use Illuminate\Notifications\Notifiable;
 
 class RegParticipant extends Model
 {
-    /** @use HasFactory<\Database\Factories\RegParticipantFactory> */
-    use HasFactory;
-    use Notifiable;
+    use HasFactory, Notifiable;
+
     protected $table = 'reg_participants';
+
     protected $fillable = [
-        'id',
         'name',
-        'status',
+        'nik',
+        'date_birth',
+        'photo',
+        'ijazah',
+        'letter_employee',
+        'letter_health',
+        'cv',
         'reason',
-        'isprogress',
+        'status',
         'form_id',
     ];
 

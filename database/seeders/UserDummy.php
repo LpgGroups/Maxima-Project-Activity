@@ -58,6 +58,13 @@ class UserDummy extends Seeder
                 'company' => 'Langgeng Perkasa Group',
                 'role' => 'user',
                 'password' => bcrypt('12345')
+             ],
+             [
+                'name' => 'User2',
+                'email' => 'user2',
+                'company' => 'Langgeng Perkasa Group',
+                'role' => 'user',
+                'password' => bcrypt('12345')
             ]
         ];
         foreach ($userData as $key => $val) {

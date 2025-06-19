@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('file_requirements', function (Blueprint $table) {
             $table->id();
             $table->string('file_approval')->nullable();
+            $table->string('proof_payment')->nullable();
             $table->unsignedBigInteger('file_id')->nullable();
             $table->timestamps();
             $table->foreign('file_id')->references('id')->on('reg_training')->onDelete('cascade');

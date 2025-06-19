@@ -52,7 +52,7 @@ class RegTraining extends Model
     }
     public function isLinkFilled()
     {
-        return !empty($this->link);
+        return !empty($this->isprogress==3);
     }
     public function user()
     {
