@@ -31,7 +31,7 @@ function showTabs() {
                 Swal.fire({
                     icon: "warning",
                     title: "Link Belum Diisi",
-                    text: "Silakan isi link persyaratan terlebih dahulu untuk melanjutkan.",
+                    text: "Silakan Tambahkan Peserta Minima 1 untuk Melanjutkan Tab Berikutnya.",
                 });
             }
         });

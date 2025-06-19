@@ -52,7 +52,7 @@ class RegTraining extends Model
     }
     public function isLinkFilled()
     {
-        return !empty($this->isprogress==3);
+        return in_array($this->isprogress, [3, 4, 5]);
     }
     public function user()
     {
