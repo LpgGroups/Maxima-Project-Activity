@@ -1,7 +1,12 @@
 @extends('dashboard.layouts.dashboardmain')
 @section('container')
     <div class="flex space-x-4">
+        {{-- FORM (KIRI) --}}
         <div class="max-w-[500px] mt-4 bg-white rounded-3xl shadow-lg p-8">
+            <button type="button" onclick="resetForm()"
+                class="mb-3 px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded text-xs font-medium">
+                reset form
+            </button>
             <h2 id="form-title"
                 class="text-2xl font-bold mb-4 text-center text-blue-700 flex items-center justify-center gap-2">
                 <svg class="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -11,9 +16,9 @@
                 Pendaftaran Peserta
             </h2>
 
-            <p class="mb-6 text-gray-600 text-center text-sm">Silakan isi data peserta dengan benar. Data Anda aman dan
-                hanya
-                digunakan untuk keperluan pendaftaran.</p>
+            <p class="mb-6 text-gray-600 text-center text-sm">
+                Silakan isi data peserta dengan benar. Data Anda aman dan hanya digunakan untuk keperluan pendaftaran.
+            </p>
 
             @if (session('success'))
                 <div class="bg-green-50 text-green-700 px-4 py-3 rounded mb-4 text-center">{{ session('success') }}</div>
@@ -35,7 +40,7 @@
                 <input type="hidden" name="form_id" value="{{ $form_id }}">
                 <input type="hidden" name="participant_id" id="participant_id">
 
-                <!-- Nama Lengkap -->
+                {{-- Nama Lengkap --}}
                 <div>
                     <label for="name" class="block mb-1 font-medium text-gray-700">
                         Nama Lengkap <span class="text-red-500">*</span>
@@ -45,7 +50,7 @@
                         placeholder="Contoh: Budi Santoso" />
                 </div>
 
-                <!-- NIK -->
+                {{-- NIK --}}
                 <div>
                     <label for="nik" class="block mb-1 font-medium text-gray-700">
                         NIK
@@ -55,7 +60,7 @@
                         placeholder="Nomor Induk Kependudukan" />
                 </div>
 
-                <!-- Tanggal Lahir -->
+                {{-- Tanggal Lahir --}}
                 <div>
                     <label for="date_birth" class="block mb-1 font-medium text-gray-700">
                         Tanggal Lahir
@@ -65,8 +70,7 @@
                         placeholder="Tanggal Lahir" />
                 </div>
 
-                <!-- Foto -->
-                <!-- FOTO -->
+                {{-- FOTO --}}
                 <div class="relative file-upload-group mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1" for="photo">Foto</label>
                     <div class="flex items-center gap-2">
@@ -78,14 +82,10 @@
                             </svg>
                         </span>
                     </div>
-                    <div class="file-success-name mt-1 text-green-600 text-sm">
-                        @if (session('uploaded_files')['photo'] ?? false)
-                            {{ session('uploaded_files')['photo'] }}
-                        @endif
-                    </div>
+                    <div class="file-info-photo mt-1 text-xs text-blue-700"></div>
                 </div>
 
-                <!-- IJAZAH -->
+                {{-- IJAZAH --}}
                 <div class="relative file-upload-group mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1" for="ijazah">Ijazah (PDF/JPG/PNG)</label>
                     <div class="flex items-center gap-2">
@@ -97,14 +97,9 @@
                             </svg>
                         </span>
                     </div>
-                    <div class="file-success-name mt-1 text-green-600 text-sm">
-                        @if (session('uploaded_files')['ijazah'] ?? false)
-                            {{ session('uploaded_files')['ijazah'] }}
-                        @endif
-                    </div>
                 </div>
 
-                <!-- SURAT KARYAWAN -->
+                {{-- SURAT KARYAWAN --}}
                 <div class="relative file-upload-group mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1" for="letter_employee">Surat Karyawan
                         (PDF/JPG/PNG)</label>
@@ -113,18 +108,14 @@
                             class="block w-full text-sm text-gray-600 border border-gray-300 rounded cursor-pointer" />
                         <span class="checkmark hidden">
                             <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                                    d="M5 13l4 4L19 7" />
                             </svg>
                         </span>
                     </div>
-                    <div class="file-success-name mt-1 text-green-600 text-sm">
-                        @if (session('uploaded_files')['letter_employee'] ?? false)
-                            {{ session('uploaded_files')['letter_employee'] }}
-                        @endif
-                    </div>
                 </div>
 
-                <!-- SURAT SEHAT -->
+                {{-- SURAT SEHAT --}}
                 <div class="relative file-upload-group mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1" for="letter_health">Surat Sehat
                         (PDF/JPG/PNG)</label>
@@ -139,14 +130,9 @@
                             </svg>
                         </span>
                     </div>
-                    <div class="file-success-name mt-1 text-green-600 text-sm">
-                        @if (session('uploaded_files')['letter_health'] ?? false)
-                            {{ session('uploaded_files')['letter_health'] }}
-                        @endif
-                    </div>
                 </div>
 
-                <!-- CV -->
+                {{-- CV --}}
                 <div class="relative file-upload-group mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1" for="cv">CV (PDF/DOC/DOCX)</label>
                     <div class="flex items-center gap-2">
@@ -160,15 +146,10 @@
                             </svg>
                         </span>
                     </div>
-                    <div class="file-success-name mt-1 text-green-600 text-sm">
-                        @if (session('uploaded_files')['cv'] ?? false)
-                            {{ session('uploaded_files')['cv'] }}
-                        @endif
-                    </div>
                 </div>
 
                 <div>
-                    <button type="submit"
+                    <button type="submit" id="form-submit-btn"
                         class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded transition-colors duration-200">
                         Kirim
                     </button>
@@ -176,6 +157,7 @@
             </form>
         </div>
 
+        {{-- TABEL (KANAN) --}}
         <div class="w-[500px] mt-4 bg-white rounded-3xl shadow-lg p-8">
             <table class="table-auto w-full text-center align-middle">
                 <thead>
@@ -206,7 +188,13 @@
                                 <button type="button"
                                     class="edit-btn bg-blue-500 hover:bg-blue-700 text-white px-2 py-1 rounded text-xs"
                                     data-id="{{ $participant->id }}" data-name="{{ $participant->name }}"
-                                    data-status="{{ $participant->status }}">Edit</button>
+                                    data-nik="{{ $participant->nik }}" data-date_birth="{{ $participant->date_birth }}"
+                                    data-photo="{{ $participant->photo }}" data-ijazah="{{ $participant->ijazah }}"
+                                    data-letter_employee="{{ $participant->letter_employee }}"
+                                    data-letter_health="{{ $participant->letter_health }}"
+                                    data-cv="{{ $participant->cv }}" data-status="{{ $participant->status }}">
+                                    Edit
+                                </button>
                             </td>
                         </tr>
                     @empty
@@ -217,11 +205,48 @@
                 </tbody>
             </table>
         </div>
-
     </div>
-    <!-- Tambahkan di akhir form sebelum tag </form> -->
+
     <script>
-        // Untuk preview file
+        document.querySelectorAll('.edit-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                document.getElementById('participant_id').value = btn.getAttribute('data-id');
+                document.getElementById('name').value = btn.getAttribute('data-name');
+                document.getElementById('nik').value = btn.getAttribute('data-nik') ?? '';
+                document.getElementById('date_birth').value = btn.getAttribute('data-date_birth') ?? '';
+
+                // Tampilkan pesan jika file sudah ada
+                document.querySelector('.file-info-photo').innerHTML = btn.getAttribute('data-photo') ?
+                    `File sudah ada: <span class="font-medium">${btn.getAttribute('data-photo').split('/').pop()}</span>` :
+                    '';
+                document.querySelector('.file-info-ijazah').innerHTML = btn.getAttribute('data-ijazah') ?
+                    `File sudah ada: <span class="font-medium">${btn.getAttribute('data-ijazah').split('/').pop()}</span>` :
+                    '';
+                document.querySelector('.file-info-letter_employee').innerHTML = btn.getAttribute(
+                        'data-letter_employee') ?
+                    `File sudah ada: <span class="font-medium">${btn.getAttribute('data-letter_employee').split('/').pop()}</span>` :
+                    '';
+                document.querySelector('.file-info-letter_health').innerHTML = btn.getAttribute(
+                        'data-letter_health') ?
+                    `File sudah ada: <span class="font-medium">${btn.getAttribute('data-letter_health').split('/').pop()}</span>` :
+                    '';
+                document.querySelector('.file-info-cv').innerHTML = btn.getAttribute('data-cv') ?
+                    `File sudah ada: <span class="font-medium">${btn.getAttribute('data-cv').split('/').pop()}</span>` :
+                    '';
+
+                // Ubah judul & tombol
+                document.getElementById('form-title').innerHTML = `
+            <svg class="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M12 11c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm0 2c-2.67 0-8 1.34-8 4v3h16v-3c0-2.66-5.33-4-8-4z" />
+            </svg>
+            Edit Peserta: <span class="text-blue-700">${btn.getAttribute('data-name')}</span>
+        `;
+                document.getElementById('form-submit-btn').textContent = "Simpan Edit";
+            });
+        });
+
+        // Preview file upload (optional, sesuai kebutuhanmu)
         document.querySelectorAll('.file-upload-group input[type="file"]').forEach(function(input) {
             const group = input.closest('.file-upload-group');
             const checkmark = group.querySelector('.checkmark');
@@ -233,40 +258,5 @@
                 }
             });
         });
-
-        // Script untuk tombol Edit di tabel peserta
-        document.querySelectorAll('.edit-btn').forEach(function(btn) {
-            btn.addEventListener('click', function() {
-                // Isi form sesuai data yang diklik
-                document.getElementById('participant_id').value = btn.getAttribute('data-id');
-                document.getElementById('name').value = btn.getAttribute('data-name');
-                // Kamu bisa tambahkan isi field lain jika ingin (nik, tanggal lahir, dsb)
-                // document.getElementById('nik').value = ... dst
-
-                // Ubah judul form jadi "Edit Peserta: [nama]"
-                const nama = btn.getAttribute('data-name');
-                document.getElementById('form-title').innerHTML = `
-                <svg class="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M12 11c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm0 2c-2.67 0-8 1.34-8 4v3h16v-3c0-2.66-5.33-4-8-4z" />
-                </svg>
-                Edit Peserta: <span class="text-blue-700">${nama}</span>
-            `;
-            });
-        });
-
-        // Tambahkan fungsi reset judul & form (misal untuk tambah baru)
-        function resetForm() {
-            document.getElementById('participant_id').value = '';
-            document.getElementById('form2').reset();
-            document.getElementById('form-title').innerHTML = `
-            <svg class="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M12 11c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm0 2c-2.67 0-8 1.34-8 4v3h16v-3c0-2.66-5.33-4-8-4z" />
-            </svg>
-            Pendaftaran Peserta
-        `;
-        }
     </script>
-
 @endsection
