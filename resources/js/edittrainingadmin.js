@@ -457,7 +457,7 @@ function showErrorSwal(title = "Gagal", text = "Terjadi kesalahan.") {
     });
 }
 
-// Tampilkan notifikasi warning (optional)
+
 function showWarningSwal(title = "Peringatan", text = "Ada yang salah.") {
     Swal.fire({
         icon: "warning",
@@ -467,7 +467,7 @@ function showWarningSwal(title = "Peringatan", text = "Ada yang salah.") {
 }
 
 function initStatusReasonWatcher() {
-    // Saat status berubah, enable/disable reason
+    
     $(".participant-status").on("change", function () {
         var id = $(this).data("id");
         var val = $(this).val();
@@ -478,12 +478,12 @@ function initStatusReasonWatcher() {
             reasonInput.addClass("border-red-500");
         } else {
             reasonInput.prop("disabled", true).removeClass("border-red-500");
-            reasonInput.val(""); // reset value jika bukan Ditolak
+            reasonInput.val(""); 
         }
     });
 }
 
-// Validasi sebelum simpan semua peserta
+
 function validateParticipantsBeforeSave() {
     var valid = true;
     $(".participant-status").each(function () {
@@ -500,6 +500,21 @@ function validateParticipantsBeforeSave() {
     return valid;
 }
 
+function toggleNIK(button) {
+    const span = $(button).siblings(".nik-text");
+    const full = String(span.data("full"));
+    const isHidden = $(button).text().trim() === "👁️";
+
+    if (isHidden) {
+        span.text(full);
+        $(button).text("🚫"); // ikon untuk sembunyikan
+    } else {
+        const masked = "*".repeat(full.length - 4) + full.slice(-4);
+        span.text(masked);
+        $(button).text("👁️"); // ikon untuk tampilkan
+    }
+}
+
 // ============ INIT ================
 $(document).ready(function () {
     datePicker(); // Inisialisasi date picker
@@ -510,7 +525,6 @@ $(document).ready(function () {
     $("#submitParticipantBtn").on("click", updateForm2User);
     $("#submitFinish").on("click", updateTrainingFinish);
     initShowDetailParticipant();
-
     initStatusReasonWatcher();
     // Handler delete tombol, tetap pakai on (untuk baris yang dynamic)
     $(document).on("click", ".deleteButtonParticipant", function () {
@@ -519,4 +533,7 @@ $(document).ready(function () {
     });
 
     addParticipants();
+    $(document).on("click", ".toggle-nik-btn", function () {
+        toggleNIK(this);
+    });
 });

@@ -193,8 +193,24 @@
                                     <td>{{ $index + 1 }}</td>
                                     <td class="max-w-[80px] truncate whitespace-nowrap" title="{{ $participant->name }}">
                                         {{ $participant->name }}</td>
-                                    <td class="max-w-[70px]">{{ $participant->nik ?? '-' }}</td>
-                                    <td class="max-w-[50px]">
+                                    <td class="max-w-[70px]">
+                                        @php
+                                            $nik = $participant->nik;
+                                            $hiddenNik = str_repeat('*', strlen($nik) - 4) . substr($nik, -4);
+                                        @endphp
+
+                                        <div class="flex items-center">
+                                            <span class="nik-text"
+                                                data-full="{{ $nik }}">{{ $hiddenNik }}</span>
+                                            <button type="button"
+                                                class="toggle-nik-btn text-blue-500 text-xs hover:underline">
+                                                👁️
+                                            </button>
+                                        </div>
+                                    </td>
+
+                                    <td class="max-w-[50px] truncate whitespace-nowrap"
+                                        title="{{ $participant->date_birth ? \Carbon\Carbon::parse($participant->date_birth)->translatedFormat('d F Y') : '-' }}">
                                         {{ $participant->date_birth ? \Carbon\Carbon::parse($participant->date_birth)->translatedFormat('d F Y') : '-' }}
                                     </td>
 
@@ -217,12 +233,34 @@
                                             style="width: 100%;">
                                     </td>
                                     <td>
-                                        <button type="button" class="text-blue-700 showDetailBtn px-2 py-1 rounded"
-                                            data-id="{{ $participant->id }}">Click</button>
-                                        <button type="button"
-                                            class="text-red-600 deleteButtonParticipant px-2 py-1 rounded"
-                                            data-id="{{ $participant->id }}">Delete</button>
+                                        <!-- Tombol Click (pakai ikon pointer) -->
+                                        <button type="button" class="text-blue-700 showDetailBtn rounded"
+                                            data-id="{{ $participant->id }}">
+                                            <!-- SVG Ikon Kursor -->
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                class="w-5 h-5 mb-2 inline-block" stroke-width="1.5"
+                                                stroke="currentColor" class="size-6">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25M9 16.5v.75m3-3v3M15 12v5.25m-4.5-15H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+                                            </svg>
+
+                                        </button>
+
+                                        <!-- Tombol Delete (pakai ikon tempat sampah) -->
+                                        <button type="button" class="text-red-600 deleteButtonParticipant rounded"
+                                            data-id="{{ $participant->id }}">
+                                            <!-- SVG Ikon Tempat Sampah -->
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mb-2 inline-block"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                stroke-width="2">
+                                                <path
+                                                    d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6z" />
+                                                <line x1="10" y1="11" x2="10" y2="17" />
+                                                <line x1="14" y1="11" x2="14" y2="17" />
+                                            </svg>
+                                        </button>
                                     </td>
+
                                 </tr>
                                 {{-- Dropdown row, hidden by default --}}
                                 <tr class="detail-row hidden" id="detail-row-{{ $participant->id }}">
