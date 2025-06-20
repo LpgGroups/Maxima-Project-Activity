@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('letter_health')->nullable();
             $table->string('cv')->nullable();
             $table->string('reason')->nullable();
-            $table->integer('status')->default(1);
+            $table->integer('status')->default(0);
             $table->unsignedBigInteger('form_id')->nullable();
             $table->timestamps();
             $table->foreign('form_id')->references('id')->on('reg_training')->onDelete('cascade');
