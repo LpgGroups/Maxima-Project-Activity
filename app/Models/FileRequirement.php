@@ -12,6 +12,7 @@ class FileRequirement extends Model
     protected $fillable = [
         'id',
         'file_approval',
+        'proof_payment',
         'file_id',
     ];
 

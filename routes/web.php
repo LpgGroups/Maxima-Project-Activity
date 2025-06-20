@@ -64,8 +64,12 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/dashboard/user/training', [RegTrainingController::class, 'index'])->name('dashboard.training');
         Route::get('/dashboard/user/training/selectdate', [RegTrainingController::class, 'selectDate'])->name('dashboard.selectDate');
         Route::get('/dashboard/user/training/form/{id}', [RegTrainingController::class, 'formReg'])->name('dashboard.form');
+      
+        Route::get('/dashboard/user/training/form2/add/{form_id}', [RegTrainingController::class, 'pageAddParticipant'])->name('dashboard.addparticipant');
+        Route::post('/dashboard/user/training/form2/add/{form_id}/save', [RegTrainingController::class, 'saveForm2'])->name('dashboard.addparticipant.save');
+
         Route::post('/dashboard/user/training/form/save', [RegTrainingController::class, 'saveForm1'])->name('dashboard.form.save');
-        Route::post('/dashboard/user/training/form2/save', [RegTrainingController::class, 'saveForm2'])->name('dashboard.form2.save');
+        // Route::post('/dashboard/user/training/form2/save', [RegTrainingController::class, 'saveForm2'])->name('dashboard.form2.save');
         Route::post('/dashboard/user/training/form3/save', [RegTrainingController::class, 'saveForm3'])->name('dashboard.form3.save');
         Route::delete('/dashboard/user/training/form2/{id}', [RegTrainingController::class, 'destroyUser'])->name('dashboard.form2.destroy');
     });
