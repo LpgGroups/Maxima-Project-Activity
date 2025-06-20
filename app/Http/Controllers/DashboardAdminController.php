@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Log;
 use App\Notifications\TrainingUpdatedNotification;
 use Illuminate\Support\Facades\Notification;
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Storage;
 
 
 class DashboardAdminController extends Controller
@@ -207,66 +208,40 @@ class DashboardAdminController extends Controller
 
     public function updateForm2User(Request $request)
     {
-        $validated = $request->validate([
+        $request->validate([
+            'form_id'      => 'required|exists:reg_training,id',
             'participants' => 'required|array',
-            'participants.*.name' => 'required|string|max:255',
             'participants.*.status' => 'required|in:0,1,2',
             'participants.*.reason' => 'nullable|string|max:255',
         ]);
 
-        // Update semua peserta yang diberikan
-        foreach ($validated['participants'] as $id => $data) {
+        foreach ($request->participants as $id => $data) {
             $participant = RegParticipant::find($id);
             if ($participant) {
-                $participant->update($data);
+                $participant->status = $data['status'];
+                $participant->reason = $data['reason'] ?? null;
+                $participant->save();
             }
         }
 
-        // Ambil salah satu peserta untuk ambil relasi training & user
-        $firstParticipant = RegParticipant::find(array_key_first($validated['participants']));
-        $training = $firstParticipant?->training;
-
+        $training = RegTraining::find($request->form_id);
         if ($training && $training->user) {
             $training->user->notify(new TrainingUpdatedNotification(
                 $training,
                 'admin',
                 'Daftar Peserta',
-                'Data peserta pada pelatihan "' . $training->activity . '" telah diperbarui. Silakan cek kembali.',
+                'Data peserta pada pelatihan "' . $training->activity . '" telah diperbarui oleh Admin.',
                 'info'
             ));
         }
 
-        return response()->json(['success' => true]);
-    }
-    public function addParticipant(Request $request)
-    {
-        Log::info('Data yang diterima:', $request->all());
-        $validated = $request->validate([
-            'form_id' => 'required|integer',
-            'name' => 'required|string|max:255',
+        return response()->json([
+            'success' => true,
+            'message' => 'Data peserta berhasil diperbarui!'
         ]);
-
-        // Proses penyimpanan peserta baru
-        $participant = new RegParticipant();
-        $participant->form_id = $validated['form_id'];
-        $participant->name = $validated['name'];
-        $participant->status = 1; // Status default
-        $participant->reason = null; // Alasan default
-        $participant->save();
-
-        $training = $participant->training;
-        if ($training && $training->user) {
-            $training->user->notify(new TrainingUpdatedNotification(
-                $training,
-                'admin',
-                'Daftar Peserta',
-                'Admin telah menambahkan peserta baru ke pelatihan ' . $training->activity,
-                'update'
-            ));
-        }
-
-        return response()->json(['success' => true]);
     }
+
+
 
     public function trainingFinish(Request $request, $id)
     {

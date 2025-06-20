@@ -170,58 +170,109 @@
             </button>
 
             <!-- Form untuk update semua peserta -->
-            <form id="updateParticipantsForm" data-form-id="{{ $training->id }}">
+            <form id="participantTableForm" data-form-id="{{ $training->id }}">
                 @csrf
-                <div class="overflow-y-auto max-h-[300px] shadow-lg rounded-md border bg-white">
-                    <table class="table-auto w-full text-center align-middle">
+                <input type="hidden" name="form_id" value="{{ $training->id }}">
+                <div class="overflow-y-auto max-h-[400px] shadow-lg rounded-md border bg-white">
+                    <table class="table-auto w-full text-center align-middle" id="participantsTable">
                         <thead>
-                            <tr class="bg-slate-600 text-white text-[10px] lg:text-sm">
-                                <th class="w-[24px]">No</th>
-                                <th class="w-[200px]">Peserta</th>
-                                <th class="w-[120px]">Status</th>
-                                <th>Catatan</th>
+                            <tr class="bg-slate-600 text-white text-xs">
+                                <th>No</th>
+                                <th>Nama</th>
+                                <th>NIK</th>
+                                <th>Tgl Lahir</th>
+                                <th>Status</th>
+                                <th>Keterangan</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             @forelse ($training->participants as $index => $participant)
-                                <tr class="odd:bg-[#d9f6fd] even:bg-white text-[12px]"
+                                <tr class="main-row odd:bg-[#d9f6fd] even:bg-white text-sm"
                                     data-participant-id="{{ $participant->id }}">
                                     <td>{{ $index + 1 }}</td>
-                                    <td>
-                                        <input type="text" name="participants[{{ $participant->id }}][name]"
-                                            value="{{ $participant->name }}"
-                                            class="border px-2 py-1 w-full bg-transparent">
+                                    <td class="max-w-[80px] truncate whitespace-nowrap" title="{{ $participant->name }}">
+                                        {{ $participant->name }}</td>
+                                    <td class="max-w-[70px]">{{ $participant->nik ?? '-' }}</td>
+                                    <td class="max-w-[50px]">
+                                        {{ $participant->date_birth ? \Carbon\Carbon::parse($participant->date_birth)->translatedFormat('d F Y') : '-' }}
                                     </td>
-                                    <td>
+
+                                    <td class="max-w-[70px]">
                                         <select name="participants[{{ $participant->id }}][status]"
-                                            class="px-4 py-1 w-full bg-transparent">
-                                            <option value="1" {{ $participant->status == 1 ? 'selected' : '' }}>
-                                                🔄Waiting</option>
+                                            class="px-4 py-1 bg-transparent">
                                             <option value="0" {{ $participant->status == 0 ? 'selected' : '' }}>
-                                                ❌Rejected</option>
-                                            <option value="2" {{ $participant->status == 2 ? 'selected' : '' }}>
+                                                🔄Waiting</option>
+                                            <option value="1" {{ $participant->status == 1 ? 'selected' : '' }}>
                                                 ✅Success</option>
+                                            <option value="2" {{ $participant->status == 2 ? 'selected' : '' }}>
+                                                ❌Rejected</option>
+
                                         </select>
                                     </td>
+
                                     <td>
                                         <input type="text" name="participants[{{ $participant->id }}][reason]"
-                                            value="{{ $participant->reason ?? '' }}"
-                                            class="border px-2 py-1 w-full bg-transparent">
+                                            value="{{ $participant->reason }}" placeholder="Masukkan alasan"
+                                            style="width: 100%;">
                                     </td>
-                                    <td class="text-center">
+                                    <td>
+                                        <button type="button" class="text-blue-700 showDetailBtn px-2 py-1 rounded"
+                                            data-id="{{ $participant->id }}">Click</button>
                                         <button type="button"
-                                            class="text-red-600 hover:text-red-800 deleteButtonParticipant"
-                                            data-id="{{ $participant->id }}" title="Hapus Peserta">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block"
-                                                fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                                                stroke-width="2">
-                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                    d="M6 18L18 6M6 6l12 12" />
-                                            </svg>
-                                        </button>
+                                            class="text-red-600 deleteButtonParticipant px-2 py-1 rounded"
+                                            data-id="{{ $participant->id }}">Delete</button>
                                     </td>
                                 </tr>
+                                {{-- Dropdown row, hidden by default --}}
+                                <tr class="detail-row hidden" id="detail-row-{{ $participant->id }}">
+                                    <td colspan="7" class="bg-gray-100 text-left px-4 py-3">
+                                        <div class="mb-2 font-semibold text-[15px]">Dokumen Peserta</div>
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            @php
+                                                $files = [
+                                                    'Foto' => $participant->photo,
+                                                    'Ijazah' => $participant->ijazah,
+                                                    'SK Kerja' => $participant->letter_employee,
+                                                    'SK Kesehatan' => $participant->letter_health,
+                                                    'CV' => $participant->cv,
+                                                ];
+                                                $icons = [
+                                                    'Foto' => '🖼️',
+                                                    'Ijazah' => '📄',
+                                                    'SK Kerja' => '📃',
+                                                    'SK Kesehatan' => '📑',
+                                                    'CV' => '📁',
+                                                ];
+                                            @endphp
+                                            @foreach ($files as $label => $file)
+                                                <div
+                                                    class="flex items-center gap-3 bg-white rounded-md shadow-sm px-3 py-2">
+                                                    <span class="text-xl">{{ $icons[$label] ?? '📎' }}</span>
+                                                    <span
+                                                        class="font-medium min-w-[80px] w-[110px]">{{ $label }}</span>
+                                                    @if ($file)
+                                                        <a href="{{ asset('storage/' . $file) }}" download
+                                                            class="ml-auto px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-700 transition text-xs font-semibold flex items-center gap-1">
+                                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                                class="h-4 w-4 inline-block" fill="none"
+                                                                viewBox="0 0 24 24" stroke="currentColor">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2"
+                                                                    d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3" />
+                                                            </svg>
+                                                            Download
+                                                        </a>
+                                                    @else
+                                                        <span class="ml-auto text-gray-400 text-xs italic">Belum
+                                                            diunggah</span>
+                                                    @endif
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </td>
+                                </tr>
+
                             @empty
                                 <tr>
                                     <td colspan="5" class="text-center py-4 text-gray-500 italic">
@@ -232,27 +283,9 @@
                         </tbody>
                     </table>
                 </div>
-
             </form>
         </div>
 
-        <div class="mt-4">
-            <h2>PIC yang telah mendaftarkan pesertanya pada tabel diatas telah melampirkan link berkas file yang telah
-                diupload untuk ditinjau oleh admin.</h2>
-
-            <h1 class="mt-2">
-                <a href="{{ $training->link }}"
-                    class="text-blue-600 underline inline-flex items-center gap-2 max-w-xs truncate" target="_blank"
-                    title="{{ $training->link }}">
-
-                    <!-- Ikon SVG dari file lokal -->
-                    <img src="/img/svg/attachment.svg" alt="attachment" class="h-4 w-4 shrink-0">
-
-                    <!-- Teks link -->
-                    <span class="truncate">{{ $training->link }}</span>
-                </a>
-            </h1>
-        </div>
         <div class="mt-4 flex items-center gap-2">
             <input type="checkbox" id="confirmEdit2"
                 class="h-5 w-5 appearance-none border-2 border-gray-400 rounded-sm checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200" />

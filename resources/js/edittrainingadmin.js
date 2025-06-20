@@ -160,7 +160,7 @@ function updateForm1User(event) {
 }
 
 function updateForm2User() {
-    const form = document.getElementById("updateParticipantsForm");
+    const form = document.getElementById("participantTableForm");
     const csrfToken = document.querySelector('input[name="_token"]').value;
     const formData = new FormData(form);
 
@@ -317,88 +317,101 @@ function addParticipants() {
     });
 }
 
-function initParticipantStatusWatcher() {
-    // Cari semua select status peserta
-    const statusSelects = document.querySelectorAll(
-        "select[name^='participants'][name$='[status]']"
-    );
+function initShowDetailParticipant() {
+    // Reset semua dropdown detail row
+    $(".showDetailBtn")
+        .off("click")
+        .on("click", function () {
+            const id = $(this).data("id");
+            const detailRow = $("#detail-row-" + id);
 
-    statusSelects.forEach((select) => {
-        select.addEventListener("change", function () {
-            const selectedValue = this.value;
-
-            // Cari elemen <tr> induk (baris) dari select ini
-            const row = this.closest("tr");
-
-            // Cari input reason dalam baris yang sama
-            const reasonInput = row.querySelector(
-                "input[name^='participants'][name$='[reason]']"
-            );
-
-            if (selectedValue === "2") {
-                // Jika status "Success", kosongkan reason
-                reasonInput.value = "";
-            }
+            // Hide semua detail-row kecuali yang diklik
+            $(".detail-row").not(detailRow).addClass("hidden");
+            detailRow.toggleClass("hidden");
         });
-    });
 }
 
 function deleteParticipant(id) {
-    Swal.fire({
-        title: "Konfirmasi Penghapusan",
-        text: "Peserta yang dihapus tidak dapat dikembalikan. Anda yakin ingin melanjutkan?",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#d33",
-        cancelButtonColor: "#3085d6",
-        confirmButtonText: "Ya, hapus!",
-        cancelButtonText: "Batal",
-        reverseButtons: true,
-    }).then((result) => {
-        if (result.isConfirmed) {
-            showLoadingSwal("Menghapus...", "Sedang menghapus data peserta.");
-
-            fetch(`/dashboard/admin/training/delete-participant/${id}`, {
-                method: "DELETE",
-                headers: {
-                    "X-CSRF-TOKEN": document.querySelector(
-                        'meta[name="csrf-token"]'
-                    ).content,
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
-                },
-            })
-                .then(async (response) => {
-                    const data = await response.json();
-                    Swal.close();
-
-                    if (response.ok && data.success) {
-                        showSuccessSwal(
-                            "Berhasil",
-                            data.message || "Peserta berhasil dihapus."
-                        );
-                        const row = document.querySelector(
-                            `[data-participant-id="${id}"]`
-                        );
-                        if (row) row.remove();
-                    } else {
-                        showErrorSwal(
-                            "Gagal",
-                            data.message || "Gagal menghapus peserta."
-                        );
-                    }
-                })
-                .catch((error) => {
-                    Swal.close();
-                    console.error("Error:", error);
-                    showErrorSwal(
-                        "Kesalahan",
-                        "Terjadi kesalahan saat menghapus peserta."
-                    );
-                });
-        }
-    });
+    if (confirm("Hapus peserta ini?")) {
+        $.ajax({
+            url: `/dashboard/admin/training/delete-participant/${id}`,
+            method: "POST",
+            headers: {
+                "X-CSRF-TOKEN": $('input[name="_token"]').val(),
+                Accept: "application/json",
+            },
+            success: function (resp) {
+                if (resp.success) {
+                    $(`tr[data-participant-id="${id}"]`).remove();
+                    $(`#detail-row-${id}`).remove();
+                    showSuccessSwal("Berhasil", "Peserta berhasil dihapus!");
+                } else {
+                    showErrorSwal("Gagal", "Gagal menghapus peserta!");
+                }
+            },
+            error: function () {
+                showErrorSwal("Gagal", "Terjadi kesalahan saat menghapus!");
+            },
+        });
+    }
 }
+
+// function deleteParticipant(id) {
+//     Swal.fire({
+//         title: "Konfirmasi Penghapusan",
+//         text: "Peserta yang dihapus tidak dapat dikembalikan. Anda yakin ingin melanjutkan?",
+//         icon: "warning",
+//         showCancelButton: true,
+//         confirmButtonColor: "#d33",
+//         cancelButtonColor: "#3085d6",
+//         confirmButtonText: "Ya, hapus!",
+//         cancelButtonText: "Batal",
+//         reverseButtons: true,
+//     }).then((result) => {
+//         if (result.isConfirmed) {
+//             showLoadingSwal("Menghapus...", "Sedang menghapus data peserta.");
+
+//             fetch(`/dashboard/admin/training/delete-participant/${id}`, {
+//                 method: "DELETE",
+//                 headers: {
+//                     "X-CSRF-TOKEN": document.querySelector(
+//                         'meta[name="csrf-token"]'
+//                     ).content,
+//                     Accept: "application/json",
+//                     "Content-Type": "application/json",
+//                 },
+//             })
+//                 .then(async (response) => {
+//                     const data = await response.json();
+//                     Swal.close();
+
+//                     if (response.ok && data.success) {
+//                         showSuccessSwal(
+//                             "Berhasil",
+//                             data.message || "Peserta berhasil dihapus."
+//                         );
+//                         const row = document.querySelector(
+//                             `[data-participant-id="${id}"]`
+//                         );
+//                         if (row) row.remove();
+//                     } else {
+//                         showErrorSwal(
+//                             "Gagal",
+//                             data.message || "Gagal menghapus peserta."
+//                         );
+//                     }
+//                 })
+//                 .catch((error) => {
+//                     Swal.close();
+//                     console.error("Error:", error);
+//                     showErrorSwal(
+//                         "Kesalahan",
+//                         "Terjadi kesalahan saat menghapus peserta."
+//                     );
+//                 });
+//         }
+//     });
+// }
 
 function showLoadingSwal(
     title = "Memproses...",
@@ -452,19 +465,58 @@ function showWarningSwal(title = "Peringatan", text = "Ada yang salah.") {
         text: text,
     });
 }
+
+function initStatusReasonWatcher() {
+    // Saat status berubah, enable/disable reason
+    $(".participant-status").on("change", function () {
+        var id = $(this).data("id");
+        var val = $(this).val();
+        var reasonInput = $("#reason-" + id);
+
+        if (val == "2") {
+            reasonInput.prop("disabled", false).focus();
+            reasonInput.addClass("border-red-500");
+        } else {
+            reasonInput.prop("disabled", true).removeClass("border-red-500");
+            reasonInput.val(""); // reset value jika bukan Ditolak
+        }
+    });
+}
+
+// Validasi sebelum simpan semua peserta
+function validateParticipantsBeforeSave() {
+    var valid = true;
+    $(".participant-status").each(function () {
+        var id = $(this).data("id");
+        var val = $(this).val();
+        var reasonInput = $("#reason-" + id);
+        if (val == "2" && reasonInput.val().trim() === "") {
+            valid = false;
+            reasonInput.addClass("border-red-500");
+        } else {
+            reasonInput.removeClass("border-red-500");
+        }
+    });
+    return valid;
+}
+
 // ============ INIT ================
 $(document).ready(function () {
     datePicker(); // Inisialisasi date picker
     updateEndDate(); // Hitung end date saat halaman dimuat
     setupConfirmationCheckbox(); // Aktifkan/Nonaktifkan tombol submit
-    initParticipantStatusWatcher();
     $("#submitBtn").click(updateForm1User); // Tombol submit
     $("#activity").on("change", updateEndDate); // Update end date saat activity berubah
     $("#submitParticipantBtn").on("click", updateForm2User);
     $("#submitFinish").on("click", updateTrainingFinish);
+    initShowDetailParticipant();
+
+    initStatusReasonWatcher();
+    // Handler delete tombol, tetap pakai on (untuk baris yang dynamic)
     $(document).on("click", ".deleteButtonParticipant", function () {
         const id = $(this).data("id");
         deleteParticipant(id);
     });
+
     addParticipants();
 });
