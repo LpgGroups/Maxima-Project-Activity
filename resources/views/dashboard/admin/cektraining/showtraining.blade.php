@@ -307,17 +307,30 @@
             diperiksa dengan cermat:</p>
 
         @forelse ($training->files as $file)
+            {{-- FILE APPROVAL --}}
             @if ($file->file_approval)
                 <div class="flex mt-4">
-
                     <img src="{{ asset('img/icon_pdf_mou.png') }}" alt="PDF Icon" width="50"
                         style="margin-right: 15px;">
-
-
                     <div>
-                        <div><strong>File MOU:</strong> {{ basename($file->file_approval) }}</div>
+                        <div><strong>File Approval:</strong> {{ basename($file->file_approval) }}</div>
                         <a href="{{ asset('storage/' . $file->file_approval) }}" target="_blank"
-                            class="w-full h-20 p-1 bg-red-500 rounded mt-2 text-[10px]">
+                            class="w-full h-20 p-1 bg-red-500 rounded mt-2 text-[10px] text-white">
+                            Download
+                        </a>
+                    </div>
+                </div>
+            @endif
+
+            {{-- PROOF OF PAYMENT --}}
+            @if ($file->proof_payment)
+                <div class="flex mt-4">
+                    <img src="{{ asset('img/icon_pdf_mou.png') }}" alt="PDF Icon" width="50"
+                        style="margin-right: 15px;">
+                    <div>
+                        <div><strong>Proof of Payment:</strong> {{ basename($file->proof_payment) }}</div>
+                        <a href="{{ asset('storage/' . $file->proof_payment) }}" target="_blank"
+                            class="w-full h-20 p-1 bg-blue-500 rounded mt-2 text-[10px] text-white">
                             Download
                         </a>
                     </div>
@@ -328,6 +341,7 @@
                 <strong>Data File Belum Tersedia</strong>
             </div>
         @endforelse
+
         <div class="mt-4 flex flex-col gap-2">
             <!-- Checkbox di atas -->
             <div class="flex items-center gap-2">
