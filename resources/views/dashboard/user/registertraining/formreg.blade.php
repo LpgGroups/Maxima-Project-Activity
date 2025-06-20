@@ -239,7 +239,7 @@
 
 
 
-                <a  href="{{ route('dashboard.addparticipant', ['form_id' => $training->id]) }}"
+                <a href="{{ route('dashboard.addparticipant', ['form_id' => $training->id]) }}"
                     class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm px-5 py-2 rounded-lg shadow-md transition duration-200 ease-in-out mt-4 mb-2">
                     Tambah Peserta
                 </a>
@@ -266,12 +266,26 @@
                                         <td class="max-w-[100px] truncate whitespace-nowrap py-2">{{ $participant->nik }}
                                         </td>
                                         <td class="max-w-[100px] truncate whitespace-nowrap py-2">
-                                            @if ($participant->status == 1)
-                                                <span class="text-green-600">Terverifikasi</span>
-                                            @else
-                                                <span class="text-red-600">Belum</span>
-                                            @endif
+                                            @php
+                                                $status = $participant->status;
+                                                $statusText = [
+                                                    0 => 'Pending',
+                                                    1 => 'Sukses',
+                                                    2 => 'Ditolak',
+                                                ];
+                                                $statusClass = [
+                                                    0 => 'bg-yellow-200 text-yellow-800',
+                                                    1 => 'bg-green-200 text-green-800',
+                                                    2 => 'bg-red-200 text-red-800',
+                                                ];
+                                            @endphp
+
+                                            <span
+                                                class="px-2 py-1 rounded text-sm font-medium {{ $statusClass[$status] ?? 'bg-gray-200 text-gray-800' }}">
+                                                {{ $statusText[$status] ?? 'Tidak Diketahui' }}
+                                            </span>
                                         </td>
+
                                         <td class="py-2">{{ $participant->reason }}</td>
                                         <td class="py-2">
                                             <a href="#"
@@ -286,13 +300,6 @@
                 </div>
 
                 <div class="flex">
-                    {{-- <div class="mt-4">
-                        <button type="button" id="submitBtnForm2"
-                            class="w-48 bg-blue-500 text-white px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-                            data-training-date="{{ $training->date }}">
-                            Simpan Data
-                        </button>
-                    </div> --}}
                     <div class="flex justify-end gap-x-2 w-full items-end max-w-[1920px] p-4">
                         <!-- Tombol Previous -->
                         <button type="button" id="prevBtnForm2"
@@ -467,9 +474,9 @@
 
                                             @php
                                                 $statusInfo = [
-                                                    0 => ['file' => 'rejected.svg', 'label' => 'Rejected'],
-                                                    1 => ['file' => 'waiting.svg', 'label' => 'Waiting'],
-                                                    2 => ['file' => 'success.svg', 'label' => 'Success'],
+                                                    0 => ['file' => 'waiting.svg', 'label' => 'Waiting'],
+                                                    1 => ['file' => 'success.svg', 'label' => 'Success'],
+                                                    2 => ['file' => 'rejected.svg', 'label' => 'Rejected'],
                                                 ];
                                                 $info = $statusInfo[$participant->status] ?? [
                                                     'file' => 'unknown.svg',
@@ -489,8 +496,8 @@
                                             <td class="w-[200px]">
                                                 @php
                                                     $statusReasonMap = [
-                                                        1 => 'Dalam Pemeriksaan',
-                                                        2 => 'Berhasil Terverifikasi',
+                                                        0 => 'Dalam Pemeriksaan',
+                                                        1 => 'Berhasil Terverifikasi',
                                                     ];
 
                                                     $rawReason = $participant->reason;
