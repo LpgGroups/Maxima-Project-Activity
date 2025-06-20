@@ -305,6 +305,78 @@ class RegTrainingController extends Controller
         return redirect()->back()->with('success', 'Participant registered successfully.');
     }
 
+    public function saveForm3(Request $request)
+    {
+        $request->validate([
+            'file_id' => 'required|exists:reg_training,id',
+            'file_approval' => 'nullable|file|mimes:pdf|max:2048',
+            'proof_payment' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+        ], [
+            'file_approval.max' => 'File melebihi batas 2MB.',
+            'proof_payment.max' => 'File melebihi batas 2MB.',
+        ]);
+
+        $training = RegTraining::where('id', $request->file_id)->firstOrFail();
+        $record = FileRequirement::where('file_id', $request->file_id)->first();
+
+        // Siapkan nama file
+        $nameCompany = Str::slug($training->name_company ?? 'Company', '_');
+        $nameTraining = Str::slug($training->activity ?? 'Training', '_');
+
+        // Default path dari database jika sudah ada
+        $fileApprovalPath = $record->file_approval ?? null;
+        $proofPaymentPath = $record->proof_payment ?? null;
+
+        // Simpan file MoU (file_approval)
+        if ($request->hasFile('file_approval')) {
+            // Hapus file lama jika ada
+            if ($record && $record->file_approval) {
+                Storage::disk('public')->delete($record->file_approval);
+            }
+            $fileName = "File_{$nameCompany}_{$nameTraining}." . $request->file('file_approval')->getClientOriginalExtension();
+            $fileApprovalPath = $request->file('file_approval')->storeAs('uploads/fileapproval', $fileName, 'public');
+        }
+
+        // Simpan file Bukti Pembayaran (proof_payment)
+        if ($request->hasFile('proof_payment')) {
+            // Hapus file lama jika ada
+            if ($record && $record->proof_payment) {
+                Storage::disk('public')->delete($record->proof_payment);
+            }
+            $proofName = "Proof_{$nameCompany}_{$nameTraining}." . $request->file('proof_payment')->getClientOriginalExtension();
+            $proofPaymentPath = $request->file('proof_payment')->storeAs('uploads/proofpayment', $proofName, 'public');
+        }
+
+        // Simpan atau update ke table file_requirement
+        if ($record) {
+            $record->update([
+                'file_approval' => $fileApprovalPath,
+                'proof_payment' => $proofPaymentPath,
+            ]);
+        } else {
+            FileRequirement::create([
+                'file_id' => $request->file_id,
+                'file_approval' => $fileApprovalPath,
+                'proof_payment' => $proofPaymentPath,
+            ]);
+        }
+
+        // ✅ Update progress training (minimal tetap 4)
+        $training->isprogress = max($training->isprogress, 4);
+        $training->save();
+
+        // Sentuh updated_at
+        $training->touch();
+
+        // Notifikasi ke admin
+        $admins = User::where('role', 'admin')->get();
+        foreach ($admins as $admin) {
+            $admin->notify(new TrainingUpdatedNotification($training, 'user', 'Upload Persetujuan / Bukti Pembayaran'));
+        }
+
+        return response()->json(['message' => 'File berhasil diperbarui!']);
+    }
+
 
     public function destroyUser($id)
     {
