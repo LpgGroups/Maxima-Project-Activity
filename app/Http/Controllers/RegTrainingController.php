@@ -205,7 +205,7 @@ class RegTrainingController extends Controller
     {
         $request->validate([
             'name'              => 'required|string|max:255',
-            'nik'               => 'nullable|integer',
+            'nik'               => 'nullable|string|min:16|max:20',
             'date_birth'        => 'nullable|date',
             'photo'             => 'nullable|file|image|max:2048',
             'ijazah'            => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',

@@ -241,13 +241,17 @@
 
                 // Ubah judul & tombol
                 document.getElementById('form-title').innerHTML = `
-            <svg class="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M12 11c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm0 2c-2.67 0-8 1.34-8 4v3h16v-3c0-2.66-5.33-4-8-4z" />
+           
+            <svg class="w-8 h-8 text-yellow-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+            <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
             </svg>
-            Edit Peserta: <span class="text-blue-700">${btn.getAttribute('data-name')}</span>
+
+            <h1 class="text-yellow-500">Ubah Peserta: <span class="text-yellow-500">${btn.getAttribute('data-name')}</span></h1>
         `;
+
                 document.getElementById('form-submit-btn').textContent = "Simpan Edit";
+                document.getElementById('form-submit-btn').classList.add('bg-yellow-500',
+                    'hover:bg-yellow-600', 'text-white');
             });
         });
 
@@ -262,7 +266,11 @@
         </svg>
         Pendaftaran Peserta
     `;
-            document.getElementById('form-submit-btn').textContent = "Kirim";
+            const submitBtn = document.getElementById('form-submit-btn');
+            submitBtn.textContent = "Kirim";
+            submitBtn.classList.remove('bg-yellow-500', 'hover:bg-yellow-600', 'text-white'); // Hapus styling edit
+            submitBtn.classList.add('bg-blue-500', 'hover:bg-blue-600', 'text-white'); // Tambahkan styling kirim
+
 
             // Hapus info file
             document.querySelector('.file-info-photo').innerHTML = '';
