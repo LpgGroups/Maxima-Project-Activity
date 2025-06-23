@@ -20,6 +20,7 @@ class FileDownloadController extends Controller
         $folders = [
             'budget-plan' => 'budget-plans',
             'letter-implementation' => 'letter-implementations',
+            
         ];
         if (!array_key_exists($type, $folders)) {
             abort(404, 'Jenis file tidak dikenali');
