@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Middleware\UserAccess;
 use App\Http\Controllers\DashboardUserController;
+use App\Http\Controllers\FileDownloadController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\RegTrainingController;
 use Illuminate\Support\Facades\Storage;
@@ -26,6 +27,7 @@ Route::get('/forgot-password', [ForgotPasswordController::class, 'showForm'])->n
 Route::post('/forgot-password', [ForgotPasswordController::class, 'sendReset'])->name('password.email');
 Route::get('/reset-password/{token}', [ForgotPasswordController::class, 'showResetForm'])->name('password.reset');
 Route::post('/reset-password', [ForgotPasswordController::class, 'reset'])->name('password.update');
+
 Route::middleware(['auth'])->group(function () {
     Route::middleware([UserAccess::class . ':admin'])->group(function () {
         Route::get('/admin/training/live', [DashboardAdminController::class, 'getLiveTraining'])->name('admin.training.live');
@@ -39,9 +41,6 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/dashboard/admin/training/add-participant', [DashboardAdminController::class, 'addParticipant']);
         Route::post('/dashboard/admin/training/finish/{id}', [DashboardAdminController::class, 'trainingFinish']);
         Route::post('/dashboard/admin/upload-files', [DashboardAdminController::class, 'uploadFileForAdmin']);
-        
-
-
         Route::get('/download/file-mou/{id}', function ($id) {
             $file = \App\Models\FileRequirement::findOrFail($id);
 
@@ -113,6 +112,10 @@ Route::middleware(['auth'])->group(function () {
             })->values(),
         ]);
     })->middleware('auth');
+
+    Route::get('/download-confidential/{type}/{file}', [FileDownloadController::class, 'download'])
+        ->name('download.confidential')
+        ->middleware(['auth']);
 
     Route::get('/profile/settings', [App\Http\Controllers\ProfileController::class, 'edit'])->name('profile.edit');
     Route::post('/profile/settings', [App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');

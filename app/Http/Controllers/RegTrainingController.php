@@ -152,7 +152,6 @@ class RegTrainingController extends Controller
             ];
             session()->flash('uploaded_files', $uploaded_files);
 
-
             if ($trainingData) {
                 // Update data jika sudah ada
                 $currentProgress = $trainingData->isprogress;
@@ -275,9 +274,6 @@ class RegTrainingController extends Controller
                     unset($data[$field]);
                 }
             }
-
-            // Status: default 1 (sukses)
-            $data['status'] = 1;
             $participant->update($data);
         } else {
             // === Jika TAMBAH (create) ===
@@ -292,7 +288,7 @@ class RegTrainingController extends Controller
             ) {
                 $handleFile($field, $folder);
             }
-            $data['status'] = 1;
+
             $participant = RegParticipant::create($data);
         }
 
@@ -307,7 +303,7 @@ class RegTrainingController extends Controller
         }
         $training->touch();
 
-        return redirect()->back()->with('success', 'Participant registered successfully.');
+        return redirect()->back()->with('success', 'Peserta Berhasil Ditambahkan.');
     }
 
 

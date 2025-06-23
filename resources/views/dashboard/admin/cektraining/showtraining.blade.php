@@ -355,10 +355,11 @@
                     <p class="text-sm text-green-600 mt-1">
                         File sudah diupload:
                         <strong>
-                            <a href="{{ asset('storage/' . $fileRequirement->budget_plan) }}" target="_blank"
-                                class="underline">
+                            <a href="{{ route('download.confidential', ['type' => 'budget-plan', 'file' => basename($fileRequirement->budget_plan)]) }}"
+                                class="underline" target="_blank">
                                 {{ basename($fileRequirement->budget_plan) }}
                             </a>
+
                         </strong>
                     </p>
                 @endif
@@ -376,7 +377,7 @@
                     <p class="text-sm text-green-600 mt-1">
                         File sudah diupload:
                         <strong>
-                            <a href="{{ asset('storage/' . $fileRequirement->letter_implementation) }}" target="_blank"
+                            <a href="{{ route('download.confidential', ['type' => 'letter-implementation', 'file' => basename($fileRequirement->letter_implementation)]) }}"
                                 class="underline">
                                 {{ basename($fileRequirement->letter_implementation) }}
                             </a>

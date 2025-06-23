@@ -386,87 +386,87 @@ function initShowDetailParticipant() {
         });
 }
 
-function deleteParticipant(id) {
-    if (confirm("Hapus peserta ini?")) {
-        $.ajax({
-            url: `/dashboard/admin/training/delete-participant/${id}`,
-            method: "POST",
-            headers: {
-                "X-CSRF-TOKEN": $('input[name="_token"]').val(),
-                Accept: "application/json",
-            },
-            success: function (resp) {
-                if (resp.success) {
-                    $(`tr[data-participant-id="${id}"]`).remove();
-                    $(`#detail-row-${id}`).remove();
-                    showSuccessSwal("Berhasil", "Peserta berhasil dihapus!");
-                } else {
-                    showErrorSwal("Gagal", "Gagal menghapus peserta!");
-                }
-            },
-            error: function () {
-                showErrorSwal("Gagal", "Terjadi kesalahan saat menghapus!");
-            },
-        });
-    }
-}
-
 // function deleteParticipant(id) {
-//     Swal.fire({
-//         title: "Konfirmasi Penghapusan",
-//         text: "Peserta yang dihapus tidak dapat dikembalikan. Anda yakin ingin melanjutkan?",
-//         icon: "warning",
-//         showCancelButton: true,
-//         confirmButtonColor: "#d33",
-//         cancelButtonColor: "#3085d6",
-//         confirmButtonText: "Ya, hapus!",
-//         cancelButtonText: "Batal",
-//         reverseButtons: true,
-//     }).then((result) => {
-//         if (result.isConfirmed) {
-//             showLoadingSwal("Menghapus...", "Sedang menghapus data peserta.");
-
-//             fetch(`/dashboard/admin/training/delete-participant/${id}`, {
-//                 method: "DELETE",
-//                 headers: {
-//                     "X-CSRF-TOKEN": document.querySelector(
-//                         'meta[name="csrf-token"]'
-//                     ).content,
-//                     Accept: "application/json",
-//                     "Content-Type": "application/json",
-//                 },
-//             })
-//                 .then(async (response) => {
-//                     const data = await response.json();
-//                     Swal.close();
-
-//                     if (response.ok && data.success) {
-//                         showSuccessSwal(
-//                             "Berhasil",
-//                             data.message || "Peserta berhasil dihapus."
-//                         );
-//                         const row = document.querySelector(
-//                             `[data-participant-id="${id}"]`
-//                         );
-//                         if (row) row.remove();
-//                     } else {
-//                         showErrorSwal(
-//                             "Gagal",
-//                             data.message || "Gagal menghapus peserta."
-//                         );
-//                     }
-//                 })
-//                 .catch((error) => {
-//                     Swal.close();
-//                     console.error("Error:", error);
-//                     showErrorSwal(
-//                         "Kesalahan",
-//                         "Terjadi kesalahan saat menghapus peserta."
-//                     );
-//                 });
-//         }
-//     });
+//     if (confirm("Hapus peserta ini?")) {
+//         $.ajax({
+//             url: `/dashboard/admin/training/delete-participant/${id}`,
+//             method: "POST",
+//             headers: {
+//                 "X-CSRF-TOKEN": $('input[name="_token"]').val(),
+//                 Accept: "application/json",
+//             },
+//             success: function (resp) {
+//                 if (resp.success) {
+//                     $(`tr[data-participant-id="${id}"]`).remove();
+//                     $(`#detail-row-${id}`).remove();
+//                     showSuccessSwal("Berhasil", "Peserta berhasil dihapus!");
+//                 } else {
+//                     showErrorSwal("Gagal", "Gagal menghapus peserta!");
+//                 }
+//             },
+//             error: function () {
+//                 showErrorSwal("Gagal", "Terjadi kesalahan saat menghapus!");
+//             },
+//         });
+//     }
 // }
+
+function deleteParticipant(id) {
+    Swal.fire({
+        title: "Konfirmasi Penghapusan",
+        text: "Peserta yang dihapus tidak dapat dikembalikan. Anda yakin ingin melanjutkan?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "Ya, hapus!",
+        cancelButtonText: "Batal",
+        reverseButtons: true,
+    }).then((result) => {
+        if (result.isConfirmed) {
+            showLoadingSwal("Menghapus...", "Sedang menghapus data peserta.");
+
+            fetch(`/dashboard/admin/training/delete-participant/${id}`, {
+                method: "DELETE",
+                headers: {
+                    "X-CSRF-TOKEN": document.querySelector(
+                        'meta[name="csrf-token"]'
+                    ).content,
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                },
+            })
+                .then(async (response) => {
+                    const data = await response.json();
+                    Swal.close();
+
+                    if (response.ok && data.success) {
+                        showSuccessSwal(
+                            "Berhasil",
+                            data.message || "Peserta berhasil dihapus."
+                        );
+                        const row = document.querySelector(
+                            `[data-participant-id="${id}"]`
+                        );
+                        if (row) row.remove();
+                    } else {
+                        showErrorSwal(
+                            "Gagal",
+                            data.message || "Gagal menghapus peserta."
+                        );
+                    }
+                })
+                .catch((error) => {
+                    Swal.close();
+                    console.error("Error:", error);
+                    showErrorSwal(
+                        "Kesalahan",
+                        "Terjadi kesalahan saat menghapus peserta."
+                    );
+                });
+        }
+    });
+}
 
 function showLoadingSwal(
     title = "Memproses...",

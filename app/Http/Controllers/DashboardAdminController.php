@@ -267,14 +267,14 @@ class DashboardAdminController extends Controller
             $file = $request->file('budget_plan');
             $ekstensi = $file->getClientOriginalExtension();
             $nameFiles = $nameTraining . '_budget-plan.' . $ekstensi;
-            $file->storeAs('public/budget-plans', $nameFiles);
+            $file->storeAs('budget-plans', $nameFiles);
             $fileReq->budget_plan = 'budget-plans/' . $nameFiles;
         }
         if ($request->hasFile('letter_implementation')) {
             $file = $request->file('letter_implementation');
             $ekstensi = $file->getClientOriginalExtension();
             $nameFiles = $nameTraining . '_letter-implementation.' . $ekstensi;
-            $file->storeAs('public/letter-implementations', $nameFiles);
+            $file->storeAs('letter-implementations', $nameFiles);
             $fileReq->letter_implementation = 'letter-implementations/' . $nameFiles;
         }
 
@@ -364,4 +364,5 @@ class DashboardAdminController extends Controller
             'message' => 'Peserta berhasil dihapus.'
         ]);
     }
+    
 }
