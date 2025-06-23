@@ -1,5 +1,6 @@
 @extends('dashboard.layouts.dashboardmain')
 @section('container')
+
     <div class="flex space-x-4">
         {{-- FORM (KIRI) --}}
         <div class="max-w-[500px] mt-4 bg-white rounded-3xl shadow-lg p-8">
@@ -36,6 +37,12 @@
             <form id="form2" method="POST"
                 action="{{ route('dashboard.addparticipant.save', ['form_id' => $form_id]) }}" enctype="multipart/form-data"
                 class="space-y-5">
+                @php
+                    use Carbon\Carbon;
+                    $trainingDate = Carbon::parse($training->date);
+                    $deadline = $trainingDate->copy()->subDays(3);
+                    $isClosed = now()->greaterThanOrEqualTo($deadline);
+                @endphp
                 @csrf
                 <input type="hidden" name="form_id" value="{{ $form_id }}">
                 <input type="hidden" name="participant_id" id="participant_id">
@@ -152,11 +159,16 @@
                     <div class="file-info-cv mt-1 text-xs text-green-700"></div>
                 </div>
 
-                <div>
+                <div class="relative">
                     <button type="submit" id="form-submit-btn"
-                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded transition-colors duration-200">
-                        Kirim
+                        class="w-full font-semibold py-2 rounded transition-colors duration-200
+               {{ $isClosed ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 text-white' }}"
+                        {{ $isClosed ? 'disabled' : '' }} data-training-date="{{ $trainingDate->format('Y-m-d') }}">
+                        {{ $isClosed ? 'Pendaftaran sudah ditutup' : 'Simpan Peserta' }}
                     </button>
+                    <div id="countdown-tooltip"
+                        class="absolute left-1/2 -translate-x-1/2 mt-2 text-xs text-gray-700 bg-gray-100 rounded px-3 py-2 shadow hidden">
+                    </div>
                 </div>
             </form>
         </div>
@@ -189,6 +201,7 @@
                                 @endif
                             </td>
                             <td>
+
                                 <button type="button"
                                     class="edit-btn bg-blue-500 hover:bg-blue-700 text-white px-2 py-1 rounded text-xs"
                                     data-id="{{ $participant->id }}" data-name="{{ $participant->name }}"
@@ -212,6 +225,7 @@
     </div>
 
     <script>
+        window.isClosed = @json($isClosed);
         // Edit tombol
         document.querySelectorAll('.edit-btn').forEach(function(btn) {
             btn.addEventListener('click', function() {
@@ -253,6 +267,45 @@
                 document.getElementById('form-submit-btn').classList.add('bg-yellow-500',
                     'hover:bg-yellow-600', 'text-white');
             });
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const btn = document.getElementById("form-submit-btn");
+            const tooltip = document.getElementById("countdown-tooltip");
+            const trainingDateStr = btn.dataset.trainingDate;
+            if (!trainingDateStr) return;
+
+            // H-3 dari tanggal pelatihan
+            const trainingDate = new Date(trainingDateStr);
+            const deadline = new Date(trainingDate);
+            deadline.setDate(trainingDate.getDate() - 5);
+
+            function showCountdown() {
+                const now = new Date();
+                const distance = deadline - now;
+                if (distance <= 0) {
+                    tooltip.textContent = "Pendaftaran sudah ditutup.";
+                    tooltip.classList.remove('hidden');
+                    btn.disabled = true;
+                    btn.textContent = "Pendaftaran sudah ditutup";
+                    btn.classList.remove('bg-blue-600', 'hover:bg-blue-700', 'text-white');
+                    btn.classList.add('bg-gray-400', 'cursor-not-allowed');
+                    return;
+                }
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                tooltip.textContent = `
+                Sisa waktu pendaftaran: ${days}h ${hours}j ${minutes}m ${seconds}d`;
+                tooltip.classList.remove('hidden');
+            }
+
+            if (btn && tooltip && !btn.disabled) {
+                showCountdown();
+                setInterval(showCountdown, 1000);
+            }
         });
 
         // Reset pesan file saat reset form

@@ -196,7 +196,8 @@
                                     <td class="max-w-[70px]">
                                         @php
                                             $nik = $participant->nik;
-                                            $hiddenNik = str_repeat('*', strlen($nik) - 4) . substr($nik, -4);
+                                            $repeat = max(0, strlen($nik) - 4);
+                                            $hiddenNik = str_repeat('*', $repeat) . substr($nik, -4);
                                         @endphp
 
                                         <div class="flex items-center">
@@ -337,6 +338,62 @@
             Simpan Semua Peserta
         </button>
     </div>
+
+    <div class="p-6 bg-white border border-gray-200 rounded-xl shadow-sm w-full mt-8">
+        <h2 class="text-2xl font-bold mb-6 text-gray-700">Upload File Budget Plan & Pelaksanaan</h2>
+        <form id="adminFileUploadForm" class="space-y-6">
+            <input type="hidden" name="training_id" value="{{ $training->id }}">
+            <div class="mt-2">
+                <label class="block mb-2 mt-2 text-sm font-medium text-gray-900" for="budget_plan">
+                    Upload Budget Plan (.pdf, .docx)
+                </label>
+                <input name="budget_plan" id="budget_plan" type="file" accept=".pdf,.doc,.docx"
+                    class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none">
+                <p class="mt-1 text-sm text-gray-500">Format File: PDF, DOC, DOCX (Maks Size: 5MB).</p>
+
+                @if (!empty($fileRequirement?->budget_plan))
+                    <p class="text-sm text-green-600 mt-1">
+                        File sudah diupload:
+                        <strong>
+                            <a href="{{ asset('storage/' . $fileRequirement->budget_plan) }}" target="_blank"
+                                class="underline">
+                                {{ basename($fileRequirement->budget_plan) }}
+                            </a>
+                        </strong>
+                    </p>
+                @endif
+            </div>
+
+            <div class="mt-2">
+                <label class="block mb-2 mt-2 text-sm font-medium text-gray-900" for="letter_implementation">
+                    Upload Letter Implementation (.pdf, .docx)
+                </label>
+                <input name="letter_implementation" id="letter_implementation" type="file" accept=".pdf,.doc,.docx"
+                    class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none">
+                <p class="mt-1 text-sm text-gray-500">Format File: PDF, DOC, DOCX (Maks Size: 5MB).</p>
+
+                @if (!empty($fileRequirement?->letter_implementation))
+                    <p class="text-sm text-green-600 mt-1">
+                        File sudah diupload:
+                        <strong>
+                            <a href="{{ asset('storage/' . $fileRequirement->letter_implementation) }}" target="_blank"
+                                class="underline">
+                                {{ basename($fileRequirement->letter_implementation) }}
+                            </a>
+                        </strong>
+                    </p>
+                @endif
+            </div>
+
+
+            <button type="button" id="uploadFileForAdminBtn"
+                class="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition">
+                Upload
+            </button>
+            <div id="uploadAdminFileStatus" class="text-center text-sm mt-2"></div>
+        </form>
+    </div>
+
 
     <div class="p-4 border border-t-0 border-gray-300 bg-white rounded-lg mt-4">
         <h1 class="text-[24px] font-semibold">Upload persetujuan</h1>

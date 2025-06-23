@@ -198,6 +198,61 @@ function updateForm2User() {
         });
 }
 
+function uploadFileForAdmin() {
+    let form = $("#adminFileUploadForm")[0];
+    let formData = new FormData(form);
+
+    console.log("Mulai upload, formData:", formData);
+
+    $("#uploadAdminFileStatus")
+        .text("Uploading...")
+        .removeClass("text-red-600 text-green-600");
+
+    fetch("/dashboard/admin/upload-files", {
+        method: "POST",
+        headers: {
+            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            Accept: "application/json",
+        },
+        body: formData,
+    })
+        .then(async (res) => {
+            console.log("Fetch response status:", res.status);
+            const contentType = res.headers.get("content-type");
+            console.log("Content-Type header:", contentType);
+
+            let data;
+            if (contentType && contentType.indexOf("application/json") !== -1) {
+                data = await res.json();
+            } else {
+                data = { success: false, message: await res.text() };
+            }
+            console.log("Parsed data:", data);
+
+            if (res.ok && data.success) {
+                $("#uploadAdminFileStatus")
+                    .addClass("text-green-600")
+                    .text("File berhasil diupload!");
+                form.reset();
+                console.log("Sukses upload, status hijau.");
+            } else {
+                $("#uploadAdminFileStatus")
+                    .addClass("text-red-600")
+                    .text(data.message || "Gagal upload file.");
+                console.log(
+                    "Gagal upload, status merah.",
+                    data.message || data
+                );
+            }
+        })
+        .catch((err) => {
+            console.error("Error di catch fetch:", err);
+            $("#uploadAdminFileStatus")
+                .addClass("text-red-600")
+                .text("Gagal upload file. " + err);
+        });
+}
+
 function updateTrainingFinish(event) {
     const id = event.target.dataset.formId;
     const csrfToken = document.querySelector('input[name="_token"]').value;
@@ -457,7 +512,6 @@ function showErrorSwal(title = "Gagal", text = "Terjadi kesalahan.") {
     });
 }
 
-
 function showWarningSwal(title = "Peringatan", text = "Ada yang salah.") {
     Swal.fire({
         icon: "warning",
@@ -467,7 +521,6 @@ function showWarningSwal(title = "Peringatan", text = "Ada yang salah.") {
 }
 
 function initStatusReasonWatcher() {
-    
     $(".participant-status").on("change", function () {
         var id = $(this).data("id");
         var val = $(this).val();
@@ -478,11 +531,10 @@ function initStatusReasonWatcher() {
             reasonInput.addClass("border-red-500");
         } else {
             reasonInput.prop("disabled", true).removeClass("border-red-500");
-            reasonInput.val(""); 
+            reasonInput.val("");
         }
     });
 }
-
 
 function validateParticipantsBeforeSave() {
     var valid = true;
@@ -526,6 +578,10 @@ $(document).ready(function () {
     $("#submitFinish").on("click", updateTrainingFinish);
     initShowDetailParticipant();
     initStatusReasonWatcher();
+    $("#uploadFileForAdminBtn").on("click", function (e) {
+        e.preventDefault();
+        uploadFileForAdmin(); // baru dipanggil waktu tombol diklik
+    });
     // Handler delete tombol, tetap pakai on (untuk baris yang dynamic)
     $(document).on("click", ".deleteButtonParticipant", function () {
         const id = $(this).data("id");

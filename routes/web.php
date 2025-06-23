@@ -10,7 +10,6 @@ use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\RegTrainingController;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
-use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 use App\Http\Controllers\RegisterController;
 
 Route::get('/', [LoginController::class, 'index'])->name('login.index');
@@ -39,6 +38,9 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/dashboard/admin/training/update-participant', [DashboardAdminController::class, 'updateForm2User']);
         Route::post('/dashboard/admin/training/add-participant', [DashboardAdminController::class, 'addParticipant']);
         Route::post('/dashboard/admin/training/finish/{id}', [DashboardAdminController::class, 'trainingFinish']);
+        Route::post('/dashboard/admin/upload-files', [DashboardAdminController::class, 'uploadFileForAdmin']);
+        
+
 
         Route::get('/download/file-mou/{id}', function ($id) {
             $file = \App\Models\FileRequirement::findOrFail($id);
@@ -64,7 +66,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/dashboard/user/training', [RegTrainingController::class, 'index'])->name('dashboard.training');
         Route::get('/dashboard/user/training/selectdate', [RegTrainingController::class, 'selectDate'])->name('dashboard.selectDate');
         Route::get('/dashboard/user/training/form/{id}', [RegTrainingController::class, 'formReg'])->name('dashboard.form');
-      
+
         Route::get('/dashboard/user/training/form2/add/{form_id}', [RegTrainingController::class, 'pageAddParticipant'])->name('dashboard.addparticipant');
         Route::post('/dashboard/user/training/form2/add/{form_id}/save', [RegTrainingController::class, 'saveForm2'])->name('dashboard.addparticipant.save');
 

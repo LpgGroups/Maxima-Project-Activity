@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\FileRequirement;
 use App\Models\RegParticipant;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -157,10 +158,12 @@ class DashboardAdminController extends Controller
                 $notification->markAsRead();
             }
         }
+        $fileRequirement = FileRequirement::where('file_id', $training->id)->first();
 
         return view('dashboard.admin.cektraining.showtraining', [
             'title' => 'Detail Pelatihan',
-            'training' => $training
+            'training' => $training,
+            'fileRequirement' => $fileRequirement
         ]);
     }
 
@@ -241,6 +244,44 @@ class DashboardAdminController extends Controller
         ]);
     }
 
+    public function uploadFileForAdmin(Request $request)
+    {
+        $request->validate([
+            'training_id' => 'required|exists:reg_training,id',
+            'budget_plan' => 'nullable|file|mimes:pdf,doc,docx|max:5120',
+            'letter_implementation' => 'nullable|file|mimes:pdf,doc,docx|max:5120',
+        ]);
+
+        $training = RegTraining::find($request->training_id);
+        if (!$training) {
+            return response()->json(['success' => false, 'message' => 'Training tidak ditemukan.'], 404);
+        }
+
+        $nameTraining = str_replace([' ', '/', '\\'], '-', strtolower($training->activity ?? 'pelatihan'));
+        $fileReq = FileRequirement::firstOrNew(['file_id' => $training->id]);
+
+        // SET FILE_ID SAMA DENGAN ID TRAINING
+        $fileReq->file_id = $training->id;
+
+        if ($request->hasFile('budget_plan')) {
+            $file = $request->file('budget_plan');
+            $ekstensi = $file->getClientOriginalExtension();
+            $nameFiles = $nameTraining . '_budget-plan.' . $ekstensi;
+            $file->storeAs('public/budget-plans', $nameFiles);
+            $fileReq->budget_plan = 'budget-plans/' . $nameFiles;
+        }
+        if ($request->hasFile('letter_implementation')) {
+            $file = $request->file('letter_implementation');
+            $ekstensi = $file->getClientOriginalExtension();
+            $nameFiles = $nameTraining . '_letter-implementation.' . $ekstensi;
+            $file->storeAs('public/letter-implementations', $nameFiles);
+            $fileReq->letter_implementation = 'letter-implementations/' . $nameFiles;
+        }
+
+        $fileReq->save();
+        return response()->json(['success' => true]);
+    }
+
 
 
     public function trainingFinish(Request $request, $id)
@@ -254,36 +295,36 @@ class DashboardAdminController extends Controller
 
         $customMessage = "Selamat, Pelatihan {$training->activity} Telah Disetujui!";
 
-        $phone = $training->phone_pic; // Langsung ambil dari reg_training
+        // $phone = $training->phone_pic; // Langsung ambil dari reg_training
 
-        if (empty($phone) || !is_string($phone)) {
-            Log::warning("WhatsApp not sent: No phone number in reg_training ID {$training->id}");
-        } else {
-            try {
-                $client = new Client();
-                $response = $client->post('https://app.maxchat.id/api/messages/push', [
-                    'headers' => [
-                        'Authorization' => 'Bearer ' . env('MAXCHAT_TOKEN'),
-                        'Content-Type'  => 'application/json',
-                        'Accept'        => 'application/json',
-                    ],
-                    'json' => [
-                        'to' => $phone,
-                        'msgType' => 'text',
-                        'templateId' => env('MAXCHAT_TEMPLATE'),
-                    ],
-                ]);
-                $status = $response->getStatusCode();
-                $body = json_decode($response->getBody()->getContents(), true);
-                if ($status == 200 && !isset($body['error'])) {
-                    Log::info("SUKSES kirim WA ke $phone (reg_training id: {$training->id}): " . json_encode($body));
-                } else {
-                    Log::error("GAGAL kirim WA ke $phone (reg_training id: {$training->id}): " . json_encode($body));
-                }
-            } catch (\Exception $e) {
-                Log::error("Gagal kirim WhatsApp Maxchat: " . $e->getMessage());
-            }
-        }
+        // if (empty($phone) || !is_string($phone)) {
+        //     Log::warning("WhatsApp not sent: No phone number in reg_training ID {$training->id}");
+        // } else {
+        //     try {
+        //         $client = new Client();
+        //         $response = $client->post('https://app.maxchat.id/api/messages/push', [
+        //             'headers' => [
+        //                 'Authorization' => 'Bearer ' . env('MAXCHAT_TOKEN'),
+        //                 'Content-Type'  => 'application/json',
+        //                 'Accept'        => 'application/json',
+        //             ],
+        //             'json' => [
+        //                 'to' => $phone,
+        //                 'msgType' => 'text',
+        //                 'templateId' => env('MAXCHAT_TEMPLATE'),
+        //             ],
+        //         ]);
+        //         $status = $response->getStatusCode();
+        //         $body = json_decode($response->getBody()->getContents(), true);
+        //         if ($status == 200 && !isset($body['error'])) {
+        //             Log::info("SUKSES kirim WA ke $phone (reg_training id: {$training->id}): " . json_encode($body));
+        //         } else {
+        //             Log::error("GAGAL kirim WA ke $phone (reg_training id: {$training->id}): " . json_encode($body));
+        //         }
+        //     } catch (\Exception $e) {
+        //         Log::error("Gagal kirim WhatsApp Maxchat: " . $e->getMessage());
+        //     }
+        // }
 
         // Notifikasi ke user jika memang perlu
         if ($training->user) {
@@ -323,11 +364,4 @@ class DashboardAdminController extends Controller
             'message' => 'Peserta berhasil dihapus.'
         ]);
     }
-
-    // public function showDashboard()
-    // {
-    //     $notifications = Auth::user()->unreadNotifications;
-
-    //     return view('dashboard.admin.index', compact('notifications'));
-    // }
 }
