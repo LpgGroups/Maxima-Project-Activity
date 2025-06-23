@@ -77,6 +77,28 @@
                         placeholder="Tanggal Lahir" />
                 </div>
 
+                <div>
+                    <label for="blood_type" class="block mb-1 font-medium text-gray-700">
+                        Golongan Darah
+                    </label>
+                    <select name="blood_type" id="blood_type"
+                        class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 px-4 py-2 text-base">
+                        <option value="">Pilih Golongan Darah</option>
+                        <option value="A"
+                            {{ old('blood_type', $participant->blood_type ?? '') == 'A' ? 'selected' : '' }}>A</option>
+                        <option value="B"
+                            {{ old('blood_type', $participant->blood_type ?? '') == 'B' ? 'selected' : '' }}>B</option>
+                        <option value="AB"
+                            {{ old('blood_type', $participant->blood_type ?? '') == 'AB' ? 'selected' : '' }}>AB</option>
+                        <option value="O"
+                            {{ old('blood_type', $participant->blood_type ?? '') == 'O' ? 'selected' : '' }}>O</option>
+                        <option value="-"
+                            {{ old('blood_type', $participant->blood_type ?? '') == '-' ? 'selected' : '' }}>- / Tidak Tahu
+                        </option>
+                    </select>
+                </div>
+
+
                 {{-- FOTO --}}
                 <div class="relative file-upload-group mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1" for="photo">Foto</label>
@@ -112,10 +134,12 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1" for="letter_employee">Surat Karyawan
                         (PDF/JPG/PNG)</label>
                     <div class="flex items-center gap-2">
-                        <input type="file" name="letter_employee" id="letter_employee" accept="application/pdf,image/*"
+                        <input type="file" name="letter_employee" id="letter_employee"
+                            accept="application/pdf,image/*"
                             class="block w-full text-sm text-gray-600 border border-gray-300 rounded cursor-pointer" />
                         <span class="checkmark hidden">
-                            <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
                                     d="M5 13l4 4L19 7" />
                             </svg>

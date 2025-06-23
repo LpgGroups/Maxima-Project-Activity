@@ -209,6 +209,7 @@ class RegTrainingController extends Controller
             'name'              => 'required|string|max:255',
             'nik'               => 'nullable|string|min:16|max:20',
             'date_birth'        => 'nullable|date',
+            'blood_type'        => 'nullable|in:A,B,AB,O,-',
             'photo'             => 'nullable|file|image|max:2048',
             'ijazah'            => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
             'letter_employee'   => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
@@ -235,6 +236,7 @@ class RegTrainingController extends Controller
             'name',
             'nik',
             'date_birth',
+            'blood_type',
             'reason',
             'form_id'
         ]);

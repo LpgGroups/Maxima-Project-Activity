@@ -34,7 +34,7 @@ function showDetail(id) {
                     } Peserta</div>
                 </div>
 
-                <div class="font-extrabold mt-4">Data Persetujuan</div>
+                <div class="font-extrabold mt-4">Kelengkapan Dokumen</div>
                 <div class="text-sm bg-gray-50 border border-gray-300 rounded-md p-4 mt-1">
                     ${
                         data.files.length > 0

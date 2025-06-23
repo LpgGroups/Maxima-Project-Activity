@@ -139,7 +139,6 @@
                         <a href="#" class="text-indigo-600 text-xs view-detail-btn" data-id="{{ $training->id }}">
                             View Details
                         </a>
-
                     </div>
                 </div>
             </div>

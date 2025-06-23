@@ -16,6 +16,7 @@ class RegParticipant extends Model
         'name',
         'nik',
         'date_birth',
+        'blood_type',
         'photo',
         'ijazah',
         'letter_employee',

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->string('nik')->nullable();
             $table->date('date_birth')->nullable();
-            $table->date('blood_type')->nullable();
+            $table->string('blood_type')->nullable();
             $table->string('photo')->nullable();
             $table->string('ijazah')->nullable();
             $table->string('letter_employee')->nullable();

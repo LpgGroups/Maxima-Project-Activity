@@ -165,9 +165,9 @@
             dan sesuai dengan data peserta:</h2>
         <div class="rounded-2xl p-2 w-full mt-4">
             <!-- Form untuk menambah peserta -->
-            <button id="submitParticipation" class="mb-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+            {{-- <button id="submitParticipation" class="mb-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
                 Tambah Peserta
-            </button>
+            </button> --}}
 
             <!-- Form untuk update semua peserta -->
             <form id="participantTableForm" data-form-id="{{ $training->id }}">
@@ -181,6 +181,7 @@
                                 <th>Nama</th>
                                 <th>NIK</th>
                                 <th>Tgl Lahir</th>
+                                <th>Gol Darah</th>
                                 <th>Status</th>
                                 <th>Keterangan</th>
                                 <th>Action</th>
@@ -193,7 +194,7 @@
                                     <td>{{ $index + 1 }}</td>
                                     <td class="max-w-[80px] truncate whitespace-nowrap" title="{{ $participant->name }}">
                                         {{ $participant->name }}</td>
-                                    <td class="max-w-[70px]">
+                                    <td class="max-w-[90px]">
                                         @php
                                             $nik = $participant->nik;
                                             $repeat = max(0, strlen($nik) - 4);
@@ -213,6 +214,10 @@
                                     <td class="max-w-[50px] truncate whitespace-nowrap"
                                         title="{{ $participant->date_birth ? \Carbon\Carbon::parse($participant->date_birth)->translatedFormat('d F Y') : '-' }}">
                                         {{ $participant->date_birth ? \Carbon\Carbon::parse($participant->date_birth)->translatedFormat('d F Y') : '-' }}
+                                    </td>
+
+                                    <td class="max-w-[10px] truncate whitespace-nowrap">
+                                        {{ $participant->blood_type }}
                                     </td>
 
                                     <td class="max-w-[70px]">
@@ -265,7 +270,7 @@
                                 </tr>
                                 {{-- Dropdown row, hidden by default --}}
                                 <tr class="detail-row hidden" id="detail-row-{{ $participant->id }}">
-                                    <td colspan="7" class="bg-gray-100 text-left px-4 py-3">
+                                    <td colspan="8" class="bg-gray-100 text-left px-4 py-3">
                                         <div class="mb-2 font-semibold text-[15px]">Dokumen Peserta</div>
                                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             @php
