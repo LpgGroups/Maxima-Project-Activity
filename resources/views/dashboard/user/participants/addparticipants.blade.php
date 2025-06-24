@@ -111,6 +111,7 @@
                 </div>
 
                 {{-- FOTO --}}
+
                 <div class="relative file-upload-group mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1" for="photo">Foto</label>
                     <div class="flex items-center gap-2">
@@ -122,6 +123,7 @@
                             </svg>
                         </span>
                     </div>
+                    <p class="mt-1 text-xs text-gray-500">Format file: PNG/JPG (maksimal 2MB)</p>
                     <div class="file-info-photo mt-1 text-xs text-green-700"></div>
                 </div>
 
@@ -133,18 +135,19 @@
                             class="block w-full text-sm text-gray-600 border border-gray-300 rounded cursor-pointer" />
                         <span class="checkmark hidden">
                             <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                                    d="M5 13l4 4L19 7" />
                             </svg>
                         </span>
                     </div>
+                    <p class="mt-1 text-xs text-gray-500">Format file: PDF (maksimal 2MB)</p>
                     <div class="file-info-ijazah mt-1 text-xs text-green-700"></div>
                 </div>
 
                 {{-- SURAT KARYAWAN --}}
                 <div class="relative file-upload-group mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1" for="letter_employee">Surat Keterangan
-                        Kerja
-                        (PDF)</label>
+                        Kerja (PDF)</label>
                     <div class="flex items-center gap-2">
                         <input type="file" name="letter_employee" id="letter_employee"
                             accept="application/pdf,image/*"
@@ -157,6 +160,7 @@
                             </svg>
                         </span>
                     </div>
+                    <p class="mt-1 text-xs text-gray-500">Format file: PDF (maksimal 2MB)</p>
                     <div class="file-info-letter_employee mt-1 text-xs text-green-700"></div>
                 </div>
 
@@ -176,14 +180,21 @@
                             </svg>
                         </span>
                     </div>
+                    <p class="mt-1 text-xs text-gray-500">Format file: PDF (maksimal 2MB)</p>
+                    <p class="mt-1 text-xs text-gray-500">
+                        Template Surat Pernyataan
+                        <a href="http://maximagroup.co.id/wp-content/uploads/2025/06/01-Formulir-Pendaftaran-2025.pdf"
+                            download class="text-blue-600 underline ml-2" target="_blank">
+                            Download Template
+                        </a>
+                    </p>
                     <div class="file-info-letter_statement mt-1 text-xs text-green-700"></div>
                 </div>
 
                 {{-- Form-Registration --}}
                 <div class="relative file-upload-group mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1" for="form_registration">Formulir
-                        Pendaftaran
-                        (PDF)</label>
+                        Pendaftaran (PDF)</label>
                     <div class="flex items-center gap-2">
                         <input type="file" name="form_registration" id="form_registration"
                             accept="application/pdf,image/*"
@@ -196,9 +207,16 @@
                             </svg>
                         </span>
                     </div>
+                    <p class="mt-1 text-xs text-gray-500">Format file: PDF (maksimal 2MB)</p>
+                    <p class="mt-1 text-xs text-gray-500">
+                        Template Formulir Pendaftaran
+                        <a href="http://maximagroup.co.id/wp-content/uploads/2025/06/Template-Surat-Pernyataan.zip"
+                            download class="text-blue-600 underline ml-2" target="_blank">
+                            Download Template
+                        </a>
+                    </p>
                     <div class="file-info-form_registration mt-1 text-xs text-green-700"></div>
                 </div>
-
 
                 {{-- SURAT SEHAT --}}
                 <div class="relative file-upload-group mb-4">
@@ -215,6 +233,7 @@
                             </svg>
                         </span>
                     </div>
+                    <p class="mt-1 text-xs text-gray-500">Format file: PDF (maksimal 2MB)</p>
                     <div class="file-info-letter_health mt-1 text-xs text-green-700"></div>
                 </div>
 
@@ -232,8 +251,10 @@
                             </svg>
                         </span>
                     </div>
+                    <p class="mt-1 text-xs text-gray-500">Format file: PDF/DOC/DOCX (maksimal 2MB)</p>
                     <div class="file-info-cv mt-1 text-xs text-green-700"></div>
                 </div>
+
 
                 <div class="relative">
                     <button type="submit" id="form-submit-btn"
