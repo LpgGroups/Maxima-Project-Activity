@@ -21,7 +21,7 @@ class RegTraining extends Model
         'activity',
         'date',
         'date_end',
-        'link',
+        'reason_fail',
         'place',
         'isprogress',
         'isfinish',

@@ -20,6 +20,8 @@ class RegParticipant extends Model
         'photo',
         'ijazah',
         'letter_employee',
+        'letter_statement',
+        'form_registration',
         'letter_health',
         'cv',
         'reason',

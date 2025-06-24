@@ -278,6 +278,8 @@
                                                     'Foto' => $participant->photo,
                                                     'Ijazah' => $participant->ijazah,
                                                     'SK Kerja' => $participant->letter_employee,
+                                                    'Surat Pernyataan' => $participant->letter_statement,
+                                                    'Form Pendaftaran' => $participant->form_registration,
                                                     'SK Kesehatan' => $participant->letter_health,
                                                     'CV' => $participant->cv,
                                                 ];
@@ -285,6 +287,8 @@
                                                     'Foto' => '🖼️',
                                                     'Ijazah' => '📄',
                                                     'SK Kerja' => '📃',
+                                                    'Surat Pernyataan' => '✍️',
+                                                    'Form Pendaftaran' => '📝',
                                                     'SK Kesehatan' => '📑',
                                                     'CV' => '📁',
                                                 ];
@@ -294,7 +298,7 @@
                                                     class="flex items-center gap-3 bg-white rounded-md shadow-sm px-3 py-2">
                                                     <span class="text-xl">{{ $icons[$label] ?? '📎' }}</span>
                                                     <span
-                                                        class="font-medium min-w-[80px] w-[110px]">{{ $label }}</span>
+                                                        class="font-medium min-w-[80px] w-[120px]">{{ $label }}</span>
                                                     @if ($file)
                                                         <a href="{{ asset('storage/' . $file) }}" download
                                                             class="ml-auto px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-700 transition text-xs font-semibold flex items-center gap-1">
@@ -315,6 +319,7 @@
                                             @endforeach
                                         </div>
                                     </td>
+
                                 </tr>
 
                             @empty
@@ -403,7 +408,7 @@
 
     <div class="p-4 border border-t-0 border-gray-300 bg-white rounded-lg mt-4">
         <h1 class="text-[24px] font-semibold">Upload persetujuan</h1>
-        <p class="text-[15px]">Pastikan bahwa dokumen MoU (Memorandum of Understanding) dan Quotation (Penawaran Harga)
+        <p class="text-[15px]">Pastikan bahwa dokumen MoU/Quotation/PO dan Bukti Bayar
             dari client
             diperiksa dengan cermat:</p>
 
@@ -414,7 +419,7 @@
                     <img src="{{ asset('img/icon_pdf_mou.png') }}" alt="PDF Icon" width="50"
                         style="margin-right: 15px;">
                     <div>
-                        <div><strong>File Approval:</strong> {{ basename($file->file_approval) }}</div>
+                        <div><strong>File MOU/Quoatation/PO:</strong> {{ basename($file->file_approval) }}</div>
                         <a href="{{ asset('storage/' . $file->file_approval) }}" target="_blank"
                             class="w-full h-20 p-1 bg-red-500 rounded mt-2 text-[10px] text-white">
                             Download
@@ -429,7 +434,7 @@
                     <img src="{{ asset('img/icon_pdf_mou.png') }}" alt="PDF Icon" width="50"
                         style="margin-right: 15px;">
                     <div>
-                        <div><strong>Proof of Payment:</strong> {{ basename($file->proof_payment) }}</div>
+                        <div><strong>Bukti Bayar:</strong> {{ basename($file->proof_payment) }}</div>
                         <a href="{{ asset('storage/' . $file->proof_payment) }}" target="_blank"
                             class="w-full h-20 p-1 bg-blue-500 rounded mt-2 text-[10px] text-white">
                             Download
@@ -449,7 +454,7 @@
                 <input type="checkbox" id="confirmEdit3"
                     class="h-5 w-5 appearance-none border-2 border-gray-400 rounded-sm checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200" />
                 <label for="confirmEdit3" class="text-sm text-gray-700">
-                    Saya yakin data yang diubah sudah benar
+                   Saya memastikan bahwa seluruh dokumen yang masuk telah lengkap, valid, dan siap untuk diproses lebih lanjut
                 </label>
             </div>
 

@@ -20,6 +20,8 @@ return new class extends Migration
             $table->string('photo')->nullable();
             $table->string('ijazah')->nullable();
             $table->string('letter_employee')->nullable();
+            $table->string('letter_statement')->nullable();
+            $table->string('form_registration')->nullable();
             $table->string('letter_health')->nullable();
             $table->string('cv')->nullable();
             $table->string('reason')->nullable();

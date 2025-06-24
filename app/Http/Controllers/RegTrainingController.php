@@ -194,13 +194,21 @@ class RegTrainingController extends Controller
     {
         $training = RegTraining::findOrFail($form_id);
         $participants = RegParticipant::where('form_id', $form_id)->get();
+
+        $participantToEdit = null;
+        if (request()->has('participant_id')) {
+            $participantToEdit = RegParticipant::find(request()->participant_id);
+        }
+
         return view('dashboard.user.participants.addparticipants', [
             'title' => 'Tambah Peserta',
             'form_id' => $form_id,
             'participants' => $participants,
-            'training' => $training, // <= WAJIB ADA INI!
+            'training' => $training,
+            'participantToEdit' => $participantToEdit,
         ]);
     }
+
 
     public function saveForm2(Request $request)
     {
@@ -248,7 +256,7 @@ class RegTrainingController extends Controller
             if ($request->hasFile($field)) {
                 $ext = $request->file($field)->getClientOriginalExtension();
                 $filename = "{$prefix}_{$field}." . $ext;
-                $path = $request->file($field)->storeAs("uploads/participanst/{$folder}", $filename, 'public');
+                $path = $request->file($field)->storeAs("uploads/participants/{$folder}", $filename, 'public');
                 $data[$field] = $path;
                 $uploaded_files[$field] = $filename;
             }
@@ -263,6 +271,8 @@ class RegTrainingController extends Controller
                     'photo' => 'photo',
                     'ijazah' => 'ijazah',
                     'letter_employee' => 'letter_employee',
+                    'letter_statement' => 'letter_statement',
+                    'form_registration' => 'form_registration',
                     'letter_health' => 'letter_health',
                     'cv' => 'cv'
                 ] as $field => $folder
@@ -284,7 +294,9 @@ class RegTrainingController extends Controller
                     'photo' => 'photo',
                     'ijazah' => 'ijazah',
                     'letter_employee' => 'letter_employee',
+                    'letter_statement' => 'letter_statement',
                     'letter_health' => 'letter_health',
+                    'form_registration' => 'form_registration',
                     'cv' => 'cv'
                 ] as $field => $folder
             ) {
@@ -382,11 +394,19 @@ class RegTrainingController extends Controller
     }
 
 
-    public function destroyUser($id)
+    public function deleteParticipant($id)
     {
-        $participant = RegParticipant::findOrFail($id);
+        $participant = RegParticipant::find($id);
+        if (!$participant) {
+            return response()->json(['success' => false, 'message' => 'Peserta tidak ditemukan.']);
+        }
+        // Hapus file terkait jika perlu (photo, ijazah, dst)
+        foreach (['photo', 'ijazah', 'letter_employee', 'letter_statement', 'form_registration', 'letter_health', 'cv'] as $field) {
+            if ($participant->$field && Storage::disk('public')->exists($participant->$field)) {
+                Storage::disk('public')->delete($participant->$field);
+            }
+        }
         $participant->delete();
-
-        return back()->with('success', 'Peserta berhasil dihapus.');
+        return response()->json(['success' => true]);
     }
 }

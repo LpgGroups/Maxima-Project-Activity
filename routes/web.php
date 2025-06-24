@@ -73,6 +73,8 @@ Route::middleware(['auth'])->group(function () {
         // Route::post('/dashboard/user/training/form2/save', [RegTrainingController::class, 'saveForm2'])->name('dashboard.form2.save');
         Route::post('/dashboard/user/training/form3/save', [RegTrainingController::class, 'saveForm3'])->name('dashboard.form3.save');
         Route::delete('/dashboard/user/training/form2/{id}', [RegTrainingController::class, 'destroyUser'])->name('dashboard.form2.destroy');
+        Route::post('/dashboard/user/training/participant/delete/{id}', [RegTrainingController::class, 'deleteParticipant'])
+            ->name('dashboard.participant.delete');
     });
 
     Route::middleware([UserAccess::class . ':management'])->group(function () {

@@ -286,10 +286,12 @@
                                             </span>
                                         </td>
 
-                                        <td class="py-2">{{ $participant->reason }}</td>
+                                        <td class="py-2">{{ $participant->reason ?? '-' }}</td>
                                         <td class="py-2">
-                                            <a href="#"
-                                                class="bg-blue-500 text-white px-3 py-1 rounded text-xs hover:bg-blue-600">Detail</a>
+                                            <a href="{{ route('dashboard.addparticipant', ['form_id' => $trainingId]) }}?participant_id={{ $participant->id }}"
+                                                class="bg-blue-500 text-white px-3 py-1 rounded text-xs hover:bg-blue-600">
+                                                Detail
+                                            </a>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -537,10 +539,12 @@
 
             <div @class([
                 'w-auto h-auto rounded-[20px] p-4 border-2',
-                'text-green-600 border-green-600' => $training->isprogress == 5,
-                'text-red-600 border-red-600' => $training->isprogress != 5,
+                'text-green-600 border-green-600' => $training->isprogress == 6,
+                'text-yellow-600 border-yellow-600' => $training->isprogress == 5,
+                'text-red-600 border-red-600' =>
+                    $training->isprogress != 6 && $training->isprogress != 5,
             ])>
-                @if ($training->isprogress == 5)
+                @if ($training->isprogress == 6)
                     <h3 class="text-xl font-bold mb-2 text-green-600">Halo Sobat Maxima,</h3>
                     <p class="text-[10px] text-gray-700 text-justify">
                         Kami mengucapkan terima kasih atas kerja sama dan perhatian Bapak/Ibu dalam melengkapi
@@ -557,6 +561,16 @@
                         <br>
                         Maxima Group
                     </p>
+                @elseif ($training->isprogress == 5)
+                    <h3 class="text-xl font-bold mb-2 text-yellow-600">Menunggu Persetujuan</h3>
+                    <p class="text-[10px] text-gray-700 text-justify">
+                        Semua data dan dokumen pengajuan pelatihan sudah dikirimkan.
+                        Silakan menunggu proses verifikasi dan persetujuan dari tim Maxima.
+                        <br><br>
+                        Anda akan mendapatkan notifikasi apabila proses sudah selesai.
+                        <br><br>
+                        Jika ada pertanyaan tambahan, silakan hubungi kami.
+                    </p>
                 @else
                     <h3 class="text-xl font-bold mb-2 text-red-600">Informasi Data</h3>
                     <ul class="list-disc text-xs ml-2 text-red-600">
@@ -569,8 +583,9 @@
             </div>
 
 
+
             <div class="text-center">
-                @if ($training->isprogress == 5)
+                @if ($training->isprogress == 6)
                     <img class="mt-4 w-[250px] h-[150px] mx-auto" src="/img/complete.png" alt="LPG">
                 @endif
             </div>
