@@ -22,12 +22,12 @@ return new class extends Migration
             $table->date('date')->nullable();
             $table->date('date_end')->nullable();
             $table->string('place')->nullable();
+            $table->string('reason_fail')->nullable();
             $table->integer('isprogress')->default(0);
             $table->boolean('isfinish')->default(false);
-            $table->unsignedBigInteger('user_id')->nullable(); 
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-
         });
     }
 

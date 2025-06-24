@@ -152,7 +152,6 @@ class RegTrainingController extends Controller
             ];
             session()->flash('uploaded_files', $uploaded_files);
 
-
             if ($trainingData) {
                 // Update data jika sudah ada
                 $currentProgress = $trainingData->isprogress;
@@ -193,20 +192,32 @@ class RegTrainingController extends Controller
 
     public function pageAddParticipant($form_id)
     {
+        $training = RegTraining::findOrFail($form_id);
         $participants = RegParticipant::where('form_id', $form_id)->get();
+
+        $participantToEdit = null;
+        if (request()->has('participant_id')) {
+            $participantToEdit = RegParticipant::find(request()->participant_id);
+        }
+
         return view('dashboard.user.participants.addparticipants', [
             'title' => 'Tambah Peserta',
             'form_id' => $form_id,
-            'participants' => $participants
+            'participants' => $participants,
+            'training' => $training,
+            'participantToEdit' => $participantToEdit,
         ]);
     }
 
+
     public function saveForm2(Request $request)
     {
+        // Validasi awal supaya bisa load training
         $request->validate([
             'name'              => 'required|string|max:255',
             'nik'               => 'nullable|string|min:16|max:20',
             'date_birth'        => 'nullable|date',
+            'blood_type'        => 'nullable|in:A,B,AB,O,-',
             'photo'             => 'nullable|file|image|max:2048',
             'ijazah'            => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
             'letter_employee'   => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
@@ -214,27 +225,38 @@ class RegTrainingController extends Controller
             'cv'                => 'nullable|file|mimes:pdf,doc,docx|max:2048',
             'reason'            => 'nullable|string',
             'form_id'           => 'required|exists:reg_training,id',
-            'participant_id'    => 'nullable|exists:reg_participants,id', // untuk edit
+            'participant_id'    => 'nullable|exists:reg_participants,id',
         ]);
 
+        // Ambil data training
+        $training = RegTraining::findOrFail($request->form_id);
+
+        $trainingDate = \Carbon\Carbon::parse($training->training_date ?? $training->date ?? $training->start_date);
+        $deadline = $trainingDate->copy()->subDays(3); // Deadline H-3
+
+
+        if (now()->greaterThanOrEqualTo($deadline)) {
+            return redirect()->back()->withErrors([
+                'form' => 'Pendaftaran/ubah peserta sudah ditutup pada H-3 sebelum pelatihan. Silakan hubungi admin.'
+            ])->withInput();
+        }
         $data = $request->only([
             'name',
             'nik',
             'date_birth',
+            'blood_type',
             'reason',
             'form_id'
         ]);
         $prefix = strtolower(str_replace(' ', '_', $request->name)) ?: 'file';
-
-        // Siapkan array untuk nama file yang baru saja di-upload (buat feedback jika mau)
         $uploaded_files = [];
 
-        // Handle upload (helper closure biar DRY)
+        // Helper upload
         $handleFile = function ($field, $folder) use ($request, $prefix, &$data, &$uploaded_files) {
             if ($request->hasFile($field)) {
                 $ext = $request->file($field)->getClientOriginalExtension();
                 $filename = "{$prefix}_{$field}." . $ext;
-                $path = $request->file($field)->storeAs("uploads/participanst/{$folder}", $filename, 'public');
+                $path = $request->file($field)->storeAs("uploads/participants/{$folder}", $filename, 'public');
                 $data[$field] = $path;
                 $uploaded_files[$field] = $filename;
             }
@@ -244,31 +266,26 @@ class RegTrainingController extends Controller
         if ($request->filled('participant_id')) {
             $participant = RegParticipant::findOrFail($request->participant_id);
 
-            // Upload baru: hapus file lama (jika ada), lalu simpan file baru
             foreach (
                 [
                     'photo' => 'photo',
                     'ijazah' => 'ijazah',
                     'letter_employee' => 'letter_employee',
+                    'letter_statement' => 'letter_statement',
+                    'form_registration' => 'form_registration',
                     'letter_health' => 'letter_health',
                     'cv' => 'cv'
                 ] as $field => $folder
             ) {
                 if ($request->hasFile($field)) {
-                    // Hapus file lama jika ada
                     if ($participant->$field && Storage::disk('public')->exists($participant->$field)) {
                         Storage::disk('public')->delete($participant->$field);
                     }
                     $handleFile($field, $folder);
                 } else {
-                    // Jangan update kolom file jika tidak upload baru (biar data lama tetap)
                     unset($data[$field]);
                 }
             }
-
-            // Status: tetapkan ke 1 (sukses), atau bisa disesuaikan
-            $data['status'] = 1;
-
             $participant->update($data);
         } else {
             // === Jika TAMBAH (create) ===
@@ -277,33 +294,32 @@ class RegTrainingController extends Controller
                     'photo' => 'photo',
                     'ijazah' => 'ijazah',
                     'letter_employee' => 'letter_employee',
+                    'letter_statement' => 'letter_statement',
                     'letter_health' => 'letter_health',
+                    'form_registration' => 'form_registration',
                     'cv' => 'cv'
                 ] as $field => $folder
             ) {
                 $handleFile($field, $folder);
             }
 
-            $data['status'] = 1;
             $participant = RegParticipant::create($data);
         }
 
-        // Training: update progress dsb
-        $training = RegTraining::find($data['form_id']);
-        if ($training) {
-            $training->isprogress = max($training->isprogress ?? 0, 3);
-            $training->save();
+        // Update progress dsb
+        $training->isprogress = max($training->isprogress ?? 0, 3);
+        $training->save();
 
-            // Notifikasi admin (optional)
-            $admins = User::where('role', 'admin')->get();
-            foreach ($admins as $admin) {
-                $admin->notify(new TrainingUpdatedNotification($training, 'user', 'Peserta Terdaftar'));
-            }
-            $training->touch();
+        // Notifikasi admin (optional)
+        $admins = User::where('role', 'admin')->get();
+        foreach ($admins as $admin) {
+            $admin->notify(new TrainingUpdatedNotification($training, 'user', 'Peserta Terdaftar'));
         }
+        $training->touch();
 
-        return redirect()->back()->with('success', 'Participant registered successfully.');
+        return redirect()->back()->with('success', 'Peserta Berhasil Ditambahkan.');
     }
+
 
     public function saveForm3(Request $request)
     {
@@ -378,11 +394,19 @@ class RegTrainingController extends Controller
     }
 
 
-    public function destroyUser($id)
+    public function deleteParticipant($id)
     {
-        $participant = RegParticipant::findOrFail($id);
+        $participant = RegParticipant::find($id);
+        if (!$participant) {
+            return response()->json(['success' => false, 'message' => 'Peserta tidak ditemukan.']);
+        }
+        // Hapus file terkait jika perlu (photo, ijazah, dst)
+        foreach (['photo', 'ijazah', 'letter_employee', 'letter_statement', 'form_registration', 'letter_health', 'cv'] as $field) {
+            if ($participant->$field && Storage::disk('public')->exists($participant->$field)) {
+                Storage::disk('public')->delete($participant->$field);
+            }
+        }
         $participant->delete();
-
-        return back()->with('success', 'Peserta berhasil dihapus.');
+        return response()->json(['success' => true]);
     }
 }

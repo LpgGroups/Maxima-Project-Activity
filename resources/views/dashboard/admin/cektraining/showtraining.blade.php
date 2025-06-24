@@ -165,9 +165,9 @@
             dan sesuai dengan data peserta:</h2>
         <div class="rounded-2xl p-2 w-full mt-4">
             <!-- Form untuk menambah peserta -->
-            <button id="submitParticipation" class="mb-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+            {{-- <button id="submitParticipation" class="mb-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
                 Tambah Peserta
-            </button>
+            </button> --}}
 
             <!-- Form untuk update semua peserta -->
             <form id="participantTableForm" data-form-id="{{ $training->id }}">
@@ -181,6 +181,7 @@
                                 <th>Nama</th>
                                 <th>NIK</th>
                                 <th>Tgl Lahir</th>
+                                <th>Gol Darah</th>
                                 <th>Status</th>
                                 <th>Keterangan</th>
                                 <th>Action</th>
@@ -193,9 +194,30 @@
                                     <td>{{ $index + 1 }}</td>
                                     <td class="max-w-[80px] truncate whitespace-nowrap" title="{{ $participant->name }}">
                                         {{ $participant->name }}</td>
-                                    <td class="max-w-[70px]">{{ $participant->nik ?? '-' }}</td>
-                                    <td class="max-w-[50px]">
+                                    <td class="max-w-[90px]">
+                                        @php
+                                            $nik = $participant->nik;
+                                            $repeat = max(0, strlen($nik) - 4);
+                                            $hiddenNik = str_repeat('*', $repeat) . substr($nik, -4);
+                                        @endphp
+
+                                        <div class="flex items-center">
+                                            <span class="nik-text"
+                                                data-full="{{ $nik }}">{{ $hiddenNik }}</span>
+                                            <button type="button"
+                                                class="toggle-nik-btn text-blue-500 text-xs hover:underline">
+                                                👁️
+                                            </button>
+                                        </div>
+                                    </td>
+
+                                    <td class="max-w-[50px] truncate whitespace-nowrap"
+                                        title="{{ $participant->date_birth ? \Carbon\Carbon::parse($participant->date_birth)->translatedFormat('d F Y') : '-' }}">
                                         {{ $participant->date_birth ? \Carbon\Carbon::parse($participant->date_birth)->translatedFormat('d F Y') : '-' }}
+                                    </td>
+
+                                    <td class="max-w-[10px] truncate whitespace-nowrap">
+                                        {{ $participant->blood_type }}
                                     </td>
 
                                     <td class="max-w-[70px]">
@@ -217,16 +239,38 @@
                                             style="width: 100%;">
                                     </td>
                                     <td>
-                                        <button type="button" class="text-blue-700 showDetailBtn px-2 py-1 rounded"
-                                            data-id="{{ $participant->id }}">Click</button>
-                                        <button type="button"
-                                            class="text-red-600 deleteButtonParticipant px-2 py-1 rounded"
-                                            data-id="{{ $participant->id }}">Delete</button>
+                                        <!-- Tombol Click (pakai ikon pointer) -->
+                                        <button type="button" class="text-blue-700 showDetailBtn rounded"
+                                            data-id="{{ $participant->id }}">
+                                            <!-- SVG Ikon Kursor -->
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                class="w-5 h-5 mb-2 inline-block" stroke-width="1.5"
+                                                stroke="currentColor" class="size-6">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25M9 16.5v.75m3-3v3M15 12v5.25m-4.5-15H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+                                            </svg>
+
+                                        </button>
+
+                                        <!-- Tombol Delete (pakai ikon tempat sampah) -->
+                                        <button type="button" class="text-red-600 deleteButtonParticipant rounded"
+                                            data-id="{{ $participant->id }}">
+                                            <!-- SVG Ikon Tempat Sampah -->
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mb-2 inline-block"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                stroke-width="2">
+                                                <path
+                                                    d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6z" />
+                                                <line x1="10" y1="11" x2="10" y2="17" />
+                                                <line x1="14" y1="11" x2="14" y2="17" />
+                                            </svg>
+                                        </button>
                                     </td>
+
                                 </tr>
                                 {{-- Dropdown row, hidden by default --}}
                                 <tr class="detail-row hidden" id="detail-row-{{ $participant->id }}">
-                                    <td colspan="7" class="bg-gray-100 text-left px-4 py-3">
+                                    <td colspan="8" class="bg-gray-100 text-left px-4 py-3">
                                         <div class="mb-2 font-semibold text-[15px]">Dokumen Peserta</div>
                                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             @php
@@ -234,6 +278,8 @@
                                                     'Foto' => $participant->photo,
                                                     'Ijazah' => $participant->ijazah,
                                                     'SK Kerja' => $participant->letter_employee,
+                                                    'Surat Pernyataan' => $participant->letter_statement,
+                                                    'Form Pendaftaran' => $participant->form_registration,
                                                     'SK Kesehatan' => $participant->letter_health,
                                                     'CV' => $participant->cv,
                                                 ];
@@ -241,6 +287,8 @@
                                                     'Foto' => '🖼️',
                                                     'Ijazah' => '📄',
                                                     'SK Kerja' => '📃',
+                                                    'Surat Pernyataan' => '✍️',
+                                                    'Form Pendaftaran' => '📝',
                                                     'SK Kesehatan' => '📑',
                                                     'CV' => '📁',
                                                 ];
@@ -250,7 +298,7 @@
                                                     class="flex items-center gap-3 bg-white rounded-md shadow-sm px-3 py-2">
                                                     <span class="text-xl">{{ $icons[$label] ?? '📎' }}</span>
                                                     <span
-                                                        class="font-medium min-w-[80px] w-[110px]">{{ $label }}</span>
+                                                        class="font-medium min-w-[80px] w-[120px]">{{ $label }}</span>
                                                     @if ($file)
                                                         <a href="{{ asset('storage/' . $file) }}" download
                                                             class="ml-auto px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-700 transition text-xs font-semibold flex items-center gap-1">
@@ -271,6 +319,7 @@
                                             @endforeach
                                         </div>
                                     </td>
+
                                 </tr>
 
                             @empty
@@ -300,9 +349,66 @@
         </button>
     </div>
 
+    <div class="p-6 bg-white border border-gray-200 rounded-xl shadow-sm w-full mt-8">
+        <h2 class="text-2xl font-bold mb-6 text-gray-700">Upload File Budget Plan & Pelaksanaan</h2>
+        <form id="adminFileUploadForm" class="space-y-6">
+            <input type="hidden" name="training_id" value="{{ $training->id }}">
+            <div class="mt-2">
+                <label class="block mb-2 mt-2 text-sm font-medium text-gray-900" for="budget_plan">
+                    Upload Budget Plan (.pdf, .docx)
+                </label>
+                <input name="budget_plan" id="budget_plan" type="file" accept=".pdf,.doc,.docx"
+                    class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none">
+                <p class="mt-1 text-sm text-gray-500">Format File: PDF, DOC, DOCX (Maks Size: 5MB).</p>
+
+                @if (!empty($fileRequirement?->budget_plan))
+                    <p class="text-sm text-green-600 mt-1">
+                        File sudah diupload:
+                        <strong>
+                            <a href="{{ route('download.confidential', ['type' => 'budget-plan', 'file' => basename($fileRequirement->budget_plan)]) }}"
+                                class="underline" target="_blank">
+                                {{ basename($fileRequirement->budget_plan) }}
+                            </a>
+
+                        </strong>
+                    </p>
+                @endif
+            </div>
+
+            <div class="mt-2">
+                <label class="block mb-2 mt-2 text-sm font-medium text-gray-900" for="letter_implementation">
+                    Upload Letter Implementation (.pdf, .docx)
+                </label>
+                <input name="letter_implementation" id="letter_implementation" type="file" accept=".pdf,.doc,.docx"
+                    class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none">
+                <p class="mt-1 text-sm text-gray-500">Format File: PDF, DOC, DOCX (Maks Size: 5MB).</p>
+
+                @if (!empty($fileRequirement?->letter_implementation))
+                    <p class="text-sm text-green-600 mt-1">
+                        File sudah diupload:
+                        <strong>
+                            <a href="{{ route('download.confidential', ['type' => 'letter-implementation', 'file' => basename($fileRequirement->letter_implementation)]) }}"
+                                class="underline">
+                                {{ basename($fileRequirement->letter_implementation) }}
+                            </a>
+                        </strong>
+                    </p>
+                @endif
+            </div>
+
+
+            <button type="button" id="uploadFileForAdminBtn"
+                class="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition">
+                Upload
+            </button>
+            <div id="uploadAdminFileStatus" class="text-center text-sm mt-2"></div>
+        </form>
+    </div>
+
+
     <div class="p-4 border border-t-0 border-gray-300 bg-white rounded-lg mt-4">
         <h1 class="text-[24px] font-semibold">Upload persetujuan</h1>
-        <p class="text-[15px]">Pastikan bahwa dokumen MoU (Memorandum of Understanding) dan Quotation (Penawaran Harga)
+        <p class="text-[15px]">Pastikan bahwa dokumen MoU/Quotation/PO dan Bukti Bayar
             dari client
             diperiksa dengan cermat:</p>
 
@@ -313,7 +419,7 @@
                     <img src="{{ asset('img/icon_pdf_mou.png') }}" alt="PDF Icon" width="50"
                         style="margin-right: 15px;">
                     <div>
-                        <div><strong>File Approval:</strong> {{ basename($file->file_approval) }}</div>
+                        <div><strong>File MOU/Quoatation/PO:</strong> {{ basename($file->file_approval) }}</div>
                         <a href="{{ asset('storage/' . $file->file_approval) }}" target="_blank"
                             class="w-full h-20 p-1 bg-red-500 rounded mt-2 text-[10px] text-white">
                             Download
@@ -328,7 +434,7 @@
                     <img src="{{ asset('img/icon_pdf_mou.png') }}" alt="PDF Icon" width="50"
                         style="margin-right: 15px;">
                     <div>
-                        <div><strong>Proof of Payment:</strong> {{ basename($file->proof_payment) }}</div>
+                        <div><strong>Bukti Bayar:</strong> {{ basename($file->proof_payment) }}</div>
                         <a href="{{ asset('storage/' . $file->proof_payment) }}" target="_blank"
                             class="w-full h-20 p-1 bg-blue-500 rounded mt-2 text-[10px] text-white">
                             Download
@@ -348,7 +454,7 @@
                 <input type="checkbox" id="confirmEdit3"
                     class="h-5 w-5 appearance-none border-2 border-gray-400 rounded-sm checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200" />
                 <label for="confirmEdit3" class="text-sm text-gray-700">
-                    Saya yakin data yang diubah sudah benar
+                   Saya memastikan bahwa seluruh dokumen yang masuk telah lengkap, valid, dan siap untuk diproses lebih lanjut
                 </label>
             </div>
 

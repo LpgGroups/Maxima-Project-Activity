@@ -6,11 +6,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Middleware\UserAccess;
 use App\Http\Controllers\DashboardUserController;
+use App\Http\Controllers\FileDownloadController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\RegTrainingController;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
-use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 use App\Http\Controllers\RegisterController;
 
 Route::get('/', [LoginController::class, 'index'])->name('login.index');
@@ -27,6 +27,7 @@ Route::get('/forgot-password', [ForgotPasswordController::class, 'showForm'])->n
 Route::post('/forgot-password', [ForgotPasswordController::class, 'sendReset'])->name('password.email');
 Route::get('/reset-password/{token}', [ForgotPasswordController::class, 'showResetForm'])->name('password.reset');
 Route::post('/reset-password', [ForgotPasswordController::class, 'reset'])->name('password.update');
+
 Route::middleware(['auth'])->group(function () {
     Route::middleware([UserAccess::class . ':admin'])->group(function () {
         Route::get('/admin/training/live', [DashboardAdminController::class, 'getLiveTraining'])->name('admin.training.live');
@@ -39,7 +40,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/dashboard/admin/training/update-participant', [DashboardAdminController::class, 'updateForm2User']);
         Route::post('/dashboard/admin/training/add-participant', [DashboardAdminController::class, 'addParticipant']);
         Route::post('/dashboard/admin/training/finish/{id}', [DashboardAdminController::class, 'trainingFinish']);
-
+        Route::post('/dashboard/admin/upload-files', [DashboardAdminController::class, 'uploadFileForAdmin']);
         Route::get('/download/file-mou/{id}', function ($id) {
             $file = \App\Models\FileRequirement::findOrFail($id);
 
@@ -64,7 +65,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/dashboard/user/training', [RegTrainingController::class, 'index'])->name('dashboard.training');
         Route::get('/dashboard/user/training/selectdate', [RegTrainingController::class, 'selectDate'])->name('dashboard.selectDate');
         Route::get('/dashboard/user/training/form/{id}', [RegTrainingController::class, 'formReg'])->name('dashboard.form');
-      
+
         Route::get('/dashboard/user/training/form2/add/{form_id}', [RegTrainingController::class, 'pageAddParticipant'])->name('dashboard.addparticipant');
         Route::post('/dashboard/user/training/form2/add/{form_id}/save', [RegTrainingController::class, 'saveForm2'])->name('dashboard.addparticipant.save');
 
@@ -72,6 +73,8 @@ Route::middleware(['auth'])->group(function () {
         // Route::post('/dashboard/user/training/form2/save', [RegTrainingController::class, 'saveForm2'])->name('dashboard.form2.save');
         Route::post('/dashboard/user/training/form3/save', [RegTrainingController::class, 'saveForm3'])->name('dashboard.form3.save');
         Route::delete('/dashboard/user/training/form2/{id}', [RegTrainingController::class, 'destroyUser'])->name('dashboard.form2.destroy');
+        Route::post('/dashboard/user/training/participant/delete/{id}', [RegTrainingController::class, 'deleteParticipant'])
+            ->name('dashboard.participant.delete');
     });
 
     Route::middleware([UserAccess::class . ':management'])->group(function () {
@@ -111,6 +114,10 @@ Route::middleware(['auth'])->group(function () {
             })->values(),
         ]);
     })->middleware('auth');
+
+    Route::get('/download-confidential/{type}/{file}', [FileDownloadController::class, 'download'])
+        ->name('download.confidential')
+        ->middleware(['auth']);
 
     Route::get('/profile/settings', [App\Http\Controllers\ProfileController::class, 'edit'])->name('profile.edit');
     Route::post('/profile/settings', [App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');

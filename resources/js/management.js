@@ -34,24 +34,73 @@ function showDetail(id) {
                     } Peserta</div>
                 </div>
 
-                <div class="font-extrabold mt-4">Data Persetujuan</div>
+                <div class="font-extrabold mt-4">Kelengkapan Dokumen</div>
                 <div class="text-sm bg-gray-50 border border-gray-300 rounded-md p-4 mt-1">
                     ${
                         data.files.length > 0
                             ? data.files
-                                  .map(
-                                      (f) => `
-                                <div class="mb-4 flex items-start">
-                                    <img src="/img/icon_pdf_mou.png" alt="PDF Icon" width="50" class="mr-4 mt-1" />
-                                    <div>
-                                        <div class="font-medium text-gray-800">${f.name}</div>
-                                        <a href="${f.url}" target="_blank" class="inline-block mt-1 text-sm text-white bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded">
-                                            Download
-                                        </a>
-                                    </div>
-                                </div>
-                            `
-                                  )
+                                  .map((f) => {
+                                      // Helper: dapatkan nama file (basename)
+                                      const getFileName = (url) => {
+                                          if (!url) return "";
+                                          return url.split("/").pop();
+                                      };
+
+                                      // Array untuk menyimpan semua tipe dokumen
+                                      const docs = [
+                                          {
+                                              url: f.file_approval,
+                                              label: "File Persetujuan",
+                                              color: "blue",
+                                              icon: "/img/icon_pdf_mou.png",
+                                          },
+                                          {
+                                              url: f.proof_payment,
+                                              label: "Bukti Pembayaran",
+                                              color: "green",
+                                              icon: "/img/icon_pdf_mou.png",
+                                          },
+                                          {
+                                              url: f.budget_plan,
+                                              label: "Budget Plan",
+                                              color: "indigo",
+                                              icon: "/img/icon_pdf_mou.png",
+                                          },
+                                          {
+                                              url: f.letter_implementation,
+                                              label: "Surat Pelaksanaan",
+                                              color: "pink",
+                                              icon: "/img/icon_pdf_mou.png",
+                                          },
+                                      ];
+
+                                      return docs
+                                          .filter((doc) => doc.url)
+                                          .map(
+                                              (doc) => `
+                <div class="flex items-center mb-3">
+                    <img src="${
+                        doc.icon
+                    }" alt="Icon" class="w-8 h-8 mr-3 flex-shrink-0" />
+                    <div class="flex-1">
+                        <div class="font-semibold text-gray-800 text-sm mb-0.5">${getFileName(
+                            doc.url
+                        )}</div>
+                        <div class="text-xs text-gray-500 mb-1">${
+                            doc.label
+                        }</div>
+                    </div>
+                    <a href="${doc.url}" target="_blank"
+                        class="bg-${doc.color}-600 hover:bg-${
+                                                  doc.color
+                                              }-700 text-white text-xs px-3 py-1.5 rounded shadow transition">
+                        Download
+                    </a>
+                </div>
+            `
+                                          )
+                                          .join("");
+                                  })
                                   .join("")
                             : '<div class="text-gray-500 italic">Tidak ada file</div>'
                     }
@@ -175,19 +224,26 @@ function liveSearch() {
     });
 }
 function applyTrainingFilters() {
-    const searchTerm = $('#searchInput').val().toLowerCase();
-    const sortValue = $('#sortCompany').val();
-    const start = $('#startDate').val() ? new Date($('#startDate').val()) : null;
-    const end = $('#endDate').val() ? new Date($('#endDate').val()) : null;
+    const searchTerm = $("#searchInput").val().toLowerCase();
+    const sortValue = $("#sortCompany").val();
+    const start = $("#startDate").val()
+        ? new Date($("#startDate").val())
+        : null;
+    const end = $("#endDate").val() ? new Date($("#endDate").val()) : null;
 
-    const cards = $('.training-card');
+    const cards = $(".training-card");
 
     // Filtering
     cards.each(function () {
         const card = $(this);
-        const companyText = card.find('p.text-zinc-800.text-xs').text().split(' - ')[1]?.trim().toLowerCase();
-        const dateRangeText = card.find('.text-violet-400').text();
-        const [startText, endText] = dateRangeText.split(' - ');
+        const companyText = card
+            .find("p.text-zinc-800.text-xs")
+            .text()
+            .split(" - ")[1]
+            ?.trim()
+            .toLowerCase();
+        const dateRangeText = card.find(".text-violet-400").text();
+        const [startText, endText] = dateRangeText.split(" - ");
 
         const cardStart = new Date(startText);
         const cardEnd = new Date(endText);
@@ -205,15 +261,29 @@ function applyTrainingFilters() {
 
     // Sorting
     if (sortValue) {
-        const container = $('.space-y-4');
-        const visibleCards = cards.filter(function () {
-            return $(this).is(':visible');
-        }).get();
+        const container = $(".space-y-4");
+        const visibleCards = cards
+            .filter(function () {
+                return $(this).is(":visible");
+            })
+            .get();
 
         visibleCards.sort(function (a, b) {
-            const nameA = $(a).find('p.text-zinc-800.text-xs').text().split(' - ')[1]?.trim().toLowerCase();
-            const nameB = $(b).find('p.text-zinc-800.text-xs').text().split(' - ')[1]?.trim().toLowerCase();
-            return sortValue === 'asc' ? nameA.localeCompare(nameB) : nameB.localeCompare(nameA);
+            const nameA = $(a)
+                .find("p.text-zinc-800.text-xs")
+                .text()
+                .split(" - ")[1]
+                ?.trim()
+                .toLowerCase();
+            const nameB = $(b)
+                .find("p.text-zinc-800.text-xs")
+                .text()
+                .split(" - ")[1]
+                ?.trim()
+                .toLowerCase();
+            return sortValue === "asc"
+                ? nameA.localeCompare(nameB)
+                : nameB.localeCompare(nameA);
         });
 
         // Append sorted cards back to the container
@@ -232,6 +302,4 @@ $(document).ready(function () {
         liveSearch();
     });
     filterSearch();
-
-    
 });

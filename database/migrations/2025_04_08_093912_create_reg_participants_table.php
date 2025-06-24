@@ -16,9 +16,12 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->string('nik')->nullable();
             $table->date('date_birth')->nullable();
+            $table->string('blood_type')->nullable();
             $table->string('photo')->nullable();
             $table->string('ijazah')->nullable();
             $table->string('letter_employee')->nullable();
+            $table->string('letter_statement')->nullable();
+            $table->string('form_registration')->nullable();
             $table->string('letter_health')->nullable();
             $table->string('cv')->nullable();
             $table->string('reason')->nullable();

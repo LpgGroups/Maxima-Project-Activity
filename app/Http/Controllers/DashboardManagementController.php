@@ -66,12 +66,22 @@ class DashboardManagementController extends Controller
             'participants' => $training->participants->count(),
             'date'         => Carbon::parse($training->date)->translatedFormat('d F Y'),
             'date_end'     => Carbon::parse($training->date_end)->translatedFormat('d F Y'),
-            'files'        => $training->approvalFiles->map(function ($file) {
+            'files' => $training->approvalFiles->map(function ($file) {
                 return [
-                    'name' => 'File Persetujuan',
-                    'url'  => $file->file_approval ? asset('storage/' . $file->file_approval) : null,
+                    'id'                    => $file->id,
+                    'file_approval'         => $file->file_approval ? asset('storage/' . $file->file_approval) : null,
+                    'proof_payment'         => $file->proof_payment ? asset('storage/' . $file->proof_payment) : null,
+                    'budget_plan' => $file->budget_plan
+                        ? route('download.confidential', ['type' => 'budget-plan', 'file' => basename($file->budget_plan)])
+                        : null,
+                    'letter_implementation' => $file->letter_implementation
+                        ? route('download.confidential', ['type' => 'letter-implementation', 'file' => basename($file->letter_implementation)])
+                        : null,
+                    'created_at'            => $file->created_at ? $file->created_at->format('d-m-Y H:i') : null,
+                    // bisa tambahkan kolom lain sesuai kebutuhan
                 ];
             }),
+
         ]);
     }
     public function approve(Request $request, $id)
