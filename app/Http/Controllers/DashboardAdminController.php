@@ -337,17 +337,17 @@ class DashboardAdminController extends Controller
             ));
         }
 
-        $managementUsers = User::where('role', 'management')->get();
+        // $managementUsers = User::where('role', 'management')->get();
 
-        foreach ($managementUsers as $manager) {
-            $manager->notify(new TrainingUpdatedNotification(
-                $training,
-                'admin',
-                'Daftar Pelatihan',
-                'Training telah diperbarui oleh Admin. Silakan tinjau.',
-                'info'
-            ));
-        }
+        // foreach ($managementUsers as $manager) {
+        //     $manager->notify(new TrainingUpdatedNotification(
+        //         $training,
+        //         'admin',
+        //         'Daftar Pelatihan',
+        //         'Training telah diperbarui oleh Admin. Silakan tinjau.',
+        //         'info'
+        //     ));
+        // }
 
 
         return response()->json(['success' => true, 'message' => 'Progress berhasil diperbarui.']);

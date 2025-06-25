@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\RegTraining;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class DashboardManagementController extends Controller
 {
@@ -54,7 +56,6 @@ class DashboardManagementController extends Controller
 
     public function showDetail($id)
     {
-        
         $training = RegTraining::with('participants', 'approvalFiles')->findOrFail($id);
 
         return response()->json([
@@ -90,7 +91,6 @@ class DashboardManagementController extends Controller
         $training = RegTraining::findOrFail($id);
         $isfinish = (int) $request->input('isfinish', 0);
 
-
         if ($isfinish === 2 && empty($request->input('reason_fail'))) {
             return response()->json([
                 'success' => false,
@@ -100,16 +100,56 @@ class DashboardManagementController extends Controller
 
         $training->isfinish = $isfinish;
 
-        // Simpan reason_fail jika ditolak
         if ($isfinish === 2) {
             $training->reason_fail = $request->input('reason_fail');
         } else {
-            // kosongkan alasan jika disetujui atau direset
             $training->reason_fail = null;
         }
 
         $training->save();
 
+        // === Kirim Notifikasi WhatsApp ===
+        $phone = $training->phone_pic;
+
+        if (empty($phone) || !is_string($phone)) {
+            Log::warning("WhatsApp not sent: No phone number in reg_training ID {$training->id}");
+        } else {
+            try {
+                $client = new \GuzzleHttp\Client();
+                $response = $client->post('https://app.maxchat.id/api/messages/push', [
+                    'headers' => [
+                        'Authorization' => 'Bearer ' . env('MAXCHAT_TOKEN'),
+                        'Content-Type'  => 'application/json',
+                        'Accept'        => 'application/json',
+                    ],
+                    'json' => [
+                        'to' => $phone,
+                        'msgType' => 'text',
+                        'templateId' => env('MAXCHAT_TEMPLATE'),
+                    ],
+                ]);
+                $status = $response->getStatusCode();
+                $body = json_decode($response->getBody()->getContents(), true);
+                if ($status == 200 && !isset($body['error'])) {
+                    Log::info("SUKSES kirim WA ke $phone (reg_training id: {$training->id}): " . json_encode($body));
+                } else {
+                    Log::error("GAGAL kirim WA ke $phone (reg_training id: {$training->id}): " . json_encode($body));
+                }
+            } catch (\Exception $e) {
+                Log::error("Gagal kirim WhatsApp Maxchat: " . $e->getMessage());
+            }
+        }
+
         return response()->json(['success' => true]);
+    }
+
+    public function getManagementNotifications()
+    {
+        $notifications = Auth::user()->notifications // atau ->unreadNotifications()
+            ->where('type', 'App\Notifications\TrainingUpdatedNotification')
+            ->latest()
+            ->get();
+
+        return view('dashboard.management.notifications', compact('notifications'));
     }
 }

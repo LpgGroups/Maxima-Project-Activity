@@ -93,9 +93,6 @@
                                     <img src="{{ asset('img/svg/success.svg') }}" alt="Success" class="ml-1 w-4 h-4">
                                 @elseif ($training->isfinish == 2)
                                     <img src="{{ asset('img/svg/waiting.svg') }}" alt="Denied" class="ml-1 w-4 h-4">
-                                @else
-                                    <p class="text-zinc-800 text-sm font-semibold">
-                                        {{ $activityMap[$training->activity] ?? 'null' }}</p>
                                 @endif
                             </div>
                             <p class="text-zinc-800 text-xs">{{ $training->name_pic ?? 'null' }} -
