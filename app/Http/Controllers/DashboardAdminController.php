@@ -293,7 +293,7 @@ class DashboardAdminController extends Controller
             'isprogress' => max($currentProgress, $newProgress),
         ]);
 
-        $customMessage = "Selamat, Pelatihan {$training->activity} Telah Disetujui!";
+        $customMessage = "Proses verifikasi berhasil. Pengajuan pelatihan {$training->activity} akan segera ditinjau untuk disetujui.";
 
         // $phone = $training->phone_pic; // Langsung ambil dari reg_training
 
@@ -333,9 +333,22 @@ class DashboardAdminController extends Controller
                 'admin',
                 'Daftar Pelatihan',
                 $customMessage,
-                'success'
+                'verifacc'
             ));
         }
+
+        // $managementUsers = User::where('role', 'management')->get();
+
+        // foreach ($managementUsers as $manager) {
+        //     $manager->notify(new TrainingUpdatedNotification(
+        //         $training,
+        //         'admin',
+        //         'Daftar Pelatihan',
+        //         'Training telah diperbarui oleh Admin. Silakan tinjau.',
+        //         'info'
+        //     ));
+        // }
+
 
         return response()->json(['success' => true, 'message' => 'Progress berhasil diperbarui.']);
     }
@@ -364,5 +377,4 @@ class DashboardAdminController extends Controller
             'message' => 'Peserta berhasil dihapus.'
         ]);
     }
-    
 }

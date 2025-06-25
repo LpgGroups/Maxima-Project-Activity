@@ -114,22 +114,16 @@ function showDetail(id) {
                 html: SwalHTML,
                 icon: "info",
                 showCancelButton: true,
-                showConfirmButton: !isApproved, // tombol setujui hanya muncul kalau isfinish = false
+                showConfirmButton: true,
                 confirmButtonText: "Setujui",
                 confirmButtonColor: "#3085d6",
-                showDenyButton: isApproved, // tombol tolak hanya muncul kalau isfinish = true
+                showDenyButton: true,
                 denyButtonText: "Tolak",
                 denyButtonColor: "#d33",
                 cancelButtonText: "Tutup",
                 allowOutsideClick: () => !Swal.isLoading(),
                 allowEscapeKey: () => !Swal.isLoading(),
                 preConfirm: () => {
-                    if (isApproved) {
-                        Swal.showValidationMessage(
-                            "Data sudah disetujui, tidak bisa mengubah status menjadi setuju lagi."
-                        );
-                        return false;
-                    }
                     const url = `/dashboard/management/approve/${id}`;
                     return fetch(url, {
                         method: "PUT",
@@ -139,11 +133,11 @@ function showDetail(id) {
                                 "content"
                             ),
                         },
-                        body: JSON.stringify({ isfinish: true }),
+                        body: JSON.stringify({ isfinish: 1 }), // nilai 1 = disetujui
                     })
                         .then((res) => {
                             if (!res.ok)
-                                throw new Error("Gagal menyimpan perubahan.");
+                                throw new Error("Gagal menyetujui data.");
                             return res.json();
                         })
                         .catch((err) => {
@@ -151,30 +145,48 @@ function showDetail(id) {
                         });
                 },
                 preDeny: () => {
-                    if (!isApproved) {
-                        Swal.showValidationMessage(
-                            "Data belum disetujui, tidak bisa menolak."
-                        );
-                        return false;
-                    }
-                    const url = `/dashboard/management/approve/${id}`;
-                    return fetch(url, {
-                        method: "PUT",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
-                                "content"
-                            ),
+                    return Swal.fire({
+                        title: "Alasan Penolakan",
+                        input: "textarea",
+                        inputLabel: "Wajib isi alasan mengapa ditolak",
+                        inputPlaceholder: "Tuliskan alasan di sini...",
+                        inputAttributes: {
+                            "aria-label": "Tuliskan alasan di sini",
                         },
-                        body: JSON.stringify({ isfinish: false }),
-                    })
-                        .then((res) => {
-                            if (!res.ok) throw new Error("Gagal menolak data.");
-                            return res.json();
-                        })
-                        .catch((err) => {
-                            Swal.showValidationMessage(err.message);
-                        });
+                        inputValidator: (value) => {
+                            if (!value) {
+                                return "Alasan penolakan wajib diisi!";
+                            }
+                        },
+                        showCancelButton: true,
+                        cancelButtonText: "Batal",
+                        confirmButtonText: "Kirim Penolakan",
+                        confirmButtonColor: "#d33",
+                        preConfirm: (reason) => {
+                            const url = `/dashboard/management/approve/${id}`;
+                            return fetch(url, {
+                                method: "PUT",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                    "X-CSRF-TOKEN": $(
+                                        'meta[name="csrf-token"]'
+                                    ).attr("content"),
+                                },
+                                body: JSON.stringify({
+                                    isfinish: 2,
+                                    reason_fail: reason,
+                                }),
+                            })
+                                .then((res) => {
+                                    if (!res.ok)
+                                        throw new Error("Gagal menolak data.");
+                                    return res.json();
+                                })
+                                .catch((err) => {
+                                    Swal.showValidationMessage(err.message);
+                                });
+                        },
+                    });
                 },
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -185,8 +197,8 @@ function showDetail(id) {
                     ).then(() => location.reload());
                 } else if (result.isDenied) {
                     Swal.fire(
-                        "Ditolak!",
-                        "Data telah ditolak.",
+                        "Data Ditolak!",
+                        "Data telah berhasil ditolak.",
                         "warning"
                     ).then(() => location.reload());
                 }

@@ -84,18 +84,29 @@
                                 @endif
                             </td>
                             <td class="p-1">
-                                @if ($training->isprogress < 5)
-                                    <span
-                                        class="bg-yellow-400 text-black font-semibold text-[10px] px-2 py-[2px] rounded inline-block w-[70px] text-center">
-                                        Menunggu
-                                    </span>
-                                @else
+                                @if ($training->isprogress == 5 && $training->isfinish == 1)
                                     <span
                                         class="bg-green-600 text-white font-semibold text-[10px] px-2 py-[2px] rounded inline-block w-[70px] text-center">
                                         Selesai
                                     </span>
+                                @elseif ($training->isprogress == 5 && $training->isfinish == 2)
+                                    <span
+                                        class="bg-red-600 text-white font-semibold text-[10px] px-2 py-[2px] rounded inline-block w-[70px] text-center">
+                                        Ditolak
+                                    </span>
+                                @elseif ($training->isprogress < 4 && $training->isfinish == 0)
+                                    <span
+                                        class="bg-blue-400 text-white font-semibold text-[10px] px-2 py-[2px] rounded inline-block w-[70px] text-center">
+                                        Proses
+                                    </span>
+                                @else
+                                    <span
+                                        class="bg-yellow-400 text-black font-semibold text-[10px] px-2 py-[2px] rounded inline-block w-[70px] text-center">
+                                        Menunggu
+                                    </span>
                                 @endif
                             </td>
+
                             <td>{{ $training->participants->count() }} peserta</td>
                             <td>
                                 @php

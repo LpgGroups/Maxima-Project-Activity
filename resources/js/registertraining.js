@@ -30,7 +30,7 @@ function showTabs() {
             } else {
                 Swal.fire({
                     icon: "warning",
-                    title: "Link Belum Diisi",
+                    title: "Peserta Belum didaftarkan",
                     text: "Silakan Tambahkan Peserta Minima 1 untuk Melanjutkan Tab Berikutnya.",
                 });
             }

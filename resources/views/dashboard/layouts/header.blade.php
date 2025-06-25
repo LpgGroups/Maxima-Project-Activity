@@ -49,6 +49,7 @@
                                                         'new' => '🔔',
                                                         'update' => '✏️',
                                                         'success' => '🎉',
+                                                        'verifacc' => '✅',
                                                         default => '🔔',
                                                     };
                                                 @endphp

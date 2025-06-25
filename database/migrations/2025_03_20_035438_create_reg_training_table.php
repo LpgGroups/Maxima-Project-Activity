@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('place')->nullable();
             $table->string('reason_fail')->nullable();
             $table->integer('isprogress')->default(0);
-            $table->boolean('isfinish')->default(false);
+            $table->integer('isfinish')->default(0);
             $table->unsignedBigInteger('user_id')->nullable();
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
@@ -36,6 +36,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('reg_training');
+        Schema::table('reg_training', function (Blueprint $table) {
+            $table->boolean('isfinish')->default(false)->change(); // atau sesuai sebelumnya
+        });
     }
 };
