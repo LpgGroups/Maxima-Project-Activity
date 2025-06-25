@@ -54,6 +54,7 @@ class DashboardManagementController extends Controller
 
     public function showDetail($id)
     {
+        
         $training = RegTraining::with('participants', 'approvalFiles')->findOrFail($id);
 
         return response()->json([
