@@ -85,16 +85,19 @@
                 <div class="absolute inset-0 bg-white rounded-lg p-3 flex flex-col justify-between">
                     <div class="flex justify-between items-start">
                         <div>
-                            @if ($training->isfinish == true)
-                                <div class="flex">
+                            <div class="flex items-center">
+                                <p class="text-zinc-800 text-sm font-semibold">
+                                    {{ $activityMap[$training->activity] ?? 'null' }}
+                                </p>
+                                @if ($training->isfinish == 1)
+                                    <img src="{{ asset('img/svg/success.svg') }}" alt="Success" class="ml-1 w-4 h-4">
+                                @elseif ($training->isfinish == 2)
+                                    <img src="{{ asset('img/svg/waiting.svg') }}" alt="Denied" class="ml-1 w-4 h-4">
+                                @else
                                     <p class="text-zinc-800 text-sm font-semibold">
                                         {{ $activityMap[$training->activity] ?? 'null' }}</p>
-                                    <img src="{{ asset('img/svg/success.svg') }}" alt="Success" class="ml-1 w-4 h-4">
-                                </div>
-                            @else
-                                <p class="text-zinc-800 text-sm font-semibold">
-                                    {{ $activityMap[$training->activity] ?? 'null' }}</p>
-                            @endif
+                                @endif
+                            </div>
                             <p class="text-zinc-800 text-xs">{{ $training->name_pic ?? 'null' }} -
                                 {{ $training->name_company ?? '-' }}</p>
                             <p class="text-zinc-800 text-[12px] mt-1">{{ $training->participants->count() }} Peserta</p>
@@ -112,15 +115,27 @@
                                     5 => ['percent' => 100, 'color' => 'bg-green-600'],
                                 ];
 
-                                $progress = $progressMap[$progressValue] ?? [
-                                    'percent' => 0,
-                                    'color' => 'bg-gray-400',
-                                ];
+                                if ($training->isfinish == 2) {
+                                    $progress = [
+                                        'percent' => 100,
+                                        'color' => 'bg-red-600',
+                                        'label' => 'Ditolak',
+                                    ];
+                                } else {
+                                    $map = $progressMap[$progressValue] ?? ['percent' => 0, 'color' => 'bg-gray-400'];
+                                    $progress = [
+                                        'percent' => $map['percent'],
+                                        'color' => $map['color'],
+                                        'label' => $map['percent'] === 100 ? 'Completed' : 'In Progress',
+                                    ];
+                                }
+
                             @endphp
 
                             <div class="text-[10px] text-black font-medium">
-                                {{ $progress['percent'] === 100 ? 'Completed' : 'In Progress' }}
+                                {{ $progress['label'] }}
                             </div>
+
 
                             <div class="relative w-full md:w-24 h-1.5 bg-violet-100 rounded-full mt-1 mb-1">
                                 <div class="absolute top-0 left-0 h-1.5 {{ $progress['color'] }} rounded-full"

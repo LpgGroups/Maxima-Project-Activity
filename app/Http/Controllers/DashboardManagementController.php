@@ -87,12 +87,26 @@ class DashboardManagementController extends Controller
     public function approve(Request $request, $id)
     {
         $training = RegTraining::findOrFail($id);
+        $isfinish = (int) $request->input('isfinish', 0);
 
-        // Baca nilai dari request body
-        $isfinish = $request->input('isfinish', false);
 
-        // Simpan nilai ke database
+        if ($isfinish === 2 && empty($request->input('reason_fail'))) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Alasan penolakan wajib diisi.'
+            ], 422);
+        }
+
         $training->isfinish = $isfinish;
+
+        // Simpan reason_fail jika ditolak
+        if ($isfinish === 2) {
+            $training->reason_fail = $request->input('reason_fail');
+        } else {
+            // kosongkan alasan jika disetujui atau direset
+            $training->reason_fail = null;
+        }
+
         $training->save();
 
         return response()->json(['success' => true]);

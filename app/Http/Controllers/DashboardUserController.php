@@ -153,6 +153,7 @@ class DashboardUserController extends Controller
                 'date' => $date,
                 'progress_percent' => $progress['percent'],
                 'progress_color' => $progress['color'],
+                'isfinish' => (int) $training->isfinish,
                 'isprogress' => (int) $training->isprogress,
 
                 'url' => route('dashboard.form', ['id' => $training->id])

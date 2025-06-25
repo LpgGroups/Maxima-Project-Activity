@@ -44,7 +44,7 @@
                     <a href="#" id="tab3"
                         class="flex justify-center items-center gap-2 text-violet-400 py-2 px-4 bg-gray-400 text-center rounded-r-lg">Submit
                         Data
-                        @if ($training->isprogress == 5)
+                        @if ($training->isfinish == 1)
                             <img src="{{ asset('img/svg/success.svg') }}" alt="Success" class="w-4 h-4">
                         @endif
                     </a>
@@ -544,7 +544,7 @@
                 'text-red-600 border-red-600' =>
                     $training->isprogress != 6 && $training->isprogress != 5,
             ])>
-                @if ($training->isprogress == 6)
+                @if ($training->isfinish == 1)
                     <h3 class="text-xl font-bold mb-2 text-green-600">Halo Sobat Maxima,</h3>
                     <p class="text-[10px] text-gray-700 text-justify">
                         Kami mengucapkan terima kasih atas kerja sama dan perhatian Bapak/Ibu dalam melengkapi
@@ -585,7 +585,7 @@
 
 
             <div class="text-center">
-                @if ($training->isprogress == 6)
+                @if ($training->isfinish == 1)
                     <img class="mt-4 w-[250px] h-[150px] mx-auto" src="/img/complete.png" alt="LPG">
                 @endif
             </div>
