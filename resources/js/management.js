@@ -304,6 +304,36 @@ function applyTrainingFilters() {
         });
     }
 }
+
+function badgedUpdate() {
+    $(".view-detail-btn").each(function () {
+        const btn = this;
+        const trainingId = btn.dataset.id;
+        const updatedAt = btn.dataset.updated;
+
+        const badge = document.querySelector(
+            `.new-badge[data-badge-id="${trainingId}"]`
+        );
+
+        if (!badge) {
+            console.warn(`Badge not found for training ID: ${trainingId}`);
+            return;
+        }
+
+        const lastSeenKey = `training_last_seen_${trainingId}`;
+        const lastSeen = localStorage.getItem(lastSeenKey);
+
+        if (!lastSeen || new Date(updatedAt) > new Date(lastSeen)) {
+            badge.classList.remove("hidden");
+        }
+
+        btn.addEventListener("click", function () {
+            badge.classList.add("hidden");
+            localStorage.setItem(lastSeenKey, updatedAt);
+        });
+    });
+}
+
 $(document).ready(function () {
     $(".view-detail-btn").on("click", function (e) {
         e.preventDefault();
@@ -314,4 +344,5 @@ $(document).ready(function () {
         liveSearch();
     });
     filterSearch();
+    badgedUpdate();
 });

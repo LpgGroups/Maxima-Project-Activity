@@ -72,11 +72,37 @@ class LoginController extends Controller
     public function editUser($id)
     {
         $users = User::findOrFail($id);
-        return view('dashboard.admin.actuser.edit', [
+        return view('dashboard.admin.actuser.edituser', [
             'title' => 'Edit User',
             'users' => $users
         ]);
     }
+
+    public function updateUser(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => "required|email|unique:users,email,{$id}",
+            'phone' => "nullable|numeric|digits_between:10,13|unique:users,phone,{$id}",
+            'company' => 'nullable|string|max:255',
+            'role' => 'required|in:user,admin,management,dev',
+            'is_active' => 'required|boolean',
+        ]);
+
+        $user = User::findOrFail($id);
+
+        $user->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'company' => $request->company,
+            'role' => $request->role,
+            'is_active' => $request->is_active,
+        ]);
+
+        return redirect()->route('users.index')->with('success', 'Data user berhasil diperbarui.');
+    }
+
 
     public function destroyUser($id)
     {

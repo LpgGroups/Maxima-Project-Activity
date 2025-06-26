@@ -145,16 +145,33 @@
                     </div>
                     <div>
                         {{ \Carbon\Carbon::parse($training->updated_at)->translatedFormat('d F Y H:i') }} WIB
+                        <div class="absolute top-[-5px] right-[-5px] z-10 new-badge hidden">
+                            <img src="{{ asset('img/gif/update.gif') }}" alt="New" class="w-4 h-4">
+                        </div>
                     </div>
-                    <div class="flex justify-between items-center text-[12px]">
+                    <div class="flex justify-between items-center text-[12px] relative">
                         <span class="text-violet-400">
                             {{ \Carbon\Carbon::parse($training->date)->translatedFormat('d F Y') }}
                             -
-                            {{ \Carbon\Carbon::parse($training->date_end)->translatedFormat('d F Y') }}</span>
-                        <a href="#" class="text-indigo-600 text-xs view-detail-btn" data-id="{{ $training->id }}">
-                            View Details
-                        </a>
+                            {{ \Carbon\Carbon::parse($training->date_end)->translatedFormat('d F Y') }}
+                        </span>
+
+                        <div class="relative inline-block">
+                            {{-- Badge di atas tombol --}}
+                            <div class="absolute -top-5 right-0 new-badge hidden" data-badge-id="{{ $training->id }}">
+                                <img src="{{ asset('img/gif/update.gif') }}" class="w-6 h-6" />
+                            </div>
+
+                            {{-- Tombol View Details --}}
+                            <a href="#" class="view-detail-btn block" data-id="{{ $training->id }}"
+                                data-updated="{{ $training->updated_at }}">
+                                View Details
+                            </a>
+                        </div>
                     </div>
+
+
+
                 </div>
             </div>
         @endforeach
