@@ -60,42 +60,48 @@
                 <input type="hidden" name="participant_id" id="participant_id">
 
                 {{-- Nama Lengkap --}}
-                <div>
-                    <label for="name" class="block mb-1 font-medium text-gray-700">
+                <div class="relative mt-4 w-full">
+                    <input id="name" name="name" type="text"
+                        class="peer block w-full appearance-none border border-[#515151] bg-transparent px-2.5 py-3 text-sm text-[#515151] rounded-md focus:border-[#1E6E9E] focus:outline-none focus:ring-1 focus:ring-[#1E6E9E] placeholder-transparent"
+                        placeholder="Contoh: Budi Santoso" required />
+                    <label for="name"
+                        class="absolute text-base rounded-lg bg-[#ffffff] text-[#515151] transition-all duration-300 transform -translate-y-4 scale-75 top-3 left-2.5 ml-2 z-10 origin-[0] peer-focus:text-[#1E6E9E] peer-focus:scale-75 peer-focus:-translate-y-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0">
                         Nama Lengkap <span class="text-red-500">*</span>
                     </label>
-                    <input type="text" name="name" id="name" required
-                        class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 px-4 py-2 text-base"
-                        placeholder="Contoh: Budi Santoso" />
                 </div>
+
 
                 {{-- NIK --}}
-                <div>
-                    <label for="nik" class="block mb-1 font-medium text-gray-700">
-                        NIK
+                <div class="relative mt-4 w-full">
+                    <input id="nik" name="nik" type="text"
+                        class="peer block w-full appearance-none border border-[#515151] bg-transparent px-2.5 py-3 text-sm text-[#515151] rounded-md focus:border-[#1E6E9E] focus:outline-none focus:ring-1 focus:ring-[#1E6E9E] placeholder-transparent"
+                        placeholder="Nomor Induk Kependudukan" required />
+                    <label for="nik"
+                        class="absolute text-base rounded-lg bg-[#ffffff] text-[#515151] transition-all duration-300 transform -translate-y-4 scale-75 top-3 left-2.5 ml-2 z-10 origin-[0] peer-focus:text-[#1E6E9E] peer-focus:scale-75 peer-focus:-translate-y-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0">
+                        Nomor Induk Kependudukan <span class="text-red-500">*</span>
                     </label>
-                    <input type="text" name="nik" id="nik"
-                        class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 px-4 py-2 text-base"
-                        placeholder="Nomor Induk Kependudukan" />
                 </div>
+
 
                 {{-- Tanggal Lahir --}}
-                <div>
-                    <label for="date_birth" class="block mb-1 font-medium text-gray-700">
-                        Tanggal Lahir
+                <div class="relative mt-4 w-full">
+                    <input id="date_birth" name="date_birth" type="date"
+                        class="peer block w-full appearance-none border border-[#515151] bg-transparent px-2.5 py-3 text-sm text-[#515151] rounded-md focus:border-[#1E6E9E] focus:outline-none focus:ring-1 focus:ring-[#1E6E9E]"
+                        required />
+                    <label for="date_birth"
+                        class="absolute text-base rounded-lg bg-[#ffffff] text-[#515151] transition-all duration-300 transform -translate-y-4 scale-75 top-3 left-2.5 ml-2 z-10 origin-[0] peer-focus:text-[#1E6E9E] peer-focus:scale-75 peer-focus:-translate-y-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0">
+                        Tanggal Lahir <span class="text-red-500">*</span>
                     </label>
-                    <input type="date" name="date_birth" id="date_birth"
-                        class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 px-4 py-2 text-base"
-                        placeholder="Tanggal Lahir" />
                 </div>
 
-                <div>
-                    <label for="blood_type" class="block mb-1 font-medium text-gray-700">
-                        Golongan Darah
-                    </label>
-                    <select name="blood_type" id="blood_type"
-                        class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 px-4 py-2 text-base">
-                        <option value="">Pilih Golongan Darah</option>
+
+                <div class="relative mt-4 w-full">
+                    <select id="blood_type" name="blood_type"
+                        class="peer block w-full appearance-none border border-[#515151] bg-transparent px-2.5 py-3 text-sm text-[#515151] rounded-md focus:border-[#1E6E9E] focus:outline-none focus:ring-1 focus:ring-[#1E6E9E]"
+                        required>
+                        <option value="" disabled
+                            {{ old('blood_type', $participant->blood_type ?? '') == '' ? 'selected' : '' }}>Pilih Golongan
+                            Darah</option>
                         <option value="A"
                             {{ old('blood_type', $participant->blood_type ?? '') == 'A' ? 'selected' : '' }}>A</option>
                         <option value="B"
@@ -104,14 +110,15 @@
                             {{ old('blood_type', $participant->blood_type ?? '') == 'AB' ? 'selected' : '' }}>AB</option>
                         <option value="O"
                             {{ old('blood_type', $participant->blood_type ?? '') == 'O' ? 'selected' : '' }}>O</option>
-                        <option value="-"
-                            {{ old('blood_type', $participant->blood_type ?? '') == '-' ? 'selected' : '' }}>- / Tidak Tahu
-                        </option>
                     </select>
+                    <label for="blood_type"
+                        class="absolute text-base bg-white text-[#515151] transition-all duration-300 transform scale-75 -translate-y-4 top-3 left-2.5 ml-2 z-10 origin-[0] peer-focus:text-[#1E6E9E] peer-focus:scale-75 peer-focus:-translate-y-4">
+                        Golongan Darah <span class="text-red-500">*</span>
+                    </label>
                 </div>
 
-                {{-- FOTO --}}
 
+                {{-- FOTO --}}
                 <div class="relative file-upload-group mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1" for="photo">Foto</label>
                     <div class="flex items-center gap-2">
@@ -134,7 +141,8 @@
                         <input type="file" name="ijazah" id="ijazah" accept="application/pdf,image/*"
                             class="block w-full text-sm text-gray-600 border border-gray-300 rounded cursor-pointer" />
                         <span class="checkmark hidden">
-                            <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
                                     d="M5 13l4 4L19 7" />
                             </svg>
@@ -309,7 +317,7 @@
                                     data-letter_statement="{{ $participant->letter_statement }}"
                                     data-form_registration="{{ $participant->form_registration }}"
                                     data-letter_health="{{ $participant->letter_health }}"
-                                    data-cv="{{ $participant->cv }}" data-status="{{ $participant->status }}">
+                                    data-blood_type="{{ $participant->blood_type }}">
 
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                         stroke-width="1.5" stroke="currentColor" class="h-5 w-5">
@@ -352,6 +360,7 @@
                 document.getElementById('name').value = btn.getAttribute('data-name');
                 document.getElementById('nik').value = btn.getAttribute('data-nik') ?? '';
                 document.getElementById('date_birth').value = btn.getAttribute('data-date_birth') ?? '';
+                document.getElementById('blood_type').value = btn.getAttribute('data-blood_type') ?? '';
 
                 // Tampilkan pesan jika file sudah ada
                 document.querySelector('.file-info-photo').innerHTML = btn.getAttribute('data-photo') ?
@@ -459,7 +468,6 @@
             submitBtn.textContent = "Kirim";
             submitBtn.classList.remove('bg-yellow-500', 'hover:bg-yellow-600', 'text-white'); // Hapus styling edit
             submitBtn.classList.add('bg-blue-500', 'hover:bg-blue-600', 'text-white'); // Tambahkan styling kirim
-
 
             // Hapus info file
             document.querySelector('.file-info-photo').innerHTML = '';
