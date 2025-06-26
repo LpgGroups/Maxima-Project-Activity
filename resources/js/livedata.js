@@ -63,27 +63,45 @@ function fetchTrainingDataAdmin() {
                     badgeHTML = `<img src="/img/gif/update.gif" alt="Updated" class="w-5 h-3 -mt-3 inline-block">`;
                 }
                 const statusMap = {
-                    waiting: {
-                        label: "Menunggu",
-                        bgColor:
-                            "bg-yellow-400 text-black font-semibold rounded",
-                    },
                     selesai: {
                         label: "Selesai",
                         bgColor:
                             "bg-green-600 text-white font-semibold rounded",
+                    },
+                    menunggu: {
+                        label: "Menunggu",
+                        bgColor:
+                            "bg-yellow-400 text-black font-semibold rounded",
+                    },
+                    ditolak: {
+                        label: "Ditolak",
+                        bgColor: "bg-red-600 text-white font-semibold rounded",
+                    },
+                    proses: {
+                        label: "Diproses",
+                        bgColor: "bg-blue-400 text-white font-semibold rounded",
                     },
                 };
 
                 let statusText = "";
                 let statusBgClass = "";
 
-                if ([1, 2, 3, 4].includes(training.isprogress)) {
-                    statusText = statusMap.waiting.label;
-                    statusBgClass = statusMap.waiting.bgColor;
-                } else if (training.isprogress === 5) {
+                const isprogress = Number(training.isprogress);
+                const isFinish = Number(training.isfinish);
+                console.log("isprogress:", isprogress, "isfinish:", isFinish);
+                console.log("index:", training);
+                if (isprogress === 5 && isFinish === 1) {
                     statusText = statusMap.selesai.label;
                     statusBgClass = statusMap.selesai.bgColor;
+                } else if (isprogress === 5 && isFinish === 0) {
+                    statusText = statusMap.menunggu.label;
+                    statusBgClass = statusMap.menunggu.bgColor;
+                } else if (isprogress === 5 && isFinish === 2) {
+                    statusText = statusMap.ditolak.label;
+                    statusBgClass = statusMap.ditolak.bgColor;
+                } else if ([1, 2, 3, 4].includes(isprogress)) {
+                    statusText = statusMap.proses.label;
+                    statusBgClass = statusMap.proses.bgColor;
                 } else {
                     statusText = "Unknown";
                     statusBgClass =
@@ -104,13 +122,6 @@ function fetchTrainingDataAdmin() {
                             <span class="${statusBgClass} text-[10px] px-2 py-[2px] rounded inline-block w-[70px] text-center truncate">
                                 ${statusText}
                             </span>
-                            ${
-                                ["true", true, 1, "1"].includes(
-                                    training.isfinish
-                                )
-                                    ? `<img src="/img/svg/success.svg" alt="Success" class="w-4 h-4 absolute top-1 right-1">`
-                                    : ""
-                            }
                         </td>
                         <td class="max-w-[160px] truncate whitespace-nowrap" title="${formattedDate}">${formattedDate}</td>
                         <td>
