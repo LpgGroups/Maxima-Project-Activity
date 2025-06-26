@@ -81,7 +81,7 @@
     <div class="space-y-4">
 
         @foreach ($data as $training)
-            <div class="training-card w-full h-[120px] bg-green-500 rounded-lg shadow-md relative overflow-hidden">
+            <div class="training-card w-full h-[150px] bg-green-500 rounded-lg shadow-md relative overflow-hidden">
                 <div class="absolute inset-0 bg-white rounded-lg p-3 flex flex-col justify-between">
                     <div class="flex justify-between items-start">
                         <div>
@@ -142,6 +142,9 @@
                             <div class="text-[10px] text-neutral-600">{{ $progress['percent'] }}%</div>
 
                         </div>
+                    </div>
+                    <div>
+                        {{ \Carbon\Carbon::parse($training->updated_at)->translatedFormat('d F Y H:i') }} WIB
                     </div>
                     <div class="flex justify-between items-center text-[12px]">
                         <span class="text-violet-400">

@@ -88,8 +88,6 @@ function fetchTrainingDataAdmin() {
 
                 const isprogress = Number(training.isprogress);
                 const isFinish = Number(training.isfinish);
-                console.log("isprogress:", isprogress, "isfinish:", isFinish);
-                console.log("index:", training);
                 if (isprogress === 5 && isFinish === 1) {
                     statusText = statusMap.selesai.label;
                     statusBgClass = statusMap.selesai.bgColor;

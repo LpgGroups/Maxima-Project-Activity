@@ -34,6 +34,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/dashboard/admin/training/alltraining', [DashboardAdminController::class, 'trainingAll'])->name('admin.training.alltraining');
         Route::get('/dashboard/admin', [DashboardAdminController::class, 'index'])->name('dashboard.admin.index');
         Route::get('/dashboard/admin/training/{id}', [DashboardAdminController::class, 'show'])->name('dashboard.admin.training.show');
+        Route::get('/dashboard/admin/users', [LoginController::class, 'userList'])->name('users.index');
+        Route::get('/dashboard/admin/users/{id}/edit', [LoginController::class, 'editUser'])->name('users.edit');
+        Route::delete('/dashboard/admin/users/{id}', [LoginController::class, 'destroyUser'])->name('users.destroy');
         // Rute untuk memperbarui data training menggunakan POST
         Route::post('/dashboard/admin/training/{id}/update', [DashboardAdminController::class, 'update'])->name('dashboard.training.update');
         Route::post('/dashboard/admin/training/{id}/update2', [DashboardAdminController::class, 'updateFrom2'])->name('dashboard.training.update2');
