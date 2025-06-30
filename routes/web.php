@@ -8,6 +8,7 @@ use App\Http\Middleware\UserAccess;
 use App\Http\Controllers\DashboardUserController;
 use App\Http\Controllers\FileDownloadController;
 use App\Http\Controllers\ForgotPasswordController;
+use App\Http\Controllers\MonitoringController;
 use App\Http\Controllers\RegTrainingController;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
@@ -36,7 +37,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/dashboard/admin/training/{id}', [DashboardAdminController::class, 'show'])->name('dashboard.admin.training.show');
         Route::get('/dashboard/admin/users', [LoginController::class, 'userList'])->name('users.index');
         Route::get('/dashboard/admin/users/{id}/edit', [LoginController::class, 'editUser'])->name('users.edit');
-
         Route::put('/dashboard/admin/users/{id}', [LoginController::class, 'updateUser'])->name('users.update');
 
         Route::delete('/dashboard/admin/users/{id}', [LoginController::class, 'destroyUser'])->name('users.destroy');
@@ -90,6 +90,11 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/dashboard/management/approve/{id}', [DashboardManagementController::class, 'approve']);
     });
 
+    Route::prefix('dashboard/monitoring')->middleware(['auth'])->group(function () {
+    Route::get('/', [MonitoringController::class, 'index'])->name('monitoring.index');
+    Route::get('/{id}', [MonitoringController::class, 'show'])->name('monitoring.show');
+});
+   
     Route::get('/notification', function () {
         $user = Auth::user();
         $notifications = $user->notifications->sortByDesc('created_at');
