@@ -73,6 +73,7 @@ class RegisterController extends Controller
             'phone' => $phone,
             'password' => Hash::make($request->password),
             'role' => 'user',
+            'is_active' => true,
         ]);
 
         return redirect()->route('register')->with('success', 'Berhasil mendaftarkan akun! Silakan login.');

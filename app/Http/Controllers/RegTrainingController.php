@@ -215,20 +215,19 @@ class RegTrainingController extends Controller
         // Validasi awal supaya bisa load training
         $request->validate([
             'name'              => 'required|string|max:255',
-            'nik'               => 'nullable|string|min:16|max:20',
+            'nik'               => 'nullable|string|min:16|max:16',
             'date_birth'        => 'nullable|date',
             'blood_type'        => 'nullable|in:A,B,AB,O,-',
             'photo'             => 'nullable|file|image|max:2048',
-            'ijazah'            => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
-            'letter_employee'   => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
-            'letter_health'     => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
-            'cv'                => 'nullable|file|mimes:pdf,doc,docx|max:2048',
+            'ijazah'            => 'nullable|file|mimes:pdf|max:2048',
+            'letter_employee'   => 'nullable|file|mimes:pdf|max:2048',
+            'letter_health'     => 'nullable|file|mimes:pdf|max:2048',
+            'cv'                => 'nullable|file|mimes:pdf|max:2048',
             'reason'            => 'nullable|string',
             'form_id'           => 'required|exists:reg_training,id',
             'participant_id'    => 'nullable|exists:reg_participants,id',
         ]);
 
-        // Ambil data training
         $training = RegTraining::findOrFail($request->form_id);
 
         $trainingDate = \Carbon\Carbon::parse($training->training_date ?? $training->date ?? $training->start_date);
@@ -335,17 +334,17 @@ class RegTrainingController extends Controller
         $training = RegTraining::where('id', $request->file_id)->firstOrFail();
         $record = FileRequirement::where('file_id', $request->file_id)->first();
 
-        // Siapkan nama file
+      
         $nameCompany = Str::slug($training->name_company ?? 'Company', '_');
         $nameTraining = Str::slug($training->activity ?? 'Training', '_');
 
-        // Default path dari database jika sudah ada
+       
         $fileApprovalPath = $record->file_approval ?? null;
         $proofPaymentPath = $record->proof_payment ?? null;
 
-        // Simpan file MoU (file_approval)
+        
         if ($request->hasFile('file_approval')) {
-            // Hapus file lama jika ada
+          
             if ($record && $record->file_approval) {
                 Storage::disk('public')->delete($record->file_approval);
             }
@@ -353,7 +352,7 @@ class RegTrainingController extends Controller
             $fileApprovalPath = $request->file('file_approval')->storeAs('uploads/fileapproval', $fileName, 'public');
         }
 
-        // Simpan file Bukti Pembayaran (proof_payment)
+      
         if ($request->hasFile('proof_payment')) {
             // Hapus file lama jika ada
             if ($record && $record->proof_payment) {
@@ -363,7 +362,7 @@ class RegTrainingController extends Controller
             $proofPaymentPath = $request->file('proof_payment')->storeAs('uploads/proofpayment', $proofName, 'public');
         }
 
-        // Simpan atau update ke table file_requirement
+      
         if ($record) {
             $record->update([
                 'file_approval' => $fileApprovalPath,
@@ -377,7 +376,7 @@ class RegTrainingController extends Controller
             ]);
         }
 
-        // ✅ Update progress training (minimal tetap 4)
+      
         $training->isprogress = max($training->isprogress, 4);
         $training->save();
 
