@@ -217,7 +217,7 @@ class RegTrainingController extends Controller
             'name'              => 'required|string|max:255',
             'nik'               => 'nullable|string|min:16|max:16',
             'date_birth'        => 'nullable|date',
-            'blood_type'        => 'nullable|in:A,B,AB,O,-',
+            'blood_type'        => 'nullable|in:A-,B-,AB-,O-,A+,B+,AB+,O+,-',
             'photo'             => 'nullable|file|image|max:2048',
             'ijazah'            => 'nullable|file|mimes:pdf|max:2048',
             'letter_employee'   => 'nullable|file|mimes:pdf|max:2048',
@@ -334,17 +334,17 @@ class RegTrainingController extends Controller
         $training = RegTraining::where('id', $request->file_id)->firstOrFail();
         $record = FileRequirement::where('file_id', $request->file_id)->first();
 
-      
+
         $nameCompany = Str::slug($training->name_company ?? 'Company', '_');
         $nameTraining = Str::slug($training->activity ?? 'Training', '_');
 
-       
+
         $fileApprovalPath = $record->file_approval ?? null;
         $proofPaymentPath = $record->proof_payment ?? null;
 
-        
+
         if ($request->hasFile('file_approval')) {
-          
+
             if ($record && $record->file_approval) {
                 Storage::disk('public')->delete($record->file_approval);
             }
@@ -352,7 +352,7 @@ class RegTrainingController extends Controller
             $fileApprovalPath = $request->file('file_approval')->storeAs('uploads/fileapproval', $fileName, 'public');
         }
 
-      
+
         if ($request->hasFile('proof_payment')) {
             // Hapus file lama jika ada
             if ($record && $record->proof_payment) {
@@ -362,7 +362,7 @@ class RegTrainingController extends Controller
             $proofPaymentPath = $request->file('proof_payment')->storeAs('uploads/proofpayment', $proofName, 'public');
         }
 
-      
+
         if ($record) {
             $record->update([
                 'file_approval' => $fileApprovalPath,
@@ -376,7 +376,7 @@ class RegTrainingController extends Controller
             ]);
         }
 
-      
+
         $training->isprogress = max($training->isprogress, 4);
         $training->save();
 

@@ -10,7 +10,7 @@
                     <thead class="bg-gray-100">
                         <tr>
                             <th class="px-4 py-2">#</th>
-                            <th class="px-4 py-2">ID Training</th> {{-- ← Tambahan --}}
+                            <th class="px-4 py-2">ID Training</th>
                             <th class="px-4 py-2">Training</th>
                             <th class="px-4 py-2">User/Admin</th>
                             <th class="px-4 py-2">Dilihat</th>

@@ -102,14 +102,22 @@
                         <option value="" disabled
                             {{ old('blood_type', $participant->blood_type ?? '') == '' ? 'selected' : '' }}>Pilih Golongan
                             Darah</option>
-                        <option value="A"
-                            {{ old('blood_type', $participant->blood_type ?? '') == 'A' ? 'selected' : '' }}>A</option>
-                        <option value="B"
-                            {{ old('blood_type', $participant->blood_type ?? '') == 'B' ? 'selected' : '' }}>B</option>
-                        <option value="AB"
-                            {{ old('blood_type', $participant->blood_type ?? '') == 'AB' ? 'selected' : '' }}>AB</option>
-                        <option value="O"
-                            {{ old('blood_type', $participant->blood_type ?? '') == 'O' ? 'selected' : '' }}>O</option>
+                        <option value="A-"
+                            {{ old('blood_type', $participant->blood_type ?? '') == 'A-' ? 'selected' : '' }}>A-</option>
+                        <option value="B-"
+                            {{ old('blood_type', $participant->blood_type ?? '') == 'B-' ? 'selected' : '' }}>B-</option>
+                        <option value="AB-"
+                            {{ old('blood_type', $participant->blood_type ?? '') == 'AB-' ? 'selected' : '' }}>AB-</option>
+                        <option value="O-"
+                            {{ old('blood_type', $participant->blood_type ?? '') == 'O-' ? 'selected' : '' }}>O-</option>
+                        <option value="A+"
+                            {{ old('blood_type', $participant->blood_type ?? '') == 'A+' ? 'selected' : '' }}>A+</option>
+                        <option value="B+"
+                            {{ old('blood_type', $participant->blood_type ?? '') == 'B+' ? 'selected' : '' }}>B+</option>
+                        <option value="AB+"
+                            {{ old('blood_type', $participant->blood_type ?? '') == 'AB+' ? 'selected' : '' }}>AB+</option>
+                        <option value="O+"
+                            {{ old('blood_type', $participant->blood_type ?? '') == 'O+' ? 'selected' : '' }}>O+</option>
                     </select>
                     <label for="blood_type"
                         class="absolute text-base bg-white text-[#515151] transition-all duration-300 transform scale-75 -translate-y-4 top-3 left-2.5 ml-2 z-10 origin-[0] peer-focus:text-[#1E6E9E] peer-focus:scale-75 peer-focus:-translate-y-4">
@@ -120,7 +128,8 @@
 
                 {{-- FOTO --}}
                 <div class="relative file-upload-group mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-1" for="photo">Foto</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-1" for="photo">Foto<span
+                            class="text-red-500">*</span></label>
                     <div class="flex items-center gap-2">
                         <input type="file" name="photo" id="photo" accept="image/*"
                             class="block w-full text-sm text-gray-600 border border-gray-300 rounded cursor-pointer" />
@@ -136,7 +145,8 @@
 
                 {{-- IJAZAH --}}
                 <div class="relative file-upload-group mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-1" for="ijazah">Ijazah (PDF)</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-1" for="ijazah">Ijazah (PDF)<span
+                            class="text-red-500">*</span></label>
                     <div class="flex items-center gap-2">
                         <input type="file" name="ijazah" id="ijazah" accept="application/pdf,image/*"
                             class="block w-full text-sm text-gray-600 border border-gray-300 rounded cursor-pointer" />
@@ -152,10 +162,10 @@
                     <div class="file-info-ijazah mt-1 text-xs text-green-700"></div>
                 </div>
 
-                {{-- SURAT KARYAWAN --}}
+                {{-- SURAT Keterangan KARYAWAN --}}
                 <div class="relative file-upload-group mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1" for="letter_employee">Surat Keterangan
-                        Kerja (PDF)</label>
+                        Kerja (PDF)<span class="text-red-500">*</span></label>
                     <div class="flex items-center gap-2">
                         <input type="file" name="letter_employee" id="letter_employee"
                             accept="application/pdf,image/*"
@@ -169,13 +179,20 @@
                         </span>
                     </div>
                     <p class="mt-1 text-xs text-gray-500">Format file: PDF (maksimal 2MB)</p>
+                    <p class="mt-1 text-xs text-gray-500">
+                        Download Template ini Jika <strong>Belum Bekerja</strong>
+                        <a href="http://maximagroup.co.id/wp-content/uploads/2025/07/SURAT-KETERANGAN-BELUM-BEKERJA-JIKA-BELUM-BEKERJA.pdf"
+                            download class="text-blue-600 underline ml-2" target="_blank">
+                            Download Template
+                        </a>
+                    </p>
                     <div class="file-info-letter_employee mt-1 text-xs text-green-700"></div>
                 </div>
 
                 {{-- Surat Pernyataan --}}
                 <div class="relative file-upload-group mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1" for="letter_statement">Surat Pernyataan
-                        (PDF)</label>
+                        (PDF)<span class="text-red-500">*</span></label>
                     <div class="flex items-center gap-2">
                         <input type="file" name="letter_statement" id="letter_statement"
                             accept="application/pdf,image/*"
@@ -191,7 +208,7 @@
                     <p class="mt-1 text-xs text-gray-500">Format file: PDF (maksimal 2MB)</p>
                     <p class="mt-1 text-xs text-gray-500">
                         Template Surat Pernyataan
-                        <a href="http://maximagroup.co.id/wp-content/uploads/2025/06/01-Formulir-Pendaftaran-2025.pdf"
+                        <a href=" http://maximagroup.co.id/wp-content/uploads/2025/07/Template-Pernyataan-Pilih-sesuai-Pelatihan-yang-di-ikuti.zip"
                             download class="text-blue-600 underline ml-2" target="_blank">
                             Download Template
                         </a>
@@ -202,7 +219,7 @@
                 {{-- Form-Registration --}}
                 <div class="relative file-upload-group mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1" for="form_registration">Formulir
-                        Pendaftaran (PDF)</label>
+                        Pendaftaran (PDF)<span class="text-red-500">*</span></label>
                     <div class="flex items-center gap-2">
                         <input type="file" name="form_registration" id="form_registration"
                             accept="application/pdf,image/*"
@@ -218,7 +235,7 @@
                     <p class="mt-1 text-xs text-gray-500">Format file: PDF (maksimal 2MB)</p>
                     <p class="mt-1 text-xs text-gray-500">
                         Template Formulir Pendaftaran
-                        <a href="http://maximagroup.co.id/wp-content/uploads/2025/06/Template-Surat-Pernyataan.zip"
+                        <a href="http://maximagroup.co.id/wp-content/uploads/2025/07/FORM-ADM-01-Formulir-Pendaftaran-2025.pdf"
                             download class="text-blue-600 underline ml-2" target="_blank">
                             Download Template
                         </a>
@@ -229,7 +246,7 @@
                 {{-- SURAT SEHAT --}}
                 <div class="relative file-upload-group mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1" for="letter_health">Surat Keterangan Sehat
-                        (PDF)</label>
+                        (PDF)<span class="text-red-500">*</span></label>
                     <div class="flex items-center gap-2">
                         <input type="file" name="letter_health" id="letter_health" accept="application/pdf,image/*"
                             class="block w-full text-sm text-gray-600 border border-gray-300 rounded cursor-pointer" />
@@ -246,23 +263,26 @@
                 </div>
 
                 {{-- CV --}}
-                <div class="relative file-upload-group mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-1" for="cv">CV (PDF/DOC/DOCX)</label>
-                    <div class="flex items-center gap-2">
-                        <input type="file" name="cv" id="cv" accept="application/pdf,.doc,.docx"
-                            class="block w-full text-sm text-gray-600 border border-gray-300 rounded cursor-pointer" />
-                        <span class="checkmark hidden">
-                            <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
-                                    d="M5 13l4 4L19 7" />
-                            </svg>
-                        </span>
+                @if ($training->activity == 'AK3U')
+                    {{-- CV --}}
+                    <div class="relative file-upload-group mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-1" for="cv">CV (PDF/DOC/DOCX)<span
+                                class="text-red-500">*</span></label>
+                        <div class="flex items-center gap-2">
+                            <input type="file" name="cv" id="cv" accept="application/pdf,.doc,.docx"
+                                class="block w-full text-sm text-gray-600 border border-gray-300 rounded cursor-pointer" />
+                            <span class="checkmark hidden">
+                                <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                                        d="M5 13l4 4L19 7" />
+                                </svg>
+                            </span>
+                        </div>
+                        <p class="mt-1 text-xs text-gray-500">Format file: PDF/DOC/DOCX (maksimal 2MB)</p>
+                        <div class="file-info-cv mt-1 text-xs text-green-700"></div>
                     </div>
-                    <p class="mt-1 text-xs text-gray-500">Format file: PDF/DOC/DOCX (maksimal 2MB)</p>
-                    <div class="file-info-cv mt-1 text-xs text-green-700"></div>
-                </div>
-
+                @endif
 
                 <div class="relative">
                     <button type="submit" id="form-submit-btn"
@@ -411,7 +431,7 @@
                 } else {
                     console.warn("Tidak ketemu tombol edit-btn dengan data-id:", window.participantIdEdit);
                 }
-            }, 100); // 100ms delay to ensure DOM rendered
+            }, 100);
         }
 
         document.addEventListener('DOMContentLoaded', function() {
