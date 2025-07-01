@@ -30,8 +30,8 @@ function showTabs() {
             } else {
                 Swal.fire({
                     icon: "warning",
-                    title: "Peserta Belum didaftarkan",
-                    text: "Silakan Tambahkan Peserta Minima 1 untuk Melanjutkan Tab Berikutnya.",
+                    title: "Peserta Belum Didaftarkan",
+                    text: "Silakan Tambahkan Peserta Minimal 1 untuk Melanjutkan Tab Berikutnya.",
                 });
             }
         });
@@ -177,7 +177,6 @@ function sendForm3() {
         },
         error: function (xhr) {
             if (xhr.status === 422) {
-                
                 var errors = xhr.responseJSON.errors;
                 var messages = [];
 
@@ -340,6 +339,31 @@ function checkSubmitBtnDeadline() {
         }
     });
 }
+function checkBtnSendForm3() {
+    const fileApprovalInput = document.getElementById("file_approval");
+    const proofPaymentInput = document.getElementById("proof_payment");
+    const submitBtn = $("#submitBtnForm3"); // pakai jQuery
+    function checkFilesSelected() {
+        if (
+            fileApprovalInput.files.length > 0 ||
+            proofPaymentInput.files.length > 0
+        ) {
+            submitBtn.prop("disabled", false);
+            submitBtn
+                .removeClass("bg-gray-400 cursor-not-allowed")
+                .addClass("bg-blue-500 hover:bg-blue-600 cursor-pointer");
+        } else {
+            submitBtn.prop("disabled", true);
+            submitBtn
+                .removeClass("bg-blue-500 hover:bg-blue-600 cursor-pointer")
+                .addClass("bg-gray-400 cursor-not-allowed");
+        }
+    }
+
+    fileApprovalInput.addEventListener("change", checkFilesSelected);
+    proofPaymentInput.addEventListener("change", checkFilesSelected);
+    checkFilesSelected(); // initial call
+}
 
 // function send data
 $(document).ready(function () {
@@ -355,4 +379,5 @@ $(document).ready(function () {
         e.preventDefault(); // Mencegah form submit default
         sendForm3(); // Panggil fungsi sendForm2 saat tombol diklik
     });
+    checkBtnSendForm3();
 });

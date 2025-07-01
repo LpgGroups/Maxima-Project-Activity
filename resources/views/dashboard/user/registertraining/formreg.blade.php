@@ -237,8 +237,6 @@
                     Aksara Jaya
                     Utama</p>
 
-
-
                 <a href="{{ route('dashboard.addparticipant', ['form_id' => $training->id]) }}"
                     class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm px-5 py-2 rounded-lg shadow-md transition duration-200 ease-in-out mt-4 mb-2">
                     Tambah Peserta
@@ -246,60 +244,67 @@
 
                 <div class="sm:w-full w-full h-auto bg-white rounded-2xl shadow-2xl p-4 sm:mb-0">
                     <div class="rounded-2xl w-full">
-                        <table class="table-auto w-full text-center align-middle border-separate border-spacing-y-1">
-                            <thead>
-                                <tr class="bg-slate-600 lg:text-sm text-white text-[10px]">
-                                    <th class="rounded-l-lg">No</th>
-                                    <th>Nama</th>
-                                    <th>NIK</th>
-                                    <th>Status</th>
-                                    <th>Reason</th>
-                                    <th class="rounded-r-lg">Detail</th>
-                                </tr>
-                            </thead>
-                            <tbody class="lg:text-[14px] text-[10px]">
-                                @foreach ($training->participants as $i => $participant)
-                                    <tr class="{{ $i % 2 === 0 ? 'bg-white' : 'bg-gray-100' }}">
-                                        <td class="py-2">{{ $i + 1 }}</td>
-                                        <td class="max-w-[100px] truncate whitespace-nowrap py-2">{{ $participant->name }}
-                                        </td>
-                                        <td class="max-w-[100px] truncate whitespace-nowrap py-2">{{ $participant->nik }}
-                                        </td>
-                                        <td class="max-w-[100px] truncate whitespace-nowrap py-2">
-                                            @php
-                                                $status = $participant->status;
-                                                $statusText = [
-                                                    0 => 'Pending',
-                                                    1 => 'Sukses',
-                                                    2 => 'Ditolak',
-                                                ];
-                                                $statusClass = [
-                                                    0 => 'bg-yellow-200 text-yellow-800',
-                                                    1 => 'bg-green-200 text-green-800',
-                                                    2 => 'bg-red-200 text-red-800',
-                                                ];
-                                            @endphp
-
-                                            <span
-                                                class="px-2 py-1 rounded text-sm font-medium {{ $statusClass[$status] ?? 'bg-gray-200 text-gray-800' }}">
-                                                {{ $statusText[$status] ?? 'Tidak Diketahui' }}
-                                            </span>
-                                        </td>
-
-                                        <td class="py-2">{{ $participant->reason ?? '-' }}</td>
-                                        <td class="py-2">
-                                            <a href="{{ route('dashboard.addparticipant', ['form_id' => $trainingId]) }}?participant_id={{ $participant->id }}"
-                                                class="bg-blue-500 text-white px-3 py-1 rounded text-xs hover:bg-blue-600">
-                                                Detail
-                                            </a>
-                                        </td>
+                        {{-- Scroll container --}}
+                        <div class="max-h-[500px] overflow-y-auto">
+                            <table class="table-auto w-full text-center align-middle border-separate border-spacing-y-1">
+                                <thead>
+                                    <tr class="bg-slate-600 lg:text-sm text-white text-[10px]">
+                                        <th class="rounded-l-lg">No</th>
+                                        <th>Nama</th>
+                                        <th>NIK</th>
+                                        <th>Status</th>
+                                        <th>Reason</th>
+                                        <th class="rounded-r-lg">Detail</th>
                                     </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-
+                                </thead>
+                                <tbody class="lg:text-[14px] text-[10px]">
+                                    @forelse ($training->participants as $i => $participant)
+                                        <tr class="{{ $i % 2 === 0 ? 'bg-white' : 'bg-gray-100' }}">
+                                            <td class="py-2">{{ $i + 1 }}</td>
+                                            <td class="max-w-[100px] truncate whitespace-nowrap py-2">
+                                                {{ $participant->name }}</td>
+                                            <td class="max-w-[100px] truncate whitespace-nowrap py-2">
+                                                {{ $participant->nik }}</td>
+                                            <td class="max-w-[100px] truncate whitespace-nowrap py-2">
+                                                @php
+                                                    $status = $participant->status;
+                                                    $statusText = [
+                                                        0 => 'Pending',
+                                                        1 => 'Sukses',
+                                                        2 => 'Ditolak',
+                                                    ];
+                                                    $statusClass = [
+                                                        0 => 'bg-yellow-200 text-yellow-800',
+                                                        1 => 'bg-green-200 text-green-800',
+                                                        2 => 'bg-red-200 text-red-800',
+                                                    ];
+                                                @endphp
+                                                <span
+                                                    class="px-2 py-1 rounded text-sm font-medium {{ $statusClass[$status] ?? 'bg-gray-200 text-gray-800' }}">
+                                                    {{ $statusText[$status] ?? 'Tidak Diketahui' }}
+                                                </span>
+                                            </td>
+                                            <td class="py-2">{{ $participant->reason ?? '-' }}</td>
+                                            <td class="py-2">
+                                                <a href="{{ route('dashboard.addparticipant', ['form_id' => $trainingId]) }}?participant_id={{ $participant->id }}"
+                                                    class="bg-blue-500 text-white px-3 py-1 rounded text-xs hover:bg-blue-600">
+                                                    Detail
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="6" class="text-center py-4 text-gray-500">
+                                                Data peserta belum tersedia. Silakan tambahkan peserta terlebih dahulu.
+                                            </td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
+
 
                 <div class="flex">
                     <div class="flex justify-end gap-x-2 w-full items-end max-w-[1920px] p-4">
@@ -539,11 +544,22 @@
 
             <div @class([
                 'w-auto h-auto rounded-[20px] p-4 border-2',
-                'text-green-600 border-green-600' => $training->isprogress == 6,
-                'text-yellow-600 border-yellow-600' => $training->isprogress == 5,
+            
+                // kondisi khusus: isprogress 5 dan isfinish 2 -->merah
                 'text-red-600 border-red-600' =>
+                    $training->isprogress == 5 && $training->isfinish == 2,
+            
+                // kondisi lain
+                'text-green-600 border-green-600' =>
+                    $training->isprogress == 6 && $training->isfinish != 2,
+                'text-yellow-600 border-yellow-600' =>
+                    $training->isprogress == 5 && $training->isfinish != 2,
+            
+                // default merah kalau bukan progress 5 atau 6
+                'text-red-500 border-red-500' =>
                     $training->isprogress != 6 && $training->isprogress != 5,
             ])>
+
                 @if ($training->isfinish == 1)
                     <h3 class="text-xl font-bold mb-2 text-green-600">Halo Sobat Maxima,</h3>
                     <p class="text-[10px] text-gray-700 text-justify">
@@ -560,6 +576,20 @@
                         Hormat kami,
                         <br>
                         Maxima Group
+                    </p>
+                @elseif ($training->isfinish == 2)
+                    <h3 class="text-xl font-bold mb-2 text-red-600">Pelatihan Ditolak</h3>
+                    <p class="text-[10px] text-gray-700 text-justify">
+                        Mohon maaf, pengajuan pelatihan ini <strong>tidak dapat dilanjutkan</strong>.<br><br>
+
+                        <strong>Alasan penolakan:</strong><br>
+                        <span class="text-red-600 italic">
+                            {{ $training->reason_fail ?? 'Tidak ada alasan yang tersedia.' }}
+                        </span>
+
+                        <br><br>
+                        Jika Anda merasa ada kekeliruan atau memiliki pertanyaan lebih lanjut, silakan hubungi tim Maxima
+                        untuk klarifikasi.
                     </p>
                 @elseif ($training->isprogress == 5)
                     <h3 class="text-xl font-bold mb-2 text-yellow-600">Menunggu Persetujuan</h3>
@@ -580,31 +610,29 @@
                         <li>PIC diharapkan Mengupload kembali MoU dan Quotation yang telah ditanda tangan.</li>
                     </ul>
                 @endif
-            </div>
+    </div>
 
+    <div class="text-center">
+        @if ($training->isfinish == 1)
+            <img class="mt-4 w-[250px] h-[150px] mx-auto" src="/img/complete.png" alt="LPG">
+        @endif
+    </div>
 
+    <div class="mt-4 flex gap-x-1">
+        <!-- Previous Button -->
+        <button type="button" id="prevBtnForm3"
+            class="bg-gray-500 text-white px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-400">
+            Sebelumnya
+        </button>
 
-            <div class="text-center">
-                @if ($training->isfinish == 1)
-                    <img class="mt-4 w-[250px] h-[150px] mx-auto" src="/img/complete.png" alt="LPG">
-                @endif
-            </div>
-
-            <div class="mt-4 flex gap-x-1">
-                <!-- Previous Button -->
-                <button type="button" id="prevBtnForm3"
-                    class="bg-gray-500 text-white px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-400">
-                    Sebelumnya
-                </button>
-
-                <!-- Next Button -->
-                <button type="button" id="submitBtnForm3"
-                    class="bg-blue-500 text-white px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    data-training-date="{{ $training->date }}">
-                    Simpan Data
-                </button>
-            </div>
-        </aside>
+        <!-- Next Button -->
+        <button type="button" id="submitBtnForm3"
+            class="bg-gray-400 text-white px-4 py-2 rounded-md cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-400"
+            data-training-date="{{ $training->date }}" disabled>
+            Simpan Data
+        </button>
+    </div>
+    </aside>
 
 
     </div>
