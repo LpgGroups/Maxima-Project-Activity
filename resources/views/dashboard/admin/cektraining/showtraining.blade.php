@@ -63,6 +63,19 @@
                         <div class="text-red-500 text-sm mt-1 z-10">{{ $message }}</div>
                     @enderror
                 </div>
+                @if ($training->isfinish == 2)
+                    <div class="border border-red-500 h-30 w-[300px] rounded-lg p-2">
+                        <h3 class="text-xl font-bold mb-2 text-red-600 text-center">Pelatihan Ditolak</h3>
+                        <p class="text-[10px] text-gray-700 text-justify">
+                            Mohon maaf, pengajuan pelatihan ini <strong>tidak dapat dilanjutkan</strong>.
+                            <br><br>
+                            <strong>Alasan penolakan:</strong><br>
+                            <span class="text-red-600 italic">
+                                {{ $training->reason_fail ?? 'Tidak ada alasan yang tersedia.' }}
+                            </span>
+                        </p>
+                    </div>
+                @endif
             </div>
 
             <div class="flex gap-x-4 mt-2">
@@ -115,6 +128,7 @@
                             value="{{ old('end_date', \Carbon\Carbon::parse($training->date_end)->format('Y-m-d')) }}"
                             class="border border-gray-300 rounded-md px-3 py-2 text-sm w-28 bg-gray-100 text-gray-700" />
                     </div>
+
                 </div>
 
             </div>
@@ -454,7 +468,8 @@
                 <input type="checkbox" id="confirmEdit3"
                     class="h-5 w-5 appearance-none border-2 border-gray-400 rounded-sm checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200" />
                 <label for="confirmEdit3" class="text-sm text-gray-700">
-                   Saya memastikan bahwa seluruh dokumen yang masuk telah lengkap, valid, dan siap untuk diproses lebih lanjut
+                    Saya memastikan bahwa seluruh dokumen yang masuk telah lengkap, valid, dan siap untuk diproses lebih
+                    lanjut
                 </label>
             </div>
 
@@ -467,6 +482,9 @@
 
                 @php
                     $progressValue = $training->isprogress;
+                    $isFinish = $training->isfinish;
+
+                    // Default progress map
                     $progressMap = [
                         1 => ['percent' => 10, 'color' => 'bg-red-600'],
                         2 => ['percent' => 30, 'color' => 'bg-orange-500'],
@@ -474,15 +492,28 @@
                         4 => ['percent' => 75, 'color' => 'bg-lime-600'],
                         5 => ['percent' => 100, 'color' => 'bg-green-600'],
                     ];
-                    $progress = $progressMap[$progressValue] ?? ['percent' => 0, 'color' => 'bg-gray-400'];
+
+                    // Override jika pelatihan ditolak (isfinish = 2)
+                    if ($isFinish == 2) {
+                        $progress = ['percent' => 100, 'color' => 'bg-red-600'];
+                    } else {
+                        $progress = $progressMap[$progressValue] ?? ['percent' => 0, 'color' => 'bg-gray-400'];
+                    }
                 @endphp
 
-                <div class="w-[100px] h-2 bg-gray-200 rounded-full dark:bg-gray-700">
-                    <div class="{{ $progress['color'] }} text-[8px] font-medium text-white text-center leading-none rounded-full"
-                        style="width: {{ $progress['percent'] }}%; height:8px">
-                        {{ $progress['percent'] }}%
+                <div class="text-center">
+                    @if ($isFinish == 2)
+                        <p class="text-sm text-red-600 font-semibold mb-1">Pelatihan Ditolak</p>
+                    @endif
+
+                    <div class="w-[100px] h-2 bg-gray-200 rounded-full dark:bg-gray-700 mx-auto">
+                        <div class="{{ $progress['color'] }} text-[8px] font-medium text-white text-center leading-none rounded-full"
+                            style="width: {{ $progress['percent'] }}%; height:8px">
+                            {{ $progress['percent'] }}%
+                        </div>
                     </div>
                 </div>
+
             </div>
         </div>
 

@@ -61,6 +61,18 @@ function liveDataUser() {
                         "bg-gray-400 text-white font-semibold rounded";
                 }
 
+                let progressColor = "";
+                let progressPercent = item.progress_percent;
+
+                if (item.isfinish === 2) {
+                  
+                    progressColor = "bg-red-600";
+                    progressPercent = 100;
+                } else {
+                   
+                    progressColor = item.progress_color;
+                }
+
                 let notifIcon = "";
                 if (item.isNew) {
                     notifIcon = `<img src="/img/gif/new.gif" alt="New" class="w-5 h-3 -mt-3 inline-block">`;
@@ -84,9 +96,9 @@ function liveDataUser() {
                         <td>${item.date}</td>
                         <td>
                             <div class="w-[80px] h-2 bg-gray-200 rounded-full dark:bg-gray-700 mx-auto">
-                                <div class="${item.progress_color} text-[8px] font-medium text-white text-center leading-none rounded-full"
-                                    style="width: ${item.progress_percent}%; height:8px">
-                                    ${item.progress_percent}%
+                                <div class="${progressColor} text-[8px] font-medium text-white text-center leading-none rounded-full"
+                                    style="width: ${progressPercent}%; height:8px">
+                                    ${progressPercent}%
                                 </div>
                             </div>
                         </td>

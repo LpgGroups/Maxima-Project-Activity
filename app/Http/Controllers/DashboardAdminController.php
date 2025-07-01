@@ -112,6 +112,7 @@ class DashboardAdminController extends Controller
                 'isprogress' => $training->isprogress,
                 'isNew' => $isNew,
                 'isUpdated' => $isUpdated,
+                'statusFail' => $training->reason_fail,
                 'participants_count' => $training->participants->count(),
                 'isfinish' => $training->isfinish,
             ];

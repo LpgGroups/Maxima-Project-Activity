@@ -13,6 +13,8 @@ function fetchTrainingDataAdmin() {
                 const namePic = training.name_pic || "-";
                 const nameCompany = training.name_company || "-";
                 const activity = training.activity || "";
+                const statusFail =
+                    training.reason_fail !== null ? training.reason_fail : "";
 
                 const dateStart = training.date
                     ? new Date(training.date)
@@ -116,11 +118,19 @@ function fetchTrainingDataAdmin() {
                         <td class="max-w-[120px] truncate whitespace-nowrap" title="${namePic}">${namePic}</td>
                         <td class="max-w-[150px] truncate whitespace-nowrap" title="${nameCompany}">${nameCompany} ${badgeHTML}</td>
                         <td>${activity}</td>
-                        <td class="relative p-1 pr-1">
-                            <span class="${statusBgClass} text-[10px] px-2 py-[2px] rounded inline-block w-[70px] text-center truncate">
+                        <td class="relative p-1 pr-1 truncate whitespace-nowrap">
+                            <span 
+                                class="${statusBgClass} text-[10px] px-2 py-[2px] rounded inline-block w-[70px] text-center truncate"
+                                title="${
+                                    isFinish === 2 && training.statusFail
+                                        ? training.statusFail
+                                        : "dams"
+                                }"
+                            >
                                 ${statusText}
                             </span>
                         </td>
+
                         <td class="max-w-[160px] truncate whitespace-nowrap" title="${formattedDate}">${formattedDate}</td>
                         <td>
                             <div class="w-[80px] h-2 bg-gray-200 rounded-full dark:bg-gray-700 mx-auto">

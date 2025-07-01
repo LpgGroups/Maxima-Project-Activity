@@ -73,7 +73,7 @@
 
                 {{-- NIK --}}
                 <div class="relative mt-4 w-full">
-                    <input id="nik" name="nik" type="text"
+                    <input id="nik" name="nik" type="number"
                         class="peer block w-full appearance-none border border-[#515151] bg-transparent px-2.5 py-3 text-sm text-[#515151] rounded-md focus:border-[#1E6E9E] focus:outline-none focus:ring-1 focus:ring-[#1E6E9E] placeholder-transparent"
                         placeholder="Nomor Induk Kependudukan" required />
                     <label for="nik"
@@ -262,7 +262,7 @@
                     <div class="file-info-letter_health mt-1 text-xs text-green-700"></div>
                 </div>
 
-                {{-- CV --}}
+
                 @if ($training->activity == 'AK3U')
                     {{-- CV --}}
                     <div class="relative file-upload-group mb-4">

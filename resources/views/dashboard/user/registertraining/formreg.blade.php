@@ -655,9 +655,7 @@
             targetTab = maxTab;
         }
 
-        // showTab(targetTab);
-
-        // Simpan tab yang diklik (untuk refresh nanti)
+       
         document.querySelectorAll("ul li a").forEach(function(tabEl, idx) {
             tabEl.addEventListener("click", function() {
                 const tabNum = idx + 1;
