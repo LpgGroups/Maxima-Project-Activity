@@ -371,173 +371,176 @@
     </div>
 
     <script>
-        window.isClosed = @json($isClosed);
-        window.participantIdEdit = "{{ request()->participant_id ?? '' }}";
-        // Edit tombol
-        document.querySelectorAll('.edit-btn').forEach(function(btn) {
-            btn.addEventListener('click', function() {
-                document.getElementById('participant_id').value = btn.getAttribute('data-id');
-                document.getElementById('name').value = btn.getAttribute('data-name');
-                document.getElementById('nik').value = btn.getAttribute('data-nik') ?? '';
-                document.getElementById('date_birth').value = btn.getAttribute('data-date_birth') ?? '';
-                document.getElementById('blood_type').value = btn.getAttribute('data-blood_type') ?? '';
-
-                // Tampilkan pesan jika file sudah ada
-                document.querySelector('.file-info-photo').innerHTML = btn.getAttribute('data-photo') ?
-                    `File sudah ada: <span class="font-medium">${btn.getAttribute('data-photo').split('/').pop()}</span>` :
-                    '';
-                document.querySelector('.file-info-ijazah').innerHTML = btn.getAttribute('data-ijazah') ?
-                    `File sudah ada: <span class="font-medium">${btn.getAttribute('data-ijazah').split('/').pop()}</span>` :
-                    '';
-                document.querySelector('.file-info-letter_employee').innerHTML = btn.getAttribute(
-                        'data-letter_employee') ?
-                    `File sudah ada: <span class="font-medium">${btn.getAttribute('data-letter_employee').split('/').pop()}</span>` :
-                    '';
-                document.querySelector('.file-info-letter_statement').innerHTML = btn.getAttribute(
-                        'data-letter_statement') ?
-                    `File sudah ada: <span class="font-medium">${btn.getAttribute('data-letter_statement').split('/').pop()}</span>` :
-                    '';
-                document.querySelector('.file-info-form_registration').innerHTML = btn.getAttribute(
-                        'data-form_registration') ?
-                    `File sudah ada: <span class="font-medium">${btn.getAttribute('data-form_registration').split('/').pop()}</span>` :
-                    '';
-                document.querySelector('.file-info-letter_health').innerHTML = btn.getAttribute(
-                        'data-letter_health') ?
-                    `File sudah ada: <span class="font-medium">${btn.getAttribute('data-letter_health').split('/').pop()}</span>` :
-                    '';
-                document.querySelector('.file-info-cv').innerHTML = btn.getAttribute('data-cv') ?
-                    `File sudah ada: <span class="font-medium">${btn.getAttribute('data-cv').split('/').pop()}</span>` :
-                    '';
-
-                // Ubah judul & tombol
-                document.getElementById('form-title').innerHTML = `
-                <svg class="w-8 h-8 text-yellow-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
-                </svg>
-                <h1 class="text-yellow-500">Ubah Peserta: <span class="text-yellow-500">${btn.getAttribute('data-name')}</span></h1>
-            `;
-                var submitBtn = document.getElementById('form-submit-btn');
-                submitBtn.textContent = "Simpan Edit";
-                submitBtn.classList.add('bg-yellow-500', 'hover:bg-yellow-600', 'text-white');
-            });
-        });
-
-        // --- AUTO TRIGGER jika participantIdEdit ada ---
-        if (window.participantIdEdit) {
-            setTimeout(function() {
-                let autoBtn = document.querySelector(`.edit-btn[data-id="${window.participantIdEdit}"]`);
-                if (autoBtn) {
-                    autoBtn.click();
-                } else {
-                    console.warn("Tidak ketemu tombol edit-btn dengan data-id:", window.participantIdEdit);
-                }
-            }, 100);
-        }
-
         document.addEventListener('DOMContentLoaded', function() {
+            window.isClosed = @json($isClosed);
+            window.participantIdEdit = "{{ request()->participant_id ?? '' }}";
+
+            // Fungsi aman untuk update file info
+            const setFileInfo = (selector, filePath) => {
+                const el = document.querySelector(selector);
+                if (el) {
+                    el.innerHTML = filePath ?
+                        `File sudah ada: <span class="font-medium">${filePath.split('/').pop()}</span>` :
+                        '';
+                }
+            };
+
+            // Listener tombol edit
+            document.querySelectorAll('.edit-btn').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    document.getElementById('participant_id').value = btn.getAttribute('data-id');
+                    document.getElementById('name').value = btn.getAttribute('data-name');
+                    document.getElementById('nik').value = btn.getAttribute('data-nik') ?? '';
+                    document.getElementById('date_birth').value = btn.getAttribute(
+                        'data-date_birth') ?? '';
+                    document.getElementById('blood_type').value = btn.getAttribute(
+                        'data-blood_type') ?? '';
+
+                    setFileInfo('.file-info-photo', btn.getAttribute('data-photo'));
+                    setFileInfo('.file-info-ijazah', btn.getAttribute('data-ijazah'));
+                    setFileInfo('.file-info-letter_employee', btn.getAttribute(
+                        'data-letter_employee'));
+                    setFileInfo('.file-info-letter_statement', btn.getAttribute(
+                        'data-letter_statement'));
+                    setFileInfo('.file-info-form_registration', btn.getAttribute(
+                        'data-form_registration'));
+                    setFileInfo('.file-info-letter_health', btn.getAttribute('data-letter_health'));
+                    setFileInfo('.file-info-cv', btn.getAttribute('data-cv'));
+
+                    document.getElementById('form-title').innerHTML = `
+                    <svg class="w-8 h-8 text-yellow-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                    </svg>
+                    <h1 class="text-yellow-500">Ubah Peserta: <span class="text-yellow-500">${btn.getAttribute('data-name')}</span></h1>
+                `;
+
+                    const submitBtn = document.getElementById('form-submit-btn');
+                    submitBtn.textContent = "Simpan Edit";
+                    submitBtn.classList.add('bg-yellow-500', 'hover:bg-yellow-600', 'text-white');
+                    submitBtn.classList.remove('bg-blue-500', 'hover:bg-blue-600');
+                });
+            });
+
+            // Auto click tombol edit jika participantIdEdit ada
+            if (window.participantIdEdit) {
+                setTimeout(function() {
+                    const autoBtn = document.querySelector(
+                        `.edit-btn[data-id="${window.participantIdEdit}"]`);
+                    if (autoBtn) {
+                        autoBtn.click();
+                    } else {
+                        console.warn("Tidak ketemu tombol edit-btn dengan data-id:", window
+                            .participantIdEdit);
+                    }
+                }, 100);
+            }
+
+            // Countdown untuk tombol pendaftaran
             const btn = document.getElementById("form-submit-btn");
             const tooltip = document.getElementById("countdown-tooltip");
-            const trainingDateStr = btn.dataset.trainingDate;
-            if (!trainingDateStr) return;
+            const trainingDateStr = btn?.dataset?.trainingDate;
 
-            // H-3 dari tanggal pelatihan
-            const trainingDate = new Date(trainingDateStr);
-            const deadline = new Date(trainingDate);
-            deadline.setDate(trainingDate.getDate() - 5);
+            if (btn && tooltip && trainingDateStr) {
+                const trainingDate = new Date(trainingDateStr);
+                const deadline = new Date(trainingDate);
+                deadline.setDate(trainingDate.getDate() - 5);
 
-            function showCountdown() {
-                const now = new Date();
-                const distance = deadline - now;
-                if (distance <= 0) {
-                    tooltip.textContent = "Pendaftaran sudah ditutup.";
+                function showCountdown() {
+                    const now = new Date();
+                    const distance = deadline - now;
+
+                    if (distance <= 0) {
+                        tooltip.textContent = "Pendaftaran sudah ditutup.";
+                        tooltip.classList.remove('hidden');
+                        btn.disabled = true;
+                        btn.textContent = "Pendaftaran sudah ditutup";
+                        btn.classList.remove('bg-blue-600', 'hover:bg-blue-700', 'text-white');
+                        btn.classList.add('bg-gray-400', 'cursor-not-allowed');
+                        return;
+                    }
+
+                    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                    tooltip.textContent = `Sisa waktu pendaftaran: ${days}h ${hours}j ${minutes}m ${seconds}d`;
                     tooltip.classList.remove('hidden');
-                    btn.disabled = true;
-                    btn.textContent = "Pendaftaran sudah ditutup";
-                    btn.classList.remove('bg-blue-600', 'hover:bg-blue-700', 'text-white');
-                    btn.classList.add('bg-gray-400', 'cursor-not-allowed');
-                    return;
                 }
-                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-                tooltip.textContent = `
-                Sisa waktu pendaftaran: ${days}h ${hours}j ${minutes}m ${seconds}d`;
-                tooltip.classList.remove('hidden');
+                if (!btn.disabled) {
+                    showCountdown();
+                    setInterval(showCountdown, 1000);
+                }
             }
 
-            if (btn && tooltip && !btn.disabled) {
-                showCountdown();
-                setInterval(showCountdown, 1000);
-            }
-        });
+            // Reset form function
+            window.resetForm = function() {
+                document.getElementById('participant_id').value = '';
+                document.getElementById('form2').reset();
+                document.getElementById('form-title').innerHTML = `
+                <svg class="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 11c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm0 2c-2.67 0-8 1.34-8 4v3h16v-3c0-2.66-5.33-4-8-4z" />
+                </svg>
+                Pendaftaran Peserta
+            `;
 
-        // Reset pesan file saat reset form
-        function resetForm() {
-            document.getElementById('participant_id').value = '';
-            document.getElementById('form2').reset();
-            document.getElementById('form-title').innerHTML = `
-        <svg class="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M12 11c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm0 2c-2.67 0-8 1.34-8 4v3h16v-3c0-2.66-5.33-4-8-4z" />
-        </svg>
-        Pendaftaran Peserta
-    `;
-            const submitBtn = document.getElementById('form-submit-btn');
-            submitBtn.textContent = "Kirim";
-            submitBtn.classList.remove('bg-yellow-500', 'hover:bg-yellow-600', 'text-white'); // Hapus styling edit
-            submitBtn.classList.add('bg-blue-500', 'hover:bg-blue-600', 'text-white'); // Tambahkan styling kirim
+                const submitBtn = document.getElementById('form-submit-btn');
+                submitBtn.textContent = "Kirim";
+                submitBtn.classList.remove('bg-yellow-500', 'hover:bg-yellow-600', 'text-white');
+                submitBtn.classList.add('bg-blue-500', 'hover:bg-blue-600', 'text-white');
 
-            // Hapus info file
-            document.querySelector('.file-info-photo').innerHTML = '';
-            document.querySelector('.file-info-ijazah').innerHTML = '';
-            document.querySelector('.file-info-letter_employee').innerHTML = '';
-            document.querySelector('.file-info-letter_statement').innerHTML = '';
-            document.querySelector('.file-info-form_registration').innerHTML = '';
-            document.querySelector('.file-info-letter_health').innerHTML = '';
-            document.querySelector('.file-info-cv').innerHTML = '';
-        }
+                setFileInfo('.file-info-photo', null);
+                setFileInfo('.file-info-ijazah', null);
+                setFileInfo('.file-info-letter_employee', null);
+                setFileInfo('.file-info-letter_statement', null);
+                setFileInfo('.file-info-form_registration', null);
+                setFileInfo('.file-info-letter_health', null);
+                setFileInfo('.file-info-cv', null);
+            };
 
-        // Preview file upload (optional, sesuai kebutuhanmu)
-        document.querySelectorAll('.file-upload-group input[type="file"]').forEach(function(input) {
-            const group = input.closest('.file-upload-group');
-            const checkmark = group.querySelector('.checkmark');
-            input.addEventListener('change', function() {
-                if (input.files.length > 0) {
-                    checkmark.classList.remove('hidden');
-                } else {
-                    checkmark.classList.add('hidden');
-                }
+            // Preview icon centang saat file diunggah
+            document.querySelectorAll('.file-upload-group input[type="file"]').forEach(function(input) {
+                const group = input.closest('.file-upload-group');
+                const checkmark = group.querySelector('.checkmark');
+                input.addEventListener('change', function() {
+                    if (input.files.length > 0) {
+                        checkmark.classList.remove('hidden');
+                    } else {
+                        checkmark.classList.add('hidden');
+                    }
+                });
             });
-        });
 
-        document.querySelectorAll('.delete-btn').forEach(function(btn) {
-            btn.addEventListener('click', function() {
-                const id = btn.getAttribute('data-id');
-                const name = btn.getAttribute('data-name') || '(Tanpa Nama)';
-                if (confirm(`Yakin ingin menghapus peserta: ${name}?`)) {
-                    // Kirim AJAX delete
-                    fetch(`/dashboard/user/training/participant/delete/${id}`, {
-                            method: 'POST',
-                            headers: {
-                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
-                                    .content,
-                                'Accept': 'application/json',
-                            }
-                        })
-                        .then(res => res.json())
-                        .then(data => {
-                            if (data.success) {
-                                alert('Peserta berhasil dihapus!');
-                                location.reload(); // Reload page biar tabel update
-                            } else {
-                                alert(data.message || 'Gagal menghapus peserta.');
-                            }
-                        })
-                        .catch(() => alert('Gagal menghapus peserta.'));
-                }
+            // Tombol hapus peserta
+            document.querySelectorAll('.delete-btn').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    const id = btn.getAttribute('data-id');
+                    const name = btn.getAttribute('data-name') || '(Tanpa Nama)';
+                    if (confirm(`Yakin ingin menghapus peserta: ${name}?`)) {
+                        fetch(`/dashboard/user/training/participant/delete/${id}`, {
+                                method: 'POST',
+                                headers: {
+                                    'X-CSRF-TOKEN': document.querySelector(
+                                        'meta[name="csrf-token"]').content,
+                                    'Accept': 'application/json',
+                                }
+                            })
+                            .then(res => res.json())
+                            .then(data => {
+                                if (data.success) {
+                                    alert('Peserta berhasil dihapus!');
+                                    location.reload();
+                                } else {
+                                    alert(data.message || 'Gagal menghapus peserta.');
+                                }
+                            })
+                            .catch(() => alert('Gagal menghapus peserta.'));
+                    }
+                });
             });
         });
     </script>
+
 @endsection

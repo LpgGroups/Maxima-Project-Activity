@@ -1,5 +1,6 @@
 @extends('dashboard.layouts.dashboardmain')
 @section('container')
+<p>Token</p>
     <div class="p-4 border border-t-0 border-gray-300 bg-white rounded-lg mt-6">
         <h1 class="text-[24px] font-semibold">Daftar Pelatihan</h1>
         <h2 class="text-[15px]">Lengkapi data form ini untuk mengikuti pelatihan yang akan diselenggarakan oleh PT
