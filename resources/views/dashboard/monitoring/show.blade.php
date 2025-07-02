@@ -39,15 +39,6 @@
                                 <p><strong>Pelatihan:</strong> {{ $training->activity ?? '-' }}</p>
                                 <p><strong>Diperbarui oleh:</strong> {{ $item->data['user_name'] ?? 'System' }}</p>
                             </div>
-
-                            @if (!empty($url))
-                                <div class="mt-2">
-                                    <a href="{{ $url }}" target="_blank"
-                                        class="inline-block text-blue-600 hover:text-blue-800 underline text-sm">
-                                        ➜ Lihat Detail
-                                    </a>
-                                </div>
-                            @endif
                         </div>
                     </div>
                 @endforeach
