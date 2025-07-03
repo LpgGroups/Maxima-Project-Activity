@@ -152,4 +152,19 @@ class DashboardManagementController extends Controller
 
         return view('dashboard.management.notifications', compact('notifications'));
     }
+
+    public function detailView($id)
+    {
+        // Ambil detail training
+        $training = RegTraining::with(['participants', 'approvalFiles', 'files', 'user'])->findOrFail($id);
+
+        // Bisa update notifikasi jadi "read" jika perlu
+        // Misal:
+        // Auth::user()->unreadNotifications()->where('data->training_id', $id)->update(['read_at' => now()]);
+
+        return view('dashboard.management.detailfull', [
+            'training' => $training,
+            'title' => 'Detail Pelatihan',
+        ]);
+    }
 }
