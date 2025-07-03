@@ -3,8 +3,13 @@
 
         <div class="flex items-center space-x-4 ml-auto">
             <!-- Notifikasi -->
+            @php
+                $unreadCount = Auth::user()->unreadNotifications->count();
+                $isManajemen = Auth::user()->role === 'management';
+            @endphp
             <div class="relative">
-                <button id="notifBtn" type="button" class="mb-2 text-gray-700 dark:text-white hover:text-gray-900">
+                <button id="notifBtn" data-role="{{ $isManajemen ? 'management' : 'user' }}" type="button"
+                    class="mb-2 text-gray-700 dark:text-white hover:text-gray-900">
                     <!-- Icon Bell -->
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
                         xmlns="http://www.w3.org/2000/svg">
@@ -14,9 +19,7 @@
                     </svg>
 
                     <!-- Badge jumlah notifikasi -->
-                    @php
-                        $unreadCount = Auth::user()->unreadNotifications->count();
-                    @endphp
+
 
                     @if ($unreadCount > 0)
                         <span

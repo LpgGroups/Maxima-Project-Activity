@@ -23,10 +23,9 @@ class MonitoringController extends Controller
     {
         $training = RegTraining::with('user')->findOrFail($id);
 
-       
-
         $rawNotifications = DatabaseNotification::where('notifiable_type', User::class)
             ->where('data->training_id', $id)
+            ->orderByDesc('created_at')
             ->get();
 
 

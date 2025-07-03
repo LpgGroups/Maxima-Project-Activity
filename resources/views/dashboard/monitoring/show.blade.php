@@ -31,8 +31,9 @@
                                     {{ $item->data['message'] ?? 'Notifikasi aktivitas' }}
                                 </h3>
                                 <span class="text-sm text-gray-500">
-                                    {{ \Carbon\Carbon::parse($item->created_at)->format('d M Y H:i') }}
+                                    {{ \Carbon\Carbon::parse($item->created_at)->setTimezone('Asia/Jakarta')->format('d M Y H:i') }}
                                 </span>
+
                             </div>
 
                             <div class="text-sm text-gray-600">
