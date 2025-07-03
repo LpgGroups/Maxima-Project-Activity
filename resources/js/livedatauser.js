@@ -65,11 +65,9 @@ function liveDataUser() {
                 let progressPercent = item.progress_percent;
 
                 if (item.isfinish === 2) {
-                  
                     progressColor = "bg-red-600";
                     progressPercent = 100;
                 } else {
-                   
                     progressColor = item.progress_color;
                 }
 
@@ -104,6 +102,8 @@ function liveDataUser() {
                         </td>
                     </tr>
                 `;
+                console.log(item);
+                console.log("notifIcon", notifIcon, item.isNew, item.isUpdated);
                 $tbody.append(rowHtml);
             });
         })

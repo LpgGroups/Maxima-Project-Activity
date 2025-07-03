@@ -1,6 +1,25 @@
 @extends('dashboard.layouts.dashboardmain')
 @section('container')
-<p>Token</p>
+    <div class="flex items-center gap-2 p-4 bg-gray-50 border rounded-xl shadow mb-4">
+        <span class="font-semibold text-gray-700">Token:</span>
+        <span id="token-value"
+            class="px-3 py-1 rounded-md font-mono bg-gray-200 text-blue-600 text-base tracking-wide select-all">
+            {{ $training->code_training }}
+        </span>
+        <button id="copy-token"
+            class="flex items-center gap-1 px-2 py-1 rounded-lg bg-blue-600 hover:bg-blue-700 transition text-white text-sm font-semibold shadow"
+            type="button">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <rect x="9" y="9" width="13" height="13" rx="2" stroke="currentColor" stroke-width="2"
+                    fill="none" />
+                <rect x="2" y="2" width="13" height="13" rx="2" stroke="currentColor" stroke-width="2"
+                    fill="none" />
+            </svg>
+            Copy
+        </button>
+        <span id="copied-msg" class="ml-2 text-green-500 text-xs opacity-0 transition-opacity duration-300">Copied!</span>
+    </div>
     <div class="p-4 border border-t-0 border-gray-300 bg-white rounded-lg mt-6">
         <h1 class="text-[24px] font-semibold">Daftar Pelatihan</h1>
         <h2 class="text-[15px]">Lengkapi data form ini untuk mengikuti pelatihan yang akan diselenggarakan oleh PT

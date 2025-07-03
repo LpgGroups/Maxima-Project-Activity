@@ -157,7 +157,7 @@ function fetchTrainingDataAdmin() {
                         </td>
                     </tr>`;
             }
-
+        
             document.getElementById("live-training-body").innerHTML = html;
         });
 }

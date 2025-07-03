@@ -72,15 +72,30 @@
 
 
                 {{-- NIK --}}
-                <div class="relative mt-4 w-full">
-                    <input id="nik" name="nik" type="number"
-                        class="peer block w-full appearance-none border border-[#515151] bg-transparent px-2.5 py-3 text-sm text-[#515151] rounded-md focus:border-[#1E6E9E] focus:outline-none focus:ring-1 focus:ring-[#1E6E9E] placeholder-transparent"
-                        placeholder="Nomor Induk Kependudukan" required />
-                    <label for="nik"
-                        class="absolute text-base rounded-lg bg-[#ffffff] text-[#515151] transition-all duration-300 transform -translate-y-4 scale-75 top-3 left-2.5 ml-2 z-10 origin-[0] peer-focus:text-[#1E6E9E] peer-focus:scale-75 peer-focus:-translate-y-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0">
-                        Nomor Induk Kependudukan <span class="text-red-500">*</span>
-                    </label>
+                <div class="mb-8 w-full">
+                    <div class="relative">
+                        <input id="nik" name="nik" type="number"
+                            class="peer block w-full appearance-none border border-[#515151] bg-transparent px-2.5 py-3 text-sm text-[#515151] rounded-md focus:border-[#1E6E9E] focus:outline-none focus:ring-1 focus:ring-[#1E6E9E] placeholder-transparent pr-10"
+                            placeholder="Nomor Induk Kependudukan" required maxlength="16" />
+                        <label for="nik"
+                            class="absolute text-base rounded-lg bg-[#ffffff] text-[#515151] transition-all duration-300 transform -translate-y-4 scale-75 top-3 left-2.5 ml-2 z-10 origin-[0] peer-focus:text-[#1E6E9E] peer-focus:scale-75 peer-focus:-translate-y-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0">
+                            Nomor Induk Kependudukan <span class="text-red-500">*</span>
+                        </label>
+                        <!-- Ceklis, default hidden -->
+                        <span id="nik-check" class="absolute -bottom-2 right-3 -translate-y-1/2 text-green-600 hidden">
+                            <!-- Heroicons check SVG -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                            </svg>
+                        </span>
+                    </div>
+                    <!-- Pesan error block di bawah input, jadi tidak kehalang field bawah -->
+                    <span id="nik-error" class="ml-3 mt-1 text-xs text-red-500 hidden">
+                        NIK harus 16 digit!
+                    </span>
                 </div>
+
 
 
                 {{-- Tanggal Lahir --}}
@@ -134,8 +149,10 @@
                         <input type="file" name="photo" id="photo" accept="image/*"
                             class="block w-full text-sm text-gray-600 border border-gray-300 rounded cursor-pointer" />
                         <span class="checkmark hidden">
-                            <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                            <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                                    d="M5 13l4 4L19 7" />
                             </svg>
                         </span>
                     </div>
@@ -539,6 +556,29 @@
                             .catch(() => alert('Gagal menghapus peserta.'));
                     }
                 });
+            });
+            const nikInput = document.getElementById('nik');
+            const nikCheck = document.getElementById('nik-check');
+            const nikError = document.getElementById('nik-error');
+
+            nikInput.addEventListener('input', function() {
+                if (this.value.length > 16) {
+                    this.value = this.value.slice(0, 16);
+                }
+                const value = nikInput.value;
+                // Only show check if 16 digits, all numeric
+                if (value.length === 16 && /^\d+$/.test(value)) {
+                    nikCheck.classList.remove('hidden');
+                    nikError.classList.add('hidden');
+                } else {
+                    nikCheck.classList.add('hidden');
+                    // Show error if more than 0 but less than 16 digits
+                    if (value.length > 0 && value.length < 16) {
+                        nikError.classList.remove('hidden');
+                    } else {
+                        nikError.classList.add('hidden');
+                    }
+                }
             });
         });
     </script>
