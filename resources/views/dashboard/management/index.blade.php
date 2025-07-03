@@ -143,7 +143,8 @@
 
                         </div>
                     </div>
-                    <div>
+                    <div class="text-[10px]">
+                        Update terbaru:
                         {{ \Carbon\Carbon::parse($training->updated_at)->translatedFormat('d F Y H:i') }} WIB
                         <div class="absolute top-[-5px] right-[-5px] z-10 new-badge hidden">
                             <img src="{{ asset('img/gif/update.gif') }}" alt="New" class="w-4 h-4">

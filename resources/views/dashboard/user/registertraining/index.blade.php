@@ -49,7 +49,7 @@
                         <th>Status</th>
                         <th>Peserta</th>
                         <th>Tanggal</th>
-                        <th class="rounded-r-lg">Progress</th>
+                        <th class="rounded-r-lg">Progress </th>
                     </tr>
                 </thead>
                 <tbody class="lg:text-[12px] text-[8px]">

@@ -166,7 +166,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="text-gray-500 py-2">Belum ada data pelatihan</td>
+                            <td colspan="5" class="text-gray-500 py-2">Belum ada data pelatihan </td>
                         </tr>
                     @endforelse
                 </tbody>
