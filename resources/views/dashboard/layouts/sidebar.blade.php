@@ -74,6 +74,21 @@
                             <span class="text-sm">Daftar Pelatihan</span>
                         </a>
                     </li>
+
+                    <li class="my-1">
+                        <a href="/tutorial"
+                            class="flex items-center space-x-2 menu-item-hover 
+                                  @if (request()->is('tutorial')) bg-red-500 text-white @else hover:bg-red-500 @endif 
+                                  rounded-lg p-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke-width="1.5" stroke="currentColor" class="size-6">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
+                            </svg>
+
+                            <span class="text-sm">Panduan Aplikasi</span>
+                        </a>
+                    </li>
                 @elseif ($role == 'admin')
                     {{-- Menu untuk Admin --}}
                     <li class="my-1">
@@ -135,8 +150,8 @@
                             class="flex items-center space-x-2 menu-item-hover 
                                @if (request()->is('dashboard/management*')) bg-red-500 text-white @else hover:bg-red-500 @endif 
                                   rounded-lg p-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="size-6" fill="none" viewBox="0 0 24 24"
-                                stroke-width="1.5" stroke="currentColor">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="size-6" fill="none"
+                                viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round"
                                     d="M3 3h18v4H3V3zm0 6h18v4H3V9zm0 6h18v4H3v-4z" />
                             </svg>

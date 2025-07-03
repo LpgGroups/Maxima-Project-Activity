@@ -2,10 +2,6 @@
     <div class="max-w-screen-xl flex items-center justify-between mx-auto p-4">
 
         <div class="flex items-center space-x-4 ml-auto">
-            <div class="relative">
-                <a href="{{ url('/tutorial') }}" class="text-blue-600 hover:underline">Tutorial</a>
-
-            </div>
             <!-- Notifikasi -->
             <div class="relative">
                 <button id="notifBtn" type="button" class="mb-2 text-gray-700 dark:text-white hover:text-gray-900">
@@ -40,7 +36,7 @@
                     @isset($dropdownNotifications)
                         <div class="max-h-60 overflow-y-auto">
                             <ul>
-                                @foreach ($dropdownNotifications->take(5) as $notif)
+                                @foreach ($dropdownNotifications->take(10) as $notif)
                                     <li class="border-b border-gray-200 dark:border-gray-700">
                                         <a href="{{ $notif->data['url'] ?? '#' }}"
                                             class="{{ $notif->read_at ? 'text-gray-400 font-normal text-[14px]' : 'text-black font-bold dark:text-white text-[14px]' }} block px-4 py-2">

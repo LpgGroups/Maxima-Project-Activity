@@ -96,7 +96,7 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::get('/tutorial', function () {
-        return view('dashboard.layouts.faq.tutorial',["title"=>' Tutorial']); // ini akan memuat resources/views/tutorial.blade.php
+        return view('dashboard.layouts.faq.tutorial', ["title" => ' Tutorial']); // ini akan memuat resources/views/tutorial.blade.php
     });
 
     Route::get('/notification', function () {
@@ -114,7 +114,7 @@ Route::middleware(['auth'])->group(function () {
 
         $notifications = $user->unreadNotifications
             ->sortByDesc('created_at')
-            ->take(5);
+            ->take(10);
 
         return response()->json([
             'count' => $notifications->count(),

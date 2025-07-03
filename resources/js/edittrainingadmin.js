@@ -386,31 +386,6 @@ function initShowDetailParticipant() {
         });
 }
 
-// function deleteParticipant(id) {
-//     if (confirm("Hapus peserta ini?")) {
-//         $.ajax({
-//             url: `/dashboard/admin/training/delete-participant/${id}`,
-//             method: "POST",
-//             headers: {
-//                 "X-CSRF-TOKEN": $('input[name="_token"]').val(),
-//                 Accept: "application/json",
-//             },
-//             success: function (resp) {
-//                 if (resp.success) {
-//                     $(`tr[data-participant-id="${id}"]`).remove();
-//                     $(`#detail-row-${id}`).remove();
-//                     showSuccessSwal("Berhasil", "Peserta berhasil dihapus!");
-//                 } else {
-//                     showErrorSwal("Gagal", "Gagal menghapus peserta!");
-//                 }
-//             },
-//             error: function () {
-//                 showErrorSwal("Gagal", "Terjadi kesalahan saat menghapus!");
-//             },
-//         });
-//     }
-// }
-
 function deleteParticipant(id) {
     Swal.fire({
         title: "Konfirmasi Penghapusan",
@@ -567,6 +542,19 @@ function toggleNIK(button) {
     }
 }
 
+function copyCode() {
+    document.getElementById("copy-token").onclick = function () {
+        const token = document.getElementById("token-value").innerText;
+        navigator.clipboard.writeText(token).then(function () {
+            const msg = document.getElementById("copied-msg");
+            msg.style.opacity = 1;
+            setTimeout(() => {
+                msg.style.opacity = 0;
+            }, 5200);
+        });
+    };
+}
+
 // ============ INIT ================
 $(document).ready(function () {
     datePicker(); // Inisialisasi date picker
@@ -592,4 +580,6 @@ $(document).ready(function () {
     $(document).on("click", ".toggle-nik-btn", function () {
         toggleNIK(this);
     });
+
+    copyCode();
 });

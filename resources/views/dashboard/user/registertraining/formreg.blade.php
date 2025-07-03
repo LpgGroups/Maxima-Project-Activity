@@ -73,9 +73,13 @@
                         </svg>
 
                         <!-- Tooltip container -->
-                        <div class="absolute top-0 left-full ml-2 w-32 hidden group-hover:flex z-10">
-                            <img src="/img/gif/new.gif" alt="GIF Tooltip" class="w-full h-auto rounded shadow-lg" />
+                        <div class="absolute top-0 left-full ml-2 w-[500px] hidden group-hover:flex z-50">
+                            <video src="/img/vid/tutorreg1.webm" autoplay muted loop
+                                class="w-[500px] h-auto rounded shadow-lg" playsinline>
+                                Browser anda tidak mendukung video tag.
+                            </video>
                         </div>
+
                     </div>
                 </div>
 
@@ -233,8 +237,11 @@
                         </svg>
 
                         <!-- Tooltip container -->
-                        <div class="absolute top-0 left-full ml-2 w-32 hidden group-hover:flex z-10">
-                            <img src="/img/gif/new.gif" alt="GIF Tooltip" class="w-full h-auto rounded shadow-lg" />
+                        <div class="absolute top-0 left-full ml-2 w-[500px] hidden group-hover:flex z-50">
+                            <video src="/img/vid/tutorregparticipants.webm" autoplay muted loop
+                                class="w-[500px] h-auto rounded shadow-lg" playsinline>
+                                Browser anda tidak mendukung video tag.
+                            </video>
                         </div>
                     </div>
                 </div>
@@ -412,9 +419,11 @@
                                 </svg>
 
                                 <!-- Tooltip container -->
-                                <div class="absolute top-0 left-full ml-2 w-32 hidden group-hover:flex z-10">
-                                    <img src="/img/gif/new.gif" alt="GIF Tooltip"
-                                        class="w-full h-auto rounded shadow-lg border border-gray-300" />
+                                <div class="absolute top-0 left-full ml-2 w-[500px] hidden group-hover:flex z-50">
+                                    <video src="/img/vid/uploadfinish.webm" autoplay muted loop
+                                        class="w-[500px] h-auto rounded shadow-lg" playsinline>
+                                        Browser anda tidak mendukung video tag.
+                                    </video>
                                 </div>
                             </div>
                         </div>

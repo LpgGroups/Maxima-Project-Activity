@@ -19,7 +19,7 @@
         <div style="padding:0 32px 32px; color:#1f2937;">
             <h1 style="font-size:20px; font-weight:600; margin-bottom:16px;">Halo, Sobat Maxima</h1>
             <p style="font-size:16px; line-height:1.6; margin-bottom:24px;">
-                Kamu menerima email ini karena kami menerima permintaan reset password untuk akun kamu.
+                Anda menerima email ini karena kami menerima permintaan reset password untuk akun Anda.
             </p>
 
             <!-- Button -->
