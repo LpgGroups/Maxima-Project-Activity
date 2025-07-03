@@ -91,10 +91,14 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::prefix('dashboard/monitoring')->middleware(['auth'])->group(function () {
-    Route::get('/', [MonitoringController::class, 'index'])->name('monitoring.index');
-    Route::get('/{id}', [MonitoringController::class, 'show'])->name('monitoring.show');
-});
-   
+        Route::get('/', [MonitoringController::class, 'index'])->name('monitoring.index');
+        Route::get('/{id}', [MonitoringController::class, 'show'])->name('monitoring.show');
+    });
+
+    Route::get('/tutorial', function () {
+        return view('dashboard.layouts.faq.tutorial',["title"=>' Tutorial']); // ini akan memuat resources/views/tutorial.blade.php
+    });
+
     Route::get('/notification', function () {
         $user = Auth::user();
         $notifications = $user->notifications->sortByDesc('created_at');

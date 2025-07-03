@@ -139,10 +139,9 @@
                             </td>
                             <td>
                                 @php
-                                    // Ambil nilai isprogress
                                     $progressValue = $training->isprogress;
+                                    $isRejected = $training->isfinish == 2;
 
-                                    // Tentukan persentase dan warna berdasarkan nilai isprogress
                                     $progressMap = [
                                         1 => ['percent' => 10, 'color' => 'bg-red-600'],
                                         2 => ['percent' => 30, 'color' => 'bg-orange-500'],
@@ -155,6 +154,12 @@
                                         'percent' => 0,
                                         'color' => 'bg-gray-400',
                                     ];
+
+                                    // Jika isfinish = 2 (Ditolak), override warna dan persen
+                                    if ($isRejected) {
+                                        $progress['color'] = 'bg-red-600';
+                                        $progress['percent'] = 100;
+                                    }
                                 @endphp
 
                                 <div class="w-[80px] h-2 bg-gray-200 rounded-full dark:bg-gray-700 mx-auto">
@@ -164,6 +169,7 @@
                                     </div>
                                 </div>
                             </td>
+
                         </tr>
                     @endforeach
                 </tbody>

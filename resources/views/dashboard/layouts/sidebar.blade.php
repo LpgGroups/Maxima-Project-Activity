@@ -116,16 +116,16 @@
                         </a>
                     </li>
                     <li class="my-1">
-                        <a href="/dashboard/admin/reports"
+                        <a href="/dashboard/monitoring"
                             class="flex items-center space-x-2 menu-item-hover 
-                                  @if (request()->is('dashboard/admin/reports')) bg-red-500 text-white @else hover:bg-red-500 @endif 
+                                  @if (request()->is('dashboard/monitoring')) bg-red-500 text-white @else hover:bg-red-500 @endif 
                                   rounded-lg p-2">
                             <svg xmlns="http://www.w3.org/2000/svg" class="size-6" fill="none" viewBox="0 0 24 24"
                                 stroke-width="1.5" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round"
                                     d="M9 17v-2a2 2 0 012-2h2a2 2 0 012 2v2M9 7h.01M15 7h.01M12 9.5a2.5 2.5 0 00-2.5 2.5h5a2.5 2.5 0 00-2.5-2.5z" />
                             </svg>
-                            <span class="text-sm">Laporan</span>
+                            <span class="text-sm">Monitoring</span>
                         </a>
                     </li>
                 @elseif ($role == 'management')

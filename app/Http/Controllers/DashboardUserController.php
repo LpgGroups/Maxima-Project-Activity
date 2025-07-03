@@ -11,6 +11,7 @@ use App\Models\RegTraining;
 use App\Notifications\NewTrainingRegistered;
 use App\Notifications\TrainingUpdatedNotification;
 use App\Models\User;
+use Illuminate\Support\Str;
 
 class DashboardUserController extends Controller
 {
@@ -77,7 +78,7 @@ class DashboardUserController extends Controller
             $booking->activity = $validated['activity'];
             $booking->place = $validated['place'];
             $booking->isprogress = max($booking->isprogress, $validated['isprogress']);
-
+            $booking->code_training = strtoupper(Str::random(6)) . '-' . strtoupper(Str::random(6));
             $countSameDay = RegTraining::where('date', $startDate->toDateString())
                 ->where('user_id', $user->id)
                 ->count();
@@ -87,6 +88,20 @@ class DashboardUserController extends Controller
                     'message' => 'Kuota Pendaftaran pelatihan pada tanggal tersebut sudah penuh. Silakan pilih tanggal lain.'
                 ]);
             }
+            $now = now();
+            $month = $now->format('m'); // bulan saat ini
+            $year = $now->format('Y');  // tahun saat ini
+
+            // Hitung jumlah pendaftaran tahun ini untuk activity yang sama
+            $sequence = RegTraining::where('activity', $booking->activity)
+                ->whereYear('created_at', $year)
+                ->count() + 1;
+
+            $noUrut = str_pad($sequence, 4, '0', STR_PAD_LEFT);
+            $noLetter = "{$booking->activity}/{$noUrut}/{$month}/{$year}";
+
+            $booking->no_letter = $noLetter;
+
             $booking->save();
             $booking->load('user');
 
@@ -134,6 +149,7 @@ class DashboardUserController extends Controller
                 $date = $start->translatedFormat('d F') . ' - ' . $end->translatedFormat('d F Y');
             }
 
+
             $progressMap = [
                 1 => ['percent' => 10, 'color' => 'bg-red-600'],
                 2 => ['percent' => 30, 'color' => 'bg-orange-500'],
@@ -141,6 +157,11 @@ class DashboardUserController extends Controller
                 4 => ['percent' => 75, 'color' => 'bg-[#bffb4e]'],
                 5 => ['percent' => 100, 'color' => 'bg-green-600'],
             ];
+
+            if ((int) $training->isfinish === 2) {
+                $progress['color'] = 'bg-red-600';
+                $progress['percent'] = 100;
+            }
 
             $progress = $progressMap[$training->isprogress] ?? ['percent' => 0, 'color' => 'bg-gray-400'];
 

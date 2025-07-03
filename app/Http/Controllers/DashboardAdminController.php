@@ -112,6 +112,7 @@ class DashboardAdminController extends Controller
                 'isprogress' => $training->isprogress,
                 'isNew' => $isNew,
                 'isUpdated' => $isUpdated,
+                'statusFail' => $training->reason_fail,
                 'participants_count' => $training->participants->count(),
                 'isfinish' => $training->isfinish,
             ];
@@ -199,9 +200,19 @@ class DashboardAdminController extends Controller
 
         $targetUser = $training->user;
 
-        if ($targetUser) {
-            $targetUser->notify(new TrainingUpdatedNotification($training, 'admin', 'Daftar Pelatihan'));
-        }
+        // if ($targetUser) {
+        //     $targetUser->notify(new TrainingUpdatedNotification($training, 'admin', 'Daftar Pelatihan'));
+        // }
+        $adminName = optional(Auth::user())->name ?? '-';
+
+        $targetUser->notify(new TrainingUpdatedNotification(
+            $training,
+            'admin',
+            'Daftar Pelatihan',
+            '',     // customMessage
+            '',     // customType
+            $adminName
+        ));
 
         return response()->json([
             'success' => true,
@@ -226,7 +237,7 @@ class DashboardAdminController extends Controller
                 $participant->save();
             }
         }
-
+        $adminName = optional(Auth::user())->name ?? '-';
         $training = RegTraining::find($request->form_id);
         if ($training && $training->user) {
             $training->user->notify(new TrainingUpdatedNotification(
@@ -234,7 +245,8 @@ class DashboardAdminController extends Controller
                 'admin',
                 'Daftar Peserta',
                 'Data peserta pada pelatihan "' . $training->activity . '" telah diperbarui oleh Admin.',
-                'info'
+                'info',
+                $adminName
             ));
         }
 
@@ -279,6 +291,20 @@ class DashboardAdminController extends Controller
         }
 
         $fileReq->save();
+        $uploaderName = optional(Auth::user())->name ?? 'admin';
+
+        $managers = User::where('role', 'management')->get();
+
+        foreach ($managers as $manager) {
+            $manager->notify(new TrainingUpdatedNotification(
+                $training,
+                'admin',
+                'Upload Dokumen',
+                "{$uploaderName} telah mengunggah dokumen untuk pelatihan {$training->activity}.",
+                'info',
+                $uploaderName
+            ));
+        }
         return response()->json(['success' => true]);
     }
 
@@ -295,45 +321,15 @@ class DashboardAdminController extends Controller
 
         $customMessage = "Proses verifikasi berhasil. Pengajuan pelatihan {$training->activity} akan segera ditinjau untuk disetujui.";
 
-        // $phone = $training->phone_pic; // Langsung ambil dari reg_training
-
-        // if (empty($phone) || !is_string($phone)) {
-        //     Log::warning("WhatsApp not sent: No phone number in reg_training ID {$training->id}");
-        // } else {
-        //     try {
-        //         $client = new Client();
-        //         $response = $client->post('https://app.maxchat.id/api/messages/push', [
-        //             'headers' => [
-        //                 'Authorization' => 'Bearer ' . env('MAXCHAT_TOKEN'),
-        //                 'Content-Type'  => 'application/json',
-        //                 'Accept'        => 'application/json',
-        //             ],
-        //             'json' => [
-        //                 'to' => $phone,
-        //                 'msgType' => 'text',
-        //                 'templateId' => env('MAXCHAT_TEMPLATE'),
-        //             ],
-        //         ]);
-        //         $status = $response->getStatusCode();
-        //         $body = json_decode($response->getBody()->getContents(), true);
-        //         if ($status == 200 && !isset($body['error'])) {
-        //             Log::info("SUKSES kirim WA ke $phone (reg_training id: {$training->id}): " . json_encode($body));
-        //         } else {
-        //             Log::error("GAGAL kirim WA ke $phone (reg_training id: {$training->id}): " . json_encode($body));
-        //         }
-        //     } catch (\Exception $e) {
-        //         Log::error("Gagal kirim WhatsApp Maxchat: " . $e->getMessage());
-        //     }
-        // }
-
-        // Notifikasi ke user jika memang perlu
+        $adminName = optional(Auth::user())->name ?? '-';
         if ($training->user) {
             $training->user->notify(new TrainingUpdatedNotification(
                 $training,
                 'admin',
                 'Daftar Pelatihan',
                 $customMessage,
-                'verifacc'
+                'verifacc',
+                $adminName
             ));
         }
 

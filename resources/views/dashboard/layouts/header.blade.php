@@ -2,7 +2,10 @@
     <div class="max-w-screen-xl flex items-center justify-between mx-auto p-4">
 
         <div class="flex items-center space-x-4 ml-auto">
+            <div class="relative">
+                <a href="{{ url('/tutorial') }}" class="text-blue-600 hover:underline">Tutorial</a>
 
+            </div>
             <!-- Notifikasi -->
             <div class="relative">
                 <button id="notifBtn" type="button" class="mb-2 text-gray-700 dark:text-white hover:text-gray-900">

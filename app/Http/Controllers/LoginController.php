@@ -60,7 +60,7 @@ class LoginController extends Controller
     public function userList()
     {
         // Ambil semua user, bisa ditambah paginate kalau perlu
-        $users = User::orderBy('name')->get();
+        $users = User::whereIn('role', ['admin', 'user'])->get();
 
         // Kirim data user ke view users.index (atau sesuaikan dengan nama view-mu)
         return view('dashboard.admin.actuser.tableactuser', [

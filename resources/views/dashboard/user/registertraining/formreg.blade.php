@@ -11,10 +11,15 @@
             'AK3U' => 'Pelatihan Ahli K3 Umum (AK3U) ',
         ];
     @endphp
+    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center w-full gap-2">
+        <p class="text-center sm:text-left text-base sm:text-lg font-semibold text-[#9694FF]">
+            {{ $activityMap[$training->activity] ?? $training->activity }}
+        </p>
 
-    <p class="text-center text-lg font-semibold text-[#9694FF]">
-        {{ $activityMap[$training->activity] ?? $training->activity }}
-    </p>
+        <p class="text-center sm:text-right text-sm sm:text-base text-gray-600">
+            No: {{ $training->no_letter }}
+        </p>
+    </div>
 
     <div class="container mx-auto">
         <!-- Tab Navigation -->
@@ -610,29 +615,29 @@
                         <li>PIC diharapkan Mengupload kembali MoU dan Quotation yang telah ditanda tangan.</li>
                     </ul>
                 @endif
-    </div>
+            </div>
 
-    <div class="text-center">
-        @if ($training->isfinish == 1)
-            <img class="mt-4 w-[250px] h-[150px] mx-auto" src="/img/complete.png" alt="LPG">
-        @endif
-    </div>
+            <div class="text-center">
+                @if ($training->isfinish == 1)
+                    <img class="mt-4 w-[250px] h-[150px] mx-auto" src="/img/complete.png" alt="LPG">
+                @endif
+            </div>
 
-    <div class="mt-4 flex gap-x-1">
-        <!-- Previous Button -->
-        <button type="button" id="prevBtnForm3"
-            class="bg-gray-500 text-white px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-400">
-            Sebelumnya
-        </button>
+            <div class="mt-4 flex gap-x-1">
+                <!-- Previous Button -->
+                <button type="button" id="prevBtnForm3"
+                    class="bg-gray-500 text-white px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-400">
+                    Sebelumnya
+                </button>
 
-        <!-- Next Button -->
-        <button type="button" id="submitBtnForm3"
-            class="bg-gray-400 text-white px-4 py-2 rounded-md cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-400"
-            data-training-date="{{ $training->date }}" disabled>
-            Simpan Data
-        </button>
-    </div>
-    </aside>
+                <!-- Next Button -->
+                <button type="button" id="submitBtnForm3"
+                    class="bg-gray-400 text-white px-4 py-2 rounded-md cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    data-training-date="{{ $training->date }}" disabled>
+                    Simpan Data
+                </button>
+            </div>
+        </aside>
 
 
     </div>
@@ -655,9 +660,7 @@
             targetTab = maxTab;
         }
 
-        // showTab(targetTab);
 
-        // Simpan tab yang diklik (untuk refresh nanti)
         document.querySelectorAll("ul li a").forEach(function(tabEl, idx) {
             tabEl.addEventListener("click", function() {
                 const tabNum = idx + 1;
