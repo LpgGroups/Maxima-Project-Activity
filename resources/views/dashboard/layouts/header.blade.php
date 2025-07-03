@@ -41,7 +41,11 @@
                             <ul>
                                 @foreach ($dropdownNotifications->take(10) as $notif)
                                     <li class="border-b border-gray-200 dark:border-gray-700">
-                                        <a href="{{ $notif->data['url'] ?? '#' }}"
+                                        @php
+                                            $trainingId = $notif->data['training_id'] ?? ($notif->data['id'] ?? null);
+                                        @endphp
+                                        <a href="
+    {{ $isManajemen ? route('management.training.detail', ['id' => $trainingId]) : $notif->data['url'] ?? '#' }}"
                                             class="{{ $notif->read_at ? 'text-gray-400 font-normal text-[14px]' : 'text-black font-bold dark:text-white text-[14px]' }} block px-4 py-2">
 
                                             {{-- Flex container for icon and content --}}

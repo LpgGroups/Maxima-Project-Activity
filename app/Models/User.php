@@ -11,6 +11,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Notifications\DatabaseNotification;
 
 
+
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;

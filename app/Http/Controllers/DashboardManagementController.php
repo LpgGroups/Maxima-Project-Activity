@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\RegTraining;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -36,10 +37,11 @@ class DashboardManagementController extends Controller
         }
 
         $data = $query->get();
-
+        $notifications = Auth::user()->unreadNotifications;
         return view('dashboard.management.index', [
             'title' => 'Management Summary',
             'data' => $data,
+            'notifications' => $notifications,
         ]);
     }
 
@@ -139,7 +141,36 @@ class DashboardManagementController extends Controller
                 Log::error("Gagal kirim WhatsApp Maxchat: " . $e->getMessage());
             }
         }
+        // Kirim notifikasi ke user PIC (pendaftar training)
+        if ($training->user) {
+            $training->user->notify(new \App\Notifications\TrainingUpdatedNotification(
+                $training,
+                'admin',
+                '',
+                "Status pelatihan {$training->activity} telah di-" . ($isfinish == 1 ? 'approve' : 'tolak') . ".",
+                $isfinish == 1 ? 'success' : 'denied',
+                $request->user()->name ?? 'Admin'
+            ));
 
+            Log::info('DEBUG NOTIF USER TERKIRIM', [
+                'user_id' => $training->user->id,
+                'user_email' => $training->user->email ?? null,
+            ]);
+        } 
+
+        // Kirim notifikasi ke semua admin
+        $adminUsers = User::where('role', 'admin')->get();
+
+        foreach ($adminUsers as $admin) {
+            $admin->notify(new \App\Notifications\TrainingUpdatedNotification(
+                $training,
+                'admin',
+                '',
+                "Status pelatihan {$training->activity} telah di-" . ($isfinish == 1 ? 'approve' : 'tolak') . ".",
+                $isfinish == 1 ? 'success' : 'denied',
+                $request->user()->name ?? 'Admin'
+            ));
+        }
         return response()->json(['success' => true]);
     }
 
@@ -155,12 +186,21 @@ class DashboardManagementController extends Controller
 
     public function detailView($id)
     {
-        // Ambil detail training
         $training = RegTraining::with(['participants', 'approvalFiles', 'files', 'user'])->findOrFail($id);
 
-        // Bisa update notifikasi jadi "read" jika perlu
-        // Misal:
-        // Auth::user()->unreadNotifications()->where('data->training_id', $id)->update(['read_at' => now()]);
+        $user = Auth::user(); // <-- Tambah ini
+
+        if ($user->role === 'management') {
+            $manajemenUsers = User::where('role', 'management')->get();
+
+            foreach ($manajemenUsers as $manajemen) {
+                $manajemen->unreadNotifications
+                    ->where('data.training_id', $training->id)
+                    ->each(function ($notif) {
+                        $notif->markAsRead();
+                    });
+            }
+        }
 
         return view('dashboard.management.detailfull', [
             'training' => $training,

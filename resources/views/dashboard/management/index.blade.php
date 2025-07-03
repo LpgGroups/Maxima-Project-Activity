@@ -1,5 +1,6 @@
 @extends('dashboard.layouts.dashboardmain')
 @section('container')
+    {{-- <pre>{{ json_encode($notifications, JSON_PRETTY_PRINT) }}</pre> --}}
     @php
         $activityMap = [
             'TKPK1' => 'Pelatihan Tenaga Kerja Pada Ketinggian Tingkat 1',
@@ -157,13 +158,22 @@
                             {{ \Carbon\Carbon::parse($training->date_end)->translatedFormat('d F Y') }}
                         </span>
 
-                        <div class="relative inline-block">
-                            {{-- Badge di atas tombol --}}
-                            <div class="absolute -top-5 right-0 new-badge hidden" data-badge-id="{{ $training->id }}">
-                                <img src="{{ asset('img/gif/update.gif') }}" class="w-6 h-6" />
-                            </div>
+                        @php
+                            $hasUpdateNotif = $hasUpdateNotif =
+                                $notifications
+                                    ->where('data.training_id', $training->id)
+                                    ->whereIn('data.type', ['update', 'new', 'info']) // <-- tambahkan 'info'
+                                    ->whereNull('read_at')
+                                    ->count() > 0;
 
-                            {{-- Tombol View Details --}}
+                        @endphp
+
+                        <div class="relative inline-block">
+                            @if ($hasUpdateNotif)
+                                <div class="absolute -top-5 right-0 new-badge" data-badge-id="{{ $training->id }}">
+                                    <img src="{{ asset('img/gif/update.gif') }}" class="w-6 h-6" />
+                                </div>
+                            @endif
                             <a href="#" class="view-detail-btn block" data-id="{{ $training->id }}"
                                 data-updated="{{ $training->updated_at }}">
                                 View Details

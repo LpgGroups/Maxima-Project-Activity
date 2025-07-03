@@ -344,5 +344,5 @@ $(document).ready(function () {
         liveSearch();
     });
     filterSearch();
-    badgedUpdate();
+    // badgedUpdate();
 });
