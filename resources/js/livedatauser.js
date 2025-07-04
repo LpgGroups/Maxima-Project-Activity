@@ -50,8 +50,8 @@ function liveDataUser() {
                     statusText = statusMap.menunggu.label;
                     statusBgClass = statusMap.menunggu.bgColor;
                 } else if (isprogress === 5 && isFinish === 2) {
-                    statusText = statusMap.ditolak.label;
-                    statusBgClass = statusMap.ditolak.bgColor;
+                    statusText = statusMap.menunggu.label;
+                    statusBgClass = statusMap.menunggu.bgColor;
                 } else if ([1, 2, 3, 4].includes(isprogress)) {
                     statusText = statusMap.proses.label;
                     statusBgClass = statusMap.proses.bgColor;
@@ -63,13 +63,7 @@ function liveDataUser() {
 
                 let progressColor = "";
                 let progressPercent = item.progress_percent;
-
-                if (item.isfinish === 2) {
-                    progressColor = "bg-red-600";
-                    progressPercent = 100;
-                } else {
-                    progressColor = item.progress_color;
-                }
+                progressColor = item.progress_color;
 
                 let notifIcon = "";
                 if (item.isNew) {

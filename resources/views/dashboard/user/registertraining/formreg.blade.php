@@ -560,7 +560,7 @@
                 'w-auto h-auto rounded-[20px] p-4 border-2',
             
                 // kondisi khusus: isprogress 5 dan isfinish 2 -->merah
-                'text-red-600 border-red-600' =>
+                'text-red-600 border-yellow-600' =>
                     $training->isprogress == 5 && $training->isfinish == 2,
             
                 // kondisi lain
@@ -591,7 +591,7 @@
                         <br>
                         Maxima Group
                     </p>
-                @elseif ($training->isfinish == 2)
+                    {{-- @elseif ($training->isfinish == 2)
                     <h3 class="text-xl font-bold mb-2 text-red-600">Pelatihan Ditolak</h3>
                     <p class="text-[10px] text-gray-700 text-justify">
                         Mohon maaf, pengajuan pelatihan ini <strong>tidak dapat dilanjutkan</strong>.<br><br>
@@ -604,7 +604,7 @@
                         <br><br>
                         Jika Anda merasa ada kekeliruan atau memiliki pertanyaan lebih lanjut, silakan hubungi tim Maxima
                         untuk klarifikasi.
-                    </p>
+                    </p> --}}
                 @elseif ($training->isprogress == 5)
                     <h3 class="text-xl font-bold mb-2 text-yellow-600">Menunggu Persetujuan</h3>
                     <p class="text-[10px] text-gray-700 text-justify">

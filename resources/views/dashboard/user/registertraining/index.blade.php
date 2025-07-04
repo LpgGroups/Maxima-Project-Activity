@@ -91,8 +91,8 @@
                                     </span>
                                 @elseif ($training->isprogress == 5 && $training->isfinish == 2)
                                     <span
-                                        class="bg-red-600 text-white font-semibold text-[10px] px-2 py-[2px] rounded inline-block w-[70px] text-center">
-                                        Ditolak
+                                        class="bg-yellow-400 text-black font-semibold text-[10px] px-2 py-[2px] rounded inline-block w-[70px] text-center">
+                                        Menunggu
                                     </span>
                                 @elseif ($training->isprogress <= 4 && $training->isfinish == 0)
                                     <span
@@ -156,10 +156,10 @@
                                     ];
 
                                     // Jika isfinish = 2 (Ditolak), override warna dan persen
-                                    if ($isRejected) {
-                                        $progress['color'] = 'bg-red-600';
-                                        $progress['percent'] = 100;
-                                    }
+                                    // if ($isRejected) {
+                                    //     $progress['color'] = 'bg-red-600';
+                                    //     $progress['percent'] = 100;
+                                    // }
                                 @endphp
 
                                 <div class="w-[80px] h-2 bg-gray-200 rounded-full dark:bg-gray-700 mx-auto">
