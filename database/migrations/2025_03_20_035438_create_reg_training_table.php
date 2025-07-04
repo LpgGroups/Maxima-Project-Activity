@@ -23,6 +23,7 @@ return new class extends Migration
             $table->date('date')->nullable();
             $table->date('date_end')->nullable();
             $table->string('place')->nullable();
+            $table->string('city')->nullable();
             $table->string('code_training')->nullable();
             $table->string('reason_fail')->nullable();
             $table->integer('isprogress')->default(0);

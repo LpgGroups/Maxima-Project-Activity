@@ -7,21 +7,20 @@
         @if ($notifications->count())
             <div class="space-y-4">
                 @php
-                    $notifSet = $notifications ?? collect();
+                    $notifSet = ($notifications ?? collect())->sortByDesc('created_at');
+                    $total = $notifSet->count(); // total notifikasi
                 @endphp
 
-                @foreach ($notifSet->sortByDesc('created_at') as $item)
+                @foreach ($notifSet as $item)
                     @php
-
                         $url = $item->data['url'] ?? null;
-
                     @endphp
 
                     <div class="flex items-start space-x-4 bg-gray-50 border border-gray-200 rounded-lg p-4 shadow-sm">
-                        <!-- Nomor urut -->
+                        <!-- Nomor urut mundur -->
                         <div
                             class="flex-shrink-0 w-10 h-10 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold">
-                            {{ $loop->iteration }}
+                            {{ $total - $loop->index }}
                         </div>
 
                         <!-- Detail aktivitas -->
@@ -33,7 +32,6 @@
                                 <span class="text-sm text-gray-500">
                                     {{ \Carbon\Carbon::parse($item->created_at)->setTimezone('Asia/Jakarta')->format('d M Y H:i') }}
                                 </span>
-
                             </div>
 
                             <div class="text-sm text-gray-600">
@@ -43,6 +41,7 @@
                         </div>
                     </div>
                 @endforeach
+
             </div>
         @else
             <p class="text-gray-600 mt-4">Belum ada data monitoring.</p>
