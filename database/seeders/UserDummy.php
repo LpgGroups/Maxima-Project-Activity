@@ -40,18 +40,18 @@ class UserDummy extends Seeder
             ],
             [
                 'name' => 'Management LPG',
-                'email' => 'management@gmail.com',
+                'email' => 'management@maximagroup.com',
                 'company' => 'Langgeng Perkasa Group',
                 'role' => 'management',
-                'password' => bcrypt('LPGr0up1')
+                'password' => bcrypt('LPGr0up25')
             ],
             [
                 'name' => 'Management LPG 2',
-                'email' => 'management1@gmail.com',
+                'email' => 'management1@maximagroup.com',
                 'company' => 'Langgeng Perkasa Group',
                 'role' => 'management',
-                'password' => bcrypt('LPGr0up1')
-            ],    
+                'password' => bcrypt('m4n49ement')
+            ],
         ];
         foreach ($userData as $key => $val) {
             User::create($val);
