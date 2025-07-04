@@ -22,7 +22,7 @@ return new class extends Migration
             $table->timestamps();
 
             // Optional: Jika nanti kamu pakai relasi ke tabel lain
-            $table->foreign('carousel_id')->references('id')->on('carousels')->onDelete('cascade');
+            // $table->foreign('carousel_id')->references('id')->on('carousels')->onDelete('cascade');
         });
     }
 
