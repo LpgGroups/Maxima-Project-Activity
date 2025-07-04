@@ -15,7 +15,7 @@ class UserDummy extends Seeder
     {
         $userData = [
             [
-                'name' => 'Admin Ops Maxima 1',
+                'name' => 'Admin-Ops1',
                 'email' => 'ana@maximagroup.co.id',
                 'company' => 'Maxima',
                 'phone' => '62895321678104',
@@ -23,7 +23,7 @@ class UserDummy extends Seeder
                 'password' => bcrypt('4dm1nMaxima')
             ],
             [
-                'name' => 'Admin Ops Maxima 2',
+                'name' => 'Admin-Ops2',
                 'email' => 'temank3.maxima@gmail.com',
                 'company' => 'Maxima',
                 'phone' => '6285283051168',
@@ -51,28 +51,7 @@ class UserDummy extends Seeder
                 'company' => 'Langgeng Perkasa Group',
                 'role' => 'management',
                 'password' => bcrypt('LPGr0up1')
-            ],
-             [
-                'name' => 'User',
-                'email' => 'user1',
-                'company' => 'Langgeng Perkasa Group',
-                'role' => 'user',
-                'password' => bcrypt('12345')
-             ],
-             [
-                'name' => 'User2',
-                'email' => 'user2',
-                'company' => 'Langgeng Perkasa Group',
-                'role' => 'user',
-                'password' => bcrypt('12345')
-             ],
-             [
-                'name' => 'admin',
-                'email' => 'admin',
-                'company' => 'Langgeng Perkasa Group',
-                'role' => 'admin',
-                'password' => bcrypt('12345')
-            ]
+            ],    
         ];
         foreach ($userData as $key => $val) {
             User::create($val);
