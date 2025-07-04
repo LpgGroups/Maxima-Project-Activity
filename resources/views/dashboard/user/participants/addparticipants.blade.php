@@ -304,7 +304,7 @@
                 <div class="relative">
                     <button type="submit" id="form-submit-btn"
                         class="w-full font-semibold py-2 rounded transition-colors duration-200
-               {{ $isClosed ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 text-white' }}"
+        {{ $isClosed ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 text-white' }}"
                         {{ $isClosed ? 'disabled' : '' }} data-training-date="{{ $trainingDate->format('Y-m-d') }}">
                         {{ $isClosed ? 'Pendaftaran sudah ditutup' : 'Simpan Peserta' }}
                     </button>
@@ -392,6 +392,29 @@
             window.isClosed = @json($isClosed);
             window.participantIdEdit = "{{ request()->participant_id ?? '' }}";
 
+
+            const submitBtn = document.getElementById('form-submit-btn');
+
+            submitBtn?.addEventListener('click', function(e) {
+                if (submitBtn.disabled) return;
+
+                e.preventDefault(); // Jangan langsung submit
+
+                Swal.fire({
+                    title: 'Yakin simpan peserta?',
+                    text: 'Pastikan data sudah benar sebelum disimpan.',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ya, simpan!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        submitBtn.closest('form').submit();
+                    }
+                });
+            });
             // Fungsi aman untuk update file info
             const setFileInfo = (selector, filePath) => {
                 const el = document.querySelector(selector);
@@ -535,28 +558,52 @@
                 btn.addEventListener('click', function() {
                     const id = btn.getAttribute('data-id');
                     const name = btn.getAttribute('data-name') || '(Tanpa Nama)';
-                    if (confirm(`Yakin ingin menghapus peserta: ${name}?`)) {
-                        fetch(`/dashboard/user/training/participant/delete/${id}`, {
-                                method: 'POST',
-                                headers: {
-                                    'X-CSRF-TOKEN': document.querySelector(
-                                        'meta[name="csrf-token"]').content,
-                                    'Accept': 'application/json',
-                                }
-                            })
-                            .then(res => res.json())
-                            .then(data => {
-                                if (data.success) {
-                                    alert('Peserta berhasil dihapus!');
-                                    location.reload();
-                                } else {
-                                    alert(data.message || 'Gagal menghapus peserta.');
-                                }
-                            })
-                            .catch(() => alert('Gagal menghapus peserta.'));
-                    }
+
+                    Swal.fire({
+                        title: `Hapus peserta?`,
+                        text: `Yakin ingin menghapus peserta: ${name}?`,
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        confirmButtonText: 'Ya, hapus',
+                        cancelButtonText: 'Batal'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            fetch(`/dashboard/user/training/participant/delete/${id}`, {
+                                    method: 'POST',
+                                    headers: {
+                                        'X-CSRF-TOKEN': document.querySelector(
+                                            'meta[name="csrf-token"]').content,
+                                        'Accept': 'application/json',
+                                    }
+                                })
+                                .then(res => res.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        Swal.fire({
+                                            title: 'Berhasil!',
+                                            text: 'Peserta berhasil dihapus.',
+                                            icon: 'success',
+                                            timer: 1500,
+                                            showConfirmButton: false
+                                        }).then(() => {
+                                            location.reload();
+                                        });
+                                    } else {
+                                        Swal.fire('Gagal', data.message ||
+                                            'Gagal menghapus peserta.', 'error');
+                                    }
+                                })
+                                .catch(() => {
+                                    Swal.fire('Error', 'Gagal menghapus peserta.',
+                                        'error');
+                                });
+                        }
+                    });
                 });
             });
+
             const nikInput = document.getElementById('nik');
             const nikCheck = document.getElementById('nik-check');
             const nikError = document.getElementById('nik-error');
