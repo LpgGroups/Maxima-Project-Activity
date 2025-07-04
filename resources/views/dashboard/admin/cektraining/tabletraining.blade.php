@@ -98,7 +98,7 @@
                                         class="bg-red-600 text-white font-semibold text-[10px] px-2 py-[2px] rounded inline-block w-[70px] text-center">
                                         Ditolak
                                     </span>
-                                @elseif ($training->isprogress < 4 && $training->isfinish == 0)
+                                @elseif ($training->isprogress <= 4 && $training->isfinish == 0)
                                     <span
                                         class="bg-blue-400 text-white font-semibold text-[10px] px-2 py-[2px] rounded inline-block w-[70px] text-center">
                                         Proses

@@ -87,6 +87,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/dashboard/management', [DashboardManagementController::class, 'index'])->name('dashboard.management.index');
         Route::get('/dashboard/management/get', [DashboardManagementController::class, 'getData'])->name('dashboard.management.getdata');
         Route::get('/dashboard/management/detail/{id}', [DashboardManagementController::class, 'showDetail']);
+        Route::get('/dashboard/management/training/{id}/detail', [DashboardManagementController::class, 'detailView'])
+            ->name('management.training.detail');
         Route::put('/dashboard/management/approve/{id}', [DashboardManagementController::class, 'approve']);
     });
 
