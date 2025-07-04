@@ -122,11 +122,12 @@
                             class="flex items-center space-x-2 menu-item-hover 
                                   @if (request()->is('dashboard/admin/users')) bg-red-500 text-white @else hover:bg-red-500 @endif 
                                   rounded-lg p-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="size-6" fill="none" viewBox="0 0 24 24"
-                                stroke-width="1.5" stroke="currentColor">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke-width="1.5" stroke="currentColor" class="size-6">
                                 <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M17 20h5v-2a4 4 0 00-5-4m-6 6v-2a4 4 0 00-5-4h0a4 4 0 00-5 4v2h5m6-6a4 4 0 110-8 4 4 0 010 8z" />
+                                    d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z" />
                             </svg>
+
                             <span class="text-sm">Manajemen User</span>
                         </a>
                     </li>
@@ -135,10 +136,10 @@
                             class="flex items-center space-x-2 menu-item-hover 
                                   @if (request()->is('dashboard/monitoring')) bg-red-500 text-white @else hover:bg-red-500 @endif 
                                   rounded-lg p-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="size-6" fill="none" viewBox="0 0 24 24"
-                                stroke-width="1.5" stroke="currentColor">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke-width="1.5" stroke="currentColor" class="size-6">
                                 <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M9 17v-2a2 2 0 012-2h2a2 2 0 012 2v2M9 7h.01M15 7h.01M12 9.5a2.5 2.5 0 00-2.5 2.5h5a2.5 2.5 0 00-2.5-2.5z" />
+                                    d="M9 17.25v1.007a3 3 0 0 1-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0 1 15 18.257V17.25m6-12V15a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 15V5.25m18 0A2.25 2.25 0 0 0 18.75 3H5.25A2.25 2.25 0 0 0 3 5.25m18 0V12a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 12V5.25" />
                             </svg>
                             <span class="text-sm">Monitoring</span>
                         </a>
@@ -156,6 +157,20 @@
                                     d="M3 3h18v4H3V3zm0 6h18v4H3V9zm0 6h18v4H3v-4z" />
                             </svg>
                             <span class="text-sm">Management Dashboard</span>
+                        </a>
+                    </li>
+
+                    <li class="my-1">
+                        <a href="/dashboard/monitoring"
+                            class="flex items-center space-x-2 menu-item-hover 
+                                  @if (request()->is('dashboard/monitoring')) bg-red-500 text-white @else hover:bg-red-500 @endif 
+                                  rounded-lg p-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke-width="1.5" stroke="currentColor" class="size-6">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M9 17.25v1.007a3 3 0 0 1-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0 1 15 18.257V17.25m6-12V15a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 15V5.25m18 0A2.25 2.25 0 0 0 18.75 3H5.25A2.25 2.25 0 0 0 3 5.25m18 0V12a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 12V5.25" />
+                            </svg>
+                            <span class="text-sm">Monitoring</span>
                         </a>
                     </li>
                 @endif
