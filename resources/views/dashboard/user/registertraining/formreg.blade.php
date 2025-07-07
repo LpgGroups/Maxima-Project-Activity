@@ -427,8 +427,11 @@
                                 </div>
                             </div>
                         </div>
-                        <p class="text-[12px]">PIC diharapkan untuk mengupload kembali berkas MoU dan Quotation yang
-                            telah disetujui dan ditandatangani oleh PIC.</p>
+                        <p class="text-[12px]">
+                            PIC diharapkan untuk mengupload kembali berkas
+                            <strong>MoU/Quotation/PO dan Bukti Pembayaran</strong>
+                            yang telah disetujui dan ditandatangani oleh PIC.
+                        </p>
 
                         <form id="form3" enctype="multipart/form-data">
                             @csrf

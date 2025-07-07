@@ -104,6 +104,7 @@ class DashboardAdminController extends Controller
             return [
                 'id' => $training->id,
                 'user' => $training->user,
+                'noLetter' => $training->no_letter,
                 'name_pic' => $training->name_pic,
                 'name_company' => $training->name_company,
                 'activity' => $training->activity,
@@ -260,8 +261,8 @@ class DashboardAdminController extends Controller
     {
         $request->validate([
             'training_id' => 'required|exists:reg_training,id',
-            'budget_plan' => 'nullable|file|mimes:pdf,doc,docx|max:5120',
-            'letter_implementation' => 'nullable|file|mimes:pdf,doc,docx|max:5120',
+            'budget_plan' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx|max:2408',
+            'letter_implementation' => 'nullable|file|mimes:pdf,doc,docx|max:2408',
         ]);
 
         $training = RegTraining::find($request->training_id);

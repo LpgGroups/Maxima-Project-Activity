@@ -1,25 +1,52 @@
 @extends('dashboard.layouts.dashboardmain')
 @section('container')
-    <div class="flex items-center gap-2 p-4 bg-gray-50 border rounded-xl shadow mb-4">
-        <span class="font-semibold text-gray-700">Token:</span>
-        <span id="token-value"
-            class="px-3 py-1 rounded-md font-mono bg-gray-200 text-blue-600 text-base tracking-wide select-all">
-            {{ $training->code_training }}
-        </span>
-        <button id="copy-token"
-            class="flex items-center gap-1 px-2 py-1 rounded-lg bg-blue-600 hover:bg-blue-700 transition text-white text-sm font-semibold shadow"
-            type="button">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block" fill="none" viewBox="0 0 24 24"
-                stroke="currentColor">
-                <rect x="9" y="9" width="13" height="13" rx="2" stroke="currentColor" stroke-width="2"
-                    fill="none" />
-                <rect x="2" y="2" width="13" height="13" rx="2" stroke="currentColor" stroke-width="2"
-                    fill="none" />
-            </svg>
-            Copy
-        </button>
-        <span id="copied-msg" class="ml-2 text-green-500 text-xs opacity-0 transition-opacity duration-300">Copied!</span>
+    <div class="flex justify-between items-start p-4 bg-gray-50 border rounded-xl shadow mb-4">
+        <!-- Kiri: Token -->
+        <div class="flex items-center gap-2 flex-wrap">
+            <span class="font-semibold text-gray-700">Token:</span>
+            <span id="token-value"
+                class="px-3 py-1 rounded-md font-mono bg-gray-200 text-blue-600 text-base tracking-wide select-all">
+                {{ $training->code_training }}
+            </span>
+            <button id="copy-token"
+                class="flex items-center gap-1 px-2 py-1 rounded-lg bg-blue-600 hover:bg-blue-700 transition text-white text-sm font-semibold shadow"
+                type="button">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <rect x="9" y="9" width="13" height="13" rx="2" stroke="currentColor" stroke-width="2"
+                        fill="none" />
+                    <rect x="2" y="2" width="13" height="13" rx="2" stroke="currentColor" stroke-width="2"
+                        fill="none" />
+                </svg>
+                Copy
+            </button>
+            <span id="copied-msg"
+                class="ml-2 text-green-500 text-xs opacity-0 transition-opacity duration-300">Copied!</span>
+        </div>
+
+        <!-- Kanan: No Surat -->
+        <div class="flex items-center gap-2 whitespace-nowrap">
+            <span class="text-sm text-gray-600 font-semibold" id="no-letter-value">
+                No: {{ $training->no_letter }}
+            </span>
+            <button id="copy-letter"
+                class="flex items-center gap-1 px-2 py-1 rounded-lg bg-green-600 hover:bg-green-700 transition text-white text-sm font-semibold shadow"
+                type="button">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <rect x="9" y="9" width="13" height="13" rx="2" stroke="currentColor" stroke-width="2"
+                        fill="none" />
+                    <rect x="2" y="2" width="13" height="13" rx="2" stroke="currentColor" stroke-width="2"
+                        fill="none" />
+                </svg>
+                Copy
+            </button>
+            <span id="copied-letter-msg"
+                class="text-green-500 text-xs opacity-0 transition-opacity duration-300">Copied!</span>
+        </div>
     </div>
+
+
     <div class="p-4 border border-t-0 border-gray-300 bg-white rounded-lg mt-6">
         <h1 class="text-[24px] font-semibold">Daftar Pelatihan</h1>
         <h2 class="text-[15px]">Lengkapi data form ini untuk mengikuti pelatihan yang akan diselenggarakan oleh PT
@@ -114,7 +141,8 @@
                             {{ old('activity', $training->activity ?? '') == 'TKBT2' ? 'selected' : '' }}>TKBT2</option>
                         <option value="BE" {{ old('activity', $training->activity ?? '') == 'BE' ? 'selected' : '' }}>
                             BE</option>
-                        <option value="P3K" {{ old('activity', $training->activity ?? '') == 'P3K' ? 'selected' : '' }}>
+                        <option value="P3K"
+                            {{ old('activity', $training->activity ?? '') == 'P3K' ? 'selected' : '' }}>
                             P3K</option>
                         <option value="AK3U"
                             {{ old('activity', $training->activity ?? '') == 'AK3U' ? 'selected' : '' }}>
@@ -384,16 +412,16 @@
     </div>
 
     <div class="p-6 bg-white border border-gray-200 rounded-xl shadow-sm w-full mt-8">
-        <h2 class="text-2xl font-bold mb-6 text-gray-700">Upload File Budget Plan & Pelaksanaan</h2>
+        <h2 class="text-2xl font-bold mb-6 text-gray-700">Upload File Budget Plan & Surat Pelaksanaan</h2>
         <form id="adminFileUploadForm" class="space-y-6">
             <input type="hidden" name="training_id" value="{{ $training->id }}">
             <div class="mt-2">
                 <label class="block mb-2 mt-2 text-sm font-medium text-gray-900" for="budget_plan">
-                    Upload Budget Plan (.pdf, .docx)
+                    Upload Budget Plan (.pdf, .docx, .xls)
                 </label>
-                <input name="budget_plan" id="budget_plan" type="file" accept=".pdf,.doc,.docx"
+                <input name="budget_plan" id="budget_plan" type="file" accept=".pdf,.doc,.docx,.xls,.xlsx"
                     class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none">
-                <p class="mt-1 text-sm text-gray-500">Format File: PDF, DOC, DOCX (Maks Size: 5MB).</p>
+                <p class="mt-1 text-sm text-gray-500">Format File: PDF, DOC, DOCX, XLS (Maks Size: 5MB).</p>
 
                 @if (!empty($fileRequirement?->budget_plan))
                     <p class="text-sm text-green-600 mt-1">
@@ -411,7 +439,7 @@
 
             <div class="mt-2">
                 <label class="block mb-2 mt-2 text-sm font-medium text-gray-900" for="letter_implementation">
-                    Upload Letter Implementation (.pdf, .docx)
+                    Upload Surat Pelaksanaan (.pdf, .docx)
                 </label>
                 <input name="letter_implementation" id="letter_implementation" type="file" accept=".pdf,.doc,.docx"
                     class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none">
