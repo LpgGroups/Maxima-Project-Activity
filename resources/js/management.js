@@ -14,6 +14,9 @@ function showDetail(id) {
             const SwalHTML = `
                 <div class="font-extrabold">Informasi Pendaftaran</div>
                 <div class="text-sm bg-gray-50 border border-gray-300 rounded-md p-4 grid grid-cols-[120px,10px,1fr] gap-y-2">
+                 <div class="text-right font-bold text-gray-700">No Surat</div><div>:</div><div>${
+                     data.no_letter ?? "-"
+                 }</div>
                     <div class="text-right font-bold text-gray-700">Nama PIC</div><div>:</div><div>${
                         data.pic ?? "-"
                     }</div>
@@ -133,7 +136,7 @@ function showDetail(id) {
                                 "content"
                             ),
                         },
-                        body: JSON.stringify({ isfinish: 1 }), // nilai 1 = disetujui
+                        body: JSON.stringify({ isfinish: 1 }),
                     })
                         .then((res) => {
                             if (!res.ok)
@@ -194,13 +197,17 @@ function showDetail(id) {
                         "Disetujui!",
                         "Data telah disetujui.",
                         "success"
-                    ).then(() => location.reload());
+                    ).then(() => {
+                        window.location.href = `/dashboard/management/training/${id}/detail`;
+                    });
                 } else if (result.isDenied) {
                     Swal.fire(
                         "Data Ditolak!",
                         "Data telah berhasil ditolak.",
                         "warning"
-                    ).then(() => location.reload());
+                    ).then(() => {
+                        window.location.href = `/dashboard/management/training/${id}/detail`;
+                    });
                 }
             });
         })
@@ -228,81 +235,12 @@ function liveSearch() {
             .text()
             .toLowerCase();
         const infoText = $(this).find("p.text-xs").text().toLowerCase();
-
-        const combinedText = activityText + " " + infoText;
+        const letterText = $(this).find(".no-letter").text().toLowerCase();
+        const combinedText = activityText + " " + infoText + letterText;
 
         const isMatch = combinedText.includes(query);
         $(this).toggle(isMatch);
     });
-}
-function applyTrainingFilters() {
-    const searchTerm = $("#searchInput").val().toLowerCase();
-    const sortValue = $("#sortCompany").val();
-    const start = $("#startDate").val()
-        ? new Date($("#startDate").val())
-        : null;
-    const end = $("#endDate").val() ? new Date($("#endDate").val()) : null;
-
-    const cards = $(".training-card");
-
-    // Filtering
-    cards.each(function () {
-        const card = $(this);
-        const companyText = card
-            .find("p.text-zinc-800.text-xs")
-            .text()
-            .split(" - ")[1]
-            ?.trim()
-            .toLowerCase();
-        const dateRangeText = card.find(".text-violet-400").text();
-        const [startText, endText] = dateRangeText.split(" - ");
-
-        const cardStart = new Date(startText);
-        const cardEnd = new Date(endText);
-
-        const matchesSearch = card.text().toLowerCase().includes(searchTerm);
-        const matchesStart = !start || cardStart >= start;
-        const matchesEnd = !end || cardEnd <= end;
-
-        if (matchesSearch && matchesStart && matchesEnd) {
-            card.show();
-        } else {
-            card.hide();
-        }
-    });
-
-    // Sorting
-    if (sortValue) {
-        const container = $(".space-y-4");
-        const visibleCards = cards
-            .filter(function () {
-                return $(this).is(":visible");
-            })
-            .get();
-
-        visibleCards.sort(function (a, b) {
-            const nameA = $(a)
-                .find("p.text-zinc-800.text-xs")
-                .text()
-                .split(" - ")[1]
-                ?.trim()
-                .toLowerCase();
-            const nameB = $(b)
-                .find("p.text-zinc-800.text-xs")
-                .text()
-                .split(" - ")[1]
-                ?.trim()
-                .toLowerCase();
-            return sortValue === "asc"
-                ? nameA.localeCompare(nameB)
-                : nameB.localeCompare(nameA);
-        });
-
-        // Append sorted cards back to the container
-        $.each(visibleCards, function (_, card) {
-            container.append(card);
-        });
-    }
 }
 
 function badgedUpdate() {

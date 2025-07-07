@@ -236,7 +236,7 @@
                 {{-- Form-Registration --}}
                 <div class="relative file-upload-group mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1" for="form_registration">Formulir
-                        Pendaftaran (PDF)<span class="text-red-500">*</span></label>
+                        Pendaftaran (PDF)<span class="text-grey-500">(opsional)</span></label>
                     <div class="flex items-center gap-2">
                         <input type="file" name="form_registration" id="form_registration"
                             accept="application/pdf,image/*"
@@ -263,7 +263,7 @@
                 {{-- SURAT SEHAT --}}
                 <div class="relative file-upload-group mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1" for="letter_health">Surat Keterangan Sehat
-                        (PDF)<span class="text-red-500">*</span></label>
+                        (PDF)<span class="text-grey-500">(opsional)</span></label>
                     <div class="flex items-center gap-2">
                         <input type="file" name="letter_health" id="letter_health" accept="application/pdf,image/*"
                             class="block w-full text-sm text-gray-600 border border-gray-300 rounded cursor-pointer" />
@@ -284,7 +284,7 @@
                     {{-- CV --}}
                     <div class="relative file-upload-group mb-4">
                         <label class="block text-sm font-medium text-gray-700 mb-1" for="cv">CV (PDF/DOC/DOCX)<span
-                                class="text-red-500">*</span></label>
+                                class="text-grey-500">(opsional)</span></label>
                         <div class="flex items-center gap-2">
                             <input type="file" name="cv" id="cv" accept="application/pdf,.doc,.docx"
                                 class="block w-full text-sm text-gray-600 border border-gray-300 rounded cursor-pointer" />

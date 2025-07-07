@@ -179,7 +179,7 @@
 
         <!-- Version Info -->
         <div class="p-4 mt-auto">
-            <span class="text-sm">Version: Beta V1.0.1</span>
+            <span class="text-sm">Version: Beta V1.0.2</span>
         </div>
     </div>
 </div>

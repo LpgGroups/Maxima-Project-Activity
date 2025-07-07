@@ -1,9 +1,9 @@
 @extends('dashboard.layouts.dashboardmain')
 @section('container')
     <div class="lg:w-full sm:w-full h-auto bg-white rounded-2xl shadow-md p-4 sm:mb-0 lg:mb-[500px]">
-        <a href="{{ route('dashboard.selectDate') }}">Tambah</a>
+        <a class="bg-blue-500 rounded-lg p-2 text-white" href="{{ route('dashboard.selectDate') }}">+ Tambah Training</a>
 
-        <form method="GET" class="mb-4 flex flex-wrap gap-2 items-end">
+        <form method="GET" class="mb-4 flex flex-wrap gap-2 items-end mt-4">
             <input type="text" name="search" placeholder="Search..." value="{{ request('search') }}"
                 class="border rounded px-2 py-1 text-sm" />
 

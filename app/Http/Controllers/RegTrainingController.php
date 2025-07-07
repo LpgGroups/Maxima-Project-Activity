@@ -30,7 +30,8 @@ class RegTrainingController extends Controller
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
-                $q->where('activity', 'like', '%' . $search . '%');
+                $q->where('activity', 'like', '%' . $search . '%')
+                    ->orWhere('no_letter', 'like', '%' . $search . '%');
             });
         }
 

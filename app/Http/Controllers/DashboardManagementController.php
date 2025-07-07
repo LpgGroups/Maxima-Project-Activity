@@ -17,14 +17,21 @@ class DashboardManagementController extends Controller
         $query = RegTraining::with(['participants', 'files', 'trainingNotifications', 'user'])
             ->where('isprogress', 5);
 
-        // Filter tanggal mulai
         if ($request->filled('startDate')) {
-            $query->whereDate('date', '>=', $request->startDate);
+            $query->whereDate('date_end', '>=', $request->startDate); // Data yang belum selesai pada startDate
         }
 
-        // Filter tanggal selesai
         if ($request->filled('endDate')) {
-            $query->whereDate('date_end', '<=', $request->endDate);
+            $query->whereDate('date', '<=', $request->endDate); // Data yang sudah mulai sebelum endDate
+        }
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('no_letter', 'like', '%' . $search . '%')
+                    ->orWhere('activity', 'like', '%' . $search . '%')
+                    ->orWhere('name_company', 'like', '%' . $search . '%');
+            });
         }
 
         // Sorting berdasarkan nama perusahaan (name_company)
@@ -37,6 +44,7 @@ class DashboardManagementController extends Controller
         }
 
         $data = $query->get();
+
         $notifications = Auth::user()->unreadNotifications;
         return view('dashboard.management.index', [
             'title' => 'Management Summary',
@@ -62,6 +70,7 @@ class DashboardManagementController extends Controller
 
         return response()->json([
             'activity'     => $training->activity,
+            'no_letter'     => $training->no_letter,
             'pic'          => $training->name_pic,
             'email'          => $training->email_pic,
             'phone'          => $training->phone_pic,
@@ -141,22 +150,7 @@ class DashboardManagementController extends Controller
                 Log::error("Gagal kirim WhatsApp Maxchat: " . $e->getMessage());
             }
         }
-        // Kirim notifikasi ke user PIC (pendaftar training)
-        if ($training->user) {
-            $training->user->notify(new \App\Notifications\TrainingUpdatedNotification(
-                $training,
-                'admin',
-                '',
-                "Status pelatihan {$training->activity} telah di-" . ($isfinish == 1 ? 'approve' : 'tolak') . ".",
-                $isfinish == 1 ? 'success' : 'denied',
-                $request->user()->name ?? 'Admin'
-            ));
 
-            Log::info('DEBUG NOTIF USER TERKIRIM', [
-                'user_id' => $training->user->id,
-                'user_email' => $training->user->email ?? null,
-            ]);
-        } 
 
         // Kirim notifikasi ke semua admin
         $adminUsers = User::where('role', 'admin')->get();
