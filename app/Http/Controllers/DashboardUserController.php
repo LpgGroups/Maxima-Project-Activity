@@ -30,10 +30,17 @@ class DashboardUserController extends Controller
             ->take(10)  // Membatasi hanya 10 data pelatihan
             ->get();
 
+        $fullQuotaDates = RegTraining::select('date')
+            ->groupBy('date')
+            ->havingRaw('COUNT(*) >= 2')
+            ->pluck('date')
+            ->map(fn($d) => \Carbon\Carbon::parse($d)->toDateString())
+            ->toArray();
         return view('dashboard.user.index', [
             'title' => 'Dashboard User',
             'trainings' => $trainings,
             'totalTrainings' => $totalTrainings,
+            'fullQuotaDates' => $fullQuotaDates,
             'totalParticipants' => $totalParticipants,
         ]);
     }
@@ -82,10 +89,22 @@ class DashboardUserController extends Controller
             $countSameDay = RegTraining::where('date', $startDate->toDateString())
                 ->where('user_id', $user->id)
                 ->count();
+
             if ($countSameDay >= 2) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Kuota Pendaftaran pelatihan pada tanggal tersebut sudah penuh. Silakan pilih tanggal lain.'
+                    'message' => 'Kuota pendaftaran Anda pada tanggal tersebut sudah penuh.'
+                ]);
+            }
+
+            // Cek kuota umum (global full)
+            $countAllSameDay = RegTraining::whereDate('date', $startDate->toDateString())
+                ->count();
+
+            if ($countAllSameDay >= 2) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Pelatihan pada tanggal tersebut sudah penuh. Silakan pilih tanggal lain.'
                 ]);
             }
             $now = now();

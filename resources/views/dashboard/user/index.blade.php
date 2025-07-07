@@ -131,6 +131,9 @@
 
         </div>
     </div>
+    <script>
+        window.fullQuotaDates = @json($fullQuotaDates);
+    </script>
 @endsection
 
 @push('scripts')

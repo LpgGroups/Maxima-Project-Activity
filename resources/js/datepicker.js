@@ -33,21 +33,29 @@ $(document).ready(function () {
             currentDate.getMonth() + 1,
             0
         ).getDate();
+
         const firstDay = new Date(
             currentDate.getFullYear(),
             currentDate.getMonth(),
             1
         ).getDay();
 
+        const $daysContainer = $("#days");
+        $daysContainer.empty();
+
+        // Set nama bulan
         $("#month-name").text(
             `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`
         );
 
-        const $daysContainer = $("#days");
-        $daysContainer.empty();
+        const today = new Date();
+        const tenDaysLater = new Date(today);
+        tenDaysLater.setDate(today.getDate() + 10);
 
-        const { today, tenDaysLater } = getTodayAndTenDaysLater();
+        // Isi tanggal penuh (kuota sudah 2) dari backend
+        const fullQuotaDates = window.fullQuotaDates || []; // Format: ['2025-07-10', ...]
 
+        // Spasi awal sebelum tanggal 1
         for (let i = 0; i < firstDay; i++) {
             $("<div>").addClass("text-center text-xs").appendTo($daysContainer);
         }
@@ -56,11 +64,18 @@ $(document).ready(function () {
             const dayCell = $("<div>").addClass(
                 "text-center border border-black py-1 px-2 rounded-lg cursor-pointer text-xs h-8 flex items-center justify-center"
             );
+
             const currentDay = new Date(
                 currentDate.getFullYear(),
                 currentDate.getMonth(),
                 day
             );
+            const dateString =
+                currentDay.getFullYear() +
+                "-" +
+                String(currentDay.getMonth() + 1).padStart(2, "0") +
+                "-" +
+                String(currentDay.getDate()).padStart(2, "0");
             const dayOfWeek = currentDay.getDay();
             const isWeekend = dayOfWeek === 0;
             const isPastDate = currentDay < today;
@@ -71,7 +86,15 @@ $(document).ready(function () {
                 currentDate.getMonth() === today.getMonth() &&
                 currentDate.getFullYear() === today.getFullYear();
 
-            if (isToday) {
+            const isFullQuota = fullQuotaDates.includes(dateString);
+
+            // Logika tampilan kalender
+            if (isFullQuota) {
+                dayCell
+                    .addClass("bg-red-500 text-white cursor-not-allowed")
+                    .attr("title", "Kuota pelatihan penuh pada tanggal ini");
+                dayCell.css("pointer-events", "none");
+            } else if (isToday) {
                 dayCell.addClass("bg-violet-400 text-white");
                 dayCell.css("pointer-events", "none");
             } else if (isPastDate || isWithinNextTenDays || isWeekend) {
@@ -93,6 +116,7 @@ $(document).ready(function () {
                         .addClass("bg-blue-500 text-white");
                 });
             }
+
             dayCell.text(day);
             $daysContainer.append(dayCell);
         }
@@ -100,6 +124,7 @@ $(document).ready(function () {
         if (selectedDay === null) {
             disableBookingButton();
         }
+        console.log("Checking date:", dateString, "in", fullQuotaDates);
     }
 
     function enableBookingButton() {
