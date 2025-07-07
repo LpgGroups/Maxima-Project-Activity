@@ -9,10 +9,12 @@ function fetchTrainingDataAdmin() {
             const displayTrainings = trainings.slice(0, maxDisplay);
 
             displayTrainings.forEach((training, index) => {
-                const userName = training.user?.name || "-";
+                const numberLetter = training.noLetter || "-";
                 const namePic = training.name_pic || "-";
                 const nameCompany = training.name_company || "-";
                 const activity = training.activity || "";
+                const statusFail =
+                    training.reason_fail !== null ? training.reason_fail : "";
 
                 const dateStart = training.date
                     ? new Date(training.date)
@@ -63,27 +65,43 @@ function fetchTrainingDataAdmin() {
                     badgeHTML = `<img src="/img/gif/update.gif" alt="Updated" class="w-5 h-3 -mt-3 inline-block">`;
                 }
                 const statusMap = {
-                    waiting: {
-                        label: "Menunggu",
-                        bgColor:
-                            "bg-yellow-400 text-black font-semibold rounded",
-                    },
                     selesai: {
                         label: "Selesai",
                         bgColor:
                             "bg-green-600 text-white font-semibold rounded",
+                    },
+                    menunggu: {
+                        label: "Menunggu",
+                        bgColor:
+                            "bg-yellow-400 text-black font-semibold rounded",
+                    },
+                    ditolak: {
+                        label: "Ditolak",
+                        bgColor: "bg-red-600 text-white font-semibold rounded",
+                    },
+                    proses: {
+                        label: "Diproses",
+                        bgColor: "bg-blue-400 text-white font-semibold rounded",
                     },
                 };
 
                 let statusText = "";
                 let statusBgClass = "";
 
-                if ([1, 2, 3, 4].includes(training.isprogress)) {
-                    statusText = statusMap.waiting.label;
-                    statusBgClass = statusMap.waiting.bgColor;
-                } else if (training.isprogress === 5) {
+                const isprogress = Number(training.isprogress);
+                const isFinish = Number(training.isfinish);
+                if (isprogress === 5 && isFinish === 1) {
                     statusText = statusMap.selesai.label;
                     statusBgClass = statusMap.selesai.bgColor;
+                } else if (isprogress === 5 && isFinish === 0) {
+                    statusText = statusMap.menunggu.label;
+                    statusBgClass = statusMap.menunggu.bgColor;
+                } else if (isprogress === 5 && isFinish === 2) {
+                    statusText = statusMap.ditolak.label;
+                    statusBgClass = statusMap.ditolak.bgColor;
+                } else if ([1, 2, 3, 4].includes(isprogress)) {
+                    statusText = statusMap.proses.label;
+                    statusBgClass = statusMap.proses.bgColor;
                 } else {
                     statusText = "Unknown";
                     statusBgClass =
@@ -94,24 +112,25 @@ function fetchTrainingDataAdmin() {
                     <tr onclick="window.location='/dashboard/admin/training/${
                         training.id
                     }'"
-                        class="odd:bg-white even:bg-gray-300 cursor-pointer hover:bg-red-500 hover:text-white leading-loose">
+                        class="odd:bg-white even:bg-gray-300 cursor-pointer hover:bg-red-500 hover:text-white leading-loose text-[12px]">
                         <td>${index + 1}</td>
-                        <td class="max-w-[120px] truncate whitespace-nowrap" title="${userName}">${userName}</td>
-                        <td class="max-w-[120px] truncate whitespace-nowrap" title="${namePic}">${namePic}</td>
-                        <td class="max-w-[150px] truncate whitespace-nowrap" title="${nameCompany}">${nameCompany} ${badgeHTML}</td>
+                        <td class="max-w-[120px] truncate whitespace-nowrap" title="${numberLetter}">${numberLetter}${badgeHTML}</td>
+                        <td class="max-w-[50px] truncate whitespace-nowrap" title="${namePic}">${namePic}</td>
+                        <td class="max-w-[150px] truncate whitespace-nowrap" title="${nameCompany}">${nameCompany} </td>
                         <td>${activity}</td>
-                        <td class="relative p-1 pr-1">
-                            <span class="${statusBgClass} text-[10px] px-2 py-[2px] rounded inline-block w-[70px] text-center truncate">
+                        <td class="relative p-1 pr-1 truncate whitespace-nowrap">
+                            <span 
+                                class="${statusBgClass} text-[10px] px-2 py-[2px] rounded inline-block w-[70px] text-center truncate"
+                                title="${
+                                    isFinish === 2 && training.statusFail
+                                        ? training.statusFail
+                                        : "nothing"
+                                }"
+                            >
                                 ${statusText}
                             </span>
-                            ${
-                                ["true", true, 1, "1"].includes(
-                                    training.isfinish
-                                )
-                                    ? `<img src="/img/svg/success.svg" alt="Success" class="w-4 h-4 absolute top-1 right-1">`
-                                    : ""
-                            }
                         </td>
+
                         <td class="max-w-[160px] truncate whitespace-nowrap" title="${formattedDate}">${formattedDate}</td>
                         <td>
                             <div class="w-[80px] h-2 bg-gray-200 rounded-full dark:bg-gray-700 mx-auto">

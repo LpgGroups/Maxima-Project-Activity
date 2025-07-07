@@ -17,34 +17,53 @@ function liveDataUser() {
             result.data.forEach((item) => {
                 // Menentukan status label dan warna
                 const statusMap = {
-                    waiting: {
-                        label: "Menunggu",
-                        bgColor:
-                            "bg-yellow-400 text-black font-semibold rounded",
-                    },
                     selesai: {
                         label: "Selesai",
                         bgColor:
                             "bg-green-600 text-white font-semibold rounded",
+                    },
+                    menunggu: {
+                        label: "Menunggu",
+                        bgColor:
+                            "bg-yellow-400 text-black font-semibold rounded",
+                    },
+                    ditolak: {
+                        label: "Ditolak",
+                        bgColor: "bg-red-600 text-white font-semibold rounded",
+                    },
+                    proses: {
+                        label: "Diproses",
+                        bgColor: "bg-blue-400 text-white font-semibold rounded",
                     },
                 };
 
                 let statusText = "";
                 let statusBgClass = "";
 
-                const isprogress = Number(item.isprogress); // konversi ke number
+                const isprogress = Number(item.isprogress);
+                const isFinish = Number(item.isfinish); // atau item.isfinish, pastikan konsisten
 
-                if ([1, 2, 3, 4].includes(isprogress)) {
-                    statusText = statusMap.waiting.label;
-                    statusBgClass = statusMap.waiting.bgColor;
-                } else if (isprogress === 5) {
+                if (isprogress === 5 && isFinish === 1) {
                     statusText = statusMap.selesai.label;
                     statusBgClass = statusMap.selesai.bgColor;
+                } else if (isprogress === 5 && isFinish === 0) {
+                    statusText = statusMap.menunggu.label;
+                    statusBgClass = statusMap.menunggu.bgColor;
+                } else if (isprogress === 5 && isFinish === 2) {
+                    statusText = statusMap.menunggu.label;
+                    statusBgClass = statusMap.menunggu.bgColor;
+                } else if ([1, 2, 3, 4].includes(isprogress)) {
+                    statusText = statusMap.proses.label;
+                    statusBgClass = statusMap.proses.bgColor;
                 } else {
                     statusText = "Unknown";
                     statusBgClass =
                         "bg-gray-400 text-white font-semibold rounded";
                 }
+
+                let progressColor = "";
+                let progressPercent = item.progress_percent;
+                progressColor = item.progress_color;
 
                 let notifIcon = "";
                 if (item.isNew) {
@@ -69,14 +88,16 @@ function liveDataUser() {
                         <td>${item.date}</td>
                         <td>
                             <div class="w-[80px] h-2 bg-gray-200 rounded-full dark:bg-gray-700 mx-auto">
-                                <div class="${item.progress_color} text-[8px] font-medium text-white text-center leading-none rounded-full"
-                                    style="width: ${item.progress_percent}%; height:8px">
-                                    ${item.progress_percent}%
+                                <div class="${progressColor} text-[8px] font-medium text-white text-center leading-none rounded-full"
+                                    style="width: ${progressPercent}%; height:8px">
+                                    ${progressPercent}%
                                 </div>
                             </div>
                         </td>
                     </tr>
                 `;
+                console.log(item);
+                console.log("notifIcon", notifIcon, item.isNew, item.isUpdated);
                 $tbody.append(rowHtml);
             });
         })

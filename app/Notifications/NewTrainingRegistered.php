@@ -37,11 +37,13 @@ class NewTrainingRegistered extends Notification
      */
     public function toDatabase($notifiable)
     {
+        $userName = $this->training->user->name ?? '-';
         return [
             'type' => 'new',
             'title' => 'Training Baru Telah Didaftarkan',
             'message' => $this->training->user->name . ' telah mendaftarkan training ' . $this->training->activity,
             'training_id' => $this->training->id,
+            'user_name' => $userName,
             'url' => route('dashboard.admin.training.show', $this->training->id),
         ];
     }

@@ -11,6 +11,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Notifications\DatabaseNotification;
 
 
+
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
@@ -26,14 +27,15 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
-   protected $fillable = [
-    'name',
-    'email',
-    'password',
-    'company',
-    'phone',
-    'role',
-];
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+        'company',
+        'phone',
+        'role',
+        'is_active',
+    ];
 
 
     /**
@@ -56,6 +58,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_active' => 'boolean',
         ];
     }
 

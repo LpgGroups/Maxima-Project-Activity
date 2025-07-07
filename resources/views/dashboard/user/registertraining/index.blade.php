@@ -1,9 +1,9 @@
 @extends('dashboard.layouts.dashboardmain')
 @section('container')
     <div class="lg:w-full sm:w-full h-auto bg-white rounded-2xl shadow-md p-4 sm:mb-0 lg:mb-[500px]">
-        <a href="{{ route('dashboard.selectDate') }}">Tambah</a>
+        <a class="bg-blue-500 rounded-lg p-2 text-white" href="{{ route('dashboard.selectDate') }}">+ Tambah Training</a>
 
-        <form method="GET" class="mb-4 flex flex-wrap gap-2 items-end">
+        <form method="GET" class="mb-4 flex flex-wrap gap-2 items-end mt-4">
             <input type="text" name="search" placeholder="Search..." value="{{ request('search') }}"
                 class="border rounded px-2 py-1 text-sm" />
 
@@ -49,7 +49,7 @@
                         <th>Status</th>
                         <th>Peserta</th>
                         <th>Tanggal</th>
-                        <th class="rounded-r-lg">Progress</th>
+                        <th class="rounded-r-lg">Progress </th>
                     </tr>
                 </thead>
                 <tbody class="lg:text-[12px] text-[8px]">
@@ -84,18 +84,29 @@
                                 @endif
                             </td>
                             <td class="p-1">
-                                @if ($training->isprogress < 5)
-                                    <span
-                                        class="bg-yellow-400 text-black font-semibold text-[10px] px-2 py-[2px] rounded inline-block w-[70px] text-center">
-                                        Menunggu
-                                    </span>
-                                @else
+                                @if ($training->isprogress == 5 && $training->isfinish == 1)
                                     <span
                                         class="bg-green-600 text-white font-semibold text-[10px] px-2 py-[2px] rounded inline-block w-[70px] text-center">
                                         Selesai
                                     </span>
+                                @elseif ($training->isprogress == 5 && $training->isfinish == 2)
+                                    <span
+                                        class="bg-yellow-400 text-black font-semibold text-[10px] px-2 py-[2px] rounded inline-block w-[70px] text-center">
+                                        Menunggu
+                                    </span>
+                                @elseif ($training->isprogress <= 4 && $training->isfinish == 0)
+                                    <span
+                                        class="bg-blue-400 text-white font-semibold text-[10px] px-2 py-[2px] rounded inline-block w-[70px] text-center">
+                                        Proses
+                                    </span>
+                                @else
+                                    <span
+                                        class="bg-yellow-400 text-black font-semibold text-[10px] px-2 py-[2px] rounded inline-block w-[70px] text-center">
+                                        Menunggu
+                                    </span>
                                 @endif
                             </td>
+
                             <td>{{ $training->participants->count() }} peserta</td>
                             <td>
                                 @php
@@ -128,10 +139,9 @@
                             </td>
                             <td>
                                 @php
-                                    // Ambil nilai isprogress
                                     $progressValue = $training->isprogress;
+                                    $isRejected = $training->isfinish == 2;
 
-                                    // Tentukan persentase dan warna berdasarkan nilai isprogress
                                     $progressMap = [
                                         1 => ['percent' => 10, 'color' => 'bg-red-600'],
                                         2 => ['percent' => 30, 'color' => 'bg-orange-500'],
@@ -144,6 +154,12 @@
                                         'percent' => 0,
                                         'color' => 'bg-gray-400',
                                     ];
+
+                                    // Jika isfinish = 2 (Ditolak), override warna dan persen
+                                    // if ($isRejected) {
+                                    //     $progress['color'] = 'bg-red-600';
+                                    //     $progress['percent'] = 100;
+                                    // }
                                 @endphp
 
                                 <div class="w-[80px] h-2 bg-gray-200 rounded-full dark:bg-gray-700 mx-auto">
@@ -153,6 +169,7 @@
                                     </div>
                                 </div>
                             </td>
+
                         </tr>
                     @endforeach
                 </tbody>

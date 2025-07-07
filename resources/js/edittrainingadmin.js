@@ -160,7 +160,7 @@ function updateForm1User(event) {
 }
 
 function updateForm2User() {
-    const form = document.getElementById("updateParticipantsForm");
+    const form = document.getElementById("participantTableForm");
     const csrfToken = document.querySelector('input[name="_token"]').value;
     const formData = new FormData(form);
 
@@ -195,6 +195,61 @@ function updateForm2User() {
             Swal.close();
             console.error("Error:", error);
             showErrorSwal("Kesalahan", "Terjadi kesalahan, coba lagi nanti.");
+        });
+}
+
+function uploadFileForAdmin() {
+    let form = $("#adminFileUploadForm")[0];
+    let formData = new FormData(form);
+
+    console.log("Mulai upload, formData:", formData);
+
+    $("#uploadAdminFileStatus")
+        .text("Uploading...")
+        .removeClass("text-red-600 text-green-600");
+
+    fetch("/dashboard/admin/upload-files", {
+        method: "POST",
+        headers: {
+            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            Accept: "application/json",
+        },
+        body: formData,
+    })
+        .then(async (res) => {
+            console.log("Fetch response status:", res.status);
+            const contentType = res.headers.get("content-type");
+            console.log("Content-Type header:", contentType);
+
+            let data;
+            if (contentType && contentType.indexOf("application/json") !== -1) {
+                data = await res.json();
+            } else {
+                data = { success: false, message: await res.text() };
+            }
+            console.log("Parsed data:", data);
+
+            if (res.ok && data.success) {
+                $("#uploadAdminFileStatus")
+                    .addClass("text-green-600")
+                    .text("File berhasil diupload!");
+                form.reset();
+                console.log("Sukses upload, status hijau.");
+            } else {
+                $("#uploadAdminFileStatus")
+                    .addClass("text-red-600")
+                    .text(data.message || "Gagal upload file.");
+                console.log(
+                    "Gagal upload, status merah.",
+                    data.message || data
+                );
+            }
+        })
+        .catch((err) => {
+            console.error("Error di catch fetch:", err);
+            $("#uploadAdminFileStatus")
+                .addClass("text-red-600")
+                .text("Gagal upload file. " + err);
         });
 }
 
@@ -317,30 +372,18 @@ function addParticipants() {
     });
 }
 
-function initParticipantStatusWatcher() {
-    // Cari semua select status peserta
-    const statusSelects = document.querySelectorAll(
-        "select[name^='participants'][name$='[status]']"
-    );
+function initShowDetailParticipant() {
+    // Reset semua dropdown detail row
+    $(".showDetailBtn")
+        .off("click")
+        .on("click", function () {
+            const id = $(this).data("id");
+            const detailRow = $("#detail-row-" + id);
 
-    statusSelects.forEach((select) => {
-        select.addEventListener("change", function () {
-            const selectedValue = this.value;
-
-            // Cari elemen <tr> induk (baris) dari select ini
-            const row = this.closest("tr");
-
-            // Cari input reason dalam baris yang sama
-            const reasonInput = row.querySelector(
-                "input[name^='participants'][name$='[reason]']"
-            );
-
-            if (selectedValue === "2") {
-                // Jika status "Success", kosongkan reason
-                reasonInput.value = "";
-            }
+            // Hide semua detail-row kecuali yang diklik
+            $(".detail-row").not(detailRow).addClass("hidden");
+            detailRow.toggleClass("hidden");
         });
-    });
 }
 
 function deleteParticipant(id) {
@@ -444,7 +487,6 @@ function showErrorSwal(title = "Gagal", text = "Terjadi kesalahan.") {
     });
 }
 
-// Tampilkan notifikasi warning (optional)
 function showWarningSwal(title = "Peringatan", text = "Ada yang salah.") {
     Swal.fire({
         icon: "warning",
@@ -452,19 +494,106 @@ function showWarningSwal(title = "Peringatan", text = "Ada yang salah.") {
         text: text,
     });
 }
+
+function initStatusReasonWatcher() {
+    $(".participant-status").on("change", function () {
+        var id = $(this).data("id");
+        var val = $(this).val();
+        var reasonInput = $("#reason-" + id);
+
+        if (val == "2") {
+            reasonInput.prop("disabled", false).focus();
+            reasonInput.addClass("border-red-500");
+        } else {
+            reasonInput.prop("disabled", true).removeClass("border-red-500");
+            reasonInput.val("");
+        }
+    });
+}
+
+function validateParticipantsBeforeSave() {
+    var valid = true;
+    $(".participant-status").each(function () {
+        var id = $(this).data("id");
+        var val = $(this).val();
+        var reasonInput = $("#reason-" + id);
+        if (val == "2" && reasonInput.val().trim() === "") {
+            valid = false;
+            reasonInput.addClass("border-red-500");
+        } else {
+            reasonInput.removeClass("border-red-500");
+        }
+    });
+    return valid;
+}
+
+function toggleNIK(button) {
+    const span = $(button).siblings(".nik-text");
+    const full = String(span.data("full"));
+    const isHidden = $(button).text().trim() === "👁️";
+
+    if (isHidden) {
+        span.text(full);
+        $(button).text("🚫"); // ikon untuk sembunyikan
+    } else {
+        const masked = "*".repeat(full.length - 4) + full.slice(-4);
+        span.text(masked);
+        $(button).text("👁️"); // ikon untuk tampilkan
+    }
+}
+
+function copyCode() {
+    document.getElementById("copy-token").onclick = function () {
+        const token = document.getElementById("token-value").innerText;
+        navigator.clipboard.writeText(token).then(function () {
+            const msg = document.getElementById("copied-msg");
+            msg.style.opacity = 1;
+            setTimeout(() => {
+                msg.style.opacity = 0;
+            }, 2000);
+        });
+    };
+
+    document.getElementById("copy-letter").onclick = function () {
+        const letter = document
+            .getElementById("no-letter-value")
+            .innerText.replace("No: ", "")
+            .trim();
+        navigator.clipboard.writeText(letter).then(function () {
+            const msg = document.getElementById("copied-letter-msg");
+            msg.style.opacity = 1;
+            setTimeout(() => {
+                msg.style.opacity = 0;
+            }, 2000);
+        });
+    };
+}
+
 // ============ INIT ================
 $(document).ready(function () {
     datePicker(); // Inisialisasi date picker
     updateEndDate(); // Hitung end date saat halaman dimuat
     setupConfirmationCheckbox(); // Aktifkan/Nonaktifkan tombol submit
-    initParticipantStatusWatcher();
     $("#submitBtn").click(updateForm1User); // Tombol submit
     $("#activity").on("change", updateEndDate); // Update end date saat activity berubah
     $("#submitParticipantBtn").on("click", updateForm2User);
     $("#submitFinish").on("click", updateTrainingFinish);
+    initShowDetailParticipant();
+    initStatusReasonWatcher();
+    $("#uploadFileForAdminBtn").on("click", function (e) {
+        e.preventDefault();
+        uploadFileForAdmin(); // baru dipanggil waktu tombol diklik
+    });
+    // Handler delete tombol, tetap pakai on (untuk baris yang dynamic)
     $(document).on("click", ".deleteButtonParticipant", function () {
         const id = $(this).data("id");
         deleteParticipant(id);
     });
+
     addParticipants();
+    $(document).on("click", ".toggle-nik-btn", function () {
+        toggleNIK(this);
+    });
+
+    copyCode();
 });

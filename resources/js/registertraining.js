@@ -30,8 +30,8 @@ function showTabs() {
             } else {
                 Swal.fire({
                     icon: "warning",
-                    title: "Link Belum Diisi",
-                    text: "Silakan isi link persyaratan terlebih dahulu untuk melanjutkan.",
+                    title: "Peserta Belum Didaftarkan",
+                    text: "Silakan Tambahkan Peserta Minimal 1 untuk Melanjutkan Tab Berikutnya.",
                 });
             }
         });
@@ -115,8 +115,8 @@ function submitForm1() {
             },
             success: function (response) {
                 Swal.close(); // Tutup loading saat sukses
-                showSuccess(response.message, true);
                 if (response.success) {
+                    showSuccess(response.message, true);
                     $("#responseMessage")
                         .addClass("text-green-500")
                         .removeClass("text-red-500")
@@ -161,108 +161,7 @@ function submitForm1() {
     });
 }
 
-let form_id = 1; // Misalnya, ini adalah form_id yang dapat Anda ambil dari server atau halaman saat ini
-
-function addInputField() {
-    const newInputGroup = document.createElement("div");
-    newInputGroup.classList.add("flex", "items-center", "space-x-2", "mb-2");
-
-    // Create the input field
-    const newInput = document.createElement("input");
-    newInput.type = "text";
-    newInput.classList.add(
-        "form-control",
-        "px-3",
-        "py-2",
-        "border",
-        "border-gray-300",
-        "rounded-md"
-    );
-    newInput.placeholder = "Nama Peserta";
-
-    newInput.setAttribute("id", "input-participant-" + Date.now()); // unique id based on timestamp
-
-    // Create the add button
-    const newAddButton = document.createElement("button");
-    newAddButton.classList.add(
-        "text-lg",
-        "font-bold",
-        "text-blue-500",
-        "px-3",
-        "py-2",
-        "border",
-        "border-gray-300",
-        "rounded-md",
-        "hover:bg-gray-100"
-    );
-    newAddButton.textContent = "+";
-    newAddButton.onclick = addInputField;
-
-    window.onload = function () {
-        document
-            .querySelector("#input-fields-container button")
-            .addEventListener("click", addInputField);
-    };
-
-    // Create the remove button
-    const newRemoveButton = document.createElement("button");
-    newRemoveButton.classList.add(
-        "text-lg",
-        "font-bold",
-        "text-red-500",
-        "px-3",
-        "py-2",
-        "border",
-        "border-gray-300",
-        "rounded-md",
-        "hover:bg-gray-100"
-    );
-    newRemoveButton.textContent = "-";
-    newRemoveButton.onclick = function () {
-        newInputGroup.remove(); // Remove the entire input group when the remove button is clicked
-    };
-
-    // Append input, add button, and remove button to the new input group
-    newInputGroup.appendChild(newInput);
-    newInputGroup.appendChild(newAddButton);
-    newInputGroup.appendChild(newRemoveButton);
-
-    // Append the new input group to the container
-    document
-        .getElementById("input-fields-container")
-        .appendChild(newInputGroup);
-}
-
-function sendForm2() {
-    var formId = $("#form_id").val();
-    var link = $("#link").val();
-
-    var participants = [];
-    $("#input-fields-container input").each(function () {
-        participants.push({ name: $(this).val() });
-    });
-
-    showLoading();
-
-    $.ajax({
-        url: "/dashboard/user/training/form2/save",
-        method: "POST",
-        data: {
-            form_id: formId,
-            link: link, // kirim ke server
-            participants: participants,
-        },
-        headers: {
-            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
-        },
-        success: function (response) {
-            showSuccess(response.message, true);
-        },
-        error: function (xhr, status, error) {
-            showError("Terjadi kesalahan saat mengirim data.");
-        },
-    });
-}
+function sendForm2() {}
 
 function sendForm3() {
     var formData = new FormData($("#form3")[0]);
@@ -278,7 +177,6 @@ function sendForm3() {
         },
         error: function (xhr) {
             if (xhr.status === 422) {
-                // Tangani error validasi Laravel
                 var errors = xhr.responseJSON.errors;
                 var messages = [];
 
@@ -441,12 +339,36 @@ function checkSubmitBtnDeadline() {
         }
     });
 }
+function checkBtnSendForm3() {
+    const fileApprovalInput = document.getElementById("file_approval");
+    const proofPaymentInput = document.getElementById("proof_payment");
+    const submitBtn = $("#submitBtnForm3"); // pakai jQuery
+    function checkFilesSelected() {
+        if (
+            fileApprovalInput.files.length > 0 ||
+            proofPaymentInput.files.length > 0
+        ) {
+            submitBtn.prop("disabled", false);
+            submitBtn
+                .removeClass("bg-gray-400 cursor-not-allowed")
+                .addClass("bg-blue-500 hover:bg-blue-600 cursor-pointer");
+        } else {
+            submitBtn.prop("disabled", true);
+            submitBtn
+                .removeClass("bg-blue-500 hover:bg-blue-600 cursor-pointer")
+                .addClass("bg-gray-400 cursor-not-allowed");
+        }
+    }
+
+    fileApprovalInput.addEventListener("change", checkFilesSelected);
+    proofPaymentInput.addEventListener("change", checkFilesSelected);
+    checkFilesSelected(); // initial call
+}
 
 // function send data
 $(document).ready(function () {
     showTabs();
     submitForm1();
-    addInputField();
     checkSubmitBtnDeadline();
     $("#submitBtnForm2").click(function (e) {
         e.preventDefault(); // Mencegah form submit default
@@ -457,4 +379,5 @@ $(document).ready(function () {
         e.preventDefault(); // Mencegah form submit default
         sendForm3(); // Panggil fungsi sendForm2 saat tombol diklik
     });
+    checkBtnSendForm3();
 });

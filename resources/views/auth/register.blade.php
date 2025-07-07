@@ -108,6 +108,14 @@
                         class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition text-base font-semibold mt-3">
                         Register
                     </button>
+
+                    <div class="text-center mt-4 text-sm sm:text-base">
+                        Sudah punya akun?
+                        <a href="{{ route('login.index') }}" class="text-blue-600 hover:underline font-semibold">
+                            Login di sini
+                        </a>
+                    </div>
+
             </form>
         </div>
     </div>

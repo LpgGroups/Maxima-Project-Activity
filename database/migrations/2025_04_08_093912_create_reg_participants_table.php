@@ -14,17 +14,24 @@ return new class extends Migration
         Schema::create('reg_participants', function (Blueprint $table) {
             $table->id();
             $table->string('name')->nullable();
+            $table->string('nik')->nullable();
+            $table->date('date_birth')->nullable();
+            $table->string('blood_type')->nullable();
+            $table->string('photo')->nullable();
+            $table->string('ijazah')->nullable();
+            $table->string('letter_employee')->nullable();
+            $table->string('letter_statement')->nullable();
+            $table->string('form_registration')->nullable();
+            $table->string('letter_health')->nullable();
+            $table->string('cv')->nullable();
             $table->string('reason')->nullable();
-            $table->integer('status')->default(1);
+            $table->integer('status')->default(0);
             $table->unsignedBigInteger('form_id')->nullable();
             $table->timestamps();
             $table->foreign('form_id')->references('id')->on('reg_training')->onDelete('cascade');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('reg_participants');

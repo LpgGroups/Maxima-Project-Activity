@@ -14,6 +14,9 @@ function showDetail(id) {
             const SwalHTML = `
                 <div class="font-extrabold">Informasi Pendaftaran</div>
                 <div class="text-sm bg-gray-50 border border-gray-300 rounded-md p-4 grid grid-cols-[120px,10px,1fr] gap-y-2">
+                 <div class="text-right font-bold text-gray-700">No Surat</div><div>:</div><div>${
+                     data.no_letter ?? "-"
+                 }</div>
                     <div class="text-right font-bold text-gray-700">Nama PIC</div><div>:</div><div>${
                         data.pic ?? "-"
                     }</div>
@@ -34,24 +37,73 @@ function showDetail(id) {
                     } Peserta</div>
                 </div>
 
-                <div class="font-extrabold mt-4">Data Persetujuan</div>
+                <div class="font-extrabold mt-4">Kelengkapan Dokumen</div>
                 <div class="text-sm bg-gray-50 border border-gray-300 rounded-md p-4 mt-1">
                     ${
                         data.files.length > 0
                             ? data.files
-                                  .map(
-                                      (f) => `
-                                <div class="mb-4 flex items-start">
-                                    <img src="/img/icon_pdf_mou.png" alt="PDF Icon" width="50" class="mr-4 mt-1" />
-                                    <div>
-                                        <div class="font-medium text-gray-800">${f.name}</div>
-                                        <a href="${f.url}" target="_blank" class="inline-block mt-1 text-sm text-white bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded">
-                                            Download
-                                        </a>
-                                    </div>
-                                </div>
-                            `
-                                  )
+                                  .map((f) => {
+                                      // Helper: dapatkan nama file (basename)
+                                      const getFileName = (url) => {
+                                          if (!url) return "";
+                                          return url.split("/").pop();
+                                      };
+
+                                      // Array untuk menyimpan semua tipe dokumen
+                                      const docs = [
+                                          {
+                                              url: f.file_approval,
+                                              label: "File Persetujuan",
+                                              color: "blue",
+                                              icon: "/img/icon_pdf_mou.png",
+                                          },
+                                          {
+                                              url: f.proof_payment,
+                                              label: "Bukti Pembayaran",
+                                              color: "green",
+                                              icon: "/img/icon_pdf_mou.png",
+                                          },
+                                          {
+                                              url: f.budget_plan,
+                                              label: "Budget Plan",
+                                              color: "indigo",
+                                              icon: "/img/icon_pdf_mou.png",
+                                          },
+                                          {
+                                              url: f.letter_implementation,
+                                              label: "Surat Pelaksanaan",
+                                              color: "pink",
+                                              icon: "/img/icon_pdf_mou.png",
+                                          },
+                                      ];
+
+                                      return docs
+                                          .filter((doc) => doc.url)
+                                          .map(
+                                              (doc) => `
+                <div class="flex items-center mb-3">
+                    <img src="${
+                        doc.icon
+                    }" alt="Icon" class="w-8 h-8 mr-3 flex-shrink-0" />
+                    <div class="flex-1">
+                        <div class="font-semibold text-gray-800 text-sm mb-0.5">${getFileName(
+                            doc.url
+                        )}</div>
+                        <div class="text-xs text-gray-500 mb-1">${
+                            doc.label
+                        }</div>
+                    </div>
+                    <a href="${doc.url}" target="_blank"
+                        class="bg-${doc.color}-600 hover:bg-${
+                                                  doc.color
+                                              }-700 text-white text-xs px-3 py-1.5 rounded shadow transition">
+                        Download
+                    </a>
+                </div>
+            `
+                                          )
+                                          .join("");
+                                  })
                                   .join("")
                             : '<div class="text-gray-500 italic">Tidak ada file</div>'
                     }
@@ -65,22 +117,16 @@ function showDetail(id) {
                 html: SwalHTML,
                 icon: "info",
                 showCancelButton: true,
-                showConfirmButton: !isApproved, // tombol setujui hanya muncul kalau isfinish = false
+                showConfirmButton: true,
                 confirmButtonText: "Setujui",
                 confirmButtonColor: "#3085d6",
-                showDenyButton: isApproved, // tombol tolak hanya muncul kalau isfinish = true
+                showDenyButton: true,
                 denyButtonText: "Tolak",
                 denyButtonColor: "#d33",
                 cancelButtonText: "Tutup",
                 allowOutsideClick: () => !Swal.isLoading(),
                 allowEscapeKey: () => !Swal.isLoading(),
                 preConfirm: () => {
-                    if (isApproved) {
-                        Swal.showValidationMessage(
-                            "Data sudah disetujui, tidak bisa mengubah status menjadi setuju lagi."
-                        );
-                        return false;
-                    }
                     const url = `/dashboard/management/approve/${id}`;
                     return fetch(url, {
                         method: "PUT",
@@ -90,11 +136,11 @@ function showDetail(id) {
                                 "content"
                             ),
                         },
-                        body: JSON.stringify({ isfinish: true }),
+                        body: JSON.stringify({ isfinish: 1 }),
                     })
                         .then((res) => {
                             if (!res.ok)
-                                throw new Error("Gagal menyimpan perubahan.");
+                                throw new Error("Gagal menyetujui data.");
                             return res.json();
                         })
                         .catch((err) => {
@@ -102,30 +148,48 @@ function showDetail(id) {
                         });
                 },
                 preDeny: () => {
-                    if (!isApproved) {
-                        Swal.showValidationMessage(
-                            "Data belum disetujui, tidak bisa menolak."
-                        );
-                        return false;
-                    }
-                    const url = `/dashboard/management/approve/${id}`;
-                    return fetch(url, {
-                        method: "PUT",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
-                                "content"
-                            ),
+                    return Swal.fire({
+                        title: "Alasan Penolakan",
+                        input: "textarea",
+                        inputLabel: "Wajib isi alasan mengapa ditolak",
+                        inputPlaceholder: "Tuliskan alasan di sini...",
+                        inputAttributes: {
+                            "aria-label": "Tuliskan alasan di sini",
                         },
-                        body: JSON.stringify({ isfinish: false }),
-                    })
-                        .then((res) => {
-                            if (!res.ok) throw new Error("Gagal menolak data.");
-                            return res.json();
-                        })
-                        .catch((err) => {
-                            Swal.showValidationMessage(err.message);
-                        });
+                        inputValidator: (value) => {
+                            if (!value) {
+                                return "Alasan penolakan wajib diisi!";
+                            }
+                        },
+                        showCancelButton: true,
+                        cancelButtonText: "Batal",
+                        confirmButtonText: "Kirim Penolakan",
+                        confirmButtonColor: "#d33",
+                        preConfirm: (reason) => {
+                            const url = `/dashboard/management/approve/${id}`;
+                            return fetch(url, {
+                                method: "PUT",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                    "X-CSRF-TOKEN": $(
+                                        'meta[name="csrf-token"]'
+                                    ).attr("content"),
+                                },
+                                body: JSON.stringify({
+                                    isfinish: 2,
+                                    reason_fail: reason,
+                                }),
+                            })
+                                .then((res) => {
+                                    if (!res.ok)
+                                        throw new Error("Gagal menolak data.");
+                                    return res.json();
+                                })
+                                .catch((err) => {
+                                    Swal.showValidationMessage(err.message);
+                                });
+                        },
+                    });
                 },
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -133,13 +197,17 @@ function showDetail(id) {
                         "Disetujui!",
                         "Data telah disetujui.",
                         "success"
-                    ).then(() => location.reload());
+                    ).then(() => {
+                        window.location.href = `/dashboard/management/training/${id}/detail`;
+                    });
                 } else if (result.isDenied) {
                     Swal.fire(
-                        "Ditolak!",
-                        "Data telah ditolak.",
+                        "Data Ditolak!",
+                        "Data telah berhasil ditolak.",
                         "warning"
-                    ).then(() => location.reload());
+                    ).then(() => {
+                        window.location.href = `/dashboard/management/training/${id}/detail`;
+                    });
                 }
             });
         })
@@ -167,61 +235,43 @@ function liveSearch() {
             .text()
             .toLowerCase();
         const infoText = $(this).find("p.text-xs").text().toLowerCase();
-
-        const combinedText = activityText + " " + infoText;
+        const letterText = $(this).find(".no-letter").text().toLowerCase();
+        const combinedText = activityText + " " + infoText + letterText;
 
         const isMatch = combinedText.includes(query);
         $(this).toggle(isMatch);
     });
 }
-function applyTrainingFilters() {
-    const searchTerm = $('#searchInput').val().toLowerCase();
-    const sortValue = $('#sortCompany').val();
-    const start = $('#startDate').val() ? new Date($('#startDate').val()) : null;
-    const end = $('#endDate').val() ? new Date($('#endDate').val()) : null;
 
-    const cards = $('.training-card');
+function badgedUpdate() {
+    $(".view-detail-btn").each(function () {
+        const btn = this;
+        const trainingId = btn.dataset.id;
+        const updatedAt = btn.dataset.updated;
 
-    // Filtering
-    cards.each(function () {
-        const card = $(this);
-        const companyText = card.find('p.text-zinc-800.text-xs').text().split(' - ')[1]?.trim().toLowerCase();
-        const dateRangeText = card.find('.text-violet-400').text();
-        const [startText, endText] = dateRangeText.split(' - ');
+        const badge = document.querySelector(
+            `.new-badge[data-badge-id="${trainingId}"]`
+        );
 
-        const cardStart = new Date(startText);
-        const cardEnd = new Date(endText);
-
-        const matchesSearch = card.text().toLowerCase().includes(searchTerm);
-        const matchesStart = !start || cardStart >= start;
-        const matchesEnd = !end || cardEnd <= end;
-
-        if (matchesSearch && matchesStart && matchesEnd) {
-            card.show();
-        } else {
-            card.hide();
+        if (!badge) {
+            console.warn(`Badge not found for training ID: ${trainingId}`);
+            return;
         }
+
+        const lastSeenKey = `training_last_seen_${trainingId}`;
+        const lastSeen = localStorage.getItem(lastSeenKey);
+
+        if (!lastSeen || new Date(updatedAt) > new Date(lastSeen)) {
+            badge.classList.remove("hidden");
+        }
+
+        btn.addEventListener("click", function () {
+            badge.classList.add("hidden");
+            localStorage.setItem(lastSeenKey, updatedAt);
+        });
     });
-
-    // Sorting
-    if (sortValue) {
-        const container = $('.space-y-4');
-        const visibleCards = cards.filter(function () {
-            return $(this).is(':visible');
-        }).get();
-
-        visibleCards.sort(function (a, b) {
-            const nameA = $(a).find('p.text-zinc-800.text-xs').text().split(' - ')[1]?.trim().toLowerCase();
-            const nameB = $(b).find('p.text-zinc-800.text-xs').text().split(' - ')[1]?.trim().toLowerCase();
-            return sortValue === 'asc' ? nameA.localeCompare(nameB) : nameB.localeCompare(nameA);
-        });
-
-        // Append sorted cards back to the container
-        $.each(visibleCards, function (_, card) {
-            container.append(card);
-        });
-    }
 }
+
 $(document).ready(function () {
     $(".view-detail-btn").on("click", function (e) {
         e.preventDefault();
@@ -232,6 +282,5 @@ $(document).ready(function () {
         liveSearch();
     });
     filterSearch();
-
-    
+    // badgedUpdate();
 });

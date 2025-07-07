@@ -6,11 +6,12 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Middleware\UserAccess;
 use App\Http\Controllers\DashboardUserController;
+use App\Http\Controllers\FileDownloadController;
 use App\Http\Controllers\ForgotPasswordController;
+use App\Http\Controllers\MonitoringController;
 use App\Http\Controllers\RegTrainingController;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
-use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 use App\Http\Controllers\RegisterController;
 
 Route::get('/', [LoginController::class, 'index'])->name('login.index');
@@ -27,19 +28,25 @@ Route::get('/forgot-password', [ForgotPasswordController::class, 'showForm'])->n
 Route::post('/forgot-password', [ForgotPasswordController::class, 'sendReset'])->name('password.email');
 Route::get('/reset-password/{token}', [ForgotPasswordController::class, 'showResetForm'])->name('password.reset');
 Route::post('/reset-password', [ForgotPasswordController::class, 'reset'])->name('password.update');
+
 Route::middleware(['auth'])->group(function () {
     Route::middleware([UserAccess::class . ':admin'])->group(function () {
         Route::get('/admin/training/live', [DashboardAdminController::class, 'getLiveTraining'])->name('admin.training.live');
         Route::get('/dashboard/admin/training/alltraining', [DashboardAdminController::class, 'trainingAll'])->name('admin.training.alltraining');
         Route::get('/dashboard/admin', [DashboardAdminController::class, 'index'])->name('dashboard.admin.index');
         Route::get('/dashboard/admin/training/{id}', [DashboardAdminController::class, 'show'])->name('dashboard.admin.training.show');
+        Route::get('/dashboard/admin/users', [LoginController::class, 'userList'])->name('users.index');
+        Route::get('/dashboard/admin/users/{id}/edit', [LoginController::class, 'editUser'])->name('users.edit');
+        Route::put('/dashboard/admin/users/{id}', [LoginController::class, 'updateUser'])->name('users.update');
+
+        Route::delete('/dashboard/admin/users/{id}', [LoginController::class, 'destroyUser'])->name('users.destroy');
         // Rute untuk memperbarui data training menggunakan POST
         Route::post('/dashboard/admin/training/{id}/update', [DashboardAdminController::class, 'update'])->name('dashboard.training.update');
         Route::post('/dashboard/admin/training/{id}/update2', [DashboardAdminController::class, 'updateFrom2'])->name('dashboard.training.update2');
         Route::post('/dashboard/admin/training/update-participant', [DashboardAdminController::class, 'updateForm2User']);
         Route::post('/dashboard/admin/training/add-participant', [DashboardAdminController::class, 'addParticipant']);
         Route::post('/dashboard/admin/training/finish/{id}', [DashboardAdminController::class, 'trainingFinish']);
-
+        Route::post('/dashboard/admin/upload-files', [DashboardAdminController::class, 'uploadFileForAdmin']);
         Route::get('/download/file-mou/{id}', function ($id) {
             $file = \App\Models\FileRequirement::findOrFail($id);
 
@@ -64,17 +71,34 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/dashboard/user/training', [RegTrainingController::class, 'index'])->name('dashboard.training');
         Route::get('/dashboard/user/training/selectdate', [RegTrainingController::class, 'selectDate'])->name('dashboard.selectDate');
         Route::get('/dashboard/user/training/form/{id}', [RegTrainingController::class, 'formReg'])->name('dashboard.form');
+
+        Route::get('/dashboard/user/training/form2/add/{form_id}', [RegTrainingController::class, 'pageAddParticipant'])->name('dashboard.addparticipant');
+        Route::post('/dashboard/user/training/form2/add/{form_id}/save', [RegTrainingController::class, 'saveForm2'])->name('dashboard.addparticipant.save');
+
         Route::post('/dashboard/user/training/form/save', [RegTrainingController::class, 'saveForm1'])->name('dashboard.form.save');
-        Route::post('/dashboard/user/training/form2/save', [RegTrainingController::class, 'saveForm2'])->name('dashboard.form2.save');
+        // Route::post('/dashboard/user/training/form2/save', [RegTrainingController::class, 'saveForm2'])->name('dashboard.form2.save');
         Route::post('/dashboard/user/training/form3/save', [RegTrainingController::class, 'saveForm3'])->name('dashboard.form3.save');
         Route::delete('/dashboard/user/training/form2/{id}', [RegTrainingController::class, 'destroyUser'])->name('dashboard.form2.destroy');
+        Route::post('/dashboard/user/training/participant/delete/{id}', [RegTrainingController::class, 'deleteParticipant'])
+            ->name('dashboard.participant.delete');
     });
 
     Route::middleware([UserAccess::class . ':management'])->group(function () {
         Route::get('/dashboard/management', [DashboardManagementController::class, 'index'])->name('dashboard.management.index');
         Route::get('/dashboard/management/get', [DashboardManagementController::class, 'getData'])->name('dashboard.management.getdata');
         Route::get('/dashboard/management/detail/{id}', [DashboardManagementController::class, 'showDetail']);
+        Route::get('/dashboard/management/training/{id}/detail', [DashboardManagementController::class, 'detailView'])
+            ->name('management.training.detail');
         Route::put('/dashboard/management/approve/{id}', [DashboardManagementController::class, 'approve']);
+    });
+
+    Route::prefix('dashboard/monitoring')->middleware(['auth'])->group(function () {
+        Route::get('/', [MonitoringController::class, 'index'])->name('monitoring.index');
+        Route::get('/{id}', [MonitoringController::class, 'show'])->name('monitoring.show');
+    });
+
+    Route::get('/tutorial', function () {
+        return view('dashboard.layouts.faq.tutorial', ["title" => ' Tutorial']); // ini akan memuat resources/views/tutorial.blade.php
     });
 
     Route::get('/notification', function () {
@@ -92,7 +116,7 @@ Route::middleware(['auth'])->group(function () {
 
         $notifications = $user->unreadNotifications
             ->sortByDesc('created_at')
-            ->take(5);
+            ->take(10);
 
         return response()->json([
             'count' => $notifications->count(),
@@ -107,6 +131,10 @@ Route::middleware(['auth'])->group(function () {
             })->values(),
         ]);
     })->middleware('auth');
+
+    Route::get('/download-confidential/{type}/{file}', [FileDownloadController::class, 'download'])
+        ->name('download.confidential')
+        ->middleware(['auth']);
 
     Route::get('/profile/settings', [App\Http\Controllers\ProfileController::class, 'edit'])->name('profile.edit');
     Route::post('/profile/settings', [App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');

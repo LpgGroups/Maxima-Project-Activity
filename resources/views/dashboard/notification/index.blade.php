@@ -5,10 +5,21 @@
         <h2 class="text-2xl font-bold mb-4">Notifikasi</h2>
 
         @if ($notifications->count())
+            @php
+                $isManajemen = Auth::user()->role === 'management';
+            @endphp
+
             <ul class="divide-y divide-gray-200">
                 @foreach ($notifications as $notif)
                     @php
                         $data = $notif->data;
+                        $trainingId = $data['training_id'] ?? ($data['id'] ?? null);
+                        $defaultUrl = $data['url'] ?? '#';
+                        $link = $isManajemen
+                            ? ($trainingId
+                                ? route('management.training.detail', ['id' => $trainingId])
+                                : $defaultUrl)
+                            : $defaultUrl;
                         $type = $data['type'] ?? 'default';
                         $icon = match ($type) {
                             'new' => '🆕',
@@ -20,7 +31,7 @@
                     @endphp
 
                     <li class="py-4">
-                        <a href="{{ $data['url'] ?? '#' }}"
+                        <a href="{{ $link }}"
                             class="flex items-start gap-3 {{ $isRead ? 'text-gray-500' : 'font-bold text-black' }}">
                             <span class="text-2xl">{{ $icon }}</span>
                             <div class="flex-1">
@@ -40,4 +51,3 @@
         @endif
     </div>
 @endsection
-

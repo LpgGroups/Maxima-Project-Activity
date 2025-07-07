@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\FileRequirement;
 use App\Models\RegParticipant;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -14,6 +15,7 @@ use Illuminate\Support\Facades\Log;
 use App\Notifications\TrainingUpdatedNotification;
 use Illuminate\Support\Facades\Notification;
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Storage;
 
 
 class DashboardAdminController extends Controller
@@ -50,6 +52,7 @@ class DashboardAdminController extends Controller
                 $q->where('name_company', 'like', '%' . $search . '%')
                     ->orWhere('name_pic', 'like', '%' . $search . '%')
                     ->orWhere('activity', 'like', '%' . $search . '%')
+                    ->orWhere('no_letter', 'like', '%' . $search . '%')
                     ->orWhereHas('user', function ($uq) use ($search) {
                         $uq->where('name', 'like', '%' . $search . '%');
                     });
@@ -102,6 +105,7 @@ class DashboardAdminController extends Controller
             return [
                 'id' => $training->id,
                 'user' => $training->user,
+                'noLetter' => $training->no_letter,
                 'name_pic' => $training->name_pic,
                 'name_company' => $training->name_company,
                 'activity' => $training->activity,
@@ -110,6 +114,7 @@ class DashboardAdminController extends Controller
                 'isprogress' => $training->isprogress,
                 'isNew' => $isNew,
                 'isUpdated' => $isUpdated,
+                'statusFail' => $training->reason_fail,
                 'participants_count' => $training->participants->count(),
                 'isfinish' => $training->isfinish,
             ];
@@ -156,10 +161,12 @@ class DashboardAdminController extends Controller
                 $notification->markAsRead();
             }
         }
+        $fileRequirement = FileRequirement::where('file_id', $training->id)->first();
 
         return view('dashboard.admin.cektraining.showtraining', [
             'title' => 'Detail Pelatihan',
-            'training' => $training
+            'training' => $training,
+            'fileRequirement' => $fileRequirement
         ]);
     }
 
@@ -195,9 +202,19 @@ class DashboardAdminController extends Controller
 
         $targetUser = $training->user;
 
-        if ($targetUser) {
-            $targetUser->notify(new TrainingUpdatedNotification($training, 'admin', 'Daftar Pelatihan'));
-        }
+        // if ($targetUser) {
+        //     $targetUser->notify(new TrainingUpdatedNotification($training, 'admin', 'Daftar Pelatihan'));
+        // }
+        $adminName = optional(Auth::user())->name ?? '-';
+
+        $targetUser->notify(new TrainingUpdatedNotification(
+            $training,
+            'admin',
+            'Daftar Pelatihan',
+            '',     // customMessage
+            '',     // customType
+            $adminName
+        ));
 
         return response()->json([
             'success' => true,
@@ -207,66 +224,93 @@ class DashboardAdminController extends Controller
 
     public function updateForm2User(Request $request)
     {
-        $validated = $request->validate([
+        $request->validate([
+            'form_id'      => 'required|exists:reg_training,id',
             'participants' => 'required|array',
-            'participants.*.name' => 'required|string|max:255',
             'participants.*.status' => 'required|in:0,1,2',
             'participants.*.reason' => 'nullable|string|max:255',
         ]);
 
-        // Update semua peserta yang diberikan
-        foreach ($validated['participants'] as $id => $data) {
+        foreach ($request->participants as $id => $data) {
             $participant = RegParticipant::find($id);
             if ($participant) {
-                $participant->update($data);
+                $participant->status = $data['status'];
+                $participant->reason = $data['reason'] ?? null;
+                $participant->save();
             }
         }
-
-        // Ambil salah satu peserta untuk ambil relasi training & user
-        $firstParticipant = RegParticipant::find(array_key_first($validated['participants']));
-        $training = $firstParticipant?->training;
-
+        $adminName = optional(Auth::user())->name ?? '-';
+        $training = RegTraining::find($request->form_id);
         if ($training && $training->user) {
             $training->user->notify(new TrainingUpdatedNotification(
                 $training,
                 'admin',
                 'Daftar Peserta',
-                'Data peserta pada pelatihan "' . $training->activity . '" telah diperbarui. Silakan cek kembali.',
-                'info'
+                'Data peserta pada pelatihan "' . $training->activity . '" telah diperbarui oleh Admin.',
+                'info',
+                $adminName
             ));
         }
 
-        return response()->json(['success' => true]);
+        return response()->json([
+            'success' => true,
+            'message' => 'Data peserta berhasil diperbarui!'
+        ]);
     }
-    public function addParticipant(Request $request)
+
+    public function uploadFileForAdmin(Request $request)
     {
-        Log::info('Data yang diterima:', $request->all());
-        $validated = $request->validate([
-            'form_id' => 'required|integer',
-            'name' => 'required|string|max:255',
+        $request->validate([
+            'training_id' => 'required|exists:reg_training,id',
+            'budget_plan' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx|max:2408',
+            'letter_implementation' => 'nullable|file|mimes:pdf,doc,docx|max:2408',
         ]);
 
-        // Proses penyimpanan peserta baru
-        $participant = new RegParticipant();
-        $participant->form_id = $validated['form_id'];
-        $participant->name = $validated['name'];
-        $participant->status = 1; // Status default
-        $participant->reason = null; // Alasan default
-        $participant->save();
-
-        $training = $participant->training;
-        if ($training && $training->user) {
-            $training->user->notify(new TrainingUpdatedNotification(
-                $training,
-                'admin',
-                'Daftar Peserta',
-                'Admin telah menambahkan peserta baru ke pelatihan ' . $training->activity,
-                'update'
-            ));
+        $training = RegTraining::find($request->training_id);
+        if (!$training) {
+            return response()->json(['success' => false, 'message' => 'Training tidak ditemukan.'], 404);
         }
 
+        $nameTraining = str_replace([' ', '/', '\\'], '-', strtolower($training->activity ?? 'pelatihan'));
+        $fileReq = FileRequirement::firstOrNew(['file_id' => $training->id]);
+
+        // SET FILE_ID SAMA DENGAN ID TRAINING
+        $fileReq->file_id = $training->id;
+
+        if ($request->hasFile('budget_plan')) {
+            $file = $request->file('budget_plan');
+            $ekstensi = $file->getClientOriginalExtension();
+            $nameFiles = $nameTraining . '_budget-plan.' . $ekstensi;
+            $file->storeAs('budget-plans', $nameFiles);
+            $fileReq->budget_plan = 'budget-plans/' . $nameFiles;
+        }
+        if ($request->hasFile('letter_implementation')) {
+            $file = $request->file('letter_implementation');
+            $ekstensi = $file->getClientOriginalExtension();
+            $nameFiles = $nameTraining . '_letter-implementation.' . $ekstensi;
+            $file->storeAs('letter-implementations', $nameFiles);
+            $fileReq->letter_implementation = 'letter-implementations/' . $nameFiles;
+        }
+
+        $fileReq->save();
+        $uploaderName = optional(Auth::user())->name ?? 'admin';
+
+        $managers = User::where('role', 'management')->get();
+
+        foreach ($managers as $manager) {
+            $manager->notify(new TrainingUpdatedNotification(
+                $training,
+                'admin',
+                'Upload Dokumen',
+                "{$uploaderName} telah mengunggah dokumen untuk pelatihan {$training->activity}.",
+                'info',
+                $uploaderName
+            ));
+        }
         return response()->json(['success' => true]);
     }
+
+
 
     public function trainingFinish(Request $request, $id)
     {
@@ -277,49 +321,32 @@ class DashboardAdminController extends Controller
             'isprogress' => max($currentProgress, $newProgress),
         ]);
 
-        $customMessage = "Selamat, Pelatihan {$training->activity} Telah Disetujui!";
+        $customMessage = "Proses verifikasi berhasil. Pengajuan pelatihan {$training->activity} akan segera ditinjau untuk disetujui.";
 
-        $phone = $training->phone_pic; // Langsung ambil dari reg_training
-
-        if (empty($phone) || !is_string($phone)) {
-            Log::warning("WhatsApp not sent: No phone number in reg_training ID {$training->id}");
-        } else {
-            try {
-                $client = new Client();
-                $response = $client->post('https://app.maxchat.id/api/messages/push', [
-                    'headers' => [
-                        'Authorization' => 'Bearer ' . env('MAXCHAT_TOKEN'),
-                        'Content-Type'  => 'application/json',
-                        'Accept'        => 'application/json',
-                    ],
-                    'json' => [
-                        'to' => $phone,
-                        'msgType' => 'text',
-                        'templateId' => env('MAXCHAT_TEMPLATE'),
-                    ],
-                ]);
-                $status = $response->getStatusCode();
-                $body = json_decode($response->getBody()->getContents(), true);
-                if ($status == 200 && !isset($body['error'])) {
-                    Log::info("SUKSES kirim WA ke $phone (reg_training id: {$training->id}): " . json_encode($body));
-                } else {
-                    Log::error("GAGAL kirim WA ke $phone (reg_training id: {$training->id}): " . json_encode($body));
-                }
-            } catch (\Exception $e) {
-                Log::error("Gagal kirim WhatsApp Maxchat: " . $e->getMessage());
-            }
-        }
-
-        // Notifikasi ke user jika memang perlu
+        $adminName = optional(Auth::user())->name ?? '-';
         if ($training->user) {
             $training->user->notify(new TrainingUpdatedNotification(
                 $training,
                 'admin',
                 'Daftar Pelatihan',
                 $customMessage,
-                'success'
+                'verifacc',
+                $adminName
             ));
         }
+
+        // $managementUsers = User::where('role', 'management')->get();
+
+        // foreach ($managementUsers as $manager) {
+        //     $manager->notify(new TrainingUpdatedNotification(
+        //         $training,
+        //         'admin',
+        //         'Daftar Pelatihan',
+        //         'Training telah diperbarui oleh Admin. Silakan tinjau.',
+        //         'info'
+        //     ));
+        // }
+
 
         return response()->json(['success' => true, 'message' => 'Progress berhasil diperbarui.']);
     }
@@ -348,11 +375,4 @@ class DashboardAdminController extends Controller
             'message' => 'Peserta berhasil dihapus.'
         ]);
     }
-
-    // public function showDashboard()
-    // {
-    //     $notifications = Auth::user()->unreadNotifications;
-
-    //     return view('dashboard.admin.index', compact('notifications'));
-    // }
 }

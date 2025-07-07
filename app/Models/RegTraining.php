@@ -21,7 +21,7 @@ class RegTraining extends Model
         'activity',
         'date',
         'date_end',
-        'link',
+        'reason_fail',
         'place',
         'isprogress',
         'isfinish',
@@ -52,7 +52,7 @@ class RegTraining extends Model
     }
     public function isLinkFilled()
     {
-        return !empty($this->link);
+        return $this->isprogress >= 3;
     }
     public function user()
     {

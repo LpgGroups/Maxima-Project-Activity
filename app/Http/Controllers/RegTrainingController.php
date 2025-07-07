@@ -30,7 +30,8 @@ class RegTrainingController extends Controller
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
-                $q->where('activity', 'like', '%' . $search . '%');
+                $q->where('activity', 'like', '%' . $search . '%')
+                    ->orWhere('no_letter', 'like', '%' . $search . '%');
             });
         }
 
@@ -142,6 +143,16 @@ class RegTrainingController extends Controller
                 ->where('id', $request->input('id'))
                 ->first();
 
+            // Setelah proses upload, simpan nama file ke session
+            $uploaded_files = [
+                'photo' => $request->file('photo') ? $request->file('photo')->getClientOriginalName() : null,
+                'ijazah' => $request->file('ijazah') ? $request->file('ijazah')->getClientOriginalName() : null,
+                'letter_employee' => $request->file('letter_employee') ? $request->file('letter_employee')->getClientOriginalName() : null,
+                'letter_health' => $request->file('letter_health') ? $request->file('letter_health')->getClientOriginalName() : null,
+                'cv' => $request->file('cv') ? $request->file('cv')->getClientOriginalName() : null,
+            ];
+            session()->flash('uploaded_files', $uploaded_files);
+
             if ($trainingData) {
                 // Update data jika sudah ada
                 $currentProgress = $trainingData->isprogress;
@@ -156,13 +167,13 @@ class RegTrainingController extends Controller
                     'isprogress' => max($currentProgress, $newProgress),
                 ]);
 
-                // Kirim notifikasi ke admin
+
                 $admins = User::where('role', 'admin')->get();
                 foreach ($admins as $admin) {
                     $admin->notify(new TrainingUpdatedNotification($trainingData, 'user', 'Daftar Pelatihan'));
                 }
             } else {
-                // Simpan data baru jika belum ada
+
                 RegTraining::create([
                     'user_id' => $user->id,
                     'name_pic' => $request->input('name_pic'),
@@ -176,100 +187,197 @@ class RegTrainingController extends Controller
             return response()->json(['success' => true, 'message' => 'Data berhasil disimpan/diupdate!']);
         } catch (\Exception $e) {
             Log::error('Error in saveForm1: ' . $e->getMessage());
-            return response()->json(['success' => false, 'message' => 'Terjadi kesalahan, coba lagi.']);
+            return response()->json(['message' => 'Terjadi kesalahan, coba lagi.']);
         }
+    }
+
+    public function pageAddParticipant($form_id)
+    {
+        $training = RegTraining::findOrFail($form_id);
+        $participants = RegParticipant::where('form_id', $form_id)->get();
+
+        $participantToEdit = null;
+        if (request()->has('participant_id')) {
+            $participantToEdit = RegParticipant::find(request()->participant_id);
+        }
+
+        return view('dashboard.user.participants.addparticipants', [
+            'title' => 'Tambah Peserta',
+            'form_id' => $form_id,
+            'participants' => $participants,
+            'training' => $training,
+            'participantToEdit' => $participantToEdit,
+        ]);
     }
 
 
     public function saveForm2(Request $request)
     {
+        // Validasi awal supaya bisa load training
         $request->validate([
-            'form_id' => 'required|integer',
-
+            'name'              => 'required|string|max:255',
+            'nik'               => 'nullable|string|min:16|max:16',
+            'date_birth'        => 'nullable|date',
+            'blood_type'        => 'nullable|in:A-,B-,AB-,O-,A+,B+,AB+,O+,-',
+            'photo'             => 'nullable|file|image|max:2048',
+            'ijazah'            => 'nullable|file|mimes:pdf|max:2048',
+            'letter_employee'   => 'nullable|file|mimes:pdf|max:2048',
+            'letter_health'     => 'nullable|file|mimes:pdf|max:2048',
+            'cv'                => 'nullable|file|mimes:pdf|max:2048',
+            'reason'            => 'nullable|string',
+            'form_id'           => 'required|exists:reg_training,id',
+            'participant_id'    => 'nullable|exists:reg_participants,id',
         ]);
 
-        $formId = $request->form_id;
+        $training = RegTraining::findOrFail($request->form_id);
 
-        // $training = RegTraining::findOrFail($formId);
-        $training = RegTraining::where('id', $formId)->firstOrFail();
-        if ($training) {
-            $training->isprogress = max($training->isprogress, 3);
-            $training->link = $request->link;
-            $training->save();
+        $trainingDate = \Carbon\Carbon::parse($training->training_date ?? $training->date ?? $training->start_date);
+        $deadline = $trainingDate->copy()->subDays(3); // Deadline H-3
+
+
+        if (now()->greaterThanOrEqualTo($deadline)) {
+            return redirect()->back()->withErrors([
+                'form' => 'Pendaftaran/ubah peserta sudah ditutup pada H-3 sebelum pelatihan. Silakan hubungi admin.'
+            ])->withInput();
         }
+        $data = $request->only([
+            'name',
+            'nik',
+            'date_birth',
+            'blood_type',
+            'reason',
+            'form_id'
+        ]);
+        $prefix = strtolower(str_replace(' ', '_', $request->name)) ?: 'file';
+        $uploaded_files = [];
 
-        foreach ($request->participants as $participantData) {
-            $name = trim($participantData['name'] ?? '');
+        // Helper upload
+        $handleFile = function ($field, $folder) use ($request, $prefix, &$data, &$uploaded_files) {
+            if ($request->hasFile($field)) {
+                $ext = $request->file($field)->getClientOriginalExtension();
+                $filename = "{$prefix}_{$field}." . $ext;
+                $path = $request->file($field)->storeAs("uploads/participants/{$folder}", $filename, 'public');
+                $data[$field] = $path;
+                $uploaded_files[$field] = $filename;
+            }
+        };
 
-            // Lewati jika nama kosong
-            if ($name === '') {
-                continue;
+        // === Jika EDIT (update) ===
+        if ($request->filled('participant_id')) {
+            $participant = RegParticipant::findOrFail($request->participant_id);
+
+            foreach (
+                [
+                    'photo' => 'photo',
+                    'ijazah' => 'ijazah',
+                    'letter_employee' => 'letter_employee',
+                    'letter_statement' => 'letter_statement',
+                    'form_registration' => 'form_registration',
+                    'letter_health' => 'letter_health',
+                    'cv' => 'cv'
+                ] as $field => $folder
+            ) {
+                if ($request->hasFile($field)) {
+                    if ($participant->$field && Storage::disk('public')->exists($participant->$field)) {
+                        Storage::disk('public')->delete($participant->$field);
+                    }
+                    $handleFile($field, $folder);
+                } else {
+                    unset($data[$field]);
+                }
+            }
+            $participant->update($data);
+        } else {
+            // === Jika TAMBAH (create) ===
+            foreach (
+                [
+                    'photo' => 'photo',
+                    'ijazah' => 'ijazah',
+                    'letter_employee' => 'letter_employee',
+                    'letter_statement' => 'letter_statement',
+                    'letter_health' => 'letter_health',
+                    'form_registration' => 'form_registration',
+                    'cv' => 'cv'
+                ] as $field => $folder
+            ) {
+                $handleFile($field, $folder);
             }
 
-            // Cek apakah peserta dengan nama ini sudah ada di form ini
-            $exists = RegParticipant::where('form_id', $formId)
-                ->where('name', $name)
-                ->exists();
-
-            if (!$exists) {
-                RegParticipant::create([
-                    'form_id' => $formId,
-                    'name' => $name,
-                ]);
-            }
+            $participant = RegParticipant::create($data);
         }
-        $training->touch();
+
+        // Update progress dsb
+        $training->isprogress = max($training->isprogress ?? 0, 3);
+        $training->save();
+
+        // Notifikasi admin (optional)
         $admins = User::where('role', 'admin')->get();
         foreach ($admins as $admin) {
             $admin->notify(new TrainingUpdatedNotification($training, 'user', 'Peserta Terdaftar'));
         }
+        $training->touch();
 
-
-        return response()->json(['message' => 'Data peserta berhasil ditambahkan']);
+        return redirect()->back()->with('success', 'Peserta Berhasil Ditambahkan.');
     }
+
 
     public function saveForm3(Request $request)
     {
         $request->validate([
             'file_id' => 'required|exists:reg_training,id',
             'file_approval' => 'nullable|file|mimes:pdf|max:2048',
+            'proof_payment' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
         ], [
             'file_approval.max' => 'File melebihi batas 2MB.',
+            'proof_payment.max' => 'File melebihi batas 2MB.',
         ]);
 
         $training = RegTraining::where('id', $request->file_id)->firstOrFail();
-
         $record = FileRequirement::where('file_id', $request->file_id)->first();
 
-        // Siapkan nama file
+
         $nameCompany = Str::slug($training->name_company ?? 'Company', '_');
         $nameTraining = Str::slug($training->activity ?? 'Training', '_');
 
-        $filePath = $record->file_approval ?? null;
 
-        // Simpan file MoU
+        $fileApprovalPath = $record->file_approval ?? null;
+        $proofPaymentPath = $record->proof_payment ?? null;
+
+
         if ($request->hasFile('file_approval')) {
+
             if ($record && $record->file_approval) {
                 Storage::disk('public')->delete($record->file_approval);
             }
-
             $fileName = "File_{$nameCompany}_{$nameTraining}." . $request->file('file_approval')->getClientOriginalExtension();
-            $filePath = $request->file('file_approval')->storeAs('uploads/fileapproval', $fileName, 'public');
+            $fileApprovalPath = $request->file('file_approval')->storeAs('uploads/fileapproval', $fileName, 'public');
         }
 
-        // Simpan atau update ke table file_requirement
+
+        if ($request->hasFile('proof_payment')) {
+            // Hapus file lama jika ada
+            if ($record && $record->proof_payment) {
+                Storage::disk('public')->delete($record->proof_payment);
+            }
+            $proofName = "Proof_{$nameCompany}_{$nameTraining}." . $request->file('proof_payment')->getClientOriginalExtension();
+            $proofPaymentPath = $request->file('proof_payment')->storeAs('uploads/proofpayment', $proofName, 'public');
+        }
+
+
         if ($record) {
             $record->update([
-                'file_approval' => $filePath,
+                'file_approval' => $fileApprovalPath,
+                'proof_payment' => $proofPaymentPath,
             ]);
         } else {
             FileRequirement::create([
                 'file_id' => $request->file_id,
-                'file_approval' => $filePath,
+                'file_approval' => $fileApprovalPath,
+                'proof_payment' => $proofPaymentPath,
             ]);
         }
 
-        // ✅ Update progress training (minimal tetap 4)
+
         $training->isprogress = max($training->isprogress, 4);
         $training->save();
 
@@ -279,18 +387,26 @@ class RegTrainingController extends Controller
         // Notifikasi ke admin
         $admins = User::where('role', 'admin')->get();
         foreach ($admins as $admin) {
-            $admin->notify(new TrainingUpdatedNotification($training, 'user', 'Upload Persetujuan'));
+            $admin->notify(new TrainingUpdatedNotification($training, 'user', 'Upload Persetujuan / Bukti Pembayaran'));
         }
 
         return response()->json(['message' => 'File berhasil diperbarui!']);
     }
 
 
-    public function destroyUser($id)
+    public function deleteParticipant($id)
     {
-        $participant = RegParticipant::findOrFail($id);
+        $participant = RegParticipant::find($id);
+        if (!$participant) {
+            return response()->json(['success' => false, 'message' => 'Peserta tidak ditemukan.']);
+        }
+        // Hapus file terkait jika perlu (photo, ijazah, dst)
+        foreach (['photo', 'ijazah', 'letter_employee', 'letter_statement', 'form_registration', 'letter_health', 'cv'] as $field) {
+            if ($participant->$field && Storage::disk('public')->exists($participant->$field)) {
+                Storage::disk('public')->delete($participant->$field);
+            }
+        }
         $participant->delete();
-
-        return back()->with('success', 'Peserta berhasil dihapus.');
+        return response()->json(['success' => true]);
     }
 }

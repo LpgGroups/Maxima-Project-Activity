@@ -1,5 +1,6 @@
 @extends('dashboard.layouts.dashboardmain')
 @section('container')
+    {{-- <pre>{{ json_encode($notifications, JSON_PRETTY_PRINT) }}</pre> --}}
     @php
         $activityMap = [
             'TKPK1' => 'Pelatihan Tenaga Kerja Pada Ketinggian Tingkat 1',
@@ -81,22 +82,29 @@
     <div class="space-y-4">
 
         @foreach ($data as $training)
-            <div class="training-card w-full h-[120px] bg-green-500 rounded-lg shadow-md relative overflow-hidden">
+            <div class="training-card w-full h-[150px] bg-green-500 rounded-lg shadow-md relative overflow-hidden">
                 <div class="absolute inset-0 bg-white rounded-lg p-3 flex flex-col justify-between">
                     <div class="flex justify-between items-start">
                         <div>
-                            @if ($training->isfinish == true)
-                                <div class="flex">
-                                    <p class="text-zinc-800 text-sm font-semibold">
-                                        {{ $activityMap[$training->activity] ?? 'null' }}</p>
-                                    <img src="{{ asset('img/svg/success.svg') }}" alt="Success" class="ml-1 w-4 h-4">
-                                </div>
-                            @else
+                            <p class="no-letter text-[12px] text-gray-500">No: {{ $training->no_letter }}</p>
+                            <hr>
+                            </hr>
+                            <div class="flex items-center">
                                 <p class="text-zinc-800 text-sm font-semibold">
-                                    {{ $activityMap[$training->activity] ?? 'null' }}</p>
-                            @endif
-                            <p class="text-zinc-800 text-xs">{{ $training->name_pic ?? 'null' }} -
-                                {{ $training->name_company ?? '-' }}</p>
+                                    {{ $activityMap[$training->activity] ?? 'Tidak Ada' }}
+                                </p>
+                                @if ($training->isfinish == 1)
+                                    <img src="{{ asset('img/svg/success.svg') }}" alt="Success" class="ml-1 w-4 h-4">
+                                @elseif ($training->isfinish == 2)
+                                    <img src="{{ asset('img/svg/waiting.svg') }}" alt="Denied" class="ml-1 w-4 h-4">
+                                @endif
+                            </div>
+                            <p class="text-zinc-800 text-xs truncate overflow-hidden whitespace-nowrap 
+                                w-[160px] sm:w-[200px] md:w-[240px] lg:w-[500px]"
+                                title="{{ $training->name_pic ?? 'Tidak Ada' }} - {{ $training->name_company ?? '-' }}">
+                                {{ $training->name_pic ?? 'Tidak Ada' }} - {{ $training->name_company ?? '-' }}
+                            </p>
+
                             <p class="text-zinc-800 text-[12px] mt-1">{{ $training->participants->count() }} Peserta</p>
                         </div>
                         <div class="text-right">
@@ -112,15 +120,27 @@
                                     5 => ['percent' => 100, 'color' => 'bg-green-600'],
                                 ];
 
-                                $progress = $progressMap[$progressValue] ?? [
-                                    'percent' => 0,
-                                    'color' => 'bg-gray-400',
-                                ];
+                                if ($training->isfinish == 2) {
+                                    $progress = [
+                                        'percent' => 100,
+                                        'color' => 'bg-red-600',
+                                        'label' => 'Ditolak',
+                                    ];
+                                } else {
+                                    $map = $progressMap[$progressValue] ?? ['percent' => 0, 'color' => 'bg-gray-400'];
+                                    $progress = [
+                                        'percent' => $map['percent'],
+                                        'color' => $map['color'],
+                                        'label' => $map['percent'] === 100 ? 'Completed' : 'In Progress',
+                                    ];
+                                }
+
                             @endphp
 
                             <div class="text-[10px] text-black font-medium">
-                                {{ $progress['percent'] === 100 ? 'Completed' : 'In Progress' }}
+                                {{ $progress['label'] }}
                             </div>
+
 
                             <div class="relative w-full md:w-24 h-1.5 bg-violet-100 rounded-full mt-1 mb-1">
                                 <div class="absolute top-0 left-0 h-1.5 {{ $progress['color'] }} rounded-full"
@@ -131,16 +151,46 @@
 
                         </div>
                     </div>
-                    <div class="flex justify-between items-center text-[12px]">
+                    <div class="text-[10px]">
+                        Update terbaru:
+                        {{ \Carbon\Carbon::parse($training->updated_at)->translatedFormat('d F Y H:i') }} WIB
+                        <div class="absolute top-[-5px] right-[-5px] z-10 new-badge hidden">
+                            <img src="{{ asset('img/gif/update.gif') }}" alt="New" class="w-4 h-4">
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center text-[12px] relative">
                         <span class="text-violet-400">
                             {{ \Carbon\Carbon::parse($training->date)->translatedFormat('d F Y') }}
                             -
-                            {{ \Carbon\Carbon::parse($training->date_end)->translatedFormat('d F Y') }}</span>
-                        <a href="#" class="text-indigo-600 text-xs view-detail-btn" data-id="{{ $training->id }}">
-                            View Details
-                        </a>
+                            {{ \Carbon\Carbon::parse($training->date_end)->translatedFormat('d F Y') }}
+                        </span>
 
+                        @php
+                            $hasUpdateNotif = $hasUpdateNotif =
+                                $notifications
+                                    ->where('data.training_id', $training->id)
+                                    ->whereIn('data.type', ['update', 'new', 'info']) // <-- tambahkan 'info'
+                                    ->whereNull('read_at')
+                                    ->count() > 0;
+
+                        @endphp
+
+                        <div class="relative inline-block">
+                            @if ($hasUpdateNotif)
+                                <div class="absolute -top-5 right-0 new-badge" data-badge-id="{{ $training->id }}">
+                                    <img src="{{ asset('img/gif/update.gif') }}" class="w-6 h-6" />
+                                </div>
+                            @endif
+                            <a href="#"
+                                class="view-detail-btn block text-gray-700 hover:text-blue-600 transition duration-200"
+                                data-id="{{ $training->id }}" data-updated="{{ $training->updated_at }}">
+                                View Details
+                            </a>
+                        </div>
                     </div>
+
+
+
                 </div>
             </div>
         @endforeach

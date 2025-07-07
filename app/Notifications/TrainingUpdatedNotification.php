@@ -19,14 +19,23 @@ class TrainingUpdatedNotification extends Notification
     protected $formName;
     protected $customMessage;
     protected $customType;
+    protected $actorName;
 
-    public function __construct(RegTraining $training, string $triggeredBy = 'user', string $formName = '', string $customMessage = '', string $customType = '')
+
+    public function __construct(RegTraining $training, string $triggeredBy = '', string $formName = '', string $customMessage = '', string $customType = '',  string $actorName = '')
     {
         $this->training = $training;
         $this->triggeredBy = $triggeredBy;
         $this->formName = $formName;
         $this->customMessage = $customMessage;
         $this->customType = $customType;
+        $this->actorName = $actorName;
+
+        Log::info('NOTIFIKASI DIKIRIM:', [
+            'triggeredBy' => $triggeredBy,
+            'actorName' => $actorName,
+            'customMessage' => $customMessage,
+        ]);
     }
 
     /**
@@ -45,7 +54,7 @@ class TrainingUpdatedNotification extends Notification
     public function toDatabase($notifiable)
     {
 
-        $userName = $this->training->user->name ?? 'User';
+        $userName = $this->resolveActorName();
         $activity = $this->training->activity ?? 'Training';
 
         $formText = $this->formName ? " pada {$this->formName}" : '';
@@ -55,18 +64,17 @@ class TrainingUpdatedNotification extends Notification
                 'title' => 'Training Diperbarui oleh User',
                 'message' => "{$userName} telah memperbarui training {$activity} {$formText}",
                 'training_id' => $this->training->id,
+                'user_name' => $userName,
                 'url' => route('dashboard.admin.training.show', $this->training->id),
             ];
         }
-        $waMessage = "Status training {$activity} telah diperbarui oleh Admin{$formText}. Silakan cek dashboard.";
-        $this->sendWhatsAppNotification($waMessage);
-
         if (!empty($this->customMessage)) {
             return [
                 'type' => $this->customType ?: 'success',
                 'title' => 'Informasi Pelatihan',
                 'message' => $this->customMessage,
                 'training_id' => $this->training->id,
+                'user_name' => $userName,
                 'url' => route('dashboard.form', $this->training->id),
             ];
         }
@@ -76,6 +84,7 @@ class TrainingUpdatedNotification extends Notification
             'title' => 'Status Training Anda Telah Diubah',
             'message' => "Admin telah memperbarui status training {$activity}{$formText}",
             'training_id' => $this->training->id,
+            'user_name' => $userName,
             'url' => route('dashboard.form', $this->training->id), // ganti sesuai route kamu
         ];
     }
@@ -87,33 +96,16 @@ class TrainingUpdatedNotification extends Notification
             'from' => $this->triggeredBy, // "user" atau "admin"
         ];
     }
-    protected function sendWhatsAppNotification($message)
+    protected function resolveActorName()
     {
-        $token = config('services.maxchat.token');
-        $phone = 6285780004039 ;
-
-        if (!$phone) {
-            Log::warning('WhatsApp not sent: No phone number for user ID ' . $this->training->user_id);
-            return;
+        if (!empty($this->actorName)) {
+            return $this->actorName;
         }
 
-        $phone = preg_replace('/^0/', '62', $phone);
-        $phone = preg_replace('/[^0-9]/', '', $phone);
-
-        try {
-            $response = Http::withToken($token)->post('https://app.maxchat.id/api/messages/push', [
-                'to' => $phone,
-                'type' => 'text',
-                'message' => $message,
-            ]);
-
-            if ($response->successful()) {
-                Log::info("WA sent to {$phone}");
-            } else {
-                Log::error("WA failed: " . $response->body());
-            }
-        } catch (\Exception $e) {
-            Log::error('Failed to send WhatsApp message: ' . $e->getMessage());
+        if (strtolower($this->triggeredBy) === 'user') {
+            return $this->training->user->name ?? 'User';
         }
+
+        return 'System';
     }
 }
