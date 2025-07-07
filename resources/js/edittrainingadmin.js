@@ -550,7 +550,21 @@ function copyCode() {
             msg.style.opacity = 1;
             setTimeout(() => {
                 msg.style.opacity = 0;
-            }, 5200);
+            }, 2000);
+        });
+    };
+
+    document.getElementById("copy-letter").onclick = function () {
+        const letter = document
+            .getElementById("no-letter-value")
+            .innerText.replace("No: ", "")
+            .trim();
+        navigator.clipboard.writeText(letter).then(function () {
+            const msg = document.getElementById("copied-letter-msg");
+            msg.style.opacity = 1;
+            setTimeout(() => {
+                msg.style.opacity = 0;
+            }, 2000);
         });
     };
 }

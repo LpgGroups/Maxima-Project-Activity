@@ -22,7 +22,7 @@
                         <thead>
                             <tr class="bg-slate-600 lg:text-sm text-white text-[10px]">
                                 <th class="rounded-l-lg">No</th>
-                                <th>Pengguna</th>
+                                <th>No Surat</th>
                                 <th>PIC</th>
                                 <th>Perusahaan</th>
                                 <th>Pelatihan</th>

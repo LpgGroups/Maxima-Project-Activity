@@ -9,7 +9,7 @@ function fetchTrainingDataAdmin() {
             const displayTrainings = trainings.slice(0, maxDisplay);
 
             displayTrainings.forEach((training, index) => {
-                const userName = training.user?.name || "-";
+                const numberLetter = training.noLetter || "-";
                 const namePic = training.name_pic || "-";
                 const nameCompany = training.name_company || "-";
                 const activity = training.activity || "";
@@ -112,11 +112,11 @@ function fetchTrainingDataAdmin() {
                     <tr onclick="window.location='/dashboard/admin/training/${
                         training.id
                     }'"
-                        class="odd:bg-white even:bg-gray-300 cursor-pointer hover:bg-red-500 hover:text-white leading-loose">
+                        class="odd:bg-white even:bg-gray-300 cursor-pointer hover:bg-red-500 hover:text-white leading-loose text-[12px]">
                         <td>${index + 1}</td>
-                        <td class="max-w-[120px] truncate whitespace-nowrap" title="${userName}">${userName}</td>
-                        <td class="max-w-[120px] truncate whitespace-nowrap" title="${namePic}">${namePic}</td>
-                        <td class="max-w-[150px] truncate whitespace-nowrap" title="${nameCompany}">${nameCompany} ${badgeHTML}</td>
+                        <td class="max-w-[120px] truncate whitespace-nowrap" title="${numberLetter}">${numberLetter}${badgeHTML}</td>
+                        <td class="max-w-[50px] truncate whitespace-nowrap" title="${namePic}">${namePic}</td>
+                        <td class="max-w-[150px] truncate whitespace-nowrap" title="${nameCompany}">${nameCompany} </td>
                         <td>${activity}</td>
                         <td class="relative p-1 pr-1 truncate whitespace-nowrap">
                             <span 
@@ -124,7 +124,7 @@ function fetchTrainingDataAdmin() {
                                 title="${
                                     isFinish === 2 && training.statusFail
                                         ? training.statusFail
-                                        : "dams"
+                                        : "nothing"
                                 }"
                             >
                                 ${statusText}
@@ -157,7 +157,7 @@ function fetchTrainingDataAdmin() {
                         </td>
                     </tr>`;
             }
-        
+
             document.getElementById("live-training-body").innerHTML = html;
         });
 }
