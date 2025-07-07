@@ -86,9 +86,12 @@
                 <div class="absolute inset-0 bg-white rounded-lg p-3 flex flex-col justify-between">
                     <div class="flex justify-between items-start">
                         <div>
+                            <p class="no-letter text-[12px] text-gray-500">No: {{ $training->no_letter }}</p>
+                            <hr>
+                            </hr>
                             <div class="flex items-center">
                                 <p class="text-zinc-800 text-sm font-semibold">
-                                    {{ $activityMap[$training->activity] ?? 'null' }}
+                                    {{ $activityMap[$training->activity] ?? 'Tidak Ada' }}
                                 </p>
                                 @if ($training->isfinish == 1)
                                     <img src="{{ asset('img/svg/success.svg') }}" alt="Success" class="ml-1 w-4 h-4">
@@ -96,8 +99,12 @@
                                     <img src="{{ asset('img/svg/waiting.svg') }}" alt="Denied" class="ml-1 w-4 h-4">
                                 @endif
                             </div>
-                            <p class="text-zinc-800 text-xs">{{ $training->name_pic ?? 'null' }} -
-                                {{ $training->name_company ?? '-' }}</p>
+                            <p class="text-zinc-800 text-xs truncate overflow-hidden whitespace-nowrap 
+                                w-[160px] sm:w-[200px] md:w-[240px] lg:w-[500px]"
+                                title="{{ $training->name_pic ?? 'Tidak Ada' }} - {{ $training->name_company ?? '-' }}">
+                                {{ $training->name_pic ?? 'Tidak Ada' }} - {{ $training->name_company ?? '-' }}
+                            </p>
+
                             <p class="text-zinc-800 text-[12px] mt-1">{{ $training->participants->count() }} Peserta</p>
                         </div>
                         <div class="text-right">
@@ -174,8 +181,9 @@
                                     <img src="{{ asset('img/gif/update.gif') }}" class="w-6 h-6" />
                                 </div>
                             @endif
-                            <a href="#" class="view-detail-btn block" data-id="{{ $training->id }}"
-                                data-updated="{{ $training->updated_at }}">
+                            <a href="#"
+                                class="view-detail-btn block text-gray-700 hover:text-blue-600 transition duration-200"
+                                data-id="{{ $training->id }}" data-updated="{{ $training->updated_at }}">
                                 View Details
                             </a>
                         </div>

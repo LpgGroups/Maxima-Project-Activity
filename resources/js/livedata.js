@@ -75,10 +75,10 @@ function fetchTrainingDataAdmin() {
                         bgColor:
                             "bg-yellow-400 text-black font-semibold rounded",
                     },
-                    // ditolak: {
-                    //     label: "Ditolak",
-                    //     bgColor: "bg-red-600 text-white font-semibold rounded",
-                    // },
+                    ditolak: {
+                        label: "Ditolak",
+                        bgColor: "bg-red-600 text-white font-semibold rounded",
+                    },
                     proses: {
                         label: "Diproses",
                         bgColor: "bg-blue-400 text-white font-semibold rounded",

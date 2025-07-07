@@ -52,6 +52,7 @@ class DashboardAdminController extends Controller
                 $q->where('name_company', 'like', '%' . $search . '%')
                     ->orWhere('name_pic', 'like', '%' . $search . '%')
                     ->orWhere('activity', 'like', '%' . $search . '%')
+                    ->orWhere('no_letter', 'like', '%' . $search . '%')
                     ->orWhereHas('user', function ($uq) use ($search) {
                         $uq->where('name', 'like', '%' . $search . '%');
                     });
