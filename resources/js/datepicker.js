@@ -33,21 +33,29 @@ $(document).ready(function () {
             currentDate.getMonth() + 1,
             0
         ).getDate();
+
         const firstDay = new Date(
             currentDate.getFullYear(),
             currentDate.getMonth(),
             1
         ).getDay();
 
+        const $daysContainer = $("#days");
+        $daysContainer.empty();
+
+        // Set nama bulan
         $("#month-name").text(
             `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`
         );
 
-        const $daysContainer = $("#days");
-        $daysContainer.empty();
+        const today = new Date();
+        const tenDaysLater = new Date(today);
+        tenDaysLater.setDate(today.getDate() + 10);
 
-        const { today, tenDaysLater } = getTodayAndTenDaysLater();
+        // Isi tanggal penuh (kuota sudah 2) dari backend
+        const fullQuotaDates = window.fullQuotaDates || []; // Format: ['2025-07-10', ...]
 
+        // Spasi awal sebelum tanggal 1
         for (let i = 0; i < firstDay; i++) {
             $("<div>").addClass("text-center text-xs").appendTo($daysContainer);
         }
@@ -56,11 +64,18 @@ $(document).ready(function () {
             const dayCell = $("<div>").addClass(
                 "text-center border border-black py-1 px-2 rounded-lg cursor-pointer text-xs h-8 flex items-center justify-center"
             );
+
             const currentDay = new Date(
                 currentDate.getFullYear(),
                 currentDate.getMonth(),
                 day
             );
+            const dateString =
+                currentDay.getFullYear() +
+                "-" +
+                String(currentDay.getMonth() + 1).padStart(2, "0") +
+                "-" +
+                String(currentDay.getDate()).padStart(2, "0");
             const dayOfWeek = currentDay.getDay();
             const isWeekend = dayOfWeek === 0;
             const isPastDate = currentDay < today;
@@ -71,7 +86,15 @@ $(document).ready(function () {
                 currentDate.getMonth() === today.getMonth() &&
                 currentDate.getFullYear() === today.getFullYear();
 
-            if (isToday) {
+            const isFullQuota = fullQuotaDates.includes(dateString);
+
+            // Logika tampilan kalender
+            if (isFullQuota) {
+                dayCell
+                    .addClass("bg-red-500 text-white cursor-not-allowed")
+                    .attr("title", "Kuota pelatihan penuh pada tanggal ini");
+                dayCell.css("pointer-events", "none");
+            } else if (isToday) {
                 dayCell.addClass("bg-violet-400 text-white");
                 dayCell.css("pointer-events", "none");
             } else if (isPastDate || isWithinNextTenDays || isWeekend) {
@@ -93,6 +116,7 @@ $(document).ready(function () {
                         .addClass("bg-blue-500 text-white");
                 });
             }
+
             dayCell.text(day);
             $daysContainer.append(dayCell);
         }
@@ -128,7 +152,7 @@ $(document).ready(function () {
         ).toLocaleDateString("en-CA");
 
         Swal.fire({
-            title: `Apakah Anda yakin ingin register tanggal ${selectedDay} ${
+            title: `Konfirmasi pendaftaran untuk tanggal ${selectedDay} ${
                 getMonthNames()[currentDate.getMonth()]
             } ${currentDate.getFullYear()}?`,
             icon: "question",
@@ -136,7 +160,7 @@ $(document).ready(function () {
             confirmButtonText: "Ya, Register Pelatihan!",
             cancelButtonText: "Batal",
             html: `
-            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-700">Pilih Pelatihan:</label>
+            <label class="block mb-2 text-sm font-bold text-gray-900 dark:text-gray-700">Pilih Pelatihan:</label>
             <div class="border shadow-lg rounded-lg overflow-y-auto max-h-44 bg-white">
                 <div id="training-list" class="flex flex-col gap-2 mx-auto w-[300px] mt-2 mb-2">
                     <div class="training-option px-4 py-2 border rounded-lg cursor-pointer text-white relative overflow-hidden"
@@ -215,8 +239,8 @@ $(document).ready(function () {
                 </div>
             </div>
 
-
-            <label class="block mt-2 mb-2 text-sm font-medium text-gray-900 dark:text-gray-700">Tempat
+            <div class="border shadow-lg rounded-lg overflow-y-auto max-h-44 bg-white mt-2">
+            <label class="block mt-2 mb-2 text-sm font-bold text-gray-900 dark:text-gray-700">Tempat
                 Pelatihan:</label>
             <div class="flex items-center justify-center min-h-5">
                 <div class="flex items-center me-4">
@@ -238,6 +262,32 @@ $(document).ready(function () {
                         class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-700">Blended</label>
                 </div>
             </div>
+            
+
+            <div id="city-select-container" class="mt-4 hidden">
+            <label for="select-city" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-700">
+                Pilih Kota Pelatihan (Blended):
+            </label>
+            <select id="select-city" class="block w-full text-sm font-bold px-2 py-1 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
+               <option value="">-- Pilih Kota --</option>
+                <option value="Bali">Bali</option>
+                <option value="Balikpapan">Balikpapan</option>
+                <option value="Bogor">Bogor</option>
+                <option value="Ciracas">Ciracas</option>
+                <option value="Jakarta">Jakarta</option>
+                <option value="Makassar">Makassar</option>
+                <option value="Malang">Malang</option>
+                <option value="Medan">Medan</option>
+                <option value="Palangkaraya">Palangkaraya</option>
+                <option value="Palembang">Palembang</option>
+                <option value="Pekanbaru">Pekanbaru</option>
+                <option value="Pontianak">Pontianak</option>
+                <option value="Semarang">Semarang</option>
+                <option value="Surabaya">Surabaya</option>
+
+            </select>
+        </div>
+        </div>
             `,
             didOpen: () => {
                 // Handler untuk memilih training
@@ -248,6 +298,16 @@ $(document).ready(function () {
                     $(this).addClass("ring-2 ring-red-700 animate-pulse");
                     $("#training-list").data("selected", $(this).data("value"));
                     updateRadioStateCustom($(this).data("value"));
+                });
+
+                $('input[name="training-mode"]').on("change", function () {
+                    const selectedMode = $(this).val();
+                    if (selectedMode === "Blended") {
+                        $("#city-select-container").removeClass("hidden");
+                    } else {
+                        $("#city-select-container").addClass("hidden");
+                        $("#select-city").val(""); // reset pilihan kota jika bukan blended
+                    }
                 });
 
                 // Set default (pilih pertama)
@@ -263,20 +323,27 @@ $(document).ready(function () {
         const online = document.getElementById("radio-online");
         const offline = document.getElementById("radio-offline");
         const blended = document.getElementById("radio-blended");
+
         online.disabled = false;
         offline.disabled = false;
         blended.disabled = false;
+
         online.checked = false;
         offline.checked = false;
         blended.checked = false;
+
         if (["TKPK1", "TKPK2", "TKBT1", "TKBT2"].includes(training)) {
             blended.checked = true;
             online.disabled = true;
             offline.disabled = true;
+            $(blended).trigger("change");
         } else if (training === "AK3U") {
             online.checked = true;
             offline.disabled = true;
             blended.disabled = true;
+            $(online).trigger("change");
+        } else {
+            $(online).trigger("change");
         }
     }
 
@@ -288,20 +355,24 @@ $(document).ready(function () {
                 const trainingPlace = $(
                     'input[name="training-mode"]:checked'
                 ).val();
+                const city = $("#select-city").val(); // ambil kota jika ada
+
                 if (!trainingPlace) {
                     Swal.fire({
                         icon: "warning",
                         title: "Tempat Pelatihan Belum Dipilih!",
-                        text: "Silakan pilih 'Online' atau 'Offline' sebelum melanjutkan.",
+                        text: "Silakan pilih 'Online', 'Offline', atau 'Blended' sebelum melanjutkan.",
                         confirmButtonText: "OK",
                     });
                     return;
                 }
+
                 confirmBooking(
                     trainingType,
                     bookingDate,
                     progres,
-                    trainingPlace
+                    trainingPlace,
+                    city // ← kirim ke bawah
                 );
             }
         };
@@ -311,7 +382,8 @@ $(document).ready(function () {
         trainingType,
         formattedDate,
         progres,
-        trainingPlace
+        trainingPlace,
+        city
     ) {
         Swal.fire({
             title: "Konfirmasi Jadwal Pelatihan",
@@ -328,7 +400,8 @@ $(document).ready(function () {
                     trainingType,
                     formattedDate,
                     progres,
-                    trainingPlace
+                    trainingPlace,
+                    city
                 );
                 startConfirmationCountdown();
             }
@@ -339,7 +412,8 @@ $(document).ready(function () {
         trainingType,
         formattedDate,
         progres,
-        trainingPlace
+        trainingPlace,
+        city
     ) {
         Swal.fire({
             title: "Memproses...",
@@ -358,6 +432,7 @@ $(document).ready(function () {
                 activity: trainingType,
                 isprogress: progres,
                 place: trainingPlace,
+                city: city,
             },
             success: function (response) {
                 if (response.success) {

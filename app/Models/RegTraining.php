@@ -23,6 +23,7 @@ class RegTraining extends Model
         'date_end',
         'reason_fail',
         'place',
+        'city',
         'isprogress',
         'isfinish',
         'user_id',

@@ -96,8 +96,6 @@ function liveDataUser() {
                         </td>
                     </tr>
                 `;
-                console.log(item);
-                console.log("notifIcon", notifIcon, item.isNew, item.isUpdated);
                 $tbody.append(rowHtml);
             });
         })

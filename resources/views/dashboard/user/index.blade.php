@@ -104,33 +104,40 @@
 
             <div class="grid grid-cols-7 gap-2 p-2" id="days"></div>
 
-            <div class="flex flex-wrap space-x-2 items-center mt-4">
-                <div class="flex items-center space-x-1">
+            <div class="grid grid-cols-5 gap-4 mt-4">
+                <div class="flex flex-col items-center space-y-1">
                     <div class="w-4 h-2 bg-[#9694FF] rounded-sm"></div>
-                    <span class="text-[12px]">Hari Ini</span>
+                    <span class="text-[12px] text-center">Hari Ini</span>
                 </div>
-
-                <!-- Kotak putih: Hari biasa -->
-                <div class="flex items-center space-x-1">
+                <div class="flex flex-col items-center space-y-1">
                     <div class="w-4 h-2 bg-white border border-gray-400 rounded-sm"></div>
-                    <span class="text-[12px]">Tersedia</span>
+                    <span class="text-[12px] text-center">Tersedia</span>
                 </div>
-
-                <div class="flex items-center space-x-1">
+                <div class="flex flex-col items-center space-y-1">
                     <div class="w-4 h-2 bg-gray-300 border border-gray-400 rounded-sm"></div>
-                    <span class="text-[12px]">Tidak Tersedia</span>
+                    <span class="text-[12px] text-center">Tidak Tersedia</span>
                 </div>
-
-                <div class="flex items-center space-x-1">
+                <div class="flex flex-col items-center space-y-1">
                     <div class="w-4 h-2 bg-blue-500 border border-gray-400 rounded-sm"></div>
-                    <span class="text-[12px]">Dipilih</span>
+                    <span class="text-[12px] text-center">Dipilih</span>
+                </div>
+                <div class="flex flex-col items-center space-y-1">
+                    <div class="w-4 h-2 bg-red-500 border border-gray-400 rounded-sm"></div>
+                    <span class="text-[12px] text-center">Full</span>
                 </div>
             </div>
-            <button id="booking-button" class="bg-gray-300 text-white py-2 px-4 rounded-lg cursor-not-allowed mt-4"
-                disabled>Pilih Jadwal Pelatihan</button>
 
+            <div class="flex justify-center">
+                <button id="booking-button" class="bg-gray-300 text-white py-2 px-4 rounded-lg cursor-not-allowed mt-4"
+                    disabled>
+                    Pilih Jadwal Pelatihan
+                </button>
+            </div>
         </div>
     </div>
+    <script>
+        window.fullQuotaDates = @json($fullQuotaDates);
+    </script>
 @endsection
 
 @push('scripts')
