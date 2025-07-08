@@ -335,7 +335,7 @@ class RegTrainingController extends Controller
         $training = RegTraining::where('id', $request->file_id)->firstOrFail();
         $record = FileRequirement::where('file_id', $request->file_id)->first();
 
-
+        $noLetter = str_replace([' ', '/', '\\'], '-', strtolower($training->no_letter ?? 'no-surat'));
         $nameCompany = Str::slug($training->name_company ?? 'Company', '_');
         $nameTraining = Str::slug($training->activity ?? 'Training', '_');
 
@@ -349,7 +349,8 @@ class RegTrainingController extends Controller
             if ($record && $record->file_approval) {
                 Storage::disk('public')->delete($record->file_approval);
             }
-            $fileName = "File_{$nameCompany}_{$nameTraining}." . $request->file('file_approval')->getClientOriginalExtension();
+            $fileName = "File_{$noLetter}_{$nameCompany}_{$nameTraining}." . $request->file('file_approval')->getClientOriginalExtension();
+
             $fileApprovalPath = $request->file('file_approval')->storeAs('uploads/fileapproval', $fileName, 'public');
         }
 
@@ -359,7 +360,7 @@ class RegTrainingController extends Controller
             if ($record && $record->proof_payment) {
                 Storage::disk('public')->delete($record->proof_payment);
             }
-            $proofName = "Proof_{$nameCompany}_{$nameTraining}." . $request->file('proof_payment')->getClientOriginalExtension();
+            $proofName = "Proof_{$noLetter}_{$nameCompany}_{$nameTraining}." . $request->file('proof_payment')->getClientOriginalExtension();
             $proofPaymentPath = $request->file('proof_payment')->storeAs('uploads/proofpayment', $proofName, 'public');
         }
 

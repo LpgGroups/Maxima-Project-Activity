@@ -51,7 +51,8 @@ class DashboardUserController extends Controller
             'date' => 'required|date',
             'activity' => 'required',
             'place' => 'required',
-            'isprogress' => 'required'
+            'isprogress' => 'required',
+            'city' => 'nullable|string|max:100'
         ]);
 
         try {
@@ -84,6 +85,7 @@ class DashboardUserController extends Controller
             $booking->username = $user->name;
             $booking->activity = $validated['activity'];
             $booking->place = $validated['place'];
+            $booking->city = $validated['city'] ?? null;
             $booking->isprogress = max($booking->isprogress, $validated['isprogress']);
             $booking->code_training = strtoupper(Str::random(6)) . '-' . strtoupper(Str::random(6));
             $countSameDay = RegTraining::where('date', $startDate->toDateString())
