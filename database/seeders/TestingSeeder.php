@@ -63,7 +63,7 @@ class TestingSeeder extends Seeder
                 'name' => 'user2',
                 'email' => 'user2',
                 'company' => 'Langgeng Perkasa Group',
-                'role' => 'admin',
+                'role' => 'user',
                 'password' => bcrypt('12345')
             ],
             [
@@ -78,6 +78,13 @@ class TestingSeeder extends Seeder
                 'email' => 'admin2',
                 'company' => 'Langgeng Perkasa Group',
                 'role' => 'admin',
+                'password' => bcrypt('54321')
+            ],
+            [
+                'name' => 'Management LPG 2',
+                'email' => 'management3',
+                'company' => 'Langgeng Perkasa Group',
+                'role' => 'management',
                 'password' => bcrypt('54321')
             ],
         ];
