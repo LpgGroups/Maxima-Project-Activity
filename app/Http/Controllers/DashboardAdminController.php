@@ -271,6 +271,7 @@ class DashboardAdminController extends Controller
             return response()->json(['success' => false, 'message' => 'Training tidak ditemukan.'], 404);
         }
 
+        $noLetter = str_replace([' ', '/', '\\'], '-', strtolower($training->no_letter ?? 'no-surat'));
         $nameTraining = str_replace([' ', '/', '\\'], '-', strtolower($training->activity ?? 'pelatihan'));
         $fileReq = FileRequirement::firstOrNew(['file_id' => $training->id]);
 
@@ -280,14 +281,14 @@ class DashboardAdminController extends Controller
         if ($request->hasFile('budget_plan')) {
             $file = $request->file('budget_plan');
             $ekstensi = $file->getClientOriginalExtension();
-            $nameFiles = $nameTraining . '_budget-plan.' . $ekstensi;
+            $nameFiles = $noLetter . '_' . $nameTraining . '_budget-plan.' . $ekstensi;
             $file->storeAs('budget-plans', $nameFiles);
             $fileReq->budget_plan = 'budget-plans/' . $nameFiles;
         }
         if ($request->hasFile('letter_implementation')) {
             $file = $request->file('letter_implementation');
             $ekstensi = $file->getClientOriginalExtension();
-            $nameFiles = $nameTraining . '_letter-implementation.' . $ekstensi;
+            $nameFiles = $noLetter . '_' . $nameTraining . '_letter-implementation.' . $ekstensi;
             $file->storeAs('letter-implementations', $nameFiles);
             $fileReq->letter_implementation = 'letter-implementations/' . $nameFiles;
         }
