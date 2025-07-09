@@ -143,15 +143,15 @@ class RegTrainingController extends Controller
                 ->where('id', $request->input('id'))
                 ->first();
 
-            // Setelah proses upload, simpan nama file ke session
-            $uploaded_files = [
-                'photo' => $request->file('photo') ? $request->file('photo')->getClientOriginalName() : null,
-                'ijazah' => $request->file('ijazah') ? $request->file('ijazah')->getClientOriginalName() : null,
-                'letter_employee' => $request->file('letter_employee') ? $request->file('letter_employee')->getClientOriginalName() : null,
-                'letter_health' => $request->file('letter_health') ? $request->file('letter_health')->getClientOriginalName() : null,
-                'cv' => $request->file('cv') ? $request->file('cv')->getClientOriginalName() : null,
-            ];
-            session()->flash('uploaded_files', $uploaded_files);
+            // // Setelah proses upload, simpan nama file ke session
+            // $uploaded_files = [
+            //     'photo' => $request->file('photo') ? $request->file('photo')->getClientOriginalName() : null,
+            //     'ijazah' => $request->file('ijazah') ? $request->file('ijazah')->getClientOriginalName() : null,
+            //     'letter_employee' => $request->file('letter_employee') ? $request->file('letter_employee')->getClientOriginalName() : null,
+            //     'letter_health' => $request->file('letter_health') ? $request->file('letter_health')->getClientOriginalName() : null,
+            //     'cv' => $request->file('cv') ? $request->file('cv')->getClientOriginalName() : null,
+            // ];
+            // session()->flash('uploaded_files', $uploaded_files);
 
             if ($trainingData) {
                 // Update data jika sudah ada
@@ -164,6 +164,7 @@ class RegTrainingController extends Controller
                     'name_company' => $request->input('name_company'),
                     'email_pic' => $request->input('email_pic'),
                     'phone_pic' => $phone,
+                    'city' => $request->input('city'),
                     'isprogress' => max($currentProgress, $newProgress),
                 ]);
 
@@ -173,13 +174,13 @@ class RegTrainingController extends Controller
                     $admin->notify(new TrainingUpdatedNotification($trainingData, 'user', 'Daftar Pelatihan'));
                 }
             } else {
-
                 RegTraining::create([
                     'user_id' => $user->id,
                     'name_pic' => $request->input('name_pic'),
                     'name_company' => $request->input('name_company'),
                     'email_pic' => $request->input('email_pic'),
                     'phone_pic' => $phone,
+                    'city' => $request->input('city'),
                     'isprogress' => $request->input('isprogress'),
                 ]);
             }
