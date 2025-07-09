@@ -265,11 +265,12 @@ $(document).ready(function () {
             
 
             <div id="city-select-container" class="mt-4 hidden">
-            <label for="select-city" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-700">
+            <label for="select-city" class="block mb-2 text-sm font-bold text-gray-900 dark:text-gray-700">
                 Pilih Kota Pelatihan (Blended):
             </label>
-            <select id="select-city" class="block w-full text-sm font-bold px-2 py-1 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
-               <option value="">-- Pilih Kota --</option>
+            <div class="flex justify-center">
+            <select id="select-city" class="block w-[300px] text-sm font-bold mb-2 px-2 py-1 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                <option value="">-- Pilih Kota --</option>
                 <option value="Bali">Bali</option>
                 <option value="Balikpapan">Balikpapan</option>
                 <option value="Bogor">Bogor</option>
@@ -284,8 +285,9 @@ $(document).ready(function () {
                 <option value="Pontianak">Pontianak</option>
                 <option value="Semarang">Semarang</option>
                 <option value="Surabaya">Surabaya</option>
-
             </select>
+            </div>
+
         </div>
         </div>
             `,
@@ -372,7 +374,7 @@ $(document).ready(function () {
                     bookingDate,
                     progres,
                     trainingPlace,
-                    city // ← kirim ke bawah
+                    city
                 );
             }
         };
@@ -385,11 +387,17 @@ $(document).ready(function () {
         trainingPlace,
         city
     ) {
+        const typesWithCity = ["TKPK1", "TKPK2", "TKBT1", "TKBT2"];
         Swal.fire({
             title: "Konfirmasi Jadwal Pelatihan",
             html: `Tanggal Pelatihan: <strong>${selectedDay} ${
                 getMonthNames()[currentDate.getMonth()]
-            } ${currentDate.getFullYear()}</strong><br>Jenis Pelatihan: <strong>${trainingType}</strong>`,
+            } ${currentDate.getFullYear()}</strong><br>Jenis Pelatihan: <strong>${trainingType}</strong> ${
+                typesWithCity.includes(trainingType)
+                    ? `<br>Kota: <strong>${city || "Belum memilih"}</strong>`
+                    : ""
+            }
+            `,
             icon: "info",
             showCancelButton: true,
             confirmButtonText: "OK",

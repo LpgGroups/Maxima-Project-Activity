@@ -98,6 +98,7 @@ function submitForm1() {
             name_company: $("#name_company").val(),
             email_pic: $("#email_pic").val(),
             phone_pic: $("#phone_pic").val(),
+            city: $("#city").val(),
             isprogress: progress,
         };
 
@@ -362,7 +363,7 @@ function checkBtnSendForm3() {
 
     fileApprovalInput.addEventListener("change", checkFilesSelected);
     proofPaymentInput.addEventListener("change", checkFilesSelected);
-    checkFilesSelected(); // initial call
+    checkFilesSelected();
 }
 
 // function send data

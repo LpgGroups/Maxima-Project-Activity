@@ -21,22 +21,22 @@
                 <a href="{{ '/dashboard/admin/training/alltraining' }}"
                     class="text-sm text-gray-600 underline hover:text-red-500">Reset</a>
             </form>
+            <form method="GET" class="mb-2">
+                <label for="per_page" class="text-sm">Tampilkan:</label>
+                <select name="per_page" id="per_page" class="border rounded px-2 py-1 text-sm w-[60px]"
+                    onchange="this.form.submit()">
+                    @foreach ([20, 30, 50, 100] as $size)
+                        <option value="{{ $size }}" {{ request('per_page', 20) == $size ? 'selected' : '' }}>
+                            {{ $size }}
+                        </option>
+                    @endforeach
+                </select> data per halaman
+            </form>
             <table class="table-auto w-full text-center align-middle">
-                <form method="GET" class="mb-2">
-                    <label for="per_page" class="text-sm">Tampilkan:</label>
-                    <select name="per_page" id="per_page" class="border rounded px-2 py-1 text-sm w-[60px]"
-                        onchange="this.form.submit()">
-                        @foreach ([20, 30, 50, 100] as $size)
-                            <option value="{{ $size }}" {{ request('per_page', 20) == $size ? 'selected' : '' }}>
-                                {{ $size }}
-                            </option>
-                        @endforeach
-                    </select> data per halaman
-                </form>
                 <thead>
                     <tr class="bg-slate-600 lg:text-sm text-white text-[10px]">
                         <th class="rounded-l-lg">No</th>
-                        <th>Pengguna</th>
+                        <th>No Surat</th>
                         <th>PIC</th>
                         <th>Perusahaan</th>
                         <th>Pelatihan</th>
@@ -52,7 +52,7 @@
                             class="odd:bg-white even:bg-gray-300 cursor-pointer hover:bg-red-500 hover:text-white leading-loose">
                             <td>{{ $trainingAll->firstItem() + $index }}</td>
                             <td class="max-w-[100px] truncate whitespace-nowrap" title="{{ $training->user->name }}">
-                                {{ $training->user->name ?? '-' }}
+                                {{ $training->no_letter ?? '-' }}
                             </td>
 
                             <td class="max-w-[100px] truncate whitespace-nowrap" title="{{ $training->name_pic }}">
@@ -60,7 +60,9 @@
                             </td>
                             <td class="max-w-[100px] truncate whitespace-nowrap" title="{{ $training->name_company }}">
                                 {{ $training->name_company }}
+                            </td>
 
+                            <td>{{ $training->activity }}
                                 @php
                                     // Ambil semua notifikasi training yang sudah dilihat oleh ADMIN
                                     $adminNotifications = $training->trainingNotifications->filter(function ($notif) {
@@ -84,8 +86,6 @@
                                     <img src="/img/gif/update.gif" alt="Updated" class="w-5 h-3 -mt-3 inline-block">
                                 @endif
                             </td>
-
-                            <td>{{ $training->activity }}</td>
                             <td>{{ $training->participants->count() }}</td>
                             <td class="p-1">
                                 @if ($training->isprogress == 5 && $training->isfinish == 1)

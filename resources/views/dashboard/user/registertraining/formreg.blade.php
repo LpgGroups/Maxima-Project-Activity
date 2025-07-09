@@ -12,7 +12,7 @@
         ];
     @endphp
     <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center w-full gap-2">
-        <p class="text-center sm:text-left text-base sm:text-lg font-semibold text-[#9694FF]">
+        <p class="text-center sm:text-left text-base sm:text-[15px] font-semibold text-[#9694FF]">
             {{ $activityMap[$training->activity] ?? $training->activity }}
         </p>
 
@@ -123,7 +123,8 @@
                         <div class="relative mt-4 w-64">
                             <input id="email_pic" name="email_pic" type="email"
                                 class="peer block w-full appearance-none border border-[#515151] bg-transparent px-2.5 py-3 text-sm text-[#515151] rounded-md focus:border-[#1E6E9E] focus:outline-none focus:ring-1 focus:ring-[#1E6E9E] placeholder-transparent"
-                                placeholder="" required value="{{ old('email_pic', Auth::user()->email ?? '') }}" />
+                                placeholder="" required
+                                value="{{ old('email_pic', $training->email_pic ?? Auth::user()->email) }}" />
                             <label for="email_pic"
                                 class="absolute text-base rounded-lg bg-[#ffffff] text-[#515151] transition-all duration-300 transform -translate-y-4 scale-75 top-3 left-2.5 ml-2 z-10 origin-[0] peer-focus:text-[#1E6E9E] peer-focus:scale-75 peer-focus:-translate-y-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0">
                                 Email PIC
@@ -136,7 +137,7 @@
                                 pattern="^\+\d{1,3}\s\d{1,4}-\d{1,4}-\d{4}$"
                                 class="peer block w-full appearance-none border border-[#515151] bg-transparent px-2.5 py-3 text-sm text-[#515151] rounded-md focus:border-[#1E6E9E] focus:outline-none focus:ring-1 focus:ring-[#1E6E9E] placeholder-transparent"
                                 placeholder="" required title="No WhatsApp harus berupa nomor telepon yang valid."
-                                value="{{ old('phone_pic', Auth::user()->phone ?? '') }}"
+                                value="{{ old('phone_pic', $training->phone_pic ?? (Auth::user()->phone ?? '')) }}"
                                 oninput="this.value = this.value.replace(/[^0-9+]/g, '')" />
 
                             <label for="phone_pic"
@@ -152,36 +153,85 @@
                         </div>
                     </div>
 
-                    <p class="mt-4 text-[24px] font-semibold">Informasi Kegiatan</p>
-                    <div class="mt-4">
-                        <!-- Tampilkan aktivitas yang dipilih -->
-                        <p class="font-bold text-[18px]">Jenis Kegiatan</p>
-                        <p id="activity"> {{ $activityMap[$training->activity] ?? $training->activity }}</p>
-                    </div>
+                    <div class="mt-2 p-2 bg-white rounded-lg border">
+                        <h2 class="text-2xl font-semibold text-gray-800 mb-6">Informasi Kegiatan</h2>
 
-
-                    <div class="mt-4">
-                        <p class="font-bold text-[18px]">Tanggal Pelatihan</p>
-                        <p id="date">{{ \Carbon\Carbon::parse($training->date)->translatedFormat('d F Y') }}</p>
-                    </div>
-
-                    <div class="mt-4">
-                        <p class="font-bold text-[18px]">Tanggal Selesai Pelatihan</p>
-                        <p id="date_end">{{ \Carbon\Carbon::parse($training->date_end)->translatedFormat('d F Y') }}</p>
-                    </div>
-
-                    <div class="flex">
-                        <div id="loadingSpinner" class="hidden ml-2">
-                            <svg class="animate-spin h-5 w-5 text-blue-500" xmlns="http://www.w3.org/2000/svg"
-                                fill="none" viewBox="0 0 24 24">
-                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                                    stroke-width="4">
-                                </circle>
-                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
-                            </svg>
+                        <!-- Jenis Kegiatan -->
+                        <div class="mb-4">
+                            <p class="text-gray-600 text-base font-bold">Jenis Kegiatan</p>
+                            <p id="activity" class="text-[15px] text-gray-800 font-medium">
+                                {{ $activityMap[$training->activity] ?? $training->activity }}
+                            </p>
                         </div>
-                        <div id="responseMessage" class="mt-4 hidden"></div>
+
+                        @php
+                            $allowedActivities = ['TKPK1', 'TKPK2', 'TKBT1', 'TKBT2'];
+                            $cityOptions = [
+                                'Bali',
+                                'Balikpapan',
+                                'Bogor',
+                                'Ciracas',
+                                'Jakarta',
+                                'Makassar',
+                                'Malang',
+                                'Medan',
+                                'Palangkaraya',
+                                'Palembang',
+                                'Pekanbaru',
+                                'Pontianak',
+                                'Semarang',
+                                'Surabaya',
+                            ];
+
+                        @endphp
+
+                        @if (in_array($training->activity, $allowedActivities))
+                            <div class="mb-4">
+                                <label for="city" class="block text-gray-600 text-base font-bold mb-1">Lokasi
+                                    Pelatihan:</label>
+                                <select name="city" id="city"
+                                    class="w-[200px] p-2 border border-gray-300 rounded-lg text-gray-800">
+                                    <option value="">-- Pilih Kota --</option>
+                                    @foreach ($cityOptions as $city)
+                                        <option value="{{ $city }}"
+                                            {{ $training->city === $city ? 'selected' : '' }}>
+                                            {{ $city }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        @endif
+
+                        <!-- Tanggal Pelatihan -->
+                        <div class="mb-4">
+                            <p class="text-gray-600 text-base font-bold">Tanggal Pelatihan</p>
+                            <p id="date" class="text-[15px] text-gray-800 font-medium">
+                                {{ \Carbon\Carbon::parse($training->date)->translatedFormat('d F Y') }}
+                            </p>
+                        </div>
+
+                        <!-- Tanggal Selesai Pelatihan -->
+                        <div class="mb-6">
+                            <p class="text-gray-600 text-base font-bold">Tanggal Selesai Pelatihan</p>
+                            <p id="date_end" class="text-[15px] text-gray-800 font-medium">
+                                {{ \Carbon\Carbon::parse($training->date_end)->translatedFormat('d F Y') }}
+                            </p>
+                        </div>
+
+                        <!-- Loading Spinner dan Pesan -->
+                        <div class="flex items-center space-x-2">
+                            <div id="loadingSpinner" class="hidden">
+                                <svg class="animate-spin h-5 w-5 text-blue-500" xmlns="http://www.w3.org/2000/svg"
+                                    fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10"
+                                        stroke="currentColor" stroke-width="4" />
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+                                </svg>
+                            </div>
+                            <div id="responseMessage" class="hidden text-sm text-blue-600"></div>
+                        </div>
                     </div>
+
 
                     <!-- Submit Button -->
                     <div class="mt-4 flex flex-col lg:flex-row gap-2 w-full max-w-[1920px] p-4">
@@ -196,7 +246,8 @@
                         @if ($training->updated_at)
                             <div class="text-green-400 text-sm">
                                 <strong>Update Terakhir:</strong><br>
-                                {{ $training->updated_at->setTimezone('Asia/Jakarta')->format('d-F-Y H:i') }} WIB
+                                {{ $training->updated_at->setTimezone('Asia/Jakarta')->translatedFormat('d F Y H:i') }} WIB
+
                             </div>
                         @else
                             <div class="text-red-400 text-sm">
@@ -346,7 +397,7 @@
             <div id="content3" class="tab-content">
                 <div class="p-4 border border-t-0 border-gray-300 bg-white">
                     <h3 class="text-[24px] font-semibold">Informasi Pendaftaran</h3>
-                    <p class="text-[12px]">Pastikan data dibawah ini sesuai dengan informasi Anda</p>
+                    <p class="text-[14px]">Pastikan data dibawah ini sesuai dengan informasi Anda</p>
 
                     <div id="inf_training" class="border rounded-lg w-[600px] mt-2 p-2 bg-white">
                         <div class="grid grid-cols-2 gap-y-2 text-[14px] leading-none">
@@ -396,10 +447,13 @@
                             </div>
 
                             <div class="font-semibold">Tempat Kegiatan</div>
-                            <div>: {{ $training->place }}</div>
+                            <div>: {{ $training->place }} @if (in_array($training->activity, $allowedActivities) && $training->city)
+                                    - {{ $training->city }}
+                                @endif
+                            </div>
 
                             <div class="font-semibold">Jumlah Peserta</div>
-                            <div>: {{ $training->participants->count() }}</div>
+                            <div>: {{ $training->participants->count() }} Peserta</div>
                         </div>
                     </div>
 
@@ -427,7 +481,7 @@
                                 </div>
                             </div>
                         </div>
-                        <p class="text-[12px]">
+                        <p class="text-[14px]">
                             PIC diharapkan untuk mengupload kembali berkas
                             <strong>MoU/Quotation/PO dan Bukti Pembayaran</strong>
                             yang telah disetujui dan ditandatangani oleh PIC.
@@ -437,7 +491,7 @@
                             @csrf
                             <input class="hidden" type="hidden" name="file_id" value="{{ $training->id }}">
 
-                            <div class="mt-2">
+                            <div class="mt-2 border shadow-lg px-2 rounded">
                                 <label class="block mb-2 mt-2 text-sm font-medium text-gray-900" for="file_approval">
                                     Upload File Mou/Quotation/PO
                                 </label>
@@ -452,7 +506,7 @@
                                 @endif
                             </div>
 
-                            <div class="mt-2">
+                            <div class="mt-2 border shadow-lg px-2 rounded">
                                 <label class="block mb-2 mt-2 text-sm font-medium text-gray-900" for="proof_payment">
                                     Upload Bukti Pembayaran
                                 </label>
@@ -624,7 +678,7 @@
                         <li>Harap lengkapi data-data peserta H-3 sebelum hari pelatihan di mulai.</li>
                         <li>Data dapat di ubah H-3 sebelum hari pelatihan.</li>
                         <li>Mohon untuk input data dengan baik dan benar</li>
-                        <li>PIC diharapkan Mengupload kembali MoU dan Quotation yang telah ditanda tangan.</li>
+                        <li>PIC diharapkan Mengupload kembali MoU/Quotation/PO yang telah ditanda tangan.</li>
                     </ul>
                 @endif
             </div>
@@ -642,7 +696,6 @@
                     Sebelumnya
                 </button>
 
-                <!-- Next Button -->
                 <button type="button" id="submitBtnForm3"
                     class="bg-gray-400 text-white px-4 py-2 rounded-md cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-400"
                     data-training-date="{{ $training->date }}" disabled>

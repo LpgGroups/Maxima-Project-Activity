@@ -178,7 +178,46 @@
                     </div>
 
                 </div>
+            </div>
 
+            <div>
+
+                @php
+                    $allowedActivities = ['TKPK1', 'TKPK2', 'TKBT1', 'TKBT2'];
+                    $cityOptions = [
+                        'Bali',
+                        'Balikpapan',
+                        'Bogor',
+                        'Ciracas',
+                        'Jakarta',
+                        'Makassar',
+                        'Malang',
+                        'Medan',
+                        'Palangkaraya',
+                        'Palembang',
+                        'Pekanbaru',
+                        'Pontianak',
+                        'Semarang',
+                        'Surabaya',
+                    ];
+
+                @endphp
+
+                @if (in_array($training->activity, $allowedActivities))
+                    <div class="mb-4">
+                        <label for="city" class="block text-gray-600 text-base font-bold mb-1">Lokasi
+                            Pelatihan:</label>
+                        <select name="city" id="city"
+                            class="w-[200px] p-2 border border-gray-300 rounded-lg text-gray-800">
+                            <option value="">-- Pilih Kota --</option>
+                            @foreach ($cityOptions as $city)
+                                <option value="{{ $city }}" {{ $training->city === $city ? 'selected' : '' }}>
+                                    {{ $city }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                @endif
             </div>
             <label class="block mt-2 mb-2 text-sm font-medium text-gray-900">Tempat Pelatihan:</label>
             <div class="flex min-h-5">
