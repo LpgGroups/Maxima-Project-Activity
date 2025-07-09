@@ -165,7 +165,6 @@
                         </div>
 
                         @php
-                            $allowedActivities = ['TKPK1', 'TKPK2', 'TKBT1', 'TKBT2'];
                             $cityOptions = [
                                 'Bali',
                                 'Balikpapan',
@@ -182,10 +181,9 @@
                                 'Semarang',
                                 'Surabaya',
                             ];
-
                         @endphp
 
-                        @if (in_array($training->activity, $allowedActivities))
+                        @if (Str::lower($training->place) === 'blended')
                             <div class="mb-4">
                                 <label for="city" class="block text-gray-600 text-base font-bold mb-1">Lokasi
                                     Pelatihan:</label>
@@ -201,6 +199,8 @@
                                 </select>
                             </div>
                         @endif
+
+
 
                         <!-- Tanggal Pelatihan -->
                         <div class="mb-4">
@@ -447,7 +447,7 @@
                             </div>
 
                             <div class="font-semibold">Tempat Kegiatan</div>
-                            <div>: {{ $training->place }} @if (in_array($training->activity, $allowedActivities) && $training->city)
+                            <div>: {{ $training->place }} @if (Str::lower($training->place) === 'blended' && $training->city)
                                     - {{ $training->city }}
                                 @endif
                             </div>
