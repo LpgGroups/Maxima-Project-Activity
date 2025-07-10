@@ -239,7 +239,7 @@ $(document).ready(function () {
                 </div>
             </div>
 
-            <div class="border shadow-lg rounded-lg overflow-y-auto max-h-44 bg-white mt-2">
+            <div class="border shadow-lg rounded-lg overflow-y-auto max-h-44 bg-white mt-2 mb-2">
             <label class="block mt-2 mb-2 text-sm font-bold text-gray-900 dark:text-gray-700">Tempat
                 Pelatihan:</label>
             <div class="flex items-center justify-center min-h-5">
@@ -250,10 +250,10 @@ $(document).ready(function () {
                         class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-700">Online</label>
                 </div>
                 <div class="flex items-center me-4">
-                    <input id="radio-offline" type="radio" value="Offline" name="training-mode"
+                    <input id="radio-offline" type="radio" value="On-Site" name="training-mode"
                         class="w-4 h-4 text-blue-600 bg-gray-100 border border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 disabled:opacity-50 disabled:cursor-not-allowed" />
                     <label for="radio-offline"
-                        class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-700">Offline</label>
+                        class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-700">On-Site</label>
                 </div>
                 <div class="flex items-center me-4">
                     <input id="radio-blended" type="radio" value="Blended" name="training-mode"
