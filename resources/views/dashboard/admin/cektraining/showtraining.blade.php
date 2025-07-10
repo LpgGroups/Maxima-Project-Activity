@@ -505,7 +505,7 @@
                         <p class="text-sm text-green-600 mt-1">
                             File sudah diupload:
                             <strong>
-                                <a href="{{ route('download.confidential', ['type' => 'file-kemnaker', 'file' => basename($fileRequirement->file_nobatch)]) }}"
+                                <a href="{{ route('download.confidential', ['type' => 'file-nobatch', 'file' => basename($fileRequirement->file_nobatch)]) }}"
                                     class="underline" target="_blank">
                                     {{ basename($fileRequirement->file_nobatch) }}
                                 </a>
