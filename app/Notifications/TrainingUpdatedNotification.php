@@ -53,7 +53,6 @@ class TrainingUpdatedNotification extends Notification
      */
     public function toDatabase($notifiable)
     {
-
         $userName = $this->resolveActorName();
         $activity = $this->training->activity ?? 'Training';
 
@@ -69,13 +68,19 @@ class TrainingUpdatedNotification extends Notification
             ];
         }
         if (!empty($this->customMessage)) {
+            $url = route('dashboard.form', $this->training->id); // Default untuk user
+
+            // Jika pengguna adalah admin, arahkan ke rute admin
+            if ($notifiable->hasRole('admin')) {
+                $url = route('dashboard.admin.training.show', $this->training->id);
+            }
             return [
                 'type' => $this->customType ?: 'success',
                 'title' => 'Informasi Pelatihan',
                 'message' => $this->customMessage,
                 'training_id' => $this->training->id,
                 'user_name' => $userName,
-                'url' => route('dashboard.form', $this->training->id),
+                'url' => $url
             ];
         }
 

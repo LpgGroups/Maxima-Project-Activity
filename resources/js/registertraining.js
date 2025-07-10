@@ -162,8 +162,6 @@ function submitForm1() {
     });
 }
 
-function sendForm2() {}
-
 function sendForm3() {
     var formData = new FormData($("#form3")[0]);
     showLoading();
