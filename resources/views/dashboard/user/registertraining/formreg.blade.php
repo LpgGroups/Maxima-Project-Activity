@@ -491,8 +491,8 @@
                             @csrf
                             <input class="hidden" type="hidden" name="file_id" value="{{ $training->id }}">
 
-                            <div class="mt-2 border shadow-lg px-2 rounded">
-                                <label class="block mb-2 mt-2 text-sm font-medium text-gray-900" for="file_approval">
+                            <div class="mt-2 border  px-2 rounded">
+                                <label class="block mb-2 mt-2 text-sm font-bold text-gray-900" for="file_approval">
                                     Upload File Mou/Quotation/PO
                                 </label>
                                 <input name="file_approval" id="file_approval" type="file" accept="application/pdf"
@@ -506,8 +506,8 @@
                                 @endif
                             </div>
 
-                            <div class="mt-2 border shadow-lg px-2 rounded">
-                                <label class="block mb-2 mt-2 text-sm font-medium text-gray-900" for="proof_payment">
+                            <div class="mt-2 border px-2 rounded">
+                                <label class="block mb-2 mt-2 text-sm font-bold text-gray-900" for="proof_payment">
                                     Upload Bukti Pembayaran
                                 </label>
                                 <input name="proof_payment" id="proof_payment" type="file"
