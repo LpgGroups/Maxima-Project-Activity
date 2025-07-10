@@ -15,6 +15,7 @@ class RegParticipant extends Model
     protected $fillable = [
         'name',
         'nik',
+        'birth_place',
         'date_birth',
         'blood_type',
         'photo',

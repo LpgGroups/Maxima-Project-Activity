@@ -265,6 +265,7 @@ class DashboardAdminController extends Controller
             'training_id' => 'required|exists:reg_training,id',
             'budget_plan' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx|max:2408',
             'letter_implementation' => 'nullable|file|mimes:pdf,doc,docx|max:2408',
+            'file_nobatch' => 'nullable|file|mimes:pdf|max:2048'
         ]);
 
         $training = RegTraining::find($request->training_id);
@@ -292,6 +293,22 @@ class DashboardAdminController extends Controller
             $nameFiles = $noLetter . '_' . $nameTraining . '_letter-implementation.' . $ekstensi;
             $file->storeAs('letter-implementations', $nameFiles);
             $fileReq->letter_implementation = 'letter-implementations/' . $nameFiles;
+        }
+        if ($request->hasFile('file_nobatch')) {
+            $file = $request->file('file_nobatch');
+            $originalName = str_replace([' ', '/', '\\'], '-', strtolower($file->getClientOriginalName()));
+            $path = 'file-nobatch/' . $originalName;
+
+            // Hapus file lama jika ada, walaupun namanya beda
+            if ($fileReq->file_nobatch && Storage::exists($fileReq->file_nobatch)) {
+                Storage::delete($fileReq->file_nobatch);
+            }
+
+            // Simpan file baru dengan nama asli
+            $file->storeAs('file-nobatch', $originalName);
+
+            // Update path di database
+            $fileReq->file_nobatch = $path;
         }
 
         $fileReq->save();
