@@ -307,7 +307,6 @@ class RegTrainingController extends Controller
             $participant = RegParticipant::create($data);
         }
 
-        // Update progress dsb
         $training->isprogress = max($training->isprogress ?? 0, 3);
         $training->save();
 

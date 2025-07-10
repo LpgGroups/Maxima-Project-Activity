@@ -204,9 +204,7 @@ class DashboardAdminController extends Controller
 
         $targetUser = $training->user;
 
-        // if ($targetUser) {
-        //     $targetUser->notify(new TrainingUpdatedNotification($training, 'admin', 'Daftar Pelatihan'));
-        // }
+
         $adminName = optional(Auth::user())->name ?? '-';
 
         $targetUser->notify(new TrainingUpdatedNotification(
@@ -238,6 +236,7 @@ class DashboardAdminController extends Controller
             if ($participant) {
                 $participant->status = $data['status'];
                 $participant->reason = $data['reason'] ?? null;
+                $participant->touch();
                 $participant->save();
             }
         }

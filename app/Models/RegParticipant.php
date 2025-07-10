@@ -28,6 +28,7 @@ class RegParticipant extends Model
         'status',
         'form_id',
     ];
+    protected $touches = ['training'];
 
     public function training()
     {
