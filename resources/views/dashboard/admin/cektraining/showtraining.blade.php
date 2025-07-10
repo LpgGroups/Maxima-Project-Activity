@@ -492,6 +492,29 @@
                 @endif
             </div>
 
+            @if ($training->isfinish === 1)
+                <div class="mt-2">
+                    <label class="block mb-2 mt-2 text-sm font-medium text-gray-900" for="file_nobatch">
+                        Upload Nomor Batch Kegiatan (.pdf)
+                    </label>
+                    <input name="file_nobatch" id="file_nobatch" type="file" accept=".pdf"
+                        class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none">
+                    <p class="mt-1 text-sm text-gray-500">Format File: PDF saja (Max. 2MB).</p>
+
+                    @if (!empty($fileRequirement?->file_nobatch))
+                        <p class="text-sm text-green-600 mt-1">
+                            File sudah diupload:
+                            <strong>
+                                <a href="{{ route('download.confidential', ['type' => 'file-kemnaker', 'file' => basename($fileRequirement->file_nobatch)]) }}"
+                                    class="underline" target="_blank">
+                                    {{ basename($fileRequirement->file_nobatch) }}
+                                </a>
+                            </strong>
+                        </p>
+                    @endif
+                </div>
+            @endif
+
 
             <button type="button" id="uploadFileForAdminBtn"
                 class="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition">

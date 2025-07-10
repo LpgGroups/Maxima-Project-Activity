@@ -96,7 +96,16 @@
                     </span>
                 </div>
 
-
+                {{-- tempat lahir --}}
+                <div class="relative mt-4 w-full">
+                    <input id="birth_place" name="birth_place" type="text"
+                        class="peer block w-full appearance-none border border-[#515151] bg-transparent px-2.5 py-3 text-sm text-[#515151] rounded-md focus:border-[#1E6E9E] focus:outline-none focus:ring-1 focus:ring-[#1E6E9E] placeholder-transparent"
+                        placeholder="Contoh: Jakarta" required />
+                    <label for="birth_place"
+                        class="absolute text-base rounded-lg bg-[#ffffff] text-[#515151] transition-all duration-300 transform -translate-y-4 scale-75 top-3 left-2.5 ml-2 z-10 origin-[0] peer-focus:text-[#1E6E9E] peer-focus:scale-75 peer-focus:-translate-y-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0">
+                        Tempat Lahir <span class="text-red-500">*</span>
+                    </label>
+                </div>
 
                 {{-- Tanggal Lahir --}}
                 <div class="relative mt-4 w-full">
@@ -347,9 +356,13 @@
                                 <!-- Edit Button -->
                                 <button type="button"
                                     class="edit-btn bg-blue-500 hover:bg-blue-700 text-white px-2 py-1 rounded text-xs"
-                                    data-id="{{ $participant->id }}" data-name="{{ $participant->name }}"
-                                    data-nik="{{ $participant->nik }}" data-date_birth="{{ $participant->date_birth }}"
-                                    data-photo="{{ $participant->photo }}" data-ijazah="{{ $participant->ijazah }}"
+                                    data-id="{{ $participant->id }}" 
+                                    data-name="{{ $participant->name }}"
+                                    data-nik="{{ $participant->nik }}" 
+                                    data-birth_place="{{ $participant->birth_place }}" 
+                                    data-date_birth="{{ $participant->date_birth }}"
+                                    data-photo="{{ $participant->photo }}"
+                                     data-ijazah="{{ $participant->ijazah }}"
                                     data-letter_employee="{{ $participant->letter_employee }}"
                                     data-letter_statement="{{ $participant->letter_statement }}"
                                     data-form_registration="{{ $participant->form_registration }}"
@@ -431,6 +444,7 @@
                     document.getElementById('participant_id').value = btn.getAttribute('data-id');
                     document.getElementById('name').value = btn.getAttribute('data-name');
                     document.getElementById('nik').value = btn.getAttribute('data-nik') ?? '';
+                    document.getElementById('birth_place').value = btn.getAttribute('data-birth_place') ?? '';
                     document.getElementById('date_birth').value = btn.getAttribute(
                         'data-date_birth') ?? '';
                     document.getElementById('blood_type').value = btn.getAttribute(
