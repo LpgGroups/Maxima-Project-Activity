@@ -75,6 +75,12 @@ function showDetail(id) {
                                               color: "pink",
                                               icon: "/img/icon_pdf_mou.png",
                                           },
+                                          {
+                                              url: f.file_nobatch,
+                                              label: "Surat No Batch",
+                                              color: "yellow",
+                                              icon: "/img/icon_pdf_mou.png",
+                                          },
                                       ];
 
                                       return docs

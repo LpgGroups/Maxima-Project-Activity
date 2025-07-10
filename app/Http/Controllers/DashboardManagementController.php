@@ -90,6 +90,9 @@ class DashboardManagementController extends Controller
                     'letter_implementation' => $file->letter_implementation
                         ? route('download.confidential', ['type' => 'letter-implementation', 'file' => basename($file->letter_implementation)])
                         : null,
+                    'file_nobatch' => $file->file_nobatch
+                        ? route('download.confidential', ['type' => 'file-nobatch', 'file' => basename($file->file_nobatch)])
+                        : null,
                     'created_at'            => $file->created_at ? $file->created_at->format('d-m-Y H:i') : null,
                     // bisa tambahkan kolom lain sesuai kebutuhan
                 ];
