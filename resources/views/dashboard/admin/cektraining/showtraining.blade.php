@@ -224,10 +224,10 @@
                         <label for="radio-online" class="ms-2 text-sm font-medium text-gray-900 ">Online</label>
                     </div>
                     <div class="flex items-center">
-                        <input id="radio-offline" type="radio" value="Offline" name="colored-radio"
+                        <input id="radio-offline" type="radio" value="On-Site" name="colored-radio"
                             class="w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                            {{ $training->place == 'Offline' ? 'checked' : '' }}>
-                        <label for="radio-offline" class="ms-2 text-sm font-medium text-gray-900 ">Offline</label>
+                            {{ $training->place == 'On-Site' ? 'checked' : '' }}>
+                        <label for="radio-offline" class="ms-2 text-sm font-medium text-gray-900 ">On-Site</label>
                     </div>
                     <div class="flex items-center">
                         <input id="radio-blended" type="radio" value="Blended" name="colored-radio"

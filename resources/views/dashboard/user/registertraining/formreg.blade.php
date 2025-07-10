@@ -183,7 +183,7 @@
                             ];
                         @endphp
 
-                        @if (Str::lower($training->place) === 'blended')
+                        @if (Str::lower($training->place) === 'blended' || 'On-Site')
                             <div class="mb-4">
                                 <label for="city" class="block text-gray-600 text-base font-bold mb-1">Lokasi
                                     Pelatihan:</label>
@@ -447,7 +447,7 @@
                             </div>
 
                             <div class="font-semibold">Tempat Kegiatan</div>
-                            <div>: {{ $training->place }} @if (Str::lower($training->place) === 'blended' && $training->city)
+                            <div>: {{ $training->place }} @if (Str::lower($training->place) === 'blended' || ('On-Site' && $training->city))
                                     - {{ $training->city }}
                                 @endif
                             </div>
@@ -648,20 +648,6 @@
                         <br>
                         Maxima Group
                     </p>
-                    {{-- @elseif ($training->isfinish == 2)
-                    <h3 class="text-xl font-bold mb-2 text-red-600">Pelatihan Ditolak</h3>
-                    <p class="text-[10px] text-gray-700 text-justify">
-                        Mohon maaf, pengajuan pelatihan ini <strong>tidak dapat dilanjutkan</strong>.<br><br>
-
-                        <strong>Alasan penolakan:</strong><br>
-                        <span class="text-red-600 italic">
-                            {{ $training->reason_fail ?? 'Tidak ada alasan yang tersedia.' }}
-                        </span>
-
-                        <br><br>
-                        Jika Anda merasa ada kekeliruan atau memiliki pertanyaan lebih lanjut, silakan hubungi tim Maxima
-                        untuk klarifikasi.
-                    </p> --}}
                 @elseif ($training->isprogress == 5)
                     <h3 class="text-xl font-bold mb-2 text-yellow-600">Menunggu Persetujuan</h3>
                     <p class="text-[10px] text-gray-700 text-justify">
