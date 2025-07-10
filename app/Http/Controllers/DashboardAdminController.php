@@ -185,6 +185,7 @@ class DashboardAdminController extends Controller
             'activity' => 'required|string',
             'date' => 'required|date',
             'place' => 'required|string',
+            'city' => 'nullable|string',
             'end_date' => 'nullable|date',
         ]);
 
@@ -196,6 +197,7 @@ class DashboardAdminController extends Controller
             'activity' => $validated['activity'],
             'date' => Carbon::parse($validated['date'])->format('Y-m-d'),
             'place' => $validated['place'],
+            'city' => $validated['city'],
             'date_end' => $validated['end_date'] ? Carbon::parse($validated['end_date'])->format('Y-m-d') : null,
         ]);
 

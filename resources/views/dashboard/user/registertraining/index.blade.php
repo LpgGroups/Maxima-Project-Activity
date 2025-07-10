@@ -17,11 +17,17 @@
             <input type="date" name="end_date" class="border rounded px-2 py-1 text-sm"
                 value="{{ request('end_date') }}" />
 
-            <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600">Filter</button>
+            <button type="submit" class="bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600">Filter</button>
 
             <a href="{{ '/dashboard/user/training' }}"
-                class="text-sm text-gray-600 underline
-                hover:text-red-500">Reset</a>
+                class="text-sm bg-red-500 text-gray-600 underline rounded px-3 py-1
+                hover:text-red-300">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="size-5">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+                </svg>
+            </a>
         </form>
 
         {{-- Per Page Form --}}
@@ -45,7 +51,9 @@
                 <thead>
                     <tr class="bg-slate-600 lg:text-sm text-white text-[8px]">
                         <th class="rounded-l-lg">No</th>
-                        <th>Nama Pelatihan</th>
+                        <th>No Surat</th>
+                        <th>Pelatihan</th>
+                        <th>Lokasi</th>
                         <th>Status</th>
                         <th>Peserta</th>
                         <th>Tanggal</th>
@@ -57,9 +65,9 @@
                         <tr onclick="window.location='{{ route('dashboard.form', ['id' => $training->id]) }}'"
                             class="odd:bg-white even:bg-gray-300 cursor-pointer hover:bg-red-500 hover:text-white leading-loose">
                             <td>{{ $trainings->firstItem() + $index }}</td>
+                            <td>{{ $training->no_letter }}</td>
                             <td>
                                 {{ $training->activity }}
-
                                 @php
                                     $notification = $training->trainingNotifications
                                         ->where('user_id', auth()->id())
@@ -81,6 +89,14 @@
                                     <img src="/img/gif/new.gif" alt="New" class="w-5 h-3 -mt-3 inline-block">
                                 @elseif ($isUpdated)
                                     <img src="/img/gif/update.gif" alt="Updated" class="w-5 h-3 -mt-3 inline-block">
+                                @endif
+                            </td>
+                            <td>
+                                @php
+                                    $allowedActivities = ['TKPK1', 'TKPK2', 'TKBT1', 'TKBT2'];
+                                @endphp
+                                {{ $training->place }} @if (in_array($training->activity, $allowedActivities) && $training->city)
+                                    - {{ $training->city }}
                                 @endif
                             </td>
                             <td class="p-1">
@@ -160,6 +176,7 @@
                                     //     $progress['color'] = 'bg-red-600';
                                     //     $progress['percent'] = 100;
                                     // }
+
                                 @endphp
 
                                 <div class="w-[80px] h-2 bg-gray-200 rounded-full dark:bg-gray-700 mx-auto">
