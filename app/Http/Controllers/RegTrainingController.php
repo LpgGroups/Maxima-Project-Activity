@@ -218,6 +218,7 @@ class RegTrainingController extends Controller
         $request->validate([
             'name'              => 'required|string|max:255',
             'nik'               => 'nullable|string|min:16|max:16',
+            'birth_place'       => 'nullable|string|max:255',
             'date_birth'        => 'nullable|date',
             'blood_type'        => 'nullable|in:A-,B-,AB-,O-,A+,B+,AB+,O+,-',
             'photo'             => 'nullable|file|image|max:2048',
@@ -244,6 +245,7 @@ class RegTrainingController extends Controller
         $data = $request->only([
             'name',
             'nik',
+            'birth_place',
             'date_birth',
             'blood_type',
             'reason',
@@ -307,7 +309,6 @@ class RegTrainingController extends Controller
             $participant = RegParticipant::create($data);
         }
 
-        // Update progress dsb
         $training->isprogress = max($training->isprogress ?? 0, 3);
         $training->save();
 

@@ -15,6 +15,7 @@ class RegParticipant extends Model
     protected $fillable = [
         'name',
         'nik',
+        'birth_place',
         'date_birth',
         'blood_type',
         'photo',
@@ -28,6 +29,7 @@ class RegParticipant extends Model
         'status',
         'form_id',
     ];
+    protected $touches = ['training'];
 
     public function training()
     {

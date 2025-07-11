@@ -276,8 +276,6 @@
                                 <th>No</th>
                                 <th>Nama</th>
                                 <th>NIK</th>
-                                <th>Tgl Lahir</th>
-                                <th>Gol Darah</th>
                                 <th>Status</th>
                                 <th>Keterangan</th>
                                 <th>Action</th>
@@ -288,9 +286,9 @@
                                 <tr class="main-row odd:bg-[#d9f6fd] even:bg-white text-sm"
                                     data-participant-id="{{ $participant->id }}">
                                     <td>{{ $index + 1 }}</td>
-                                    <td class="max-w-[80px] truncate whitespace-nowrap" title="{{ $participant->name }}">
+                                    <td class="max-w-[120px] truncate whitespace-nowrap" title="{{ $participant->name }}">
                                         {{ $participant->name }}</td>
-                                    <td class="max-w-[90px]">
+                                    <td class="max-w-[100px]">
                                         @php
                                             $nik = $participant->nik;
                                             $repeat = max(0, strlen($nik) - 4);
@@ -307,15 +305,6 @@
                                         </div>
                                     </td>
 
-                                    <td class="max-w-[50px] truncate whitespace-nowrap"
-                                        title="{{ $participant->date_birth ? \Carbon\Carbon::parse($participant->date_birth)->translatedFormat('d F Y') : '-' }}">
-                                        {{ $participant->date_birth ? \Carbon\Carbon::parse($participant->date_birth)->translatedFormat('d F Y') : '-' }}
-                                    </td>
-
-                                    <td class="max-w-[10px] truncate whitespace-nowrap">
-                                        {{ $participant->blood_type }}
-                                    </td>
-
                                     <td class="max-w-[70px]">
                                         <select name="participants[{{ $participant->id }}][status]"
                                             class="px-4 py-1 bg-transparent">
@@ -325,7 +314,6 @@
                                                 ✅Success</option>
                                             <option value="2" {{ $participant->status == 2 ? 'selected' : '' }}>
                                                 ❌Rejected</option>
-
                                         </select>
                                     </td>
 
@@ -335,7 +323,7 @@
                                             style="width: 100%;">
                                     </td>
                                     <td>
-                                        <!-- Tombol Click (pakai ikon pointer) -->
+
                                         <button type="button" class="text-blue-700 showDetailBtn rounded"
                                             data-id="{{ $participant->id }}">
                                             <!-- SVG Ikon Kursor -->
@@ -367,6 +355,31 @@
                                 {{-- Dropdown row, hidden by default --}}
                                 <tr class="detail-row hidden" id="detail-row-{{ $participant->id }}">
                                     <td colspan="8" class="bg-gray-100 text-left px-4 py-3">
+                                        <div class="mb-2 font-semibold text-[15px]">Data Selengkapnya</div>
+                                        @foreach ($training->participants as $index => $participant)
+                                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-gray-800">
+                                                {{-- Tempat & Tanggal Lahir --}}
+                                                <div
+                                                    class="p-4 border border-gray-200 rounded-lg bg-white shadow-sm hover:shadow-md transition duration-300">
+                                                    <span class="block text-gray-600 font-semibold mb-1">Tempat & Tanggal
+                                                        Lahir</span>
+                                                    <div class="text-gray-900">
+                                                        {{ $participant->birth_place }},
+                                                        {{ $participant->date_birth ? \Carbon\Carbon::parse($participant->date_birth)->translatedFormat('d F Y') : '-' }}
+                                                    </div>
+                                                </div>
+
+                                                {{-- Golongan Darah --}}
+                                                <div
+                                                    class="p-4 border border-gray-200 rounded-lg bg-white shadow-sm hover:shadow-md transition duration-300">
+                                                    <span class="block text-gray-600 font-semibold mb-1">Golongan
+                                                        Darah</span>
+                                                    <div class="text-gray-900">
+                                                        {{ $participant->blood_type ?? '-' }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
                                         <div class="mb-2 font-semibold text-[15px]">Dokumen Peserta</div>
                                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             @php
@@ -491,6 +504,29 @@
                     </p>
                 @endif
             </div>
+
+            @if ($training->isfinish === 1)
+                <div class="mt-2">
+                    <label class="block mb-2 mt-2 text-sm font-medium text-gray-900" for="file_nobatch">
+                        Upload Nomor Batch Kegiatan (.pdf)
+                    </label>
+                    <input name="file_nobatch" id="file_nobatch" type="file" accept=".pdf"
+                        class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none">
+                    <p class="mt-1 text-sm text-gray-500">Format File: PDF saja (Max. 2MB).</p>
+
+                    @if (!empty($fileRequirement?->file_nobatch))
+                        <p class="text-sm text-green-600 mt-1">
+                            File sudah diupload:
+                            <strong>
+                                <a href="{{ route('download.confidential', ['type' => 'file-nobatch', 'file' => basename($fileRequirement->file_nobatch)]) }}"
+                                    class="underline" target="_blank">
+                                    {{ basename($fileRequirement->file_nobatch) }}
+                                </a>
+                            </strong>
+                        </p>
+                    @endif
+                </div>
+            @endif
 
 
             <button type="button" id="uploadFileForAdminBtn"

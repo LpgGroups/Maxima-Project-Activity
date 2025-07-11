@@ -1,19 +1,9 @@
 @extends('dashboard.layouts.dashboardmain')
 @section('container')
-    @php
-        $activityMap = [
-            'TKPK1' => 'Pelatihan Tenaga Kerja Pada Ketinggian Tingkat 1',
-            'TKPK2' => 'Pelatihan Tenaga Kerja Pada Ketinggian Tingkat 2',
-            'TKBT1' => 'Pelatihan Tenaga Kerja Bangunan Tinggi 1',
-            'TKBT2' => 'Pelatihan Tenaga Kerja Bangunan Tinggi 2',
-            'BE' => 'Pelatihan Basic Electrical',
-            'P3K' => 'Pelatihan Pertolongan Pertama Pada Kecelakaan (P3K)',
-            'AK3U' => 'Pelatihan Ahli K3 Umum (AK3U) ',
-        ];
-    @endphp
+    
     <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center w-full gap-2">
         <p class="text-center sm:text-left text-base sm:text-[15px] font-semibold text-[#9694FF]">
-            {{ $activityMap[$training->activity] ?? $training->activity }}
+            {{ config('activity_map.' . $training->activity) ?? $training->activity }}
         </p>
 
         <p class="text-center sm:text-right text-sm sm:text-base text-gray-600">
