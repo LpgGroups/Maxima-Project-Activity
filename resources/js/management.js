@@ -153,8 +153,8 @@ function showDetail(id) {
                             Swal.showValidationMessage(err.message);
                         });
                 },
-                preDeny: () => {
-                    return Swal.fire({
+                preDeny: async () => {
+                    const { isConfirmed, value } = await Swal.fire({
                         title: "Alasan Penolakan",
                         input: "textarea",
                         inputLabel: "Wajib isi alasan mengapa ditolak",
@@ -171,31 +171,35 @@ function showDetail(id) {
                         cancelButtonText: "Batal",
                         confirmButtonText: "Kirim Penolakan",
                         confirmButtonColor: "#d33",
-                        preConfirm: (reason) => {
-                            const url = `/dashboard/management/approve/${id}`;
-                            return fetch(url, {
-                                method: "PUT",
-                                headers: {
-                                    "Content-Type": "application/json",
-                                    "X-CSRF-TOKEN": $(
-                                        'meta[name="csrf-token"]'
-                                    ).attr("content"),
-                                },
-                                body: JSON.stringify({
-                                    isfinish: 2,
-                                    reason_fail: reason,
-                                }),
-                            })
-                                .then((res) => {
-                                    if (!res.ok)
-                                        throw new Error("Gagal menolak data.");
-                                    return res.json();
-                                })
-                                .catch((err) => {
-                                    Swal.showValidationMessage(err.message);
-                                });
-                        },
                     });
+
+                    if (!isConfirmed) {
+                        // Jangan lanjut jika user batal
+                        return false;
+                    }
+
+                    // Lanjutkan fetch jika user menolak dengan alasan
+                    const url = `/dashboard/management/approve/${id}`;
+                    return fetch(url, {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
+                                "content"
+                            ),
+                        },
+                        body: JSON.stringify({
+                            isfinish: 2,
+                            reason_fail: value,
+                        }),
+                    })
+                        .then((res) => {
+                            if (!res.ok) throw new Error("Gagal menolak data.");
+                            return res.json();
+                        })
+                        .catch((err) => {
+                            Swal.showValidationMessage(err.message);
+                        });
                 },
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -208,8 +212,8 @@ function showDetail(id) {
                     });
                 } else if (result.isDenied) {
                     Swal.fire(
-                        "Data Ditolak!",
-                        "Data telah berhasil ditolak.",
+                        "Penolakan Berhasil!",
+                        "Data berhasil ditolak dan tidak akan diproses lebih lanjut.",
                         "warning"
                     ).then(() => {
                         window.location.href = `/dashboard/management/training/${id}/detail`;

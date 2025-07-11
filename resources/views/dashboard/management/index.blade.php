@@ -1,17 +1,5 @@
 @extends('dashboard.layouts.dashboardmain')
 @section('container')
-    {{-- <pre>{{ json_encode($notifications, JSON_PRETTY_PRINT) }}</pre> --}}
-    @php
-        $activityMap = [
-            'TKPK1' => 'Pelatihan Tenaga Kerja Pada Ketinggian Tingkat 1',
-            'TKPK2' => 'Pelatihan Tenaga Kerja Pada Ketinggian Tingkat 2',
-            'TKBT1' => 'Pelatihan Tenaga Kerja Bangunan Tinggi 1',
-            'TKBT2' => 'Pelatihan Tenaga Kerja Bangunan Tinggi 2',
-            'BE' => 'Pelatihan Basic Electrical',
-            'P3K' => 'Pelatihan Pertolongan Pertama Pada Kecelakaan (P3K)',
-            'AK3U' => 'Pelatihan Ahli K3 Umum (AK3U) ',
-        ];
-    @endphp
     <div class="mb-4 relative w-full md:w-2/3">
         <div class="flex items-center space-x-2">
             <!-- Input pencarian -->
@@ -80,118 +68,126 @@
 
 
     <div class="space-y-4">
-
         @foreach ($data as $training)
             <div class="training-card w-full h-[150px] bg-green-500 rounded-lg shadow-md relative overflow-hidden">
-                <div class="absolute inset-0 bg-white rounded-lg p-3 flex flex-col justify-between">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <p class="no-letter text-[12px] text-gray-500">No: {{ $training->no_letter }}</p>
-                            <hr>
-                            </hr>
-                            <div class="flex items-center">
-                                <p class="text-zinc-800 text-sm font-semibold">
-                                    {{ $activityMap[$training->activity] ?? 'Tidak Ada' }}
-                                </p>
-                                @if ($training->isfinish == 1)
-                                    <img src="{{ asset('img/svg/success.svg') }}" alt="Success" class="ml-1 w-4 h-4">
-                                @elseif ($training->isfinish == 2)
-                                    <img src="{{ asset('img/svg/waiting.svg') }}" alt="Denied" class="ml-1 w-4 h-4">
-                                @endif
-                            </div>
-                            <p class="text-zinc-800 text-xs truncate overflow-hidden whitespace-nowrap 
+                <a href="{{ route('management.training.detail', ['id' => $training->id]) }}">
+                    <div class="absolute inset-0 bg-white rounded-lg p-3 flex flex-col justify-between">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="no-letter text-[12px] text-gray-500">No: {{ $training->no_letter }}</p>
+                                <hr>
+                                </hr>
+                                <div class="flex items-center">
+                                    <p class="text-zinc-800 text-sm font-semibold">
+                                        {{ config('activity_map.' . $training->activity) ?? $training->activity }}
+                                    </p>
+                                    @if ($training->isfinish == 1)
+                                        <img src="{{ asset('img/svg/success.svg') }}" alt="Success" class="ml-1 w-4 h-4">
+                                    @elseif ($training->isfinish == 2)
+                                        <img src="{{ asset('img/svg/waiting.svg') }}" alt="Denied" class="ml-1 w-4 h-4">
+                                    @endif
+                                </div>
+                                <p class="text-zinc-800 text-xs truncate overflow-hidden whitespace-nowrap 
                                 w-[160px] sm:w-[200px] md:w-[240px] lg:w-[500px]"
-                                title="{{ $training->name_pic ?? 'Tidak Ada' }} - {{ $training->name_company ?? '-' }}">
-                                {{ $training->name_pic ?? 'Tidak Ada' }} - {{ $training->name_company ?? '-' }}
-                            </p>
+                                    title="{{ $training->name_pic ?? 'Tidak Ada' }} - {{ $training->name_company ?? '-' }}">
+                                    {{ $training->name_pic ?? 'Tidak Ada' }} - {{ $training->name_company ?? '-' }}
+                                </p>
 
-                            <p class="text-zinc-800 text-[12px] mt-1">{{ $training->participants->count() }} Peserta</p>
+                                <p class="text-zinc-800 text-[12px] mt-1">{{ $training->participants->count() }} Peserta
+                                </p>
+                            </div>
+                            <div class="text-right">
+                                @php
+                                    $progressValue = $training->isprogress;
+
+                                    // Tentukan persentase dan warna berdasarkan nilai isprogress
+                                    $progressMap = [
+                                        1 => ['percent' => 10, 'color' => 'bg-red-600'],
+                                        2 => ['percent' => 30, 'color' => 'bg-orange-500'],
+                                        3 => ['percent' => 50, 'color' => 'bg-yellow-400'],
+                                        4 => ['percent' => 75, 'color' => 'bg-[#bffb4e]'],
+                                        5 => ['percent' => 100, 'color' => 'bg-green-600'],
+                                    ];
+
+                                    if ($training->isfinish == 2) {
+                                        $progress = [
+                                            'percent' => 100,
+                                            'color' => 'bg-red-600',
+                                            'label' => 'Ditolak',
+                                        ];
+                                    } elseif ($training->isfinish == 0) {
+                                        $progress = [
+                                            'percent' => 100,
+                                            'color' => 'bg-yellow-600',
+                                            'label' => 'Menunggu Persetujuan',
+                                        ];
+                                    } else {
+                                        $map = $progressMap[$progressValue] ?? [
+                                            'percent' => 0,
+                                            'color' => 'bg-gray-400',
+                                        ];
+                                        $progress = [
+                                            'percent' => $map['percent'],
+                                            'color' => $map['color'],
+                                            'label' => $map['percent'] === 100 ? 'Pelatihan Disetujui' : 'In Progress',
+                                        ];
+                                    }
+
+                                @endphp
+
+                                <div class="text-[10px] text-black font-medium">
+                                    {{ $progress['label'] }}
+                                </div>
+
+
+                                <div class="relative w-full md:w-24 h-1.5 bg-violet-100 rounded-full mt-1 mb-1">
+                                    <div class="absolute top-0 left-0 h-1.5 {{ $progress['color'] }} rounded-full"
+                                        style="width: {{ $progress['percent'] }}%;"></div>
+                                </div>
+
+                                <div class="text-[10px] text-neutral-600">{{ $progress['percent'] }}%</div>
+
+                            </div>
                         </div>
-                        <div class="text-right">
+                        <div class="text-[10px]">
+                            Update terbaru:
+                            {{ \Carbon\Carbon::parse($training->updated_at)->translatedFormat('d F Y H:i') }} WIB
+                            <div class="absolute top-[-5px] right-[-5px] z-10 new-badge hidden">
+                                <img src="{{ asset('img/gif/update.gif') }}" alt="New" class="w-4 h-4">
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center text-[12px] relative">
+                            <span class="text-violet-400">
+                                {{ \Carbon\Carbon::parse($training->date)->translatedFormat('d F Y') }}
+                                -
+                                {{ \Carbon\Carbon::parse($training->date_end)->translatedFormat('d F Y') }}
+                            </span>
+
                             @php
-                                $progressValue = $training->isprogress;
-
-                                // Tentukan persentase dan warna berdasarkan nilai isprogress
-                                $progressMap = [
-                                    1 => ['percent' => 10, 'color' => 'bg-red-600'],
-                                    2 => ['percent' => 30, 'color' => 'bg-orange-500'],
-                                    3 => ['percent' => 50, 'color' => 'bg-yellow-400'],
-                                    4 => ['percent' => 75, 'color' => 'bg-[#bffb4e]'],
-                                    5 => ['percent' => 100, 'color' => 'bg-green-600'],
-                                ];
-
-                                if ($training->isfinish == 2) {
-                                    $progress = [
-                                        'percent' => 100,
-                                        'color' => 'bg-red-600',
-                                        'label' => 'Ditolak',
-                                    ];
-                                } else {
-                                    $map = $progressMap[$progressValue] ?? ['percent' => 0, 'color' => 'bg-gray-400'];
-                                    $progress = [
-                                        'percent' => $map['percent'],
-                                        'color' => $map['color'],
-                                        'label' => $map['percent'] === 100 ? 'Completed' : 'In Progress',
-                                    ];
-                                }
+                                $hasUpdateNotif = $hasUpdateNotif =
+                                    $notifications
+                                        ->where('data.training_id', $training->id)
+                                        ->whereIn('data.type', ['update', 'new', 'info']) // <-- tambahkan 'info'
+                                        ->whereNull('read_at')
+                                        ->count() > 0;
 
                             @endphp
 
-                            <div class="text-[10px] text-black font-medium">
-                                {{ $progress['label'] }}
+                            <div class="relative inline-block">
+                                @if ($hasUpdateNotif)
+                                    <div class="absolute -top-5 right-0 new-badge" data-badge-id="{{ $training->id }}">
+                                        <img src="{{ asset('img/gif/update.gif') }}" class="w-6 h-6" />
+                                    </div>
+                                @endif
+                                <a href="#"
+                                    class="view-detail-btn sm:mb-4 inline-block px-4 py-2 rounded-md bg-blue-300 text-blue-900 font-medium shadow hover:bg-blue-400 hover:shadow-lg hover:scale-105 transform transition duration-200 ease-in-out"
+                                    data-id="{{ $training->id }}" data-updated="{{ $training->updated_at }}">
+                                    Tinjau Pelatihan
+                                </a>
                             </div>
-
-
-                            <div class="relative w-full md:w-24 h-1.5 bg-violet-100 rounded-full mt-1 mb-1">
-                                <div class="absolute top-0 left-0 h-1.5 {{ $progress['color'] }} rounded-full"
-                                    style="width: {{ $progress['percent'] }}%;"></div>
-                            </div>
-
-                            <div class="text-[10px] text-neutral-600">{{ $progress['percent'] }}%</div>
-
                         </div>
                     </div>
-                    <div class="text-[10px]">
-                        Update terbaru:
-                        {{ \Carbon\Carbon::parse($training->updated_at)->translatedFormat('d F Y H:i') }} WIB
-                        <div class="absolute top-[-5px] right-[-5px] z-10 new-badge hidden">
-                            <img src="{{ asset('img/gif/update.gif') }}" alt="New" class="w-4 h-4">
-                        </div>
-                    </div>
-                    <div class="flex justify-between items-center text-[12px] relative">
-                        <span class="text-violet-400">
-                            {{ \Carbon\Carbon::parse($training->date)->translatedFormat('d F Y') }}
-                            -
-                            {{ \Carbon\Carbon::parse($training->date_end)->translatedFormat('d F Y') }}
-                        </span>
-
-                        @php
-                            $hasUpdateNotif = $hasUpdateNotif =
-                                $notifications
-                                    ->where('data.training_id', $training->id)
-                                    ->whereIn('data.type', ['update', 'new', 'info']) // <-- tambahkan 'info'
-                                    ->whereNull('read_at')
-                                    ->count() > 0;
-
-                        @endphp
-
-                        <div class="relative inline-block">
-                            @if ($hasUpdateNotif)
-                                <div class="absolute -top-5 right-0 new-badge" data-badge-id="{{ $training->id }}">
-                                    <img src="{{ asset('img/gif/update.gif') }}" class="w-6 h-6" />
-                                </div>
-                            @endif
-                            <a href="#"
-                                class="view-detail-btn block text-gray-700 hover:text-blue-600 transition duration-200"
-                                data-id="{{ $training->id }}" data-updated="{{ $training->updated_at }}">
-                                View Details
-                            </a>
-                        </div>
-                    </div>
-
-
-
-                </div>
+                </a>
             </div>
         @endforeach
     </div>
