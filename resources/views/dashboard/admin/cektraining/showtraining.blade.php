@@ -286,7 +286,8 @@
                                 <tr class="main-row odd:bg-[#d9f6fd] even:bg-white text-sm"
                                     data-participant-id="{{ $participant->id }}">
                                     <td>{{ $index + 1 }}</td>
-                                    <td class="max-w-[120px] truncate whitespace-nowrap" title="{{ $participant->name }}">
+                                    <td class="max-w-[120px] truncate whitespace-nowrap"
+                                        title="{{ $participant->name }}">
                                         {{ $participant->name }}</td>
                                     <td class="max-w-[100px]">
                                         @php
@@ -356,30 +357,29 @@
                                 <tr class="detail-row hidden" id="detail-row-{{ $participant->id }}">
                                     <td colspan="8" class="bg-gray-100 text-left px-4 py-3">
                                         <div class="mb-2 font-semibold text-[15px]">Data Selengkapnya</div>
-                                        @foreach ($training->participants as $index => $participant)
-                                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-gray-800">
-                                                {{-- Tempat & Tanggal Lahir --}}
-                                                <div
-                                                    class="p-4 border border-gray-200 rounded-lg bg-white shadow-sm hover:shadow-md transition duration-300">
-                                                    <span class="block text-gray-600 font-semibold mb-1">Tempat & Tanggal
-                                                        Lahir</span>
-                                                    <div class="text-gray-900">
-                                                        {{ $participant->birth_place }},
-                                                        {{ $participant->date_birth ? \Carbon\Carbon::parse($participant->date_birth)->translatedFormat('d F Y') : '-' }}
-                                                    </div>
-                                                </div>
 
-                                                {{-- Golongan Darah --}}
-                                                <div
-                                                    class="p-4 border border-gray-200 rounded-lg bg-white shadow-sm hover:shadow-md transition duration-300">
-                                                    <span class="block text-gray-600 font-semibold mb-1">Golongan
-                                                        Darah</span>
-                                                    <div class="text-gray-900">
-                                                        {{ $participant->blood_type ?? '-' }}
-                                                    </div>
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-gray-800">
+                                            {{-- Tempat & Tanggal Lahir --}}
+                                            <div
+                                                class="p-4 border border-gray-200 rounded-lg bg-white shadow-sm hover:shadow-md transition duration-300">
+                                                <span class="block text-gray-600 font-semibold mb-1">Tempat & Tanggal
+                                                    Lahir</span>
+                                                <div class="text-gray-900">
+                                                    {{ $participant->birth_place }},
+                                                    {{ $participant->date_birth ? \Carbon\Carbon::parse($participant->date_birth)->translatedFormat('d F Y') : '-' }}
                                                 </div>
                                             </div>
-                                        @endforeach
+
+                                            {{-- Golongan Darah --}}
+                                            <div
+                                                class="p-4 border border-gray-200 rounded-lg bg-white shadow-sm hover:shadow-md transition duration-300">
+                                                <span class="block text-gray-600 font-semibold mb-1">Golongan Darah</span>
+                                                <div class="text-gray-900">
+                                                    {{ $participant->blood_type ?? '-' }}
+                                                </div>
+                                            </div>
+                                        </div>
+
                                         <div class="mb-2 font-semibold text-[15px]">Dokumen Peserta</div>
                                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             @php
@@ -402,6 +402,7 @@
                                                     'CV' => '📁',
                                                 ];
                                             @endphp
+
                                             @foreach ($files as $label => $file)
                                                 <div
                                                     class="flex items-center gap-3 bg-white rounded-md shadow-sm px-3 py-2">
@@ -428,8 +429,8 @@
                                             @endforeach
                                         </div>
                                     </td>
-
                                 </tr>
+
 
                             @empty
                                 <tr>
