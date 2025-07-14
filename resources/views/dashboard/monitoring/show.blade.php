@@ -16,9 +16,9 @@
                         $url = $item->data['url'] ?? null;
                         $role = $item->data['user_role'] ?? 'user'; // fallback ke 'user' jika tidak ada
                         $borderColor = match ($role) {
-                            'admin' => 'border-red-500',
+                            'admin' => 'border-rose-500',
                             'management' => 'border-yellow-500',
-                            'user' => 'border-green-500',
+                            'user' => 'border-emerald-400',
                             default => 'border-gray-200',
                         };
                     @endphp
@@ -48,9 +48,9 @@
                             </div>
                         </div>
                     </div>
-                    <pre class="text-xs text-red-500">
+                    {{-- <pre class="text-xs text-red-500">
     {{ json_encode($item->data, JSON_PRETTY_PRINT) }}
-</pre>
+</pre> --}}
                 @endforeach
 
 
