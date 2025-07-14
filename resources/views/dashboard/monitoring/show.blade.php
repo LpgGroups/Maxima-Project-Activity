@@ -14,9 +14,17 @@
                 @foreach ($notifSet as $item)
                     @php
                         $url = $item->data['url'] ?? null;
+                        $role = $item->data['user_role'] ?? 'user'; // fallback ke 'user' jika tidak ada
+                        $borderColor = match ($role) {
+                            'admin' => 'border-red-500',
+                            'management' => 'border-yellow-500',
+                            'user' => 'border-green-500',
+                            default => 'border-gray-200',
+                        };
                     @endphp
 
-                    <div class="flex items-start space-x-4 bg-gray-50 border border-gray-200 rounded-lg p-4 shadow-sm">
+                    <div
+                        class="flex items-start space-x-4 bg-gray-50 {{ $borderColor }} border-l-4 rounded-lg p-4 shadow-sm">
                         <!-- Nomor urut mundur -->
                         <div
                             class="flex-shrink-0 w-10 h-10 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold">
@@ -40,7 +48,11 @@
                             </div>
                         </div>
                     </div>
+                    <pre class="text-xs text-red-500">
+    {{ json_encode($item->data, JSON_PRETTY_PRINT) }}
+</pre>
                 @endforeach
+
 
             </div>
         @else

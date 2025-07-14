@@ -1,5 +1,8 @@
 @extends('dashboard.layouts.dashboardmain')
 @section('container')
+    @php
+        use Carbon\Carbon;
+    @endphp
     <div class="lg:w-full sm:w-full h-auto bg-white rounded-2xl shadow-md p-4 sm:mb-0 lg:mb-[500px]">
         <a class="bg-blue-500 rounded-lg p-2 text-white" href="{{ route('dashboard.selectDate') }}">+ Tambah Training</a>
 
@@ -57,136 +60,85 @@
                         <th>Status</th>
                         <th>Peserta</th>
                         <th>Tanggal</th>
-                        <th class="rounded-r-lg">Progress </th>
+                        <th class="rounded-r-lg">Progress</th>
                     </tr>
                 </thead>
                 <tbody class="lg:text-[12px] text-[8px]">
                     @foreach ($trainings as $index => $training)
-                        <tr onclick="window.location='{{ route('dashboard.form', ['id' => $training->id]) }}'"
-                            class="odd:bg-white even:bg-gray-300 cursor-pointer hover:bg-red-500 hover:text-white leading-loose">
+                        @php
+                            $start = Carbon::parse($training->date);
+                            $end = Carbon::parse($training->date_end);
+                            $now = Carbon::now();
+                            $hMinus2 = $start->copy()->subDays(7);
+                            $showTooltip = $now->between($hMinus2, $start);
+
+                            // Tanggal range display
+                            if ($start->year != $end->year) {
+                                $date = $start->translatedFormat('d F Y') . ' - ' . $end->translatedFormat('d F Y');
+                            } elseif ($start->month != $end->month) {
+                                $date = $start->translatedFormat('d F') . ' - ' . $end->translatedFormat('d F Y');
+                            } else {
+                                $date = $start->translatedFormat('d') . ' - ' . $end->translatedFormat('d F Y');
+                            }
+
+                            $progressValue = $training->isprogress;
+                            $progressMap = [
+                                1 => ['percent' => 10, 'color' => 'bg-red-600'],
+                                2 => ['percent' => 30, 'color' => 'bg-orange-500'],
+                                3 => ['percent' => 50, 'color' => 'bg-yellow-400'],
+                                4 => ['percent' => 75, 'color' => 'bg-[#e6e600]'],
+                                5 => ['percent' => 100, 'color' => 'bg-green-600'],
+                            ];
+                            $progress = $progressMap[$progressValue] ?? ['percent' => 0, 'color' => 'bg-gray-400'];
+                        @endphp
+
+                        <tr class="odd:bg-white even:bg-gray-300 cursor-pointer hover:bg-red-500 hover:text-white leading-loose"
+                            onclick="window.location='{{ route('dashboard.form', ['id' => $training->id]) }}'">
                             <td>{{ $trainings->firstItem() + $index }}</td>
                             <td>{{ $training->no_letter }}</td>
+                            <td>{{ $training->activity }}</td>
                             <td>
-                                {{ $training->activity }}
-                                @php
-                                    $notification = $training->trainingNotifications
-                                        ->where('user_id', auth()->id())
-                                        ->first();
-                                    $isNew = !$notification || !$notification->viewed_at;
-
-                                    // Jika bukan new, cek apakah ada update setelah dilihat
-                                    $isUpdated = false;
-                                    if (
-                                        $notification &&
-                                        $notification->viewed_at &&
-                                        $training->updated_at > $notification->viewed_at
-                                    ) {
-                                        $isUpdated = true;
-                                    }
-                                @endphp
-
-                                @if ($isNew)
-                                    <img src="/img/gif/new.gif" alt="New" class="w-5 h-3 -mt-3 inline-block">
-                                @elseif ($isUpdated)
-                                    <img src="/img/gif/update.gif" alt="Updated" class="w-5 h-3 -mt-3 inline-block">
-                                @endif
-                            </td>
-                            <td>
-                                @php
-                                    $allowedActivities = ['TKPK1', 'TKPK2', 'TKBT1', 'TKBT2'];
-                                @endphp
-                                {{ $training->place }} @if (in_array($training->activity, $allowedActivities) && $training->city)
+                                {{ $training->place }}
+                                @if (in_array($training->activity, ['TKPK1', 'TKPK2', 'TKBT1', 'TKBT2']) && $training->city)
                                     - {{ $training->city }}
                                 @endif
                             </td>
                             <td class="p-1">
                                 @if ($training->isprogress == 5 && $training->isfinish == 1)
                                     <span
-                                        class="bg-green-600 text-white font-semibold text-[10px] px-2 py-[2px] rounded inline-block w-[70px] text-center">
-                                        Selesai
-                                    </span>
+                                        class="bg-green-600 text-white text-[10px] px-2 py-[2px] rounded inline-block w-[70px] text-center">Selesai</span>
                                 @elseif ($training->isprogress == 5 && $training->isfinish == 2)
                                     <span
-                                        class="bg-yellow-400 text-black font-semibold text-[10px] px-2 py-[2px] rounded inline-block w-[70px] text-center">
-                                        Menunggu
-                                    </span>
+                                        class="bg-yellow-400 text-black text-[10px] px-2 py-[2px] rounded inline-block w-[70px] text-center">Menunggu</span>
                                 @elseif ($training->isprogress <= 4 && $training->isfinish == 0)
                                     <span
-                                        class="bg-blue-400 text-white font-semibold text-[10px] px-2 py-[2px] rounded inline-block w-[70px] text-center">
-                                        Proses
-                                    </span>
+                                        class="bg-blue-400 text-white text-[10px] px-2 py-[2px] rounded inline-block w-[70px] text-center">Proses</span>
                                 @else
                                     <span
-                                        class="bg-yellow-400 text-black font-semibold text-[10px] px-2 py-[2px] rounded inline-block w-[70px] text-center">
-                                        Menunggu
-                                    </span>
+                                        class="bg-yellow-400 text-black text-[10px] px-2 py-[2px] rounded inline-block w-[70px] text-center">Menunggu</span>
                                 @endif
                             </td>
-
                             <td>{{ $training->participants->count() }} peserta</td>
-                            <td>
-                                @php
-                                    $start = \Carbon\Carbon::parse($training->date)->locale('id');
-                                    $end = \Carbon\Carbon::parse($training->date_end)->locale('id');
-
-                                    if ($start->year != $end->year) {
-                                        // Beda tahun: tampilkan full untuk keduanya
-                                        $date =
-                                            $start->translatedFormat('d F Y') . ' - ' . $end->translatedFormat('d F Y');
-                                    } else {
-                                        // Tahun sama
-                                        if ($start->month == $end->month) {
-                                            // Bulan sama → 12 - 15 Mei 2025
-                                            $date =
-                                                $start->translatedFormat('d F') .
-                                                ' - ' .
-                                                $end->translatedFormat('d F Y');
-                                        } else {
-                                            // Bulan beda → 30 Mei - 1 Juni 2025
-                                            $date =
-                                                $start->translatedFormat('d F') .
-                                                ' - ' .
-                                                $end->translatedFormat('d F Y');
-                                        }
-                                    }
-                                @endphp
-
-                                {{ $date }}
-                            </td>
-                            <td>
-                                @php
-                                    $progressValue = $training->isprogress;
-                                    $isRejected = $training->isfinish == 2;
-
-                                    $progressMap = [
-                                        1 => ['percent' => 10, 'color' => 'bg-red-600'],
-                                        2 => ['percent' => 30, 'color' => 'bg-orange-500'],
-                                        3 => ['percent' => 50, 'color' => 'bg-yellow-400'],
-                                        4 => ['percent' => 75, 'color' => 'bg-[#e6e600]'],
-                                        5 => ['percent' => 100, 'color' => 'bg-green-600'],
-                                    ];
-
-                                    $progress = $progressMap[$progressValue] ?? [
-                                        'percent' => 0,
-                                        'color' => 'bg-gray-400',
-                                    ];
-
-                                    // Jika isfinish = 2 (Ditolak), override warna dan persen
-                                    // if ($isRejected) {
-                                    //     $progress['color'] = 'bg-red-600';
-                                    //     $progress['percent'] = 100;
-                                    // }
-
-                                @endphp
-
+                            <td>{{ $date }}</td>
+                            <td class="relative space-x-2">
                                 <div class="w-[80px] h-2 bg-gray-200 rounded-full dark:bg-gray-700 mx-auto">
                                     <div class="{{ $progress['color'] }} text-[8px] font-medium text-white text-center leading-none rounded-full"
-                                        style="width: {{ $progress['percent'] }}%; height:8px">
+                                        style="width: {{ $progress['percent'] }}%; height: 8px">
                                         {{ $progress['percent'] }}%
                                     </div>
                                 </div>
-                            </td>
 
+                                @if ($showTooltip)
+                                    <div
+                                        class="tooltip-warning absolute right-full top-0 ml-2 mt-2 border border-yellow-500 bg-red-600 animate-pulse text-black text-[10px] px-3 py-2 rounded shadow-md w-max max-w-[250px] z-50 flex justify-between items-start gap-2">
+                                        <span class="font-semibold text-white">⚠️ Segera lengkapi pendaftaran</span>
+
+                                        <button type="button"
+                                            onclick="event.stopPropagation(); this.closest('.tooltip-warning')?.remove()"
+                                            class="text-black hover:text-red-600 text-lg font-bold leading-none">&times;</button>
+                                    </div>
+                                @endif
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>

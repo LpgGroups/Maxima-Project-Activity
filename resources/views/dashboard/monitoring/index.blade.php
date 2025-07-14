@@ -8,6 +8,7 @@
                 <thead class="bg-gray-100 text-gray-700">
                     <tr>
                         <th class="px-4 py-3 text-center">#</th>
+                        <th class="px-4 py-3 text-center">No Surat</th>
                         <th class="px-4 py-3">Nama Pelatihan</th>
                         <th class="px-4 py-3">Perusahaan</th>
                         <th class="px-4 py-3">Nama PIC</th>
@@ -19,6 +20,7 @@
                     @foreach ($trainings as $training)
                         <tr class="hover:bg-gray-50">
                             <td class="px-4 py-2 text-center">{{ $loop->iteration }}</td>
+                            <td class="px-4 py-2">{{ $training->no_letter }}</td>
                             <td class="px-4 py-2">{{ $training->activity }}</td>
                             <td class="px-4 py-2">{{ $training->name_company ?? '-' }}</td>
                             <td class="px-4 py-2">{{ $training->user->name ?? '-' }}</td>
@@ -35,6 +37,9 @@
                     @endforeach
                 </tbody>
             </table>
+            <div class="mt-6">
+                {{ $trainings->links() }}
+            </div>
         </div>
 
     </div>
