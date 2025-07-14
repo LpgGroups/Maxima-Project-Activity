@@ -13,7 +13,7 @@ class MonitoringController extends Controller
 {
     public function index()
     {
-        $trainings = RegTraining::with('user')->latest()->get(); // list semua training
+        $trainings = RegTraining::with('user')->latest()->paginate(15);
         return view('dashboard.monitoring.index', [
             'title' => 'Monitoring',
             'trainings' => $trainings

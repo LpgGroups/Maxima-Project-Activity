@@ -15,6 +15,8 @@ function liveDataUser() {
             }
 
             result.data.forEach((item) => {
+                console.log("Training date:", item.date);
+
                 // Menentukan status label dan warna
                 const statusMap = {
                     selesai: {
@@ -41,7 +43,7 @@ function liveDataUser() {
                 let statusBgClass = "";
 
                 const isprogress = Number(item.isprogress);
-                const isFinish = Number(item.isfinish); // atau item.isfinish, pastikan konsisten
+                const isFinish = Number(item.isfinish);
 
                 if (isprogress === 5 && isFinish === 1) {
                     statusText = statusMap.selesai.label;
@@ -73,8 +75,11 @@ function liveDataUser() {
                 }
 
                 const rowHtml = `
-                    <tr onclick="window.location='${item.url}'"
-                        class="odd:bg-white even:bg-gray-300 cursor-pointer hover:bg-red-500 hover:text-white leading-loose">
+                                        <tr 
+                       data-training-date="${item.training_date_raw}"" 
+                        onclick="window.location='${item.url}'"
+                        class="training-row odd:bg-white even:bg-gray-300 cursor-pointer hover:bg-red-500 hover:text-white leading-loose relative py-6"
+                        >
                         <td>${item.no}</td>
                         <td>
                             ${item.activity}
@@ -98,6 +103,7 @@ function liveDataUser() {
                 `;
                 $tbody.append(rowHtml);
             });
+            checkTableTooltipDeadline();
         })
         .catch((err) => {
             var $tbody = $("table tbody");
@@ -107,6 +113,71 @@ function liveDataUser() {
             );
             console.error("Gagal memuat data:", err);
         });
+}
+
+function checkTableTooltipDeadline() {
+    $(".training-row").each(function () {
+        const row = $(this);
+        const trainingDateStr = row.data("training-date");
+        if (!trainingDateStr) return;
+
+        const trainingDate = new Date(trainingDateStr);
+        const now = new Date();
+
+        const hminus5 = new Date(trainingDate);
+        hminus5.setDate(trainingDate.getDate() - 5);
+
+        const hminus2 = new Date(trainingDate);
+        hminus2.setDate(trainingDate.getDate() - 7);
+
+        if (now >= hminus2 && now <= trainingDate) {
+            if (row.find(".tooltip-row").length === 0) {
+                const tooltip = $(`
+            <div class="tooltip-row absolute left-[90%] top-4 ml-2 mt-2 border bg-red-600 text-white text-xs px-3 py-2 rounded shadow-md flex justify-between items-start gap-2 w-max max-w-[250px] z-50">
+                <div>
+                    <div class="font-semibold">⚠️ Deadline Segera</div>
+                    <div class="text-yellow-300 countdown-timer"></div>
+                </div>
+                <button class="text-white hover:text-red-400 text-lg font-bold leading-none" data-tooltip-close>&times;</button>
+            </div>
+        `);
+                row.css("position", "relative");
+                row.append(tooltip);
+
+                // Close handler
+                tooltip.find("[data-tooltip-close]").on("click", function (e) {
+                    e.stopPropagation(); // ← ini wajib kalau baris punya onclick
+                    tooltip.remove();
+                });
+
+                const countdownEl = tooltip.find(".countdown-timer")[0];
+
+                function updateCountdown() {
+                    const now = new Date();
+                    const distance = hminus5 - now;
+
+                    if (distance <= 0) {
+                        tooltip.remove();
+                        return;
+                    }
+
+                    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor(
+                        (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+                    );
+                    const minutes = Math.floor(
+                        (distance % (1000 * 60 * 60)) / (1000 * 60)
+                    );
+                    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                    countdownEl.innerText = `Sisa waktu: ${days}h ${hours}j ${minutes}m ${seconds}d`;
+                }
+
+                updateCountdown();
+                setInterval(updateCountdown, 1000);
+            }
+        }
+    });
 }
 
 // Panggil fungsi ini setiap kali halaman ready, dan bisa di-set interval untuk auto-refresh

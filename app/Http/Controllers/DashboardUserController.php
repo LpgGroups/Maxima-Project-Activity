@@ -192,6 +192,7 @@ class DashboardUserController extends Controller
                 'isNew' => $isNew,
                 'isUpdated' => $isUpdated,
                 'status' => 'Aktif',
+                'training_date_raw' => $start->toDateString(),
                 'date' => $date,
                 'progress_percent' => $progress['percent'],
                 'progress_color' => $progress['color'],

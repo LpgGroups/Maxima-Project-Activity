@@ -165,7 +165,8 @@ class DashboardManagementController extends Controller
                 '',
                 "Status pelatihan {$training->activity} telah di-" . ($isfinish == 1 ? 'approve' : 'tolak') . ".",
                 $isfinish == 1 ? 'success' : 'denied',
-                $request->user()->name ?? 'Admin'
+                $request->user()->name ?? 'Admin',
+                'management'
             ));
         }
         return response()->json(['success' => true]);
