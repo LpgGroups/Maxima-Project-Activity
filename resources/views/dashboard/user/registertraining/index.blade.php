@@ -130,7 +130,7 @@
 
                                 @if ($showTooltip)
                                     <div
-                                        class="tooltip-warning absolute right-full top-0 ml-2 mt-2 border border-yellow-500 bg-red-600 animate-pulse text-black text-[10px] px-3 py-2 rounded shadow-md w-max max-w-[250px] z-50 flex justify-between items-start gap-2">
+                                        class="tooltip-warning absolute right-full top-0 ml-2 border border-yellow-500 bg-red-600 animate-pulse text-black text-[10px] px-3 py-2 rounded shadow-md w-max max-w-[250px] z-50 flex justify-between items-start gap-2">
                                         <span class="font-semibold text-white">⚠️ Segera lengkapi pendaftaran</span>
 
                                         <button type="button"
