@@ -16,7 +16,7 @@
                         $url = $item->data['url'] ?? null;
                         $role = $item->data['user_role'] ?? 'user'; // fallback ke 'user' jika tidak ada
                         $borderColor = match ($role) {
-                            'admin' => 'border-yello-500',
+                            'admin' => 'border-yellow-500',
                             'management' => 'border-emerald-400',
                             'user' => 'border-rose-500',
                             default => 'border-gray-200',
