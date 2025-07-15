@@ -16,9 +16,9 @@
 <body class="overflow-x-hidden">
 
     @include('layout.partial.navbar')
-    <div class="container mt-4 font-poppins">
-        @yield('container')
-    </div>
+
+    @yield('container')
+
     @include('layout.partial.footer')
     @stack('scripts')
 </body>

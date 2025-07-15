@@ -133,7 +133,7 @@ function checkTableTooltipDeadline() {
         if (now >= hminus2 && now <= trainingDate) {
             if (row.find(".tooltip-row").length === 0) {
                 const tooltip = $(`
-            <div class="tooltip-row absolute left-[90%] top-4 ml-2 mt-2 border bg-red-600 text-white text-xs px-3 py-2 rounded shadow-md flex justify-between items-start gap-2 w-max max-w-[250px] z-50">
+            <div class="tooltip-row absolute left-[90%] ml-2 border mb-10 bg-red-600 text-white text-xs px-3 py-2 rounded shadow-md flex justify-between items-start gap-2 w-max max-w-[200px] z-50">
                 <div>
                     <div class="font-semibold">⚠️ Deadline Segera</div>
                     <div class="text-yellow-300 countdown-timer"></div>
