@@ -213,7 +213,8 @@ class DashboardAdminController extends Controller
             'Daftar Pelatihan',
             '',     // customMessage
             '',     // customType
-            $adminName
+            $adminName,
+            'admin'
         ));
 
         return response()->json([
@@ -249,7 +250,8 @@ class DashboardAdminController extends Controller
                 'Daftar Peserta',
                 'Data peserta pada pelatihan "' . $training->activity . '" telah diperbarui oleh Admin.',
                 'info',
-                $adminName
+                $adminName,
+                'admin'
             ));
         }
 
@@ -323,7 +325,8 @@ class DashboardAdminController extends Controller
                 'Upload Dokumen',
                 "{$uploaderName} telah mengunggah dokumen untuk pelatihan {$training->activity}.",
                 'info',
-                $uploaderName
+                $uploaderName,
+                'admin'
             ));
         }
         return response()->json(['success' => true]);
@@ -350,7 +353,8 @@ class DashboardAdminController extends Controller
                 'Daftar Pelatihan',
                 $customMessage,
                 'verifacc',
-                $adminName
+                $adminName,
+                'admin'
             ));
         }
 

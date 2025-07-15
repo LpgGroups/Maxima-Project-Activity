@@ -20,9 +20,10 @@ class TrainingUpdatedNotification extends Notification
     protected $customMessage;
     protected $customType;
     protected $actorName;
+    protected $actorRole;
 
 
-    public function __construct(RegTraining $training, string $triggeredBy = '', string $formName = '', string $customMessage = '', string $customType = '',  string $actorName = '')
+    public function __construct(RegTraining $training, string $triggeredBy = '', string $formName = '', string $customMessage = '', string $customType = '',  string $actorName = '', string $actorRole = '')
     {
         $this->training = $training;
         $this->triggeredBy = $triggeredBy;
@@ -30,6 +31,7 @@ class TrainingUpdatedNotification extends Notification
         $this->customMessage = $customMessage;
         $this->customType = $customType;
         $this->actorName = $actorName;
+        $this->actorRole = $actorRole;
 
         Log::info('NOTIFIKASI DIKIRIM:', [
             'triggeredBy' => $triggeredBy,
@@ -64,6 +66,7 @@ class TrainingUpdatedNotification extends Notification
                 'message' => "{$userName} telah memperbarui training {$activity} {$formText}",
                 'training_id' => $this->training->id,
                 'user_name' => $userName,
+                'user_role' => $this->actorRole,
                 'url' => route('dashboard.admin.training.show', $this->training->id),
             ];
         }
@@ -80,6 +83,7 @@ class TrainingUpdatedNotification extends Notification
                 'message' => $this->customMessage,
                 'training_id' => $this->training->id,
                 'user_name' => $userName,
+                'user_role' => $this->actorRole,
                 'url' => $url
             ];
         }
@@ -90,6 +94,7 @@ class TrainingUpdatedNotification extends Notification
             'message' => "Admin telah memperbarui status training {$activity}{$formText}",
             'training_id' => $this->training->id,
             'user_name' => $userName,
+            'user_role' => $this->actorRole,
             'url' => route('dashboard.form', $this->training->id), // ganti sesuai route kamu
         ];
     }
