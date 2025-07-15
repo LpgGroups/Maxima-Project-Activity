@@ -19,11 +19,8 @@
 
         <!-- RIGHT: Login Aside -->
         <aside class="w-full md:flex-[4] bg-white flex ">
-            <div class="w-full px-12">
+            <div class="w-full px-12 mt-20">
                 <img class="mx-auto mb-4 w-32 h-auto" src="/img/maximalog.png" alt="Logo Maxima">
-                <p class="text[32px] text-center mt-2 mb-2">Hallo, Selamat Datang kembali di
-                    </br><strong>E-Registrasi Maxima.</strong>
-                </p>
                 <h2 class="text-center text-3xl font-bold tracking-tight text-[#10496C]">Login</h2>
                 <p class="text-xs text-center mt-2">Masukan Email dan Password Anda dengan benar.</p>
 

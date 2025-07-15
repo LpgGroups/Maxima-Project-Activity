@@ -13,7 +13,7 @@
 </head>
 <title>e-Register Maxima</title>
 
-<body class="overflow-x-hidden">
+<body class="overflow-x-hidden font-inter">
 
     @include('layout.partial.navbar')
 
