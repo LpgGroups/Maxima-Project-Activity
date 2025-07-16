@@ -133,6 +133,7 @@ function showDetail(id) {
                 allowOutsideClick: () => !Swal.isLoading(),
                 allowEscapeKey: () => !Swal.isLoading(),
                 preConfirm: () => {
+                    Swal.showLoading();
                     const url = `/dashboard/management/approve/${id}`;
                     return fetch(url, {
                         method: "PUT",
@@ -177,7 +178,7 @@ function showDetail(id) {
                         // Jangan lanjut jika user batal
                         return false;
                     }
-
+                    Swal.showLoading();
                     // Lanjutkan fetch jika user menolak dengan alasan
                     const url = `/dashboard/management/approve/${id}`;
                     return fetch(url, {
@@ -282,70 +283,75 @@ function badgedUpdate() {
     });
 }
 
- function accDetail(data) {
-        Swal.fire({
-            title: `<strong>${data.activity_full || data.activity}</strong>`,
-            html: `
+function accDetail(data) {
+    Swal.fire({
+        title: `<strong>${data.activity_full || data.activity}</strong>`,
+        html: `
                 <p><strong>Nama Perusahaan:</strong> ${data.name_company}</p>
                 <p><strong>PIC:</strong> ${data.name_pic}</p>
                 <p><strong>Jumlah Peserta:</strong> ${data.participants}</p>
             `,
-            icon: "info",
-            showCancelButton: true,
-            confirmButtonText: "Setujui",
-            confirmButtonColor: "#3085d6",
-            showDenyButton: true,
-            denyButtonText: "Tolak",
-            denyButtonColor: "#d33",
-            cancelButtonText: "Tutup",
-            allowOutsideClick: () => !Swal.isLoading(),
-            allowEscapeKey: () => !Swal.isLoading(),
+        icon: "info",
+        showCancelButton: true,
+        confirmButtonText: "Setujui",
+        confirmButtonColor: "#3085d6",
+        showDenyButton: true,
+        denyButtonText: "Tolak",
+        denyButtonColor: "#d33",
+        cancelButtonText: "Tutup",
+        allowOutsideClick: () => !Swal.isLoading(),
+        allowEscapeKey: () => !Swal.isLoading(),
 
-            preConfirm: () => {
-                return $.ajax({
-                    url: `/dashboard/management/approve/${data.id}`,
-                    type: "PUT",
-                    contentType: "application/json",
-                    headers: {
-                        "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
-                    },
-                    data: JSON.stringify({ isfinish: 1 }),
-                }).catch(() => {
-                    Swal.showValidationMessage("Gagal menyetujui data.");
-                });
-            },
+        preConfirm: () => {
+            return $.ajax({
+                url: `/dashboard/management/approve/${data.id}`,
+                type: "PUT",
+                contentType: "application/json",
+                headers: {
+                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
+                        "content"
+                    ),
+                },
+                data: JSON.stringify({ isfinish: 1 }),
+            }).catch(() => {
+                Swal.showValidationMessage("Gagal menyetujui data.");
+            });
+        },
 
-            preDeny: async () => {
-                const { isConfirmed, value } = await Swal.fire({
-                    title: "Alasan Penolakan",
-                    input: "textarea",
-                    inputLabel: "Wajib isi alasan mengapa ditolak",
-                    inputPlaceholder: "Tuliskan alasan di sini...",
-                    inputAttributes: {
-                        "aria-label": "Tuliskan alasan di sini",
-                    },
-                    inputValidator: (val) => !val && "Alasan penolakan wajib diisi!",
-                    showCancelButton: true,
-                    confirmButtonText: "Kirim Penolakan",
-                    confirmButtonColor: "#d33",
-                });
+        preDeny: async () => {
+            const { isConfirmed, value } = await Swal.fire({
+                title: "Alasan Penolakan",
+                input: "textarea",
+                inputLabel: "Wajib isi alasan mengapa ditolak",
+                inputPlaceholder: "Tuliskan alasan di sini...",
+                inputAttributes: {
+                    "aria-label": "Tuliskan alasan di sini",
+                },
+                inputValidator: (val) =>
+                    !val && "Alasan penolakan wajib diisi!",
+                showCancelButton: true,
+                confirmButtonText: "Kirim Penolakan",
+                confirmButtonColor: "#d33",
+            });
 
-                if (!isConfirmed) return false;
+            if (!isConfirmed) return false;
 
-                return $.ajax({
-                    url: `/dashboard/management/approve/${data.id}`,
-                    type: "PUT",
-                    contentType: "application/json",
-                    headers: {
-                        "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
-                    },
-                    data: JSON.stringify({ isfinish: 2, reason_fail: value }),
-                }).catch(() => {
-                    Swal.showValidationMessage("Gagal menolak data.");
-                });
-            },
-        });
-    }
+            return $.ajax({
+                url: `/dashboard/management/approve/${data.id}`,
+                type: "PUT",
+                contentType: "application/json",
+                headers: {
+                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
+                        "content"
+                    ),
+                },
+                data: JSON.stringify({ isfinish: 2, reason_fail: value }),
+            }).catch(() => {
+                Swal.showValidationMessage("Gagal menolak data.");
+            });
+        },
+    });
+}
 
 $(document).ready(function () {
     $(".view-detail-btn").on("click", function (e) {
