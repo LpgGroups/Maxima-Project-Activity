@@ -31,10 +31,7 @@
     <!-- Sidebar -->
     <div class="flex flex-1">
         @if (auth()->user()->role === 'management')
-            {{-- Sidebar hanya untuk md dan lg --}}
-            <div class="hidden md:block">
-                @include('dashboard.layouts.sidebarM')
-            </div>
+            @include('dashboard.layouts.sidebarM')
             <div id="main-content" class="flex-1 p-4 transition-all duration-300 md:ml-64 lg:ml-64">
                 @yield('container')
             </div>
@@ -47,6 +44,12 @@
 
     </div>
     @stack('scripts')
+    <script>
+        function toggleMobileSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('-translate-x-full');
+        }
+    </script>
 </body>
 
 </html>
