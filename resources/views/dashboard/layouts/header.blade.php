@@ -1,6 +1,10 @@
 <nav class="h-14 bg-[#EBEAFF] border-b-2 border-[#CAC9FF]">
     <div class="max-w-screen-xl flex items-center justify-between mx-auto p-4">
-
+        <button onclick="toggleMobileSidebar()" class="md:hidden text-gray-700 p-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+        </button>
         <div class="flex items-center space-x-4 ml-auto">
             <!-- Notifikasi -->
             @php

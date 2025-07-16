@@ -3,11 +3,16 @@
 @section('container')
     <div class="flex h-screen flex-col md:flex-row">
         <!-- LEFT: Poster -->
-        <div class="hidden md:block md:flex-[6] bg-cover bg-center relative animate-zoom-loop"
-            style="background-image: url('/img/bg-login.webp');">
+        <div class="hidden md:block md:flex-[6] bg-cover bg-center relative">
+            <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover -z-10">
+                <source src="/img/vid/flayer_login.webm" type="video/webm" />
+                <!-- fallback kalau video gak support -->
+                Your browser does not support the video tag.
+            </video>
+
             <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
                 <div class="text-center text-white px-6">
-                    <h1 class="text-3xl font-bold animate-slide-left-to-right">Selamat Datang</h1>
+                    <h1 class="text-3xl font-bold animate-slide-left-to-right">Selamat Datang di E-Registrasi Maxima</h1>
                     <p class="mt-2 text-sm animate-slide-right-to-left font-bold">Akses fitur terbaik dari E-Registrasi
                         Maxima</p>
                     <p class="mt-4 text-sm animate-fadeInUp">Permudah akses Anda untuk membuat <strong
