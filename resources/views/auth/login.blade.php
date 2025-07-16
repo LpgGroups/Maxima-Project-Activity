@@ -4,18 +4,17 @@
     <div class="flex h-screen flex-col md:flex-row">
         <!-- LEFT: Poster -->
         <div class="hidden md:block md:flex-[6] bg-cover bg-center relative">
-            <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover -z-10">
+            <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover brightness-75 -z-20">
                 <source src="/img/vid/flayer_login.webm" type="video/webm" />
-                <!-- fallback kalau video gak support -->
                 Your browser does not support the video tag.
             </video>
 
             <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
                 <div class="text-center text-white px-6">
                     <h1 class="text-3xl font-bold animate-slide-left-to-right">Selamat Datang di E-Registrasi Maxima</h1>
-                    <p class="mt-2 text-sm animate-slide-right-to-left font-bold">Akses fitur terbaik dari E-Registrasi
+                    <p class="mt-2 text-[18px] animate-slide-right-to-left font-bold">Akses fitur terbaik dari E-Registrasi
                         Maxima</p>
-                    <p class="mt-4 text-sm animate-fadeInUp">Permudah akses Anda untuk membuat <strong
+                    <p class="mt-8 text-[16px] animate-fadeInUp">Permudah akses Anda untuk membuat <strong
                             class="text-yellow-300">Jadwal Pelatihan</strong> </br>Melalui Web Aplikasi <strong
                             class="text-yellow-300">E-Registrasi Maxima</strong></p>
                 </div>
@@ -39,47 +38,61 @@
 
                 <form id="loginForm" class="space-y-6 mt-6" action="{{ route('login') }}" method="POST">
                     @csrf
-
                     <!-- Email -->
-                    <div class="relative">
-                        <input id="email" name="email" type="text"
-                            class="peer w-full border border-[#515151] bg-transparent px-2.5 py-3 text-sm text-[#515151] rounded-md focus:border-[#1E6E9E] focus:outline-none focus:ring-1 focus:ring-[#1E6E9E] placeholder-transparent"
-                            placeholder=" " />
-                        <label for="email"
-                            class="absolute text-base bg-white text-[#515151] transition-all duration-300 transform -translate-y-6 scale-75 top-3 left-2.5 ml-2 z-10 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 peer-focus:text-[#1E6E9E]">
-                            Email
-                        </label>
+                    <div class="w-full max-w-sm mx-auto space-y-5">
+                        <!-- Email Field -->
+                        <div class="relative">
+                            <input id="email" name="email" type="text"
+                                class="peer w-full border border-[#515151] bg-transparent px-2.5 py-3 text-sm text-[#515151] rounded-md focus:border-[#1E6E9E] focus:outline-none focus:ring-1 focus:ring-[#1E6E9E] placeholder-transparent"
+                                placeholder=" " />
+                            <label for="email"
+                                class="absolute text-base bg-white text-[#515151] transition-all duration-300 transform -translate-y-6 scale-75 top-3 left-2.5 ml-2 z-10 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 peer-focus:text-[#1E6E9E]">
+                                Email
+                            </label>
+                        </div>
+
+                        <!-- Password Field -->
+                        <div class="relative">
+                            <input id="password" name="password" type="password"
+                                class="peer w-full border border-[#515151] bg-transparent px-2.5 py-3 text-sm text-[#515151] rounded-md focus:border-[#1E6E9E] focus:outline-none focus:ring-1 focus:ring-[#1E6E9E] placeholder-transparent"
+                                placeholder=" " />
+                            <label for="password"
+                                class="absolute text-base bg-white text-[#515151] transition-all duration-300 transform -translate-y-6 scale-75 top-3 left-2.5 ml-2 z-10 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 peer-focus:text-[#1E6E9E]">
+                                Password
+                            </label>
+                        </div>
+
+                        <!-- Lupa Password -->
+                        <p class="text-right text-xs text-gray-500">
+                            Lupa Password?
+                            <a href="{{ route('password.request') }}"
+                                class="font-semibold text-indigo-600 hover:text-indigo-500">Klik Di Sini</a>
+                        </p>
+
+                        <!-- Tombol Login -->
+                        <div>
+                            <button id="loginBtn" type="submit"
+                                class="w-full rounded-md px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-orange-500 via-orange-600 to-orange-400
+           shadow-md transition-all duration-300 ease-in-out
+           hover:from-orange-600 hover:via-orange-700 hover:to-orange-800
+           hover:shadow-lg hover:scale-105
+           focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500">
+                                Login
+                            </button>
+                        </div>
+
                     </div>
 
-                    <!-- Password -->
-                    <div class="relative">
-                        <input id="password" name="password" type="password"
-                            class="peer w-full border border-[#515151] bg-transparent px-2.5 py-3 text-sm text-[#515151] rounded-md focus:border-[#1E6E9E] focus:outline-none focus:ring-1 focus:ring-[#1E6E9E] placeholder-transparent"
-                            placeholder=" " />
-                        <label for="password"
-                            class="absolute text-base bg-white text-[#515151] transition-all duration-300 transform -translate-y-6 scale-75 top-3 left-2.5 ml-2 z-10 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 peer-focus:text-[#1E6E9E]">
-                            Password
-                        </label>
-                    </div>
 
-                    <p class="text-right text-xs text-gray-500">
-                        Lupa Password?
-                        <a href="{{ route('password.request') }}"
-                            class="font-semibold text-indigo-600 hover:text-indigo-500">Klik Di Sini</a>
-                    </p>
-
-                    <div>
-                        <button id="loginBtn" type="submit"
-                            class="w-full rounded-md px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus:outline focus:ring-2 focus:ring-indigo-600"
-                            style="background: linear-gradient(180deg, #ffc815 0%, #ff0000 100%);">
-                            Login
-                        </button>
-                    </div>
                 </form>
 
                 <p class="text-center mt-4 text-xs text-gray-500">
                     Belum Memiliki Akun?
                     <a href="{{ '/register' }}" class="font-semibold text-indigo-600 hover:text-indigo-500">Daftar</a>
+                </p>
+
+                <p class="text-center mt-20 text-[11px] text-gray-400">
+                    &copy; 2025 <span class="font-semibold text-[#10496C]">Maxima</span>. All rights reserved.
                 </p>
             </div>
         </aside>
