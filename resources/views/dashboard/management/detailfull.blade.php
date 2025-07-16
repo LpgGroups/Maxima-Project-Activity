@@ -61,6 +61,8 @@
                             <span class="inline-block px-2 py-1 text-xs font-semibold rounded bg-red-100 text-red-800">
                                 Ditolak
                             </span>
+                            <p>Dengan Alasan:</p>
+                            <p class="text-red-500 italic">{{ $training->reason_fail }}</p>
                         @else
                             <span
                                 class="inline-block px-2 py-1 text-xs font-semibold rounded bg-yellow-100 text-yellow-800">
@@ -201,6 +203,7 @@
                 allowEscapeKey: () => !Swal.isLoading(),
 
                 preConfirm: () => {
+                    Swal.showLoading();
                     return $.ajax({
                         url: `/dashboard/management/approve/${data.id}`,
                         type: "PUT",
@@ -230,12 +233,14 @@
                         },
                         inputValidator: (val) => !val && "Alasan penolakan wajib diisi!",
                         showCancelButton: true,
+                        cancelButtonText: "Batal",
                         confirmButtonText: "Kirim Penolakan",
                         confirmButtonColor: "#d33",
                     });
 
                     if (!isConfirmed) return false;
 
+                    Swal.showLoading();
                     return $.ajax({
                         url: `/dashboard/management/approve/${data.id}`,
                         type: "PUT",
@@ -251,13 +256,24 @@
                         Swal.showValidationMessage("Gagal menolak data.");
                     });
                 },
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Berhasil Disetujui",
+                        text: "Data telah disetujui.",
+                        timer: 2000,
+                        showConfirmButton: false,
+                    }).then(() => location.reload());
+                } else if (result.isDenied) {
+                    Swal.fire({
+                        icon: "warning",
+                        title: "Ditolak",
+                        text: "Data telah ditolak.",
+                        timer: 2000,
+                        showConfirmButton: false,
+                    }).then(() => location.reload());
+                }
             });
         }
-
-        $(document).ready(function() {
-            $(".btn-review-pelatihan").on("click", function() {
-                const detail = $(this).data("detail");
-                accDetail(detail);
-            });
-        });
     </script>

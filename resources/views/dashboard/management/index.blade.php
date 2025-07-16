@@ -69,7 +69,7 @@
 
     <div class="space-y-4">
         @foreach ($data as $training)
-            <div class="training-card w-full h-[150px] bg-green-500 rounded-lg shadow-md relative overflow-hidden">
+            <div class="training-card w-full h-[150px] bg-white rounded-lg shadow-md relative overflow-hidden">
                 <a href="{{ route('management.training.detail', ['id' => $training->id]) }}">
                     <div class="absolute inset-0 bg-white rounded-lg p-3 flex flex-col justify-between">
                         <div class="flex justify-between items-start">

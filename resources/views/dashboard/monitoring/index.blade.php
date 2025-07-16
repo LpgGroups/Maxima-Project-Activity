@@ -3,8 +3,8 @@
     <div class="max-w-7xl mx-auto mt-8 bg-white rounded-lg shadow p-6">
         <h2 class="text-2xl font-bold mb-4">Daftar Pelatihan Terdaftar</h2>
 
-        <div class="overflow-x-auto">
-            <table class="min-w-full text-sm text-left divide-y divide-gray-200">
+        <div class="w-full overflow-x-auto">
+            <table class="min-w-[640px] w-full text-sm text-left divide-y divide-gray-200">
                 <thead class="bg-gray-100 text-gray-700">
                     <tr>
                         <th class="px-4 py-3 text-center">#</th>
@@ -37,10 +37,10 @@
                     @endforeach
                 </tbody>
             </table>
-            <div class="mt-6">
-                {{ $trainings->links() }}
-            </div>
         </div>
 
+        <div class="mt-6">
+            {{ $trainings->links() }}
+        </div>
     </div>
 @endsection
