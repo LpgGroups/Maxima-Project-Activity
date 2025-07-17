@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardAdminController;
+use App\Http\Controllers\DashboardDevController;
 use App\Http\Controllers\DashboardManagementController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
@@ -90,6 +91,22 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/dashboard/management/training/{id}/detail', [DashboardManagementController::class, 'detailView'])
             ->name('management.training.detail');
         Route::put('/dashboard/management/approve/{id}', [DashboardManagementController::class, 'approve']);
+    });
+
+    Route::middleware([UserAccess::class . ':dev'])->group(function () {
+        Route::get('/dashboard/developer', [DashboardDevController::class, 'index'])
+            ->name('dashboard.dev.index');
+
+        Route::get('/dashboard/developer/account', [DashboardDevController::class, 'allUser'])
+            ->name('dashboard.dev.alluser');
+
+        Route::get('/dashboard/developer/account/{id}/edit', [DashboardDevController::class, 'editUser'])
+            ->name('dashboard.dev.edit');
+
+        Route::put('/dashboard/developer/account/{id}', [DashboardDevController::class, 'updateUser'])
+            ->name('dashboard.dev.update');
+
+        Route::delete('/dashboard/developer/account/{id}', [DashboardDevController::class, 'destroyUser'])->name('user.destroy');
     });
 
     Route::prefix('dashboard/monitoring')->middleware(['auth'])->group(function () {

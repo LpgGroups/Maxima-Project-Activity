@@ -33,14 +33,14 @@
                             @endif
                         </td>
                         <td class="border px-4 py-2">
-                            <a href="{{ route('users.edit', $user->id) }}"
+                            <a href="{{ route('dashboard.dev.edit', $user->id) }}"
                                 class="text-blue-600 hover:underline mr-2">Edit</a>
-                            {{-- <form action="{{ route('users.destroy', $user->id) }}" method="POST" class="inline"
+                            <form action="{{ route('user.destroy', $user->id) }}" method="POST" class="inline"
                                 onsubmit="return confirm('Yakin ingin hapus user ini?');">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="text-red-600 hover:underline">Hapus</button>
-                            </form> --}}
+                            </form>
                         </td>
                     </tr>
                 @empty
