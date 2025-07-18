@@ -49,6 +49,8 @@ class LoginController extends Controller
                     return redirect()->route('dashboard.admin.index');
                 case 'management':
                     return redirect()->route('dashboard.management.index');
+                case 'dev':
+                    return redirect()->route('dashboard.dev.index');
                 default:
                     Auth::logout();
                     return redirect('/')->withErrors('Periksa Akun Kembali');
@@ -59,10 +61,8 @@ class LoginController extends Controller
     }
     public function userList()
     {
-        // Ambil semua user, bisa ditambah paginate kalau perlu
+        
         $users = User::whereIn('role', ['admin', 'user'])->get();
-
-        // Kirim data user ke view users.index (atau sesuaikan dengan nama view-mu)
         return view('dashboard.admin.actuser.tableactuser', [
             'title' => 'Management User',
             'users' => $users

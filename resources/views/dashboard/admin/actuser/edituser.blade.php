@@ -38,8 +38,8 @@
                     class="w-full rounded-md border-gray-300 px-4 py-2 focus:ring-blue-500 focus:border-blue-500">
                     <option value="user" {{ $users->role == 'user' ? 'selected' : '' }}>User</option>
                     <option value="admin" {{ $users->role == 'admin' ? 'selected' : '' }}>Admin</option>
-                    {{-- <option value="management" {{ $users->role == 'management' ? 'selected' : '' }}>Management</option>
-                    <option value="dev" {{ $users->role == 'dev' ? 'selected' : '' }}>Developer</option> --}}
+                    <option value="management" {{ $users->role == 'management' ? 'selected' : '' }}>Management</option>
+                    <option value="dev" {{ $users->role == 'dev' ? 'selected' : '' }}>Developer</option>
                 </select>
             </div>
 

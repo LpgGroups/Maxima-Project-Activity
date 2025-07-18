@@ -11,10 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\RegTraining;
 use App\Models\TrainingNotification;
 use App\Models\User;
-use Illuminate\Support\Facades\Log;
 use App\Notifications\TrainingUpdatedNotification;
-use Illuminate\Support\Facades\Notification;
-use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Storage;
 
 
@@ -357,20 +354,6 @@ class DashboardAdminController extends Controller
                 'admin'
             ));
         }
-
-        // $managementUsers = User::where('role', 'management')->get();
-
-        // foreach ($managementUsers as $manager) {
-        //     $manager->notify(new TrainingUpdatedNotification(
-        //         $training,
-        //         'admin',
-        //         'Daftar Pelatihan',
-        //         'Training telah diperbarui oleh Admin. Silakan tinjau.',
-        //         'info'
-        //     ));
-        // }
-
-
         return response()->json(['success' => true, 'message' => 'Progress berhasil diperbarui.']);
     }
 
@@ -382,7 +365,6 @@ class DashboardAdminController extends Controller
 
         $participant->delete();
 
-        // Kirim notifikasi ke pemilik pelatihan
         if ($training && $training->user) {
             $training->user->notify(new TrainingUpdatedNotification(
                 $training,
