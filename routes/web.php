@@ -103,8 +103,13 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/dashboard/developer/account/{id}/edit', [DashboardDevController::class, 'editUser'])
             ->name('dashboard.dev.edit');
 
+        Route::get('/dashboard/developer/account/add', [DashboardDevController::class, 'homeaddUser'])
+            ->name('dashboard.dev.add');
+        Route::post('/dashboard/developer/account/add', [DashboardDevController::class, 'addUser'])->name('dashboard.dev.store');
+
         Route::put('/dashboard/developer/account/{id}', [DashboardDevController::class, 'updateUser'])
             ->name('dashboard.dev.update');
+
 
         Route::delete('/dashboard/developer/account/{id}', [DashboardDevController::class, 'destroyUser'])->name('user.destroy');
     });

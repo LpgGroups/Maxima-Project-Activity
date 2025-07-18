@@ -3,6 +3,7 @@
 @section('container')
     <div class="w-full h-auto bg-white rounded-2xl shadow-md p-4 sm:mb-0">
         <h2 class="text-xl font-semibold mb-4">Daftar User</h2>
+        <a href="{{ route('dashboard.dev.add') }}">+</a>
         <table class="min-w-full border border-gray-200">
             <thead class="bg-gray-100">
                 <tr>
