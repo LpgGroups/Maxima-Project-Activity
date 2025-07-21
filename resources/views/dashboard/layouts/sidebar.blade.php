@@ -91,12 +91,11 @@
                         </a>
                     </li>
                 @elseif ($role == 'admin')
-                    {{-- Menu untuk Admin --}}
                     <li class="my-1">
                         <a href="/dashboard/admin"
                             class="flex items-center space-x-2 menu-item-hover 
-                                  @if (request()->is('dashboard/admin')) bg-red-500 text-white @else hover:bg-red-500 @endif 
-                                  rounded-lg p-2">
+                  @if (request()->is('dashboard/admin')) bg-red-500 text-white @else hover:bg-red-500 @endif 
+                  rounded-lg p-2">
                             <svg xmlns="http://www.w3.org/2000/svg" class="size-6" fill="none" viewBox="0 0 24 24"
                                 stroke-width="1.5" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -105,40 +104,79 @@
                             <span class="text-sm">Admin Dashboard</span>
                         </a>
                     </li>
+
+                    {{-- Dropdown Manajemen Pelatihan --}}
                     <li class="my-1">
-                        <a href="/dashboard/admin/training/alltraining"
-                            class="flex items-center space-x-2 menu-item-hover 
-                                  @if (request()->is('dashboard/admin/training/alltraining')) bg-red-500 text-white @else hover:bg-red-500 @endif 
-                                  rounded-lg p-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                stroke-width="1.5" stroke="currentColor" class="size-6">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
-                            </svg>
-                            <span class="text-sm">Manajemen Pelatihan</span>
-                        </a>
+                        <div class="group">
+                            <div
+                                class="flex items-center justify-between menu-item-hover 
+                      @if (request()->is('dashboard/admin/training*')) bg-red-500 text-white @else hover:bg-red-500 @endif 
+                      rounded-lg p-2 cursor-pointer">
+                                <div class="flex items-center space-x-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke-width="1.5" stroke="currentColor" class="size-6">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+                                    </svg>
+                                    <span class="text-sm">Manajemen Pelatihan</span>
+                                </div>
+                                <svg class="size-4 transition-transform group-hover:rotate-180" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </div>
+
+                            {{-- Sub-menu (Selalu tampil saat active, tampil saat hover) --}}
+                            <ul
+                                class="mt-1 ml-6 pl-3 border-l border-gray-200 space-y-1 hidden group-hover:block 
+                            @if (request()->is('dashboard/admin/training*'))  @endif">
+                                <li>
+                                    <a href="/dashboard/admin/training/alltraining" @class([
+                                        'block px-2 py-1 rounded hover:bg-red-100 text-sm',
+                                        'text-red-500 font-bold' => request()->is(
+                                            'dashboard/admin/training/alltraining'),
+                                        'text-gray-700' => !request()->is('dashboard/admin/training/alltraining'),
+                                    ])>
+                                        List Pelatihan
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/dashboard/admin/schedule" @class([
+                                        'block px-2 py-1 rounded hover:bg-red-100 text-sm',
+                                        'text-red-500 font-bold' => request()->is('dashboard/admin/schedule'),
+                                        'text-gray-700' => !request()->is('dashboard/admin/schedule'),
+                                    ])>
+                                        Jadwal Pelatihan
+                                    </a>
+                                </li>
+                                {{-- Tambah submenu lain di sini jika perlu --}}
+                            </ul>
+                        </div>
                     </li>
+
+                    {{-- Menu lainnya --}}
                     <li class="my-1">
                         <a href="/dashboard/admin/users"
                             class="flex items-center space-x-2 menu-item-hover 
-                                  @if (request()->is('dashboard/admin/users')) bg-red-500 text-white @else hover:bg-red-500 @endif 
-                                  rounded-lg p-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                stroke-width="1.5" stroke="currentColor" class="size-6">
+                  @if (request()->is('dashboard/admin/users')) bg-red-500 text-white @else hover:bg-red-500 @endif 
+                  rounded-lg p-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="size-6" fill="none" viewBox="0 0 24 24"
+                                stroke-width="1.5" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round"
                                     d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z" />
                             </svg>
-
                             <span class="text-sm">Manajemen User</span>
                         </a>
                     </li>
+
                     <li class="my-1">
                         <a href="/dashboard/monitoring"
                             class="flex items-center space-x-2 menu-item-hover 
-                                  @if (request()->is('dashboard/monitoring')) bg-red-500 text-white @else hover:bg-red-500 @endif 
-                                  rounded-lg p-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                stroke-width="1.5" stroke="currentColor" class="size-6">
+                  @if (request()->is('dashboard/monitoring')) bg-red-500 text-white @else hover:bg-red-500 @endif 
+                  rounded-lg p-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="size-6" fill="none"
+                                viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round"
                                     d="M9 17.25v1.007a3 3 0 0 1-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0 1 15 18.257V17.25m6-12V15a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 15V5.25m18 0A2.25 2.25 0 0 0 18.75 3H5.25A2.25 2.25 0 0 0 3 5.25m18 0V12a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 12V5.25" />
                             </svg>
@@ -238,7 +276,7 @@
 
         <!-- Version Info -->
         <div class="p-4 mt-auto">
-            <span class="text-sm">Version: Beta V1.3.2 </span>
+            <span class="text-sm">Version: Beta V1.4.0 </span>
         </div>
     </div>
 </div>

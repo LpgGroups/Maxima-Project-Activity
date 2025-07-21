@@ -12,7 +12,7 @@ class FileDownloadController extends Controller
     {
         // Validasi user, hanya admin/management
         $user = Auth::user();
-        if (!in_array($user->role, ['admin', 'management'])) {
+        if (!in_array($user->role, ['admin', 'management', 'viewer'])) {
             abort(403, 'Anda tidak berhak mengakses file ini.');
         }
 
