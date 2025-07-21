@@ -41,6 +41,7 @@ class DashboardDevController extends Controller
         return redirect()->route('dashboard.dev.alluser')->with('success', 'User berhasil dihapus.');
     }
 
+
     public function updateUser(Request $request, $id)
     {
         $request->validate([
@@ -48,22 +49,45 @@ class DashboardDevController extends Controller
             'email' => "required|email|unique:users,email,{$id}",
             'phone' => "nullable|numeric|digits_between:10,13|unique:users,phone,{$id}",
             'company' => 'nullable|string|max:255',
-            'role' => 'required|in:user,admin,management,dev',
+            'role' => 'required|in:user,admin,management,dev,viewer',
             'is_active' => 'required|boolean',
+            'password' => [
+                'nullable',
+                'confirmed',
+                'min:8',
+                'regex:/[a-z]/',   // huruf kecil
+                'regex:/[A-Z]/',   // huruf besar
+                'regex:/[0-9]/',   // angka
+            ],
+        ], [
+            'password.confirmed' => 'Konfirmasi password tidak sama.',
+            'password.min' => 'Password minimal 8 karakter.',
+            'password.regex' => 'Password harus terdiri dari huruf besar, huruf kecil, dan angka.',
         ]);
 
         $user = User::findOrFail($id);
 
-        $user->update([
-            'name' => $request->name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'company' => $request->company,
-            'role' => $request->role,
-            'is_active' => $request->is_active,
+        // Ambil field biasa
+        $data = $request->only([
+            'name',
+            'email',
+            'phone',
+            'company',
+            'role',
+            'is_active',
         ]);
 
-        return redirect()->route('dashboard.dev.edit', ['id' => $user->id])->with('success', 'Data user berhasil diperbarui.');
+        // Cek jika password diisi, maka hash dan masukkan
+        if ($request->filled('password')) {
+            $data['password'] = Hash::make($request->password);
+        }
+
+        // Update user
+        $user->update($data);
+
+        return redirect()
+            ->route('dashboard.dev.edit', ['id' => $user->id])
+            ->with('success', 'Data user berhasil diperbarui.');
     }
 
     public function homeaddUser()

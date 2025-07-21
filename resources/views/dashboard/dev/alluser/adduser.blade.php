@@ -79,6 +79,12 @@
                     <input type="password" name="password" id="password"
                         class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:ring-indigo-200 focus:border-indigo-400"
                         placeholder="Minimal 8 karakter">
+                    <div id="password-hint" class="mt-2 space-y-1 text-[10px] sm:text-[10px]">
+                        <div><span id="icon-length">⬜</span> Minimal 8 karakter</div>
+                        <div><span id="icon-upper">⬜</span> Mengandung huruf kapital</div>
+                        <div><span id="icon-lower">⬜</span> Mengandung huruf kecil</div>
+                        <div><span id="icon-number">⬜</span> Mengandung angka(0-10)</div>
+                    </div>
                     @error('password')
                         <span class="text-red-500 text-sm">{{ $message }}</span>
                     @enderror
@@ -103,4 +109,27 @@
             </form>
         </div>
     </div>
+    <script>
+        function checkPassword(pw) {
+            return {
+                length: pw.length >= 8,
+                upper: /[A-Z]/.test(pw),
+                lower: /[a-z]/.test(pw),
+                number: /[0-9]/.test(pw),
+            }
+        }
+
+        function updateHint() {
+            const pw = document.getElementById('password').value;
+            const res = checkPassword(pw);
+
+            // Ceklis hijau jika OK, silang abu jika belum
+            document.getElementById('icon-length').innerHTML = res.length ? '✅' : '⬜';
+            document.getElementById('icon-upper').innerHTML = res.upper ? '✅' : '⬜';
+            document.getElementById('icon-lower').innerHTML = res.lower ? '✅' : '⬜';
+            document.getElementById('icon-number').innerHTML = res.number ? '✅' : '⬜';
+        }
+
+        document.getElementById('password').addEventListener('input', updateHint);
+    </script>
 @endsection

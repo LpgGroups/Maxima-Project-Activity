@@ -3,8 +3,14 @@
 @section('container')
     <div class="w-full h-auto bg-white rounded-2xl shadow-md p-4 sm:mb-0">
         <h2 class="text-xl font-semibold mb-4">Daftar User</h2>
-        <a href="{{ route('dashboard.dev.add') }}">+</a>
-        <table class="min-w-full border border-gray-200">
+        <a href="{{ route('dashboard.dev.add') }}"
+            class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-full shadow">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+            </svg>
+            Tambah User
+        </a>
+        <table class="min-w-full mt-2 border border-gray-200">
             <thead class="bg-gray-100">
                 <tr>
                     <th class="border px-4 py-2 text-left">No</th>
