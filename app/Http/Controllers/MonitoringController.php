@@ -11,12 +11,43 @@ use Illuminate\Notifications\DatabaseNotification;
 
 class MonitoringController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $trainings = RegTraining::with('user')->latest()->paginate(15);
+        $query = RegTraining::with(['user', 'participants']);
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+
+            $query->where(function ($q) use ($search) {
+                $q->where('name_company', 'like', '%' . $search . '%')
+                    ->orWhere('name_pic', 'like', '%' . $search . '%')
+                    ->orWhere('activity', 'like', '%' . $search . '%')
+                    ->orWhere('no_letter', 'like', '%' . $search . '%')
+                    ->orWhereHas('user', function ($uq) use ($search) {
+                        $uq->where('name', 'like', '%' . $search . '%');
+                    });
+            });
+        }
+
+        if ($request->filled('start_date') && $request->filled('end_date')) {
+            $query->whereBetween('date', [$request->start_date, $request->end_date]);
+        }
+
+        if ($request->filled('sort') && $request->sort == 'az') {
+            $query->orderBy('name_company', 'asc');
+        } else {
+            $query->latest();
+        }
+        $perPage = $request->get('per_page', 15);
+        $trainings = $query->paginate($perPage)->appends(request()->query());
+
+        $allTrainings = $query->get();
+        $totalParticipants = $allTrainings->sum(fn($training) => $training->participants->count());
+
         return view('dashboard.monitoring.index', [
             'title' => 'Monitoring',
-            'trainings' => $trainings
+            'trainings' => $trainings,
+          
         ]);
     }
     public function show($id)

@@ -66,6 +66,7 @@ class DashboardAdminController extends Controller
             $query->latest();
         }
 
+        // Ambil semua data untuk hitung total participants
         $allTrainings = $query->get();
         $totalParticipants = $allTrainings->sum(fn($training) => $training->participants->count());
 
@@ -356,6 +357,21 @@ class DashboardAdminController extends Controller
         return response()->json(['success' => true, 'message' => 'Progress berhasil diperbarui.']);
     }
 
+    public function schedule()
+    {
+        $trainings = RegTraining::withCount('participants')
+            ->whereNotNull('date')
+            ->orderBy('date')
+            ->get()
+            ->groupBy(function ($item) {
+                return \Carbon\Carbon::parse($item->date)->format('Y-m-d');
+            });
+
+        return view('dashboard.admin.trainingschedule.schedule', [
+            'title' => 'Jadwal Pelatihan',
+            'trainingsByDate' => $trainings,
+        ]);
+    }
 
     public function destroyParticipant($id)
     {
