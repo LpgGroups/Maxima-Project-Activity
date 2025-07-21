@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Middleware\UserAccess;
 use App\Http\Controllers\DashboardUserController;
+use App\Http\Controllers\DashboardViewersController;
 use App\Http\Controllers\FileDownloadController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\MonitoringController;
@@ -39,6 +40,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/dashboard/admin/users', [LoginController::class, 'userList'])->name('users.index');
         Route::get('/dashboard/admin/users/{id}/edit', [LoginController::class, 'editUser'])->name('users.edit');
         Route::put('/dashboard/admin/users/{id}', [LoginController::class, 'updateUser'])->name('users.update');
+        Route::get('/dashboard/admin/schedule', [DashboardAdminController::class, 'schedule'])->name('dashboard.admin.shcedule');
 
         Route::delete('/dashboard/admin/users/{id}', [LoginController::class, 'destroyUser'])->name('users.destroy');
         // Rute untuk memperbarui data training menggunakan POST
@@ -112,6 +114,13 @@ Route::middleware(['auth'])->group(function () {
 
 
         Route::delete('/dashboard/developer/account/{id}', [DashboardDevController::class, 'destroyUser'])->name('user.destroy');
+    });
+
+    Route::middleware([UserAccess::class . ':viewer'])->group(function () {
+        Route::get('/dashboard/viewers', [DashboardViewersController::class, 'index'])
+            ->name('dashboard.viewers.index');
+        Route::get('/dashboard/viewers/detail/{id}', [DashboardViewersController::class, 'show'])
+            ->name('dashboard.viewers.show');
     });
 
     Route::prefix('dashboard/monitoring')->middleware(['auth'])->group(function () {

@@ -1,15 +1,13 @@
 @extends('dashboard.layouts.dashboardmain')
 @section('container')
     <div class="flex flex-col lg:flex-row gap-4 ">
-        <!-- Container untuk informasi -->
         <div class="flex flex-wrap gap-4 w-full lg:w-full h-auto">
-            <!-- Elemen Total Pelatihan -->
+           
             <div class="lg:w-[276px] sm:w-full h-auto bg-white rounded-2xl shadow-md p-4">
                 <div class="text-violet-400 text-2xl font-bold">Total Pelatihan</div>
                 <div class="text-black text-[52px] font-bold">{{ $totalTraining }}</div>
             </div>
 
-            <!-- Elemen Total Peserta -->
             <div class="lg:w-[276px] sm:w-full h-auto bg-white rounded-2xl shadow-md p-4">
                 <div class="text-violet-400 text-2xl font-bold">Total Peserta</div>
                 <div class="text-black text-[52px] font-bold">{{ $totalParticipants }}</div>

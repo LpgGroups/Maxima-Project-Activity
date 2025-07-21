@@ -3,16 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\RegTraining;
+use App\Models\FileRequirement;
+use App\Models\RegParticipant;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+use App\Models\RegTraining;
 use App\Models\TrainingNotification;
 use App\Models\User;
-use Illuminate\Notifications\DatabaseNotification;
+use App\Notifications\TrainingUpdatedNotification;
+use Illuminate\Support\Facades\Storage;
 
-class MonitoringController extends Controller
+class DashboardViewersController extends Controller
 {
     public function index(Request $request)
     {
+        $viewers = Auth::user();
+
         $query = RegTraining::with(['user', 'participants']);
 
         if ($request->filled('search')) {
@@ -38,37 +45,32 @@ class MonitoringController extends Controller
         } else {
             $query->latest();
         }
-        $perPage = $request->get('per_page', 15);
-        $trainings = $query->paginate($perPage)->appends(request()->query());
 
         $allTrainings = $query->get();
         $totalParticipants = $allTrainings->sum(fn($training) => $training->participants->count());
 
-        return view('dashboard.monitoring.index', [
-            'title' => 'Monitoring',
-            'trainings' => $trainings,
-          
+        $perPage = $request->get('per_page', 20);
+        $trainingAll = $query->paginate($perPage)->appends(request()->query());
+
+        return view('dashboard.viewers.index', [
+            'title' => 'Dashboard Viewer',
+            'trainingAll' => $trainingAll,
+            'viewers' => $viewers,
+            'totalParticipants' => $totalParticipants,
         ]);
     }
+
     public function show($id)
     {
-        $training = RegTraining::with('user')->findOrFail($id);
+        $training = RegTraining::with(['participants'])
+            ->findOrFail($id);
 
-        $rawNotifications = DatabaseNotification::where('notifiable_type', User::class)
-            ->where('data->training_id', $id)
-            ->orderByDesc('created_at')
-            ->get();
+        $fileRequirement = FileRequirement::where('file_id', $training->id)->first();
 
-
-        // Deduplicate berdasarkan kombinasi unik
-        $notifications = $rawNotifications->unique(function ($notif) {
-            return $notif->data['training_id'] . $notif->data['message'] . $notif->created_at;
-        });
-
-        return view('dashboard.monitoring.show', [
+        return view('dashboard.viewers.show', [
+            'title' => 'Detail Pelatihan',
             'training' => $training,
-            'notifications' => $notifications,
-            'title' => 'Monitoring Pelatihan',
+            'fileRequirement' => $fileRequirement
         ]);
     }
 }

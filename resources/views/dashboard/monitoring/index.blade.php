@@ -4,6 +4,24 @@
         <h2 class="text-2xl font-bold mb-4">Daftar Pelatihan Terdaftar</h2>
 
         <div class="w-full overflow-x-auto">
+            <form method="GET" class="mb-4 flex flex-wrap gap-2 items-end">
+                <input type="text" name="search" placeholder="Search..." value="{{ request('search') }}"
+                    class="border rounded px-2 py-1 text-sm" />
+
+                <select name="sort" class="border w-40 rounded px-2 py-1 text-sm">
+                    <option value="">Urutkan</option>
+                    <option value="az" {{ request('sort') == 'az' ? 'selected' : '' }}>A - Z (Perusahaan)</option>
+                </select>
+
+                <input type="date" id="start_date" name="start_date" class="border rounded px-2 py-1 text-sm" />
+                <input type="date" id="end_date" name="end_date" class="border rounded px-2 py-1 text-sm" />
+
+                <button type="submit"
+                    class="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600">Filter</button>
+
+                <a href="{{ route('monitoring.index') }}"
+                    class="text-sm text-gray-600 underline hover:text-red-500">Reset</a>
+            </form>
             <table class="min-w-[640px] w-full text-sm text-left divide-y divide-gray-200">
                 <thead class="bg-gray-100 text-gray-700">
                     <tr>
