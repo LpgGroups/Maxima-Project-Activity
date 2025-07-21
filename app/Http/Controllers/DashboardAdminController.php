@@ -66,7 +66,6 @@ class DashboardAdminController extends Controller
             $query->latest();
         }
 
-        // Ambil semua data untuk hitung total participants
         $allTrainings = $query->get();
         $totalParticipants = $allTrainings->sum(fn($training) => $training->participants->count());
 
