@@ -136,16 +136,16 @@
                                         'block px-2 py-1 rounded hover:bg-red-100 text-sm',
                                         'text-red-500 font-bold' => request()->is(
                                             'dashboard/admin/training/alltraining'),
-                                        'text-gray-700' => !request()->is('dashboard/admin/training/alltraining'),
+                                        'text-gray-500' => !request()->is('dashboard/admin/training/alltraining'),
                                     ])>
                                         List Pelatihan
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="/dashboard/admin/schedule" @class([
+                                    <a href="/dashboard/schedule" @class([
                                         'block px-2 py-1 rounded hover:bg-red-100 text-sm',
-                                        'text-red-500 font-bold' => request()->is('dashboard/admin/schedule'),
-                                        'text-gray-700' => !request()->is('dashboard/admin/schedule'),
+                                        'text-red-500 font-bold' => request()->is('dashboard/schedule'),
+                                        'text-gray-500' => !request()->is('dashboard/schedule'),
                                     ])>
                                         Jadwal Pelatihan
                                     </a>
@@ -258,6 +258,22 @@
                     </li>
 
                     <li class="my-1">
+                        <a href="/dashboard/schedule"
+                            class="flex items-center space-x-2 menu-item-hover 
+                               @if (request()->is('/dashboard/schedule')) bg-red-500 text-white @else hover:bg-red-500 @endif 
+                                  rounded-lg p-2">
+
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke-width="1.5" stroke="currentColor" class="size-6">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                            </svg>
+                            <span class="text-sm">Jadwal Pelatihan</span>
+                        </a>
+                    </li>
+
+
+                    <li class="my-1">
                         <a href="/dashboard/monitoring"
                             class="flex items-center space-x-2 menu-item-hover 
                                   @if (request()->is('dashboard/monitoring')) bg-red-500 text-white @else hover:bg-red-500 @endif 
@@ -276,7 +292,7 @@
 
         <!-- Version Info -->
         <div class="p-4 mt-auto">
-            <span class="text-sm">Version: Beta V1.4.0 </span>
+            <span class="text-sm">Version: Beta V1.4.1 </span>
         </div>
     </div>
 </div>

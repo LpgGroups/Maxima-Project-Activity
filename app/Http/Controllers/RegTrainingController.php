@@ -246,8 +246,6 @@ class RegTrainingController extends Controller
         ]);
         $prefix = strtolower(str_replace(' ', '_', $request->name)) ?: 'file';
         $uploaded_files = [];
-
-        // Helper upload
         $handleFile = function ($field, $folder) use ($request, $prefix, &$data, &$uploaded_files) {
             if ($request->hasFile($field)) {
                 $ext = $request->file($field)->getClientOriginalExtension();

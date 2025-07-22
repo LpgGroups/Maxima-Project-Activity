@@ -631,8 +631,11 @@
                             {{ $progress['percent'] }}%
                         </div>
                     </div>
-                </div>
 
+
+                </div>
+                <div id="time" class="border w-auto h-auto p-2 shadow-xl rounded-lg"
+                    data-training-date="{{ $training->date }}"></div>
             </div>
         </div>
 

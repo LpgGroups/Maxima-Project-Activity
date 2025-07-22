@@ -40,6 +40,7 @@
                     <option value="admin" {{ $users->role == 'admin' ? 'selected' : '' }}>Admin</option>
                     <option value="management" {{ $users->role == 'management' ? 'selected' : '' }}>Management</option>
                     <option value="dev" {{ $users->role == 'dev' ? 'selected' : '' }}>Developer</option>
+                    <option value="viewer" {{ $users->role == 'viewer' ? 'selected' : '' }}>Viewer</option>
                 </select>
             </div>
 
