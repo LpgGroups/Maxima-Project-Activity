@@ -64,7 +64,7 @@ class LoginController extends Controller
     public function userList()
     {
 
-        $users = User::whereIn('role', ['admin', 'user'])->get();
+        $users = User::whereIn('role', ['admin', 'user' ,'viewer'])->get();
         return view('dashboard.admin.actuser.tableactuser', [
             'title' => 'Management User',
             'users' => $users

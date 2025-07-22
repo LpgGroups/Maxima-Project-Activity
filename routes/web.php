@@ -40,7 +40,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/dashboard/admin/users', [LoginController::class, 'userList'])->name('users.index');
         Route::get('/dashboard/admin/users/{id}/edit', [LoginController::class, 'editUser'])->name('users.edit');
         Route::put('/dashboard/admin/users/{id}', [LoginController::class, 'updateUser'])->name('users.update');
-        Route::get('/dashboard/admin/schedule', [DashboardAdminController::class, 'schedule'])->name('dashboard.admin.shcedule');
 
         Route::delete('/dashboard/admin/users/{id}', [LoginController::class, 'destroyUser'])->name('users.destroy');
         // Rute untuk memperbarui data training menggunakan POST
@@ -79,7 +78,6 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/dashboard/user/training/form2/add/{form_id}/save', [RegTrainingController::class, 'saveForm2'])->name('dashboard.addparticipant.save');
 
         Route::post('/dashboard/user/training/form/save', [RegTrainingController::class, 'saveForm1'])->name('dashboard.form.save');
-        // Route::post('/dashboard/user/training/form2/save', [RegTrainingController::class, 'saveForm2'])->name('dashboard.form2.save');
         Route::post('/dashboard/user/training/form3/save', [RegTrainingController::class, 'saveForm3'])->name('dashboard.form3.save');
         Route::delete('/dashboard/user/training/form2/{id}', [RegTrainingController::class, 'destroyUser'])->name('dashboard.form2.destroy');
         Route::post('/dashboard/user/training/participant/delete/{id}', [RegTrainingController::class, 'deleteParticipant'])
@@ -122,6 +120,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/dashboard/viewers/detail/{id}', [DashboardViewersController::class, 'show'])
             ->name('dashboard.viewers.show');
     });
+
+    Route::get('/dashboard/schedule', [MonitoringController::class, 'schedule'])->name('dashboard.shcedule');
 
     Route::prefix('dashboard/monitoring')->middleware(['auth'])->group(function () {
         Route::get('/', [MonitoringController::class, 'index'])->name('monitoring.index');

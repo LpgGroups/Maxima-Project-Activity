@@ -569,6 +569,65 @@ function copyCode() {
     };
 }
 
+function timeDeadline() {
+    const timeD = document.getElementById("time");
+    const trainingDateStr = timeD?.dataset?.trainingDate;
+
+    if (timeD && trainingDateStr) {
+        const trainingDate = new Date(trainingDateStr);
+        const deadline = new Date(trainingDate);
+        deadline.setDate(trainingDate.getDate() - 5);
+
+        function showCountdown() {
+            const now = new Date();
+            const distance = deadline - now;
+
+            if (distance <= 0) {
+                timeD.textContent = "⛔ Pendaftaran sudah ditutup.";
+                timeD.classList.remove("hidden");
+
+                // Tambahkan style merah ketika waktu habis
+                timeD.classList.remove(
+                    "text-blue-600",
+                    "bg-white",
+                    "border-gray-300"
+                );
+                timeD.classList.add(
+                    "bg-red-100",
+                    "text-red-800",
+                    "border-red-400"
+                );
+
+                clearInterval(intervalId);
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor(
+                (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+            );
+            const minutes = Math.floor(
+                (distance % (1000 * 60 * 60)) / (1000 * 60)
+            );
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            timeD.textContent = `⏳ Waktu pendaftaran: ${days}h ${hours}j ${minutes}m ${seconds}d`;
+            timeD.classList.remove("hidden");
+
+            // Pastikan style countdown tetap rapi
+            timeD.classList.add("text-blue-600", "bg-white", "border-gray-300");
+            timeD.classList.remove(
+                "text-red-800",
+                "bg-red-100",
+                "border-red-400"
+            );
+        }
+
+        showCountdown();
+        const intervalId = setInterval(showCountdown, 1000);
+    }
+}
+
 // ============ INIT ================
 $(document).ready(function () {
     datePicker(); // Inisialisasi date picker
@@ -589,7 +648,7 @@ $(document).ready(function () {
         const id = $(this).data("id");
         deleteParticipant(id);
     });
-
+    timeDeadline();
     addParticipants();
     $(document).on("click", ".toggle-nik-btn", function () {
         toggleNIK(this);

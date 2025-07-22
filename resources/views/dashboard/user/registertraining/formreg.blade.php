@@ -1,6 +1,6 @@
 @extends('dashboard.layouts.dashboardmain')
 @section('container')
-    
+
     <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center w-full gap-2">
         <p class="text-center sm:text-left text-base sm:text-[15px] font-semibold text-[#9694FF]">
             {{ config('activity_map.' . $training->activity) ?? $training->activity }}
@@ -150,7 +150,7 @@
                         <div class="mb-4">
                             <p class="text-gray-600 text-base font-bold">Jenis Kegiatan</p>
                             <p id="activity" class="text-[15px] text-gray-800 font-medium">
-                                {{ $activityMap[$training->activity] ?? $training->activity }}
+                                {{ config('activity_map.' . $training->activity) ?? $training->activity }}
                             </p>
                         </div>
 
