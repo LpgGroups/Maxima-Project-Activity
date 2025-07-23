@@ -163,8 +163,15 @@ class RegTrainingController extends Controller
 
                 $admins = User::where('role', 'admin')->get();
                 foreach ($admins as $admin) {
-                    $admin->notify(new TrainingUpdatedNotification($trainingData, 'user', 'Daftar Pelatihan',
-                    '','','','user'));
+                    $admin->notify(new TrainingUpdatedNotification(
+                        $trainingData,
+                        'user',
+                        'Daftar Pelatihan',
+                        '',
+                        '',
+                        '',
+                        'user'
+                    ));
                 }
             } else {
                 RegTraining::create([
@@ -244,7 +251,11 @@ class RegTrainingController extends Controller
             'reason',
             'form_id'
         ]);
-        $prefix = strtolower(str_replace(' ', '_', $request->name)) ?: 'file';
+        $noLetter = str_replace([' ', '/', '\\'], '-', $training->no_letter ?? 'no-surat');
+        $nameParticipant = Str::slug($request->name ?? 'peserta', '_');
+        $nameCompany = Str::slug($training->name_company ?? 'perusahaan', '_');
+
+        $prefix = "{$noLetter}_{$nameParticipant}_{$nameCompany}";
         $uploaded_files = [];
         $handleFile = function ($field, $folder) use ($request, $prefix, &$data, &$uploaded_files) {
             if ($request->hasFile($field)) {
@@ -306,8 +317,15 @@ class RegTrainingController extends Controller
         // Notifikasi admin (optional)
         $admins = User::where('role', 'admin')->get();
         foreach ($admins as $admin) {
-            $admin->notify(new TrainingUpdatedNotification($training, 'user', 'Peserta Terdaftar',
-            '','','','user'));
+            $admin->notify(new TrainingUpdatedNotification(
+                $training,
+                'user',
+                'Peserta Terdaftar',
+                '',
+                '',
+                '',
+                'user'
+            ));
         }
         $training->touch();
 
@@ -382,8 +400,15 @@ class RegTrainingController extends Controller
         // Notifikasi ke admin
         $admins = User::where('role', 'admin')->get();
         foreach ($admins as $admin) {
-            $admin->notify(new TrainingUpdatedNotification($training, 'user', 'Upload Persetujuan / Bukti Pembayaran',
-            '','','','user'));
+            $admin->notify(new TrainingUpdatedNotification(
+                $training,
+                'user',
+                'Upload Persetujuan / Bukti Pembayaran',
+                '',
+                '',
+                '',
+                'user'
+            ));
         }
 
         return response()->json(['message' => 'File berhasil diperbarui!']);
