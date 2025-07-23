@@ -628,7 +628,11 @@ function timeDeadline() {
 
 // ============ INIT ================
 $(document).ready(function () {
-    timeDeadline();
+    try {
+        timeDeadline();
+    } catch (e) {
+        console.error("Error di timeDeadline:", e);
+    }
     datePicker(); // Inisialisasi date picker
     updateEndDate(); // Hitung end date saat halaman dimuat
     setupConfirmationCheckbox(); // Aktifkan/Nonaktifkan tombol submit
