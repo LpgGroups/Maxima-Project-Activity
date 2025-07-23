@@ -174,7 +174,7 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1" for="ijazah">Ijazah (PDF)<span
                             class="text-red-500">*</span></label>
                     <div class="flex items-center gap-2">
-                        <input type="file" name="ijazah" id="ijazah" accept="application/pdf,image/*"
+                        <input type="file" name="ijazah" id="ijazah" accept="application/pdf"
                             class="block w-full text-sm text-gray-600 border border-gray-300 rounded cursor-pointer" />
                         <span class="checkmark hidden">
                             <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor"
@@ -194,7 +194,7 @@
                         Kerja (PDF)<span class="text-red-500">*</span></label>
                     <div class="flex items-center gap-2">
                         <input type="file" name="letter_employee" id="letter_employee"
-                            accept="application/pdf,image/*"
+                            accept="application/pdf"
                             class="block w-full text-sm text-gray-600 border border-gray-300 rounded cursor-pointer" />
                         <span class="checkmark hidden">
                             <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor"
@@ -221,7 +221,7 @@
                         (PDF)<span class="text-red-500">*</span></label>
                     <div class="flex items-center gap-2">
                         <input type="file" name="letter_statement" id="letter_statement"
-                            accept="application/pdf,image/*"
+                            accept="application/pdf"
                             class="block w-full text-sm text-gray-600 border border-gray-300 rounded cursor-pointer" />
                         <span class="checkmark hidden">
                             <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor"
@@ -248,7 +248,7 @@
                         Pendaftaran (PDF)<span class="text-grey-500">(opsional)</span></label>
                     <div class="flex items-center gap-2">
                         <input type="file" name="form_registration" id="form_registration"
-                            accept="application/pdf,image/*"
+                            accept="application/pdf"
                             class="block w-full text-sm text-gray-600 border border-gray-300 rounded cursor-pointer" />
                         <span class="checkmark hidden">
                             <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor"
@@ -274,7 +274,7 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1" for="letter_health">Surat Keterangan Sehat
                         (PDF)<span class="text-grey-500">(opsional)</span></label>
                     <div class="flex items-center gap-2">
-                        <input type="file" name="letter_health" id="letter_health" accept="application/pdf,image/*"
+                        <input type="file" name="letter_health" id="letter_health" accept="application/pdf"
                             class="block w-full text-sm text-gray-600 border border-gray-300 rounded cursor-pointer" />
                         <span class="checkmark hidden">
                             <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor"
@@ -292,10 +292,10 @@
                 @if ($training->activity == 'AK3U')
                     {{-- CV --}}
                     <div class="relative file-upload-group mb-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-1" for="cv">CV (PDF/DOC/DOCX)<span
+                        <label class="block text-sm font-medium text-gray-700 mb-1" for="cv">CV (PDF)<span
                                 class="text-grey-500">(opsional)</span></label>
                         <div class="flex items-center gap-2">
-                            <input type="file" name="cv" id="cv" accept="application/pdf,.doc,.docx"
+                            <input type="file" name="cv" id="cv" accept="application/pdf"
                                 class="block w-full text-sm text-gray-600 border border-gray-300 rounded cursor-pointer" />
                             <span class="checkmark hidden">
                                 <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor"
