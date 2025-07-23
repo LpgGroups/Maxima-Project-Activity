@@ -586,7 +586,6 @@ function timeDeadline() {
                 timeD.textContent = "⛔ Pendaftaran sudah ditutup.";
                 timeD.classList.remove("hidden");
 
-                // Tambahkan style merah ketika waktu habis
                 timeD.classList.remove(
                     "text-blue-600",
                     "bg-white",
@@ -614,7 +613,6 @@ function timeDeadline() {
             timeD.textContent = `⏳ Waktu pendaftaran: ${days}h ${hours}j ${minutes}m ${seconds}d`;
             timeD.classList.remove("hidden");
 
-            // Pastikan style countdown tetap rapi
             timeD.classList.add("text-blue-600", "bg-white", "border-gray-300");
             timeD.classList.remove(
                 "text-red-800",
