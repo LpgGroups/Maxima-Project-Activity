@@ -578,6 +578,8 @@ function timeDeadline() {
         const deadline = new Date(trainingDate);
         deadline.setDate(trainingDate.getDate() - 5);
 
+        let intervalId; // deklarasi dulu
+
         function showCountdown() {
             const now = new Date();
             const distance = deadline - now;
@@ -597,7 +599,7 @@ function timeDeadline() {
                     "border-red-400"
                 );
 
-                clearInterval(intervalId);
+                clearInterval(intervalId); // ini sudah aman sekarang
                 return;
             }
 
@@ -621,8 +623,8 @@ function timeDeadline() {
             );
         }
 
+        intervalId = setInterval(showCountdown, 1000);
         showCountdown();
-        const intervalId = setInterval(showCountdown, 1000);
     }
 }
 
