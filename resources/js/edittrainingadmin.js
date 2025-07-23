@@ -534,11 +534,11 @@ function toggleNIK(button) {
 
     if (isHidden) {
         span.text(full);
-        $(button).text("🚫"); // ikon untuk sembunyikan
+        $(button).text("🚫");
     } else {
         const masked = "*".repeat(full.length - 4) + full.slice(-4);
         span.text(masked);
-        $(button).text("👁️"); // ikon untuk tampilkan
+        $(button).text("👁️");
     }
 }
 
