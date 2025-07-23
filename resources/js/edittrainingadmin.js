@@ -650,9 +650,9 @@ $(document).ready(function () {
     });
     timeDeadline();
     addParticipants();
-    $(document).on("click", ".toggle-nik-btn", function () {
-        toggleNIK(this);
-    });
+    // $(document).on("click", ".toggle-nik-btn", function () {
+    //     toggleNIK(this);
+    // });
 
     copyCode();
 });
