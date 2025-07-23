@@ -538,7 +538,7 @@ function toggleNIK(button) {
     } else {
         const masked = "*".repeat(full.length - 4) + full.slice(-4);
         span.text(masked);
-        $(button).text("👁️");
+        $(button).text("👁️"); // ikon untuk tampilkan
     }
 }
 
