@@ -62,18 +62,21 @@ class DashboardUserController extends Controller
                 return response()->json(['success' => false, 'message' => 'User not authenticated.']);
             }
 
-            // Map activity ke durasi (hari)
-            $durationMap = [
-                'TKPK1' => 6,
-                'TKPK2' => 6,
-                'TKBT1' => 4,
-                'TKBT2' => 4,
-                'BE' => 2,
-                'AK3U' => 12,
-                'P3K' => 3
-            ];
+            $activity = $validated['activity'];
+            $place = $validated['place'];
 
-            $duration = $durationMap[$validated['activity']] ?? 1; // default 1 hari
+            $duration = match ($activity) {
+                'TKPK1', 'TKPK2' => 6,
+                'TKBT1', 'TKBT2' => 4,
+                'AK3U' => 12,
+                'P3K' => 3,
+                'BE' => match ($place) {
+                    'On-Site' => 3,
+                    'Online' => 1,
+                    default => 3,
+                },
+                default => 1
+            };
             $startDate = \Carbon\Carbon::parse($validated['date']);
             $endDate = $startDate->copy()->addDays($duration - 1); // -1 agar 1-6 itu = 6 hari
 
@@ -162,7 +165,11 @@ class DashboardUserController extends Controller
             // Format tanggal
             $start = \Carbon\Carbon::parse($training->date)->locale('id');
             $end = \Carbon\Carbon::parse($training->date_end)->locale('id');
-            if ($start->year != $end->year) {
+
+            if ($start->equalTo($end)) {
+                // Tanggal sama persis (1 hari)
+                $date = $start->translatedFormat('d F Y');
+            } elseif ($start->year != $end->year) {
                 $date = $start->translatedFormat('d F Y') . ' - ' . $end->translatedFormat('d F Y');
             } elseif ($start->month == $end->month) {
                 $date = $start->translatedFormat('d F') . ' - ' . $end->translatedFormat('d F Y');

@@ -266,11 +266,8 @@ function checkSubmitBtnDeadline() {
                 "bg-gray-400 cursor-not-allowed"
             );
             btn.text("Pendaftaran Ditutup");
-
-            // hilangkan tooltip kalau ada
             parent.find(".tooltip-btn").remove();
         } else {
-            // buat tooltip, kalau sudah ada jangan duplikat
             if (parent.find(".tooltip-btn").length === 0) {
                 const tooltip = $(`
                     <div class="tooltip-btn absolute bg-gray-800 text-white text-xs px-3 py-2 rounded shadow-md flex justify-between items-start gap-2 w-max max-w-[250px]">

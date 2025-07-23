@@ -47,7 +47,7 @@ class MonitoringController extends Controller
         return view('dashboard.monitoring.index', [
             'title' => 'Monitoring',
             'trainings' => $trainings,
-          
+
         ]);
     }
     public function show($id)
@@ -69,6 +69,21 @@ class MonitoringController extends Controller
             'training' => $training,
             'notifications' => $notifications,
             'title' => 'Monitoring Pelatihan',
+        ]);
+    }
+    public function schedule()
+    {
+        $trainings = RegTraining::withCount('participants')
+            ->whereNotNull('date')
+            ->orderByDesc('date') 
+            ->get()
+            ->groupBy(function ($item) {
+                return \Carbon\Carbon::parse($item->date)->format('Y-m-d');
+            });
+
+        return view('dashboard.admin.trainingschedule.schedule', [
+            'title' => 'Jadwal Pelatihan',
+            'trainingsByDate' => $trainings,
         ]);
     }
 }
