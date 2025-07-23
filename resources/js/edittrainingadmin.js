@@ -534,7 +534,7 @@ function toggleNIK(button) {
 
     if (isHidden) {
         span.text(full);
-        $(button).text("🚫");
+        $(button).text("🚫"); // ikon untuk sembunyikan
     } else {
         const masked = "*".repeat(full.length - 4) + full.slice(-4);
         span.text(masked);
@@ -578,6 +578,8 @@ function timeDeadline() {
         const deadline = new Date(trainingDate);
         deadline.setDate(trainingDate.getDate() - 5);
 
+        let intervalId; // deklarasi dulu
+
         function showCountdown() {
             const now = new Date();
             const distance = deadline - now;
@@ -586,7 +588,6 @@ function timeDeadline() {
                 timeD.textContent = "⛔ Pendaftaran sudah ditutup.";
                 timeD.classList.remove("hidden");
 
-                // Tambahkan style merah ketika waktu habis
                 timeD.classList.remove(
                     "text-blue-600",
                     "bg-white",
@@ -598,7 +599,7 @@ function timeDeadline() {
                     "border-red-400"
                 );
 
-                clearInterval(intervalId);
+                clearInterval(intervalId); // ini sudah aman sekarang
                 return;
             }
 
@@ -614,7 +615,6 @@ function timeDeadline() {
             timeD.textContent = `⏳ Waktu pendaftaran: ${days}h ${hours}j ${minutes}m ${seconds}d`;
             timeD.classList.remove("hidden");
 
-            // Pastikan style countdown tetap rapi
             timeD.classList.add("text-blue-600", "bg-white", "border-gray-300");
             timeD.classList.remove(
                 "text-red-800",
@@ -623,13 +623,18 @@ function timeDeadline() {
             );
         }
 
+        intervalId = setInterval(showCountdown, 1000);
         showCountdown();
-        const intervalId = setInterval(showCountdown, 1000);
     }
 }
 
 // ============ INIT ================
 $(document).ready(function () {
+    try {
+        timeDeadline();
+    } catch (e) {
+        console.error("Error di timeDeadline:", e);
+    }
     datePicker(); // Inisialisasi date picker
     updateEndDate(); // Hitung end date saat halaman dimuat
     setupConfirmationCheckbox(); // Aktifkan/Nonaktifkan tombol submit
@@ -648,11 +653,11 @@ $(document).ready(function () {
         const id = $(this).data("id");
         deleteParticipant(id);
     });
-    timeDeadline();
+
     addParticipants();
-    // $(document).on("click", ".toggle-nik-btn", function () {
-    //     toggleNIK(this);
-    // });
+    $(document).on("click", ".toggle-nik-btn", function () {
+        toggleNIK(this);
+    });
 
     copyCode();
 });
