@@ -292,13 +292,13 @@
                                     <td class="max-w-[100px]">
                                         @php
                                             $nik = $participant->nik;
-                                            $repeat = max(0, strlen($nik) - 4);
-                                            $hiddenNik = str_repeat('*', $repeat) . substr($nik, -4);
+                                            // $repeat = max(0, strlen($nik) - 4);
+                                            // $hiddenNik = str_repeat('*', $repeat) . substr($nik, -4);
                                         @endphp
 
                                         <div class="flex items-center">
                                             <span class="nik-text"
-                                                data-full="{{ $nik }}">{{ $hiddenNik }}</span>
+                                                data-full="{{ $nik }}">{{ $nik }}</span>
                                             <button type="button"
                                                 class="toggle-nik-btn text-blue-500 text-xs hover:underline">
                                                 👁️
