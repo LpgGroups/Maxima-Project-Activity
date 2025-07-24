@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CodeTrainingController;
 use App\Http\Controllers\DashboardAdminController;
 use App\Http\Controllers\DashboardDevController;
 use App\Http\Controllers\DashboardManagementController;
@@ -30,7 +31,8 @@ Route::get('/forgot-password', [ForgotPasswordController::class, 'showForm'])->n
 Route::post('/forgot-password', [ForgotPasswordController::class, 'sendReset'])->name('password.email');
 Route::get('/reset-password/{token}', [ForgotPasswordController::class, 'showResetForm'])->name('password.reset');
 Route::post('/reset-password', [ForgotPasswordController::class, 'reset'])->name('password.update');
-
+Route::get('/code/training', [CodeTrainingController::class, 'index'])->name('code.index');
+Route::get('/code/training/{id}', [CodeTrainingController::class, 'show'])->name('code.show');
 Route::middleware(['auth'])->group(function () {
     Route::middleware([UserAccess::class . ':admin'])->group(function () {
         Route::get('/admin/training/live', [DashboardAdminController::class, 'getLiveTraining'])->name('admin.training.live');
