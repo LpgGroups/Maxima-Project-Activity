@@ -109,20 +109,25 @@
     @else
         {{-- Carousel Ads --}}
         @if ($carrousel->count())
-            <div class="w-full px-4 md:px-8 mt-10">
+            <div class="w-full max-w-screen-xl mx-auto px-4 md:px-8 mt-10">
                 <div class="relative overflow-hidden rounded-lg shadow-md">
                     <div class="carousel flex transition-all duration-700 ease-in-out"
                         style="width: {{ 100 * $carrousel->count() }}%;">
 
                         @foreach ($carrousel as $ad)
-                            <div class="w-full flex-shrink-0 relative"> {{-- pastikan setiap slide relative --}}
-                                <img src="{{ asset('storage/' . $ad->image) }}" alt="{{ $ad->title }}"
-                                    class="w-full h-64 md:h-80 lg:h-[450px] object-cover rounded-lg">
+                            <div class="w-full flex-shrink-0 relative">
+                                <div class="w-full aspect-[16/9]">
+                                    <img src="{{ asset('storage/' . $ad->image) }}" alt="{{ $ad->title }}"
+                                        class="w-full h-full object-contain rounded-lg bg-black">
+                                    {{-- bg-black biar garis putih terlihat bersih --}}
+                                </div>
 
-                                <div class="absolute bottom-0 left-0 bg-black bg-opacity-50 text-white p-4 w-full">
-                                    <h3 class="text-lg font-semibold">{{ $ad->title }}</h3>
+                                <div
+                                    class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent text-white p-4 rounded-b-lg">
+                                    <h3 class="text-base sm:text-lg md:text-xl font-semibold">{{ $ad->title }}</h3>
+
                                     @if ($ad->summary)
-                                        <p class="text-sm">{{ $ad->summary }}</p>
+                                        <p class="text-xs sm:text-sm md:text-base mt-1">{{ $ad->summary }}</p>
                                     @endif
                                 </div>
                             </div>
@@ -141,8 +146,9 @@
                 setInterval(() => {
                     currentSlide = (currentSlide + 1) % totalSlides;
                     carousel.style.transform = `translateX(-${currentSlide * 100}%)`;
-                }, 10000);
+                }, 7000);
             </script>
         @endif
+
     @endif
 @endsection
