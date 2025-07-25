@@ -9,6 +9,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Middleware\UserAccess;
 use App\Http\Controllers\DashboardUserController;
 use App\Http\Controllers\DashboardViewersController;
+
 use App\Http\Controllers\FileDownloadController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\MonitoringController;
@@ -16,6 +17,7 @@ use App\Http\Controllers\RegTrainingController;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\carrousel\CarrouselController;
 
 Route::get('/', [LoginController::class, 'index'])->name('login.index');
 Route::post('/', [LoginController::class, 'authenticate'])->name('login');
@@ -112,7 +114,14 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/dashboard/developer/account/{id}', [DashboardDevController::class, 'updateUser'])
             ->name('dashboard.dev.update');
 
-
+        Route::prefix('dashboard/dev/carrousel')->name('carrousel.')->group(function () {
+            Route::get('/', [CarrouselController::class, 'index'])->name('index');
+            Route::get('/create', [CarrouselController::class, 'create'])->name('create');
+            Route::post('/', [CarrouselController::class, 'store'])->name('store');
+            Route::get('/{id}/edit', [CarrouselController::class, 'edit'])->name('edit');
+            Route::put('/{id}', [CarrouselController::class, 'update'])->name('update');
+            Route::delete('/{id}', [CarrouselController::class, 'destroy'])->name('destroy');
+        });
         Route::delete('/dashboard/developer/account/{id}', [DashboardDevController::class, 'destroyUser'])->name('user.destroy');
     });
 

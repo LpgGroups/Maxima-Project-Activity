@@ -18,15 +18,8 @@
                 <p class="text-sm text-gray-600">Atur jadwal dan materi pelatihan.</p>
             </a>
 
-            <!-- Manage Monitoring -->
-            <a href="#"
-                class="min-w-[250px] bg-white shadow-lg rounded-lg p-6 text-center hover:shadow-xl hover:bg-gray-100 transition duration-300">
-                <h3 class="text-lg font-semibold mb-2">Manage Monitoring</h3>
-                <p class="text-sm text-gray-600">Pantau aktivitas dan performa.</p>
-            </a>
-
             <!-- Manage Poster -->
-            <a href="#"
+            <a href="{{ route('carrousel.index') }}"
                 class="min-w-[250px] bg-white shadow-lg rounded-lg p-6 text-center hover:shadow-xl hover:bg-gray-100 transition duration-300">
                 <h3 class="text-lg font-semibold mb-2">Manage Poster</h3>
                 <p class="text-sm text-gray-600">Unggah dan kelola poster informasi.</p>
