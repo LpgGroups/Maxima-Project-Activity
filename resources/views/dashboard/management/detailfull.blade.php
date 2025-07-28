@@ -112,7 +112,8 @@
                                 <img src="{{ asset('img/icon_pdf_mou.png') }}" alt="Dokumen" class="w-12 h-12">
                                 <div class="flex-1">
                                     <div class="font-semibold text-gray-800">Surat Pelaksanaan</div>
-                                    <a href="{{ asset('storage/' . $file->letter_implementation) }}" target="_blank"
+                                    <a href="{{ route('download.confidential', ['type' => 'letter-implementation', 'file' => basename($file->letter_implementation)]) }}"
+                                        target="_blank"
                                         class="inline-block mt-1 px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition">
                                         Download
                                     </a>

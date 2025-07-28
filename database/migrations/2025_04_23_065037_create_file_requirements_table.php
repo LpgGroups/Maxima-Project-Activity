@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('file_approval')->nullable();
             $table->string('proof_payment')->nullable();
             $table->string('budget_plan')->nullable();
+            $table->string('file_nobatch')->nullable();
             $table->string('letter_implementation')->nullable();
             $table->unsignedBigInteger('file_id')->nullable();
             $table->timestamps();
