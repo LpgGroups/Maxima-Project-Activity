@@ -23,6 +23,16 @@
             </div>
 
             <div class="mb-4">
+                <label for="url" class="block text-sm font-medium">URL (opsional)</label>
+                <input type="url" name="url" id="url"
+                    class="mt-1 block w-full rounded border-gray-300 shadow-sm focus:ring focus:ring-blue-200"
+                    value="{{ old('url') }}">
+                @error('url')
+                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div class="mb-4">
                 <label for="image" class="block text-sm font-medium">Gambar</label>
                 <input type="file" name="image" id="image"
                     class="mt-1 block w-full border border-gray-300 rounded p-1" required>

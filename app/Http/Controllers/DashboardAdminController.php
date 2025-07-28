@@ -55,7 +55,27 @@ class DashboardAdminController extends Controller
                     });
             });
         }
-
+        if ($request->filled('isprogress')) {
+            if ($request->isprogress == 'proses') {
+                $query->where(function ($q) {
+                    $q->where('isprogress', '<', 5)
+                        ->orWhere(function ($q2) {
+                            $q2->where('isprogress', 5)
+                                ->where('isfinish', 0);
+                        });
+                });
+            } elseif ($request->isprogress == 'selesai') {
+                $query->where('isprogress', 5)
+                    ->where('isfinish', 1);
+            } elseif ($request->isprogress == 'ditolak') {
+                $query->where('isprogress', 5)
+                    ->where('isfinish', 2);
+            } elseif ($request->isprogress == 'menunggu') {
+                $query->where(function ($q) {
+                    $q->where('isprogress', '>', 4)->where('isfinish', 0);
+                });
+            }
+        }
         if ($request->filled('start_date') && $request->filled('end_date')) {
             $query->whereBetween('date', [$request->start_date, $request->end_date]);
         }
@@ -357,7 +377,7 @@ class DashboardAdminController extends Controller
         return response()->json(['success' => true, 'message' => 'Progress berhasil diperbarui.']);
     }
 
-    
+
 
     public function destroyParticipant($id)
     {
