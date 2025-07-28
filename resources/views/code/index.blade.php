@@ -3,22 +3,25 @@
 @section('container')
     <div class="px-4 md:px-8 mb-4 w-full m-4">
         <div class="w-full md:w-2/3 mx-auto">
-            <form method="GET" action="{{ route('code.index') }}" class="relative w-full">
+            <form method="GET" action="{{ route('code.index') }}" class="w-full">
                 <input type="text" name="search" placeholder="Masukkan kode training lengkap..."
                     value="{{ request('search') }}"
-                    class="w-full pl-4 pr-10 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300" />
+                    class="w-full pl-4 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300" />
 
-                <!-- Tombol submit -->
-                <button type="submit" class="absolute inset-y-0 right-3 flex items-center">
-                    <svg class="w-5 h-5 text-gray-400 hover:text-gray-600" fill="none" stroke="currentColor"
-                        stroke-width="2" viewBox="0 0 24 24">
+                <!-- Tombol submit di bawah input -->
+                <button type="submit"
+                    class="mt-3 w-[200px] flex items-center justify-center gap-2 bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition font-semibold mx-auto">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2"
+                        viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 103.75 3.75a7.5 7.5 0 0012.9 12.9z" />
                     </svg>
+                    Cari
                 </button>
             </form>
         </div>
     </div>
+
 
 
     @php
@@ -109,6 +112,7 @@
     @else
         @if ($carrousel->count())
             <div class="w-full px-4 md:px-8 mt-10 relative max-w-[1139px] mx-auto">
+                <p class="text-24 font-bold bg-red-500 w-[200px] rounded-lg">Seputar Informasi Maxima </p>
                 <div class="overflow-hidden rounded-lg shadow-lg aspect-[1139/450] relative">
                     <div id="carousel" class="flex transition-transform duration-700 ease-in-out h-full"
                         style="width: {{ 100 * $carrousel->count() }}%;">
