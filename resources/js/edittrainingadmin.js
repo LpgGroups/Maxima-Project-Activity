@@ -495,22 +495,6 @@ function showWarningSwal(title = "Peringatan", text = "Ada yang salah.") {
     });
 }
 
-function initStatusReasonWatcher() {
-    $(".participant-status").on("change", function () {
-        var id = $(this).data("id");
-        var val = $(this).val();
-        var reasonInput = $("#reason-" + id);
-
-        if (val == "2") {
-            reasonInput.prop("disabled", false).focus();
-            reasonInput.addClass("border-red-500");
-        } else {
-            reasonInput.prop("disabled", true).removeClass("border-red-500");
-            reasonInput.val("");
-        }
-    });
-}
-
 function validateParticipantsBeforeSave() {
     var valid = true;
     $(".participant-status").each(function () {
@@ -628,6 +612,37 @@ function timeDeadline() {
     }
 }
 
+function initStatusReasonWatcher() {
+    // Saat halaman dimuat, set awal reason input sesuai status
+    $("select[name^='participants']").each(function () {
+        updateReasonInput($(this));
+    });
+
+    // Handler perubahan status
+    $(document).on("change", "select[name^='participants']", function () {
+        updateReasonInput($(this));
+    });
+
+    // Fungsi helper
+    function updateReasonInput($select) {
+        // Ambil status (value select)
+        const status = $select.val();
+        // Ambil input reason di baris yang sama
+        // Bisa pakai closest('tr').find('input[name^=participants]')
+        const $reasonInput = $select
+            .closest("tr")
+            .find("input[name^='participants']");
+
+        if (status == "2") {
+            // 2 = Rejected
+            $reasonInput.prop("disabled", false);
+        } else {
+            $reasonInput.val(""); // Kosongkan reason kalau bukan rejected
+            $reasonInput.prop("disabled", true);
+        }
+    }
+}
+
 // ============ INIT ================
 $(document).ready(function () {
     try {
@@ -635,6 +650,7 @@ $(document).ready(function () {
     } catch (e) {
         console.error("Error di timeDeadline:", e);
     }
+    initStatusReasonWatcher();
     datePicker(); // Inisialisasi date picker
     updateEndDate(); // Hitung end date saat halaman dimuat
     setupConfirmationCheckbox(); // Aktifkan/Nonaktifkan tombol submit
@@ -643,7 +659,7 @@ $(document).ready(function () {
     $("#submitParticipantBtn").on("click", updateForm2User);
     $("#submitFinish").on("click", updateTrainingFinish);
     initShowDetailParticipant();
-    initStatusReasonWatcher();
+   
     $("#uploadFileForAdminBtn").on("click", function (e) {
         e.preventDefault();
         uploadFileForAdmin(); // baru dipanggil waktu tombol diklik

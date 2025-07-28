@@ -33,6 +33,7 @@ class CarrouselController extends Controller
             'summary' => 'nullable|string',
             'image' => 'required|image|max:2048',
             'is_active' => 'nullable|boolean',
+            'url' => 'nullable|url',
         ]);
         $maxOrder = CarrouselAds::max('order') ?? 0;
         $newOrder = $maxOrder + 1;
@@ -44,6 +45,7 @@ class CarrouselController extends Controller
             'image' => $imagePath,
             'order' => $newOrder,
             'is_active' => $request->is_active ?? true,
+            'url' => $request->url,
         ]);
 
         return redirect()->route('carrousel.index')->with('success', 'Carousel berhasil ditambahkan.');
@@ -69,6 +71,7 @@ class CarrouselController extends Controller
             'image' => 'nullable|image|max:2048',
             'order' => 'nullable|integer',
             'is_active' => 'nullable|boolean',
+            'url' => 'nullable|url',
         ]);
 
         $data = [
@@ -76,6 +79,7 @@ class CarrouselController extends Controller
             'summary' => $request->summary,
             'order' => $request->order ?? 0,
             'is_active' => $request->is_active ?? true,
+            'url' => $request->url,
         ];
 
         if ($request->hasFile('image')) {

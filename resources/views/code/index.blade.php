@@ -3,22 +3,25 @@
 @section('container')
     <div class="px-4 md:px-8 mb-4 w-full m-4">
         <div class="w-full md:w-2/3 mx-auto">
-            <form method="GET" action="{{ route('code.index') }}" class="relative w-full">
+            <form method="GET" action="{{ route('code.index') }}" class="w-full">
                 <input type="text" name="search" placeholder="Masukkan kode training lengkap..."
                     value="{{ request('search') }}"
-                    class="w-full pl-4 pr-10 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300" />
+                    class="w-full pl-4 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300" />
 
-                <!-- Tombol submit -->
-                <button type="submit" class="absolute inset-y-0 right-3 flex items-center">
-                    <svg class="w-5 h-5 text-gray-400 hover:text-gray-600" fill="none" stroke="currentColor"
-                        stroke-width="2" viewBox="0 0 24 24">
+                <!-- Tombol submit di bawah input -->
+                <button type="submit"
+                    class="mt-3 w-[200px] flex items-center justify-center gap-2 bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition font-semibold mx-auto">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2"
+                        viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 103.75 3.75a7.5 7.5 0 0012.9 12.9z" />
                     </svg>
+                    Cari
                 </button>
             </form>
         </div>
     </div>
+
 
 
     @php
@@ -107,48 +110,90 @@
             <p class="text-gray-500 mt-4 m-8 mx-auto">Tidak ada hasil untuk "<strong>{{ request('search') }}</strong>".</p>
         @endif
     @else
-        {{-- Carousel Ads --}}
         @if ($carrousel->count())
-            <div class="w-full max-w-screen-xl mx-auto px-4 md:px-8 mt-10">
-                <div class="relative overflow-hidden rounded-lg shadow-md">
-                    <div class="carousel flex transition-all duration-700 ease-in-out"
+            <div class="w-full px-4 md:px-8 mt-10 relative max-w-[1139px] mx-auto">
+                <p class="text-24 font-bold bg-red-500 w-[200px] rounded-lg">Seputar Informasi Maxima </p>
+                <div class="overflow-hidden rounded-lg shadow-lg aspect-[1139/450] relative">
+                    <div id="carousel" class="flex transition-transform duration-700 ease-in-out h-full"
                         style="width: {{ 100 * $carrousel->count() }}%;">
-
                         @foreach ($carrousel as $ad)
-                            <div class="w-full flex-shrink-0 relative">
-                                <div class="w-full aspect-[16/9]">
+                            @if ($ad->url)
+                                <a href="{{ $ad->url }}" target="_blank" rel="noopener"
+                                    class="block h-full w-full relative group"
+                                    style="width:{{ 100 / $carrousel->count() }}%">
                                     <img src="{{ asset('storage/' . $ad->image) }}" alt="{{ $ad->title }}"
-                                        class="w-full h-full object-contain rounded-lg bg-black">
-                                    {{-- bg-black biar garis putih terlihat bersih --}}
-                                </div>
+                                        class="w-full h-full {{ $ad->is_small ? 'object-contain p-4' : 'object-cover' }} rounded-lg transition-opacity group-hover:opacity-80" />
 
-                                <div
-                                    class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent text-white p-4 rounded-b-lg">
-                                    <h3 class="text-base sm:text-lg md:text-xl font-semibold">{{ $ad->title }}</h3>
+                                    <div
+                                        class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent text-white p-4 rounded-b-lg">
+                                        <h3 class="text-base sm:text-lg md:text-xl font-semibold">{{ $ad->title }}</h3>
+                                        @if ($ad->summary)
+                                            <p class="text-xs sm:text-sm md:text-base mt-1">{{ $ad->summary }}</p>
+                                        @endif
+                                    </div>
+                                </a>
+                            @else
+                                <div class="h-full w-full relative" style="width:{{ 100 / $carrousel->count() }}%">
+                                    <img src="{{ asset('storage/' . $ad->image) }}" alt="{{ $ad->title }}"
+                                        class="w-full h-full {{ $ad->is_small ? 'object-contain p-4' : 'object-cover' }} rounded-lg" />
 
-                                    @if ($ad->summary)
-                                        <p class="text-xs sm:text-sm md:text-base mt-1">{{ $ad->summary }}</p>
-                                    @endif
+                                    <div
+                                        class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent text-white p-4 rounded-b-lg">
+                                        <h3 class="text-base sm:text-lg md:text-xl font-semibold">{{ $ad->title }}</h3>
+                                        @if ($ad->summary)
+                                            <p class="text-xs sm:text-sm md:text-base mt-1">{{ $ad->summary }}</p>
+                                        @endif
+                                    </div>
                                 </div>
-                            </div>
+                            @endif
                         @endforeach
-
                     </div>
+
+                    {{-- Navigasi --}}
+                    <button id="prevBtn"
+                        class="absolute top-1/2 left-2 -translate-y-1/2 bg-black/50 hover:bg-black text-white rounded-full w-8 h-8 flex items-center justify-center z-10">
+                        &#10094;
+                    </button>
+                    <button id="nextBtn"
+                        class="absolute top-1/2 right-2 -translate-y-1/2 bg-black/50 hover:bg-black text-white rounded-full w-8 h-8 flex items-center justify-center z-10">
+                        &#10095;
+                    </button>
                 </div>
             </div>
 
-            {{-- Auto slide script --}}
+            {{-- JS --}}
             <script>
-                let currentSlide = 0;
-                const carousel = document.querySelector('.carousel');
-                const totalSlides = {{ $carrousel->count() }};
+                document.addEventListener('DOMContentLoaded', () => {
+                    let currentSlide = 0;
+                    const carousel = document.getElementById('carousel');
+                    const totalSlides = {{ $carrousel->count() }};
+                    const prevBtn = document.getElementById('prevBtn');
+                    const nextBtn = document.getElementById('nextBtn');
 
-                setInterval(() => {
-                    currentSlide = (currentSlide + 1) % totalSlides;
-                    carousel.style.transform = `translateX(-${currentSlide * 100}%)`;
-                }, 7000);
+                    function updateSlide() {
+                        carousel.style.transform = `translateX(-${currentSlide * (100 / totalSlides)}%)`;
+                    }
+
+                    nextBtn.addEventListener('click', () => {
+                        currentSlide = (currentSlide + 1) % totalSlides;
+                        updateSlide();
+                    });
+
+                    prevBtn.addEventListener('click', () => {
+                        currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+                        updateSlide();
+                    });
+
+                    setInterval(() => {
+                        currentSlide = (currentSlide + 1) % totalSlides;
+                        updateSlide();
+                    }, 7000);
+
+                    window.addEventListener('resize', updateSlide); // agar responsif
+                });
             </script>
         @endif
+
 
     @endif
 @endsection

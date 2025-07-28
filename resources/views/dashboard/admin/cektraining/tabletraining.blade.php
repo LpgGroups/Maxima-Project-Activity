@@ -6,7 +6,6 @@
             <form method="GET" class="mb-4 flex flex-wrap gap-2 items-end">
                 <input type="text" name="search" placeholder="Search..." value="{{ request('search') }}"
                     class="border rounded px-2 py-1 text-sm" />
-
                 <select name="sort" class="border w-40 rounded px-2 py-1 text-sm">
                     <option value="">Urutkan</option>
                     <option value="az" {{ request('sort') == 'az' ? 'selected' : '' }}>A - Z (Perusahaan)</option>
@@ -14,6 +13,14 @@
 
                 <input type="date" id="start_date" name="start_date" class="border rounded px-2 py-1 text-sm" />
                 <input type="date" id="end_date" name="end_date" class="border rounded px-2 py-1 text-sm" />
+                <select name="isprogress" class="border w-36 rounded px-2 py-1 text-sm">
+                    <option value="">Semua Progress</option>
+                    <option value="proses" {{ request('isprogress') == 'proses' ? 'selected' : '' }}>Proses</option>
+                    <option value="selesai" {{ request('isprogress') == 'selesai' ? 'selected' : '' }}>Selesai</option>
+                    <option value="ditolak" {{ request('isprogress') == 'ditolak' ? 'selected' : '' }}>Ditolak</option>
+                    <option value="menunggu" {{ request('isprogress') == 'menunggu' ? 'selected' : '' }}>Menunggu</option>
+                </select>
+
 
                 <button type="submit"
                     class="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600">Filter</button>
