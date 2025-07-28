@@ -18,5 +18,6 @@ class CarrouselAds extends Model
         'carousel_id',
         'is_active',
         'order',
+        'url'
     ];
 }

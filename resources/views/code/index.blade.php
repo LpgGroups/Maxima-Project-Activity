@@ -113,18 +113,35 @@
                     <div id="carousel" class="flex transition-transform duration-700 ease-in-out h-full"
                         style="width: {{ 100 * $carrousel->count() }}%;">
                         @foreach ($carrousel as $ad)
-                            <div class="h-full shrink-0 relative" style="width:{{ 100 / $carrousel->count() }}%">
-                                <img src="{{ asset('storage/' . $ad->image) }}" alt="{{ $ad->title }}"
-                                    class="w-full h-full {{ $ad->is_small ? 'object-contain p-4' : 'object-cover' }} rounded-lg" />
+                            @if ($ad->url)
+                                <a href="{{ $ad->url }}" target="_blank" rel="noopener"
+                                    class="block h-full w-full relative group"
+                                    style="width:{{ 100 / $carrousel->count() }}%">
+                                    <img src="{{ asset('storage/' . $ad->image) }}" alt="{{ $ad->title }}"
+                                        class="w-full h-full {{ $ad->is_small ? 'object-contain p-4' : 'object-cover' }} rounded-lg transition-opacity group-hover:opacity-80" />
 
-                                <div
-                                    class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent text-white p-4 rounded-b-lg">
-                                    <h3 class="text-base sm:text-lg md:text-xl font-semibold">{{ $ad->title }}</h3>
-                                    @if ($ad->summary)
-                                        <p class="text-xs sm:text-sm md:text-base mt-1">{{ $ad->summary }}</p>
-                                    @endif
+                                    <div
+                                        class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent text-white p-4 rounded-b-lg">
+                                        <h3 class="text-base sm:text-lg md:text-xl font-semibold">{{ $ad->title }}</h3>
+                                        @if ($ad->summary)
+                                            <p class="text-xs sm:text-sm md:text-base mt-1">{{ $ad->summary }}</p>
+                                        @endif
+                                    </div>
+                                </a>
+                            @else
+                                <div class="h-full w-full relative" style="width:{{ 100 / $carrousel->count() }}%">
+                                    <img src="{{ asset('storage/' . $ad->image) }}" alt="{{ $ad->title }}"
+                                        class="w-full h-full {{ $ad->is_small ? 'object-contain p-4' : 'object-cover' }} rounded-lg" />
+
+                                    <div
+                                        class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent text-white p-4 rounded-b-lg">
+                                        <h3 class="text-base sm:text-lg md:text-xl font-semibold">{{ $ad->title }}</h3>
+                                        @if ($ad->summary)
+                                            <p class="text-xs sm:text-sm md:text-base mt-1">{{ $ad->summary }}</p>
+                                        @endif
+                                    </div>
                                 </div>
-                            </div>
+                            @endif
                         @endforeach
                     </div>
 
