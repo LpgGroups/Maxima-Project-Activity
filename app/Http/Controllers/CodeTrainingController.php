@@ -19,8 +19,20 @@ class CodeTrainingController extends Controller
         })->get();
 
         $carrousel = CarrouselAds::where('is_active', true)
+            ->whereNotNull('image')
+            ->where('image', '!=', '')
             ->orderBy('order')
-            ->get();
+            ->get()
+            ->map(function ($item) {
+                $path = storage_path('app/public/' . $item->image);
+                if (file_exists($path)) {
+                    [$width, $height] = getimagesize($path);
+                    $item->is_small = $width < 1139 || $height < 450;
+                } else {
+                    $item->is_small = true; // fallback jika file tidak ditemukan
+                }
+                return $item;
+            });
 
         return view('code.index', [
             'title' => 'Search Training',
