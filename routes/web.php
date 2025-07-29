@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\carrousel\CarrouselController;
+use App\Http\Controllers\MaintanceFolderController;
 
 Route::get('/', [LoginController::class, 'index'])->name('login.index');
 Route::post('/', [LoginController::class, 'authenticate'])->name('login');
@@ -33,8 +34,8 @@ Route::get('/forgot-password', [ForgotPasswordController::class, 'showForm'])->n
 Route::post('/forgot-password', [ForgotPasswordController::class, 'sendReset'])->name('password.email');
 Route::get('/reset-password/{token}', [ForgotPasswordController::class, 'showResetForm'])->name('password.reset');
 Route::post('/reset-password', [ForgotPasswordController::class, 'reset'])->name('password.update');
-Route::get('/code/training', [CodeTrainingController::class, 'index'])->name('code.index');
-Route::get('/code/training/{id}', [CodeTrainingController::class, 'show'])->name('code.show');
+Route::get('/search/training', [CodeTrainingController::class, 'index'])->name('code.index');
+Route::get('/search/training/{id}', [CodeTrainingController::class, 'show'])->name('code.show');
 Route::middleware(['auth'])->group(function () {
     Route::middleware([UserAccess::class . ':admin'])->group(function () {
         Route::get('/admin/training/live', [DashboardAdminController::class, 'getLiveTraining'])->name('admin.training.live');
@@ -53,6 +54,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/dashboard/admin/training/add-participant', [DashboardAdminController::class, 'addParticipant']);
         Route::post('/dashboard/admin/training/finish/{id}', [DashboardAdminController::class, 'trainingFinish']);
         Route::post('/dashboard/admin/upload-files', [DashboardAdminController::class, 'uploadFileForAdmin']);
+        Route::get('/participant/{id}/download-all', [DashboardAdminController::class, 'downloadAllFiles'])->name('participant.downloadAll');
         Route::get('/download/file-mou/{id}', function ($id) {
             $file = \App\Models\FileRequirement::findOrFail($id);
 
@@ -114,6 +116,19 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/dashboard/developer/account/{id}', [DashboardDevController::class, 'updateUser'])
             ->name('dashboard.dev.update');
 
+        Route::prefix('dashboard/developer/folder')->name('folder.')->group(function () {
+            Route::get('/', [MaintanceFolderController::class, 'index'])->name('index');
+            // Folder spesifik
+            Route::get('/{folderName}', [MaintanceFolderController::class, 'show'])->name('show');
+            // Hapus file individual
+            Route::delete('/{folderName}/delete-file/{fileName}', [MaintanceFolderController::class, 'deleteFile'])->name('file.delete');
+            // Bulk hapus file
+            Route::post('/{folderName}/bulk-delete', [MaintanceFolderController::class, 'bulkDelete'])->name('bulkDelete');
+            // Download file individual
+            Route::get('/{folderName}/download/{fileName}', [MaintanceFolderController::class, 'downloadFile'])->name('file.download');
+            // Download bulk? (optional, advance)
+            Route::post('/{folderName}/bulk-download', [MaintanceFolderController::class, 'bulkDownload'])->name('bulkDownload');
+        });
         Route::prefix('dashboard/dev/carrousel')->name('carrousel.')->group(function () {
             Route::get('/', [CarrouselController::class, 'index'])->name('index');
             Route::get('/create', [CarrouselController::class, 'create'])->name('create');

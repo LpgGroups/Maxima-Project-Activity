@@ -283,7 +283,7 @@
                         </thead>
                         <tbody>
                             @forelse ($training->participants as $index => $participant)
-                                <tr class="main-row odd:bg-[#d9f6fd] even:bg-white text-sm"
+                                <tr class="main-row {{ $index % 2 === 0 ? 'bg-red-100' : 'bg-blue-100' }} text-sm"
                                     data-participant-id="{{ $participant->id }}">
                                     <td>{{ $index + 1 }}</td>
                                     <td class="max-w-[120px] truncate whitespace-nowrap"
@@ -349,6 +349,16 @@
                                                 <line x1="10" y1="11" x2="10" y2="17" />
                                                 <line x1="14" y1="11" x2="14" y2="17" />
                                             </svg>
+                                        </button>
+
+                                        <button type="button" class="text-green-700 downloadAllBtn rounded"
+                                            data-id="{{ $participant->id }}">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                stroke-width="1.5" stroke="currentColor" class="size-6">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M7.5 7.5h-.75A2.25 2.25 0 0 0 4.5 9.75v7.5a2.25 2.25 0 0 0 2.25 2.25h7.5a2.25 2.25 0 0 0 2.25-2.25v-7.5a2.25 2.25 0 0 0-2.25-2.25h-.75m-6 3.75 3 3m0 0 3-3m-3 3V1.5m6 9h.75a2.25 2.25 0 0 1 2.25 2.25v7.5a2.25 2.25 0 0 1-2.25 2.25h-7.5a2.25 2.25 0 0 1-2.25-2.25v-.75" />
+                                            </svg>
+
                                         </button>
                                     </td>
 

@@ -627,8 +627,6 @@ function initStatusReasonWatcher() {
     function updateReasonInput($select) {
         // Ambil status (value select)
         const status = $select.val();
-        // Ambil input reason di baris yang sama
-        // Bisa pakai closest('tr').find('input[name^=participants]')
         const $reasonInput = $select
             .closest("tr")
             .find("input[name^='participants']");
@@ -659,7 +657,7 @@ $(document).ready(function () {
     $("#submitParticipantBtn").on("click", updateForm2User);
     $("#submitFinish").on("click", updateTrainingFinish);
     initShowDetailParticipant();
-   
+
     $("#uploadFileForAdminBtn").on("click", function (e) {
         e.preventDefault();
         uploadFileForAdmin(); // baru dipanggil waktu tombol diklik
@@ -668,6 +666,14 @@ $(document).ready(function () {
     $(document).on("click", ".deleteButtonParticipant", function () {
         const id = $(this).data("id");
         deleteParticipant(id);
+    });
+
+    $(document).ready(function () {
+        $(".downloadAllBtn").on("click", function () {
+            const participantId = $(this).data("id");
+            // Lakukan aksi download
+            window.location.href = `/participant/${participantId}/download-all`;
+        });
     });
 
     addParticipants();
