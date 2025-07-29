@@ -11,8 +11,10 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\RegTraining;
 use App\Models\TrainingNotification;
 use App\Models\User;
+use Illuminate\Support\Str;
 use App\Notifications\TrainingUpdatedNotification;
 use Illuminate\Support\Facades\Storage;
+use ZipArchive;
 
 
 class DashboardAdminController extends Controller
@@ -400,5 +402,52 @@ class DashboardAdminController extends Controller
             'success' => true,
             'message' => 'Peserta berhasil dihapus.'
         ]);
+    }
+    public function downloadAllFiles($id)
+    {
+
+        $participant = RegParticipant::findOrFail($id);
+        $training = $participant->training;
+       
+        $number_letter = str_replace([' ', '/', '\\'], '-', strtolower($training->no_letter ?? 'no-surat'));;
+
+        
+        $namaPeserta = Str::slug($participant->name, '_');
+
+        $files = [
+            'Foto' => $participant->photo,
+            'Ijazah' => $participant->ijazah,
+            'SK_Kerja' => $participant->letter_employee,
+            'Surat_Pernyataan' => $participant->letter_statement,
+            'Form_Pendaftaran' => $participant->form_registration,
+            'SK_Kesehatan' => $participant->letter_health,
+            'CV' => $participant->cv,
+        ];
+
+        $zipFileName = 'peserta_' . $namaPeserta . '_dokumen.zip';
+        $zipPath = storage_path('app/public/temp_zip/' . $zipFileName);
+
+        if (!file_exists(storage_path('app/public/temp_zip'))) {
+            mkdir(storage_path('app/public/temp_zip'), 0777, true);
+        }
+
+        $zip = new ZipArchive;
+        if ($zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) === TRUE) {
+            foreach ($files as $label => $file) {
+                if ($file && Storage::disk('public')->exists($file)) {
+                    $extension = pathinfo($file, PATHINFO_EXTENSION);
+
+                    // Format nama file dalam ZIP
+                    $fileNameInZip = "{$label}-{$namaPeserta}-{$number_letter}.{$extension}";
+
+                    $zip->addFile(Storage::disk('public')->path($file), $fileNameInZip);
+                }
+            }
+            $zip->close();
+        } else {
+            return back()->with('error', 'Gagal membuat ZIP file');
+        }
+
+        return response()->download($zipPath)->deleteFileAfterSend(true);
     }
 }
