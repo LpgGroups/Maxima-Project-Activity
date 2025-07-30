@@ -1,3 +1,4 @@
+import { cityList } from "./cities.js";
 function showTabs() {
     const savedTab = maxTab;
     showTab(savedTab);
@@ -361,6 +362,20 @@ function checkBtnSendForm3() {
     checkFilesSelected();
 }
 
+function cities() {
+    var $select = $("#city");
+    var selected = $("#citySelected").val() || "";
+    if ($select.length) {
+        var options = '<option value="">-- Pilih Kota --</option>';
+        $.each(cityList, function (i, city) {
+            options += `<option value="${city}"${
+                city === selected ? " selected" : ""
+            }>${city}</option>`;
+        });
+        $select.html(options);
+    }
+}
+
 // function send data
 $(document).ready(function () {
     showTabs();
@@ -376,4 +391,5 @@ $(document).ready(function () {
         sendForm3(); // Panggil fungsi sendForm2 saat tombol diklik
     });
     checkBtnSendForm3();
+    cities();
 });

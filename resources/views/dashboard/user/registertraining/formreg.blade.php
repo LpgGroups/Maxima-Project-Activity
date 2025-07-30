@@ -1,6 +1,5 @@
 @extends('dashboard.layouts.dashboardmain')
 @section('container')
-
     <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center w-full gap-2">
         <p class="text-center sm:text-left text-base sm:text-[15px] font-semibold text-[#9694FF]">
             {{ config('activity_map.' . $training->activity) ?? $training->activity }}
@@ -177,16 +176,13 @@
                             <div class="mb-4">
                                 <label for="city" class="block text-gray-600 text-base font-bold mb-1">Lokasi
                                     Pelatihan:</label>
-                                <select name="city" id="city"
-                                    class="w-[200px] p-2 border border-gray-300 rounded-lg text-gray-800">
-                                    <option value="">-- Pilih Kota --</option>
-                                    @foreach ($cityOptions as $city)
-                                        <option value="{{ $city }}"
-                                            {{ $training->city === $city ? 'selected' : '' }}>
-                                            {{ $city }}
-                                        </option>
-                                    @endforeach
-                                </select>
+                                <div class="mb-4">
+                                    <select name="city" id="city"
+                                        class="w-[200px] p-2 border border-gray-300 rounded-lg text-gray-800">
+                                        <option value="">-- Pilih Kota --</option>
+                                    </select>
+                                    <input type="hidden" id="citySelected" value="{{ $training->city ?? '' }}">
+                                </div>
                             </div>
                         @endif
 

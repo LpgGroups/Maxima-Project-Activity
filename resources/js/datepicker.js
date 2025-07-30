@@ -1,3 +1,5 @@
+import { cityList } from "./cities.js";
+
 $(document).ready(function () {
     let currentDate = new Date();
     let selectedDay = null;
@@ -271,20 +273,6 @@ $(document).ready(function () {
             <div class="flex justify-center">
             <select id="select-city" class="block w-[300px] text-sm font-bold mb-2 px-2 py-1 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
                 <option value="">-- Pilih Kota --</option>
-                <option value="Bali">Bali</option>
-                <option value="Balikpapan">Balikpapan</option>
-                <option value="Bogor">Bogor</option>
-                <option value="Ciracas">Ciracas</option>
-                <option value="Jakarta">Jakarta</option>
-                <option value="Makassar">Makassar</option>
-                <option value="Malang">Malang</option>
-                <option value="Medan">Medan</option>
-                <option value="Palangkaraya">Palangkaraya</option>
-                <option value="Palembang">Palembang</option>
-                <option value="Pekanbaru">Pekanbaru</option>
-                <option value="Pontianak">Pontianak</option>
-                <option value="Semarang">Semarang</option>
-                <option value="Surabaya">Surabaya</option>
             </select>
             </div>
 
@@ -292,6 +280,15 @@ $(document).ready(function () {
         </div>
             `,
             didOpen: () => {
+                $("#select-city").html(
+                    '<option value="">-- Pilih Kota --</option>' +
+                        cityList
+                            .map(
+                                (city) =>
+                                    `<option value="${city}">${city}</option>`
+                            )
+                            .join("")
+                );
                 // Handler untuk memilih training
                 $("#training-list .training-option").on("click", function () {
                     $("#training-list .training-option").removeClass(
@@ -317,6 +314,13 @@ $(document).ready(function () {
                 $first.addClass("ring-2 ring-red-700 animate-pulse");
                 $("#training-list").data("selected", $first.data("value"));
                 updateRadioStateCustom($first.data("value"));
+            },
+            preConfirm: () => {
+                const selectedCity =
+                    document.getElementById("select-city")?.value || null;
+                return {
+                    city: selectedCity,
+                };
             },
         }).then(handleBookingDialogConfirm(bookingDate));
     }
@@ -477,7 +481,6 @@ $(document).ready(function () {
             },
         });
     }
-
     function startConfirmationCountdown() {
         let countdown = 30;
         const confirmButton = Swal.getConfirmButton();

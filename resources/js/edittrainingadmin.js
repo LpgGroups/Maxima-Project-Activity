@@ -1,3 +1,4 @@
+import { cityList } from "./cities.js";
 function datePicker() {
     flatpickr("#date", {
         dateFormat: "d-m-Y",
@@ -37,6 +38,20 @@ function updateEndDate() {
     const year = endDate.getFullYear();
 
     endDateInput.value = `${day}-${month}-${year}`;
+}
+
+function cities() {
+    var $select = $("#city");
+    var selected = $("#citySelected").val() || "";
+    if ($select.length) {
+        var options = '<option value="">-- Pilih Kota --</option>';
+        $.each(cityList, function (i, city) {
+            options += `<option value="${city}"${
+                city === selected ? " selected" : ""
+            }>${city}</option>`;
+        });
+        $select.html(options);
+    }
 }
 
 function setupConfirmationCheckbox() {
@@ -680,6 +695,6 @@ $(document).ready(function () {
     $(document).on("click", ".toggle-nik-btn", function () {
         toggleNIK(this);
     });
-
+    cities();
     copyCode();
 });

@@ -14,6 +14,7 @@ export default defineConfig({
                 "resources/js/livedata.js",
                 "resources/js/management.js",
                 "resources/js/livedatauser.js",
+                "resources/js/cities.js",
             ],
             refresh: true,
         }),
