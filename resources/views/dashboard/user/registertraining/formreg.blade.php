@@ -153,26 +153,7 @@
                             </p>
                         </div>
 
-                        @php
-                            $cityOptions = [
-                                'Bali',
-                                'Balikpapan',
-                                'Bogor',
-                                'Ciracas',
-                                'Jakarta',
-                                'Makassar',
-                                'Malang',
-                                'Medan',
-                                'Palangkaraya',
-                                'Palembang',
-                                'Pekanbaru',
-                                'Pontianak',
-                                'Semarang',
-                                'Surabaya',
-                            ];
-                        @endphp
-
-                        @if (Str::lower($training->place) === 'blended' || 'On-Site')
+                        @if (Str::lower($training->place) === 'blended' || Str::lower($training->place) === 'on-site')
                             <div class="mb-4">
                                 <label for="city" class="block text-gray-600 text-base font-bold mb-1">Lokasi
                                     Pelatihan:</label>
@@ -185,9 +166,6 @@
                                 </div>
                             </div>
                         @endif
-
-
-
                         <!-- Tanggal Pelatihan -->
                         <div class="mb-4">
                             <p class="text-gray-600 text-base font-bold">Tanggal Pelatihan</p>

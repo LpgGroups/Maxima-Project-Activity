@@ -115,19 +115,16 @@ Route::middleware(['auth'])->group(function () {
 
         Route::put('/dashboard/developer/account/{id}', [DashboardDevController::class, 'updateUser'])
             ->name('dashboard.dev.update');
+        Route::post('/dashboard/developer/folder/{folderName}/bulk-delete', [MaintanceFolderController::class, 'bulkDelete'])->name('folder.bulkDelete');
 
         Route::prefix('dashboard/developer/folder')->name('folder.')->group(function () {
-            Route::get('/', [MaintanceFolderController::class, 'index'])->name('index');
-            // Folder spesifik
-            Route::get('/{folderName}', [MaintanceFolderController::class, 'show'])->name('show');
-            // Hapus file individual
+
             Route::delete('/{folderName}/delete-file/{fileName}', [MaintanceFolderController::class, 'deleteFile'])->name('file.delete');
-            // Bulk hapus file
-            Route::post('/{folderName}/bulk-delete', [MaintanceFolderController::class, 'bulkDelete'])->name('bulkDelete');
-            // Download file individual
-            Route::get('/{folderName}/download/{fileName}', [MaintanceFolderController::class, 'downloadFile'])->name('file.download');
-            // Download bulk? (optional, advance)
+
             Route::post('/{folderName}/bulk-download', [MaintanceFolderController::class, 'bulkDownload'])->name('bulkDownload');
+            Route::get('/{folderName}/download/{fileName}', [MaintanceFolderController::class, 'downloadFile'])->name('file.download');
+            Route::get('/{folderName}', [MaintanceFolderController::class, 'show'])->name('show');
+            Route::get('/', [MaintanceFolderController::class, 'index'])->name('index');
         });
         Route::prefix('dashboard/dev/carrousel')->name('carrousel.')->group(function () {
             Route::get('/', [CarrouselController::class, 'index'])->name('index');

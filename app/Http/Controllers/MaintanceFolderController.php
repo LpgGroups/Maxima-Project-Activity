@@ -61,7 +61,7 @@ class MaintanceFolderController extends Controller
 
         $files = collect(Storage::disk('public')->files($folderPath))
             ->map(function ($file) use ($field) {
-               
+
                 $basename = basename($file);
                 $participant = $field ? \App\Models\RegParticipant::where($field, 'like', "%$basename")->first() : null;
                 $training = $participant ? $participant->training : null;
@@ -81,18 +81,6 @@ class MaintanceFolderController extends Controller
         ]);
     }
 
-
-    public function deleteParticipantFolder($folderName)
-    {
-        $path = 'uploads/participants/' . $folderName;
-
-        if (Storage::disk('public')->exists($path)) {
-            Storage::disk('public')->deleteDirectory($path);
-            return back()->with('success', 'Folder berhasil dihapus!');
-        } else {
-            return back()->with('error', 'Folder tidak ditemukan!');
-        }
-    }
     public function bulkDownload(Request $request, $folderName)
     {
         $fileNames = $request->input('files', []);
@@ -151,12 +139,16 @@ class MaintanceFolderController extends Controller
         $fileNames = $request->input('files', []);
         $deleted = 0;
         $folderPath = 'uploads/participants/' . $folderName;
-
+        Log::info('METHOD: ' . $request->method());
         foreach ($fileNames as $fileName) {
             $filePath = $folderPath . '/' . $fileName;
+            Log::info("Try delete: $filePath");
             if (Storage::disk('public')->exists($filePath)) {
                 Storage::disk('public')->delete($filePath);
+                Log::info("Deleted: $filePath");
                 $deleted++;
+            } else {
+                Log::warning("File not found: $filePath");
             }
         }
         return back()->with('success', "$deleted file berhasil dihapus.");
