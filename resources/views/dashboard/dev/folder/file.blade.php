@@ -10,6 +10,7 @@
             <div class="mb-4 px-4 py-2 bg-red-200 text-red-800 rounded">{{ session('error') }}</div>
         @endif
 
+        {{-- FORM BULK DELETE (HANYA 1 FORM UNTUK BULK) --}}
         <form method="POST" action="{{ route('folder.bulkDelete', $folderName) }}" id="bulkDeleteForm">
             @csrf
             <div class="mb-3 flex flex-wrap gap-3 items-center">
@@ -20,13 +21,12 @@
                 <button type="button" class="bg-green-600 hover:bg-green-800 text-white px-4 py-2 rounded shadow"
                     onclick="submitBulkDownload()">Download File Terpilih</button>
             </div>
-            {{-- Table --}}
             <div class="overflow-x-auto">
                 <table class="min-w-full text-xs border border-gray-200 rounded">
                     <thead class="bg-slate-700 text-white">
                         <tr>
-                            <th class="py-2 px-2">
-                                <input type="checkbox" id="selectAll" />
+                            <th>
+                                <input type="checkbox" id="selectAll" style="width:20px;height:20px;accent-color:#3b82f6;">
                             </th>
                             <th class="py-2 px-2 text-left">Nama File</th>
                             <th class="py-2 px-2 text-center">Status</th>
@@ -38,10 +38,10 @@
                         @forelse($files as $file)
                             <tr class="odd:bg-white even:bg-gray-100">
                                 <td class="py-2 px-2 text-center">
-                                    <input type="checkbox" name="files[]" value="{{ $file['basename'] }}">
+                                    <input type="checkbox" name="files[]" value="{{ $file['basename'] }}"
+                                        class="bg-blue-200">
                                 </td>
                                 <td class="py-2 px-2 break-all">{{ $file['basename'] }}</td>
-                                {{-- Status --}}
                                 <td class="p-1 text-center">
                                     @php $training = $file['training'] ?? null; @endphp
                                     @if ($training)
@@ -77,12 +77,8 @@
                                         class="text-blue-600 hover:underline">Lihat</a>
                                     <a href="{{ $file['download_route'] }}"
                                         class="text-green-600 hover:underline ml-3">Download</a>
-                                    <form action="{{ $file['delete_route'] }}" method="POST" class="inline"
-                                        onsubmit="return confirm('Yakin hapus file ini?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="text-red-600 hover:underline ml-3">Hapus</button>
-                                    </form>
+                                    <button type="button" class="text-red-600 hover:underline ml-3"
+                                        onclick="deleteFile('{{ $file['basename'] }}')">Hapus</button>
                                 </td>
                             </tr>
                         @empty
@@ -95,6 +91,16 @@
                 </table>
             </div>
         </form>
+
+        {{-- FORM DELETE INDIVIDU (DILUAR FORM BULK DELETE!) --}}
+        @foreach ($files as $file)
+            <form id="delete-form-{{ $file['basename'] }}" action="{{ $file['delete_route'] }}" method="POST"
+                style="display:none;">
+                @csrf
+                @method('DELETE')
+            </form>
+        @endforeach
+
         {{-- Bulk Download Form --}}
         <form method="POST" action="{{ route('folder.bulkDownload', $folderName) }}" id="bulkDownloadForm"
             style="display:none;">
@@ -107,9 +113,7 @@
         // Select All functionality
         document.getElementById('selectAll').addEventListener('change', function() {
             let checkboxes = document.querySelectorAll("input[type='checkbox'][name='files[]']");
-            for (let cb of checkboxes) {
-                cb.checked = this.checked;
-            }
+            for (let cb of checkboxes) cb.checked = this.checked;
         });
 
         // Button "Pilih Semua"
@@ -129,6 +133,12 @@
             }
             document.getElementById('filesToDownload').value = names.join(',');
             document.getElementById('bulkDownloadForm').submit();
+        }
+
+        function deleteFile(basename) {
+            if (confirm('Yakin hapus file ini?')) {
+                document.getElementById('delete-form-' + basename).submit();
+            }
         }
     </script>
 @endsection
