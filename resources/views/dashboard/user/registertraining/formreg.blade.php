@@ -625,8 +625,8 @@
                 @else
                     <h3 class="text-xl font-bold mb-2 text-red-600">Informasi Data</h3>
                     <ul class="list-disc text-xs ml-2 text-red-600">
-                        <li>Harap lengkapi data-data peserta H-3 sebelum hari pelatihan di mulai.</li>
-                        <li>Data dapat di ubah H-3 sebelum hari pelatihan.</li>
+                        <li>Harap lengkapi data-data peserta H-8 sebelum hari pelatihan di mulai.</li>
+                        <li>Data dapat di ubah H-8 sebelum hari pelatihan.</li>
                         <li>Mohon untuk input data dengan baik dan benar</li>
                         <li>PIC diharapkan Mengupload kembali MoU/Quotation/PO yang telah ditanda tangan.</li>
                     </ul>
