@@ -56,12 +56,6 @@
                             <span class="inline-block px-2 py-1 text-xs font-semibold rounded bg-green-100 text-green-800">
                                 Pelatihan Di Setujui
                             </span>
-                        @elseif ($training->isfinish == 2)
-                            <span class="inline-block px-2 py-1 text-xs font-semibold rounded bg-red-100 text-red-800">
-                                Ditolak
-                            </span>
-                            <p>Dengan Alasan:</p>
-                            <p class="text-red-500 italic">{{ $training->reason_fail }}</p>
                         @else
                             <span
                                 class="inline-block px-2 py-1 text-xs font-semibold rounded bg-yellow-100 text-yellow-800">
