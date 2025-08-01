@@ -180,16 +180,42 @@
                 </div>
             </div>
 
-            <div>
+            <div class="mb-6">
+                <h3 class="text-sm font-semibold text-gray-600 mb-3">Lokasi Kegiatan</h3>
+                <div class="grid gap-4 sm:grid-cols-2 max-w-xl">
+                    <!-- Provinsi -->
+                    <div>
+                        <label for="provience" class="block text-sm text-gray-700 font-medium mb-1">
+                            Provinsi <span class="text-red-500">*</span>
+                        </label>
+                        <select id="provience" name="provience"
+                            class="w-full p-2 border border-gray-300 rounded-md text-gray-900 focus:ring-2 focus:ring-blue-600 focus:outline-none">
+                            <option value="">-- Pilih Provinsi --</option>
+                        </select>
+                    </div>
 
-                <div class="mb-4">
-                    <label for="city" class="block text-gray-600 text-base font-bold mb-1">Lokasi Pelatihan:</label>
-                    <select name="city" id="city"
-                        class="w-[200px] p-2 border border-gray-300 rounded-lg text-gray-800">
-                        <option value="">-- Pilih Kota --</option>
-                    </select>
-                    <input type="hidden" id="citySelected" value="{{ $training->city ?? '' }}">
+                    <!-- Kota -->
+                    <div>
+                        <label for="city" class="block text-sm text-gray-700 font-medium mb-1">
+                            Kota <span class="text-red-500">*</span>
+                        </label>
+                        <select id="city" name="city"
+                            class="w-full p-2 border border-gray-300 rounded-md text-gray-900 focus:ring-2 focus:ring-blue-600 focus:outline-none">
+                            <option value="">-- Pilih Kota --</option>
+                        </select>
+                    </div>
+
+                    <div class="">
+                        <label for="address" class="block mb-1 font-semibold text-gray-700 text-sm">Alamat
+                            Lengkap</label>
+                        <textarea name="address" id="address"
+                            class="w-full border border-gray-300 rounded p-2 min-h-[100px] focus:ring-2 focus:ring-blue-500" rows="3"
+                            placeholder="Masukkan alamat lengkap lokasi pelatihan">{{ old('address', $training->address ?? '') }}</textarea>
+                    </div>
                 </div>
+
+                <input type="hidden" id="citySelected" value="{{ $training->city ?? '' }}">
+                <input type="hidden" id="provSelected" value="{{ $training->provience ?? '' }}">
             </div>
             <label class="block mt-2 mb-2 text-sm font-medium text-gray-900">Tempat Pelatihan:</label>
             <div class="flex min-h-5">
@@ -227,7 +253,7 @@
 
             <button id="submitBtn" disabled
                 class="mt-4 px-4 py-2 bg-gray-400 text-white rounded-md cursor-not-allowed transition disabled:opacity-50">
-                Update Data
+                Perbarui Data
             </button>
         </form>
     </div>
@@ -574,8 +600,8 @@
                 <input type="checkbox" id="confirmEdit3"
                     class="h-5 w-5 appearance-none border-2 border-gray-400 rounded-sm checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200" />
                 <label for="confirmEdit3" class="text-sm text-gray-700">
-                    Saya memastikan bahwa seluruh dokumen yang masuk telah lengkap, valid, dan siap untuk diproses lebih
-                    lanjut
+                    Saya memastikan bahwa seluruh dokumen yang diterima telah lengkap, valid, dan memenuhi syarat untuk
+                    diproses ke tahap selanjutnya.
                 </label>
             </div>
 
@@ -583,7 +609,7 @@
             <div class="flex items-center gap-4">
                 <button type="button" id="submitFinish" data-form-id="{{ $training->id }}"
                     class="px-4 py-2 bg-gray-400 text-white rounded-md">
-                    Approve Pelatihan
+                    Ajukan Pelatihan
                 </button>
 
                 @php
@@ -619,14 +645,11 @@
                         </div>
                     </div>
 
-
                 </div>
                 <div id="time" class="border w-auto h-auto p-2 shadow-xl rounded-lg"
                     data-training-date="{{ $training->date }}"></div>
             </div>
         </div>
-
-
     </div>
 
     @push('scripts')

@@ -204,7 +204,9 @@ class DashboardAdminController extends Controller
             'activity' => 'required|string',
             'date' => 'required|date',
             'place' => 'required|string',
+            'provience' => 'nullable|string|max:100',
             'city' => 'nullable|string',
+            'address'     => 'nullable|string|max:255',
             'end_date' => 'nullable|date',
         ]);
 
@@ -216,7 +218,9 @@ class DashboardAdminController extends Controller
             'activity' => $validated['activity'],
             'date' => Carbon::parse($validated['date'])->format('Y-m-d'),
             'place' => $validated['place'],
+            'provience' => $validated['provience'],
             'city' => $validated['city'],
+            'address' => $validated['address'],
             'date_end' => $validated['end_date'] ? Carbon::parse($validated['end_date'])->format('Y-m-d') : null,
         ]);
 
@@ -408,10 +412,10 @@ class DashboardAdminController extends Controller
 
         $participant = RegParticipant::findOrFail($id);
         $training = $participant->training;
-       
+
         $number_letter = str_replace([' ', '/', '\\'], '-', strtolower($training->no_letter ?? 'no-surat'));;
 
-        
+
         $namaPeserta = Str::slug($participant->name, '_');
 
         $files = [

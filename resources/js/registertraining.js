@@ -90,22 +90,21 @@ function showTabs() {
 
 function submitForm1() {
     $("#submitBtn").click(function (e) {
-        e.preventDefault(); // Prevent default form submission
+        e.preventDefault();
         const progress = "2";
         var formData = {
             _token: $('input[name="_token"]').val(),
-            id: $("#trainingId").val(), // Menambahkan ID untuk update
+            id: $("#trainingId").val(),
             name_pic: $("#name_pic").val(),
             name_company: $("#name_company").val(),
             email_pic: $("#email_pic").val(),
             phone_pic: $("#phone_pic").val(),
             city: $("#city").val(),
+            provience: $("#provience").val(),
+            address: $("#address").val(),
             isprogress: progress,
         };
 
-        console.log(formData); // Log the data being sent
-
-        // Clear previous response message
         $("#responseMessage").removeClass("hidden").text("");
         showLoading();
         $.ajax({
@@ -131,7 +130,7 @@ function submitForm1() {
                 }
             },
             error: function (xhr, status, error) {
-                Swal.close(); // Tutup loading saat error
+                Swal.close();
 
                 if (xhr.status === 422) {
                     let errors = xhr.responseJSON.errors;
@@ -161,6 +160,50 @@ function submitForm1() {
             },
         });
     });
+    function locationTraining() {
+        $(document).ready(function () {
+            var $prov = $("#provience");
+            var $city = $("#city");
+            var provSelected = $("#provSelected").val();
+            var citySelected = $("#citySelected").val();
+
+            $prov.html('<option value="">-- Pilih Provinsi --</option>');
+            $.each(cityList, function (i, p) {
+                $prov.append(
+                    $("<option>", { value: p.provinsi, text: p.provinsi })
+                );
+            });
+
+            // Saat pilih provinsi, isi kota
+            $prov.on("change", function () {
+                var selectedProv = $(this).val();
+                $city.html('<option value="">-- Pilih Kota --</option>');
+                var provObj = cityList.find(function (p) {
+                    return p.provinsi === selectedProv;
+                });
+                if (provObj) {
+                    $.each(provObj.kota, function (i, kota) {
+                        $city.append(
+                            $("<option>", { value: kota, text: kota })
+                        );
+                    });
+                }
+                // Reset pilihan kota jika ganti provinsi
+                $city.val("");
+            });
+
+            // Set selected provinsi (jika ada)
+            if (provSelected) {
+                $prov.val(provSelected).trigger("change");
+                setTimeout(function () {
+                    if (citySelected) {
+                        $city.val(citySelected);
+                    }
+                }, 100);
+            }
+        });
+    }
+    locationTraining();
 }
 
 function sendForm3() {

@@ -24,6 +24,8 @@ class RegTraining extends Model
         'reason_fail',
         'place',
         'city',
+        'provience',
+        'address',
         'isprogress',
         'isfinish',
         'user_id',
