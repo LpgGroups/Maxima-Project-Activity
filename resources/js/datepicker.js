@@ -91,12 +91,7 @@ $(document).ready(function () {
             const isFullQuota = fullQuotaDates.includes(dateString);
 
             // Logika tampilan kalender
-            if (isFullQuota) {
-                dayCell
-                    .addClass("bg-red-500 text-white cursor-not-allowed")
-                    .attr("title", "Kuota pelatihan penuh pada tanggal ini");
-                dayCell.css("pointer-events", "none");
-            } else if (isToday) {
+            if (isToday) {
                 dayCell.addClass("bg-violet-400 text-white");
                 dayCell.css("pointer-events", "none");
             } else if (isPastDate || isWithinNextTenDays || isWeekend) {

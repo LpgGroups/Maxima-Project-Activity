@@ -258,7 +258,7 @@ function checkSubmitBtnDeadline() {
         const now = new Date();
 
         const hMinus3 = new Date(trainingDate);
-        hMinus3.setDate(trainingDate.getDate() - 5);
+        hMinus3.setDate(trainingDate.getDate() - 8);
 
         if (now >= hMinus3) {
             // disable tombol dan ubah style
