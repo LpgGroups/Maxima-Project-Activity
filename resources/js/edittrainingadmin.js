@@ -40,20 +40,6 @@ function updateEndDate() {
     endDateInput.value = `${day}-${month}-${year}`;
 }
 
-function cities() {
-    var $select = $("#city");
-    var selected = $("#citySelected").val() || "";
-    if ($select.length) {
-        var options = '<option value="">-- Pilih Kota --</option>';
-        $.each(cityList, function (i, city) {
-            options += `<option value="${city}"${
-                city === selected ? " selected" : ""
-            }>${city}</option>`;
-        });
-        $select.html(options);
-    }
-}
-
 function setupConfirmationCheckbox() {
     const checkbox = document.getElementById("confirmEdit");
     const submitBtn = document.getElementById("submitBtn");
@@ -172,6 +158,48 @@ function updateForm1User(event) {
             console.error("Error:", error);
             showErrorSwal("Kesalahan", "Terjadi kesalahan, coba lagi nanti.");
         });
+}
+
+function locationTraining() {
+    $(document).ready(function () {
+        var $prov = $("#provience");
+        var $city = $("#city");
+        var provSelected = $("#provSelected").val();
+        var citySelected = $("#citySelected").val();
+
+        $prov.html('<option value="">-- Pilih Provinsi --</option>');
+        $.each(cityList, function (i, p) {
+            $prov.append(
+                $("<option>", { value: p.provinsi, text: p.provinsi })
+            );
+        });
+
+        // Saat pilih provinsi, isi kota
+        $prov.on("change", function () {
+            var selectedProv = $(this).val();
+            $city.html('<option value="">-- Pilih Kota --</option>');
+            var provObj = cityList.find(function (p) {
+                return p.provinsi === selectedProv;
+            });
+            if (provObj) {
+                $.each(provObj.kota, function (i, kota) {
+                    $city.append($("<option>", { value: kota, text: kota }));
+                });
+            }
+            // Reset pilihan kota jika ganti provinsi
+            $city.val("");
+        });
+
+        // Set selected provinsi (jika ada)
+        if (provSelected) {
+            $prov.val(provSelected).trigger("change");
+            setTimeout(function () {
+                if (citySelected) {
+                    $city.val(citySelected);
+                }
+            }, 100);
+        }
+    });
 }
 
 function updateForm2User() {
@@ -663,6 +691,7 @@ $(document).ready(function () {
     } catch (e) {
         console.error("Error di timeDeadline:", e);
     }
+    locationTraining();
     initStatusReasonWatcher();
     datePicker(); // Inisialisasi date picker
     updateEndDate(); // Hitung end date saat halaman dimuat
@@ -695,6 +724,6 @@ $(document).ready(function () {
     $(document).on("click", ".toggle-nik-btn", function () {
         toggleNIK(this);
     });
-    cities();
+
     copyCode();
 });

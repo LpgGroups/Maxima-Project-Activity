@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('title');
             $table->text('summary')->nullable();
             $table->string('image'); // bisa URL atau path ke storage
+            $table->string('url')->nullable();
             $table->unsignedBigInteger('carousel_id')->nullable(); // untuk relasi di masa depan
             $table->boolean('is_active')->default(true); // untuk menandai apakah carousel aktif
             $table->integer('order')->default(0); // untuk urutan tampil (sorting)

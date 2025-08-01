@@ -259,32 +259,56 @@ $(document).ready(function () {
                         class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-700">Blended</label>
                 </div>
             </div>
-            
 
             <div id="city-select-container" class="mt-4 hidden">
-            <label for="select-city" class="block mb-2 text-sm font-bold text-gray-900 dark:text-gray-700">
-                Pilih Kota Pelatihan (Blended):
-            </label>
-            <div class="flex justify-center">
-            <select id="select-city" class="block w-[300px] text-sm font-bold mb-2 px-2 py-1 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                <option value="">-- Pilih Kota --</option>
-            </select>
-            </div>
+  <div class="mb-2">
+    <label for="select-provience" class="block mb-2 text-sm font-bold text-gray-900 dark:text-gray-700">
+      Pilih Provinsi Pelatihan:<span class="text-red-500">*</span>
+    </label>
+    <select id="select-provience" class="block w-full max-w-md text-sm font-bold px-2 py-1 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
+      <option value="">-- Pilih Provinsi --</option>
+    </select>
+  </div>
 
+  <div class="mb-6">
+    <label for="select-city" class="block mb-2 text-sm font-bold text-gray-900 dark:text-gray-700">
+      Pilih Kota Pelatihan:<span class="text-red-500">*</span>
+    </label>
+    <select id="select-city" class="block w-full max-w-md text-sm font-bold px-2 py-1 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
+      <option value="">-- Pilih Kota --</option>
+    </select>
+  </div>
+</div>
         </div>
         </div>
             `,
             didOpen: () => {
-                $("#select-city").html(
-                    '<option value="">-- Pilih Kota --</option>' +
-                        cityList
-                            .map(
-                                (city) =>
-                                    `<option value="${city}">${city}</option>`
-                            )
-                            .join("")
-                );
-                // Handler untuk memilih training
+                var $prov = $("#select-provience");
+                $prov.html('<option value="">-- Pilih Provinsi --</option>');
+                $.each(cityList, function (i, p) {
+                    $prov.append(
+                        $("<option>", { value: p.provinsi, text: p.provinsi })
+                    );
+                });
+
+                // Event saat provinsi berubah, isi select kota
+                $prov.on("change", function () {
+                    var selectedProv = $(this).val();
+                    var $kota = $("#select-city");
+                    $kota.html('<option value="">-- Pilih Kota --</option>');
+                    var provObj = cityList.find(function (p) {
+                        return p.provinsi === selectedProv;
+                    });
+                    if (provObj) {
+                        $.each(provObj.kota, function (i, kota) {
+                            $kota.append(
+                                $("<option>", { value: kota, text: kota })
+                            );
+                        });
+                    }
+                });
+
+                // --- Handler pelatihan dan training-mode, tetap gunakan kode lamamu ---
                 $("#training-list .training-option").on("click", function () {
                     $("#training-list .training-option").removeClass(
                         "ring-2 ring-red-700 animate-pulse"
@@ -296,11 +320,15 @@ $(document).ready(function () {
 
                 $('input[name="training-mode"]').on("change", function () {
                     const selectedMode = $(this).val();
-                    if (selectedMode === "Blended") {
+                    if (
+                        selectedMode === "Blended" ||
+                        selectedMode === "On-Site"
+                    ) {
                         $("#city-select-container").removeClass("hidden");
                     } else {
                         $("#city-select-container").addClass("hidden");
-                        $("#select-city").val(""); // reset pilihan kota jika bukan blended
+                        $("#select-city").val(""); // reset pilihan kota jika bukan blended/onsite
+                        $("#select-provience").val("");
                     }
                 });
 
@@ -311,9 +339,10 @@ $(document).ready(function () {
                 updateRadioStateCustom($first.data("value"));
             },
             preConfirm: () => {
-                const selectedCity =
-                    document.getElementById("select-city")?.value || null;
+                const selectedProv = $("#select-provience").val();
+                const selectedCity = $("#select-city").val();
                 return {
+                    provinsi: selectedProv,
                     city: selectedCity,
                 };
             },
@@ -356,7 +385,8 @@ $(document).ready(function () {
                 const trainingPlace = $(
                     'input[name="training-mode"]:checked'
                 ).val();
-                const city = $("#select-city").val(); // ambil kota jika ada
+                const city = $("#select-city").val();
+                const provience = $("#select-provience").val();
 
                 if (!trainingPlace) {
                     Swal.fire({
@@ -368,12 +398,27 @@ $(document).ready(function () {
                     return;
                 }
 
+                if (
+                    (trainingPlace === "Blended" ||
+                        trainingPlace === "On-Site") &&
+                    (!provience || !city)
+                ) {
+                    Swal.fire({
+                        icon: "warning",
+                        title: "Provinsi/Kota Belum Dipilih!",
+                        text: "Silakan pilih provinsi dan kota pelatihan terlebih dahulu.",
+                        confirmButtonText: "OK",
+                    });
+                    return;
+                }
+
                 confirmBooking(
                     trainingType,
                     bookingDate,
                     progres,
                     trainingPlace,
-                    city
+                    city,
+                    provience
                 );
             }
         };
@@ -384,7 +429,8 @@ $(document).ready(function () {
         formattedDate,
         progres,
         trainingPlace,
-        city
+        city,
+        provience
     ) {
         const typesWithCity = ["TKPK1", "TKPK2", "TKBT1", "TKBT2"];
         Swal.fire({
@@ -408,7 +454,8 @@ $(document).ready(function () {
                     formattedDate,
                     progres,
                     trainingPlace,
-                    city
+                    city,
+                    provience
                 );
                 startConfirmationCountdown();
             }
@@ -420,7 +467,8 @@ $(document).ready(function () {
         formattedDate,
         progres,
         trainingPlace,
-        city
+        city,
+        provience
     ) {
         Swal.fire({
             title: "Memproses...",
@@ -440,6 +488,7 @@ $(document).ready(function () {
                 isprogress: progres,
                 place: trainingPlace,
                 city: city,
+                provience: provience,
             },
             success: function (response) {
                 if (response.success) {
