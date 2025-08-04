@@ -95,7 +95,7 @@ class DashboardUserController extends Controller
                 ->where('user_id', $user->id)
                 ->count();
 
-            if ($countSameDay >= 2) {
+            if ($countSameDay >= 5) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Kuota pendaftaran Anda pada tanggal tersebut sudah penuh.'
@@ -103,15 +103,15 @@ class DashboardUserController extends Controller
             }
 
             // Cek kuota umum (global full)
-            $countAllSameDay = RegTraining::whereDate('date', $startDate->toDateString())
-                ->count();
+            // $countAllSameDay = RegTraining::whereDate('date', $startDate->toDateString())
+            //     ->count();
 
-            if ($countAllSameDay >= 2) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Pelatihan pada tanggal tersebut sudah penuh. Silakan pilih tanggal lain.'
-                ]);
-            }
+            // if ($countAllSameDay >= 2) {
+            //     return response()->json([
+            //         'success' => false,
+            //         'message' => 'Pelatihan pada tanggal tersebut sudah penuh. Silakan pilih tanggal lain.'
+            //     ]);
+            // }
             $now = now();
             $month = $now->format('m'); // bulan saat ini
             $year = $now->format('Y');  // tahun saat ini
