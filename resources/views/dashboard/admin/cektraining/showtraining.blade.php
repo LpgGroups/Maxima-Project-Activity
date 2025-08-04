@@ -477,7 +477,7 @@
         <form id="adminFileUploadForm" class="space-y-6">
             <input type="hidden" name="training_id" value="{{ $training->id }}">
             <div class="mt-2">
-                <label class="block mb-2 mt-2 text-sm font-medium text-gray-900" for="budget_plan">
+                <label class="block mb-2 mt-2 text-sm font-bold text-gray-900" for="budget_plan">
                     Upload Budget Plan (.pdf, .docx, .xls)
                 </label>
                 <input name="budget_plan" id="budget_plan" type="file" accept=".pdf,.doc,.docx,.xls,.xlsx"
@@ -499,7 +499,7 @@
             </div>
 
             <div class="mt-2">
-                <label class="block mb-2 mt-2 text-sm font-medium text-gray-900" for="letter_implementation">
+                <label class="block mb-2 mt-2 text-sm font-bold text-gray-900" for="letter_implementation">
                     Upload Surat Pelaksanaan (.pdf, .docx)
                 </label>
                 <input name="letter_implementation" id="letter_implementation" type="file" accept=".pdf,.doc,.docx"
@@ -521,7 +521,7 @@
 
             @if ($training->isfinish === 1)
                 <div class="mt-2">
-                    <label class="block mb-2 mt-2 text-sm font-medium text-gray-900" for="file_nobatch">
+                    <label class="block mb-2 mt-2 text-sm font-bold text-gray-900 " for="file_nobatch">
                         Upload Nomor Batch Kegiatan (.pdf)
                     </label>
                     <input name="file_nobatch" id="file_nobatch" type="file" accept=".pdf"
@@ -541,7 +541,13 @@
                     @endif
                 </div>
             @endif
+            <div class="">
+                <label for="note" class="block mb-1 font-bold text-gray-700 text-sm">Note</label>
+                <textarea name="note" id="note" maxlength="150"
+                    class="w-full border border-gray-300 rounded p-2 min-h-[100px] focus:ring-2 focus:ring-blue-500 text-left"
+                    rows="3" placeholder="Masukkan Note untuk management (opsional)">{{ old('note', $fileRequirement->note ?? '') }}</textarea>
 
+            </div>
 
             <button type="button" id="uploadFileForAdminBtn"
                 class="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition">
@@ -551,6 +557,37 @@
         </form>
     </div>
 
+    @if ($training->isfinish === 1)
+        <div class="p-4 border border-t-0 border-gray-300 bg-white rounded-lg mt-4" id="link-section">
+            @if (session('success'))
+                <div class="mb-4 p-3 bg-green-100 text-green-700 rounded">
+                    {{ session('success') }}
+                </div>
+            @endif
+            <h2 class="text-2xl font-bold mb-2 text-gray-700">Laporan Kegiatan</h2>
+            <p class="text-[15px]">
+                Silakan unggah laporan kegiatan setelah pelatihan selesai. Laporan ini akan menjadi bagian dari dokumentasi
+                dan evaluasi internal.
+            </p>
+            <form action="{{ route('training.update-link', $training->id) }}" method="POST">
+                @csrf
+
+                <div class="relative mt-4 w-64">
+                    <input id="link" name="link" type="url"
+                        class="peer block w-full appearance-none border border-[#515151] bg-transparent px-2.5 py-3 text-sm text-[#515151] rounded-md focus:border-[#1E6E9E] focus:outline-none focus:ring-1 focus:ring-[#1E6E9E] placeholder-transparent"
+                        placeholder=" " required value="{{ old('link', $training->link ?? '') }}" />
+                    <label for="link"
+                        class="absolute text-base rounded-lg bg-[#ffffff] text-[#515151] transition-all duration-300 transform -translate-y-4 scale-75 top-3 left-2.5 ml-2 z-10 origin-[0] peer-focus:text-[#1E6E9E] peer-focus:scale-75 peer-focus:-translate-y-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0">
+                        Laporan Kegiatan
+                    </label>
+                </div>
+
+                <button type="submit" class="mt-4 rounded bg-blue-600 px-6 py-2 text-white hover:bg-blue-700">
+                    Simpan Link
+                </button>
+            </form>
+        </div>
+    @endif
 
     <div class="p-4 border border-t-0 border-gray-300 bg-white rounded-lg mt-4">
         <h1 class="text-[24px] font-semibold">Upload persetujuan</h1>

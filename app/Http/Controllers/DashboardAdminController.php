@@ -146,7 +146,7 @@ class DashboardAdminController extends Controller
 
     public function show($id)
     {
-        $training = RegTraining::with(['participants', 'trainingNotifications'])
+        $training = RegTraining::with(['participants', 'trainingNotifications',])
             ->findOrFail($id);
 
         $userId = Auth::id();
@@ -290,7 +290,8 @@ class DashboardAdminController extends Controller
             'training_id' => 'required|exists:reg_training,id',
             'budget_plan' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx|max:2408',
             'letter_implementation' => 'nullable|file|mimes:pdf,doc,docx|max:2408',
-            'file_nobatch' => 'nullable|file|mimes:pdf|max:2048'
+            'file_nobatch' => 'nullable|file|mimes:pdf|max:2048',
+            'note' => 'nullable|string|max:150',
         ]);
 
         $training = RegTraining::find($request->training_id);
@@ -335,10 +336,9 @@ class DashboardAdminController extends Controller
             // Update path di database
             $fileReq->file_nobatch = $path;
         }
-
+        $fileReq->note = $request->note;
         $fileReq->save();
         $uploaderName = optional(Auth::user())->name ?? 'admin';
-
         $managers = User::where('role', 'management')->get();
 
         foreach ($managers as $manager) {
@@ -354,7 +354,18 @@ class DashboardAdminController extends Controller
         }
         return response()->json(['success' => true]);
     }
+    public function updateTrainingLink(Request $request, $id)
+    {
+        $request->validate([
+            'link' => 'nullable|url|max:255', // Validasi link, boleh kosong
+        ]);
 
+        $training = RegTraining::findOrFail($id);
+        $training->link = $request->input('link');
+        $training->save();
+
+        return redirect()->back()->with('success', 'Link dokumen pelatihan berhasil diperbarui.');
+    }
 
 
     public function trainingFinish(Request $request, $id)

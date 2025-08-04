@@ -1,3 +1,4 @@
+import moment from "moment-timezone";
 function liveDataUser() {
     fetch("/dashboard/user/live-data")
         .then((response) => response.json())
@@ -121,54 +122,48 @@ function checkTableTooltipDeadline() {
         const trainingDateStr = row.data("training-date");
         if (!trainingDateStr) return;
 
-        const trainingDate = new Date(trainingDateStr);
-        const now = new Date();
+        const trainingDate = moment.tz(trainingDateStr, "Asia/Jakarta");
+        const now = moment.tz("Asia/Jakarta");
 
-        const hminus5 = new Date(trainingDate);
-        hminus5.setDate(trainingDate.getDate() - 5);
+        const hMinus7 = trainingDate.clone().subtract(7, "days"); // batas akhir
+        const hMinus9 = trainingDate.clone().subtract(9, "days"); // mulai muncul warning
 
-        const hminus2 = new Date(trainingDate);
-        hminus2.setDate(trainingDate.getDate() - 7);
-
-        if (now >= hminus2 && now <= trainingDate) {
+        // Tooltip muncul antara H-9 s/d H-8 (sebelum H-7)
+        if (now.isSameOrAfter(hMinus9) && now.isBefore(hMinus7)) {
             if (row.find(".tooltip-row").length === 0) {
                 const tooltip = $(`
-            <div class="tooltip-row absolute left-[90%] ml-2 border mb-10 bg-red-600 text-white text-xs px-3 py-2 rounded shadow-md flex justify-between items-start gap-2 w-max max-w-[200px] z-50">
-                <div>
-                    <div class="font-semibold">⚠️ Deadline Segera</div>
-                    <div class="text-yellow-300 countdown-timer"></div>
-                </div>
-                <button class="text-white hover:text-red-400 text-lg font-bold leading-none" data-tooltip-close>&times;</button>
-            </div>
-        `);
+                    <div class="tooltip-row absolute left-[90%] ml-2 border mb-10 bg-red-600 text-white text-xs px-3 py-2 rounded shadow-md flex justify-between items-start gap-2 w-max max-w-[200px] z-50">
+                        <div>
+                            <div class="font-semibold">⚠️ Deadline Segera</div>
+                            <div class="text-yellow-300 countdown-timer"></div>
+                        </div>
+                        <button class="text-white hover:text-red-400 text-lg font-bold leading-none" data-tooltip-close>&times;</button>
+                    </div>
+                `);
+
                 row.css("position", "relative");
                 row.append(tooltip);
 
-                // Close handler
                 tooltip.find("[data-tooltip-close]").on("click", function (e) {
-                    e.stopPropagation(); // ← ini wajib kalau baris punya onclick
+                    e.stopPropagation();
                     tooltip.remove();
                 });
 
                 const countdownEl = tooltip.find(".countdown-timer")[0];
 
                 function updateCountdown() {
-                    const now = new Date();
-                    const distance = hminus5 - now;
+                    const now = moment.tz("Asia/Jakarta");
+                    const distance = moment.duration(hMinus7.diff(now));
 
-                    if (distance <= 0) {
+                    if (distance.asMilliseconds() <= 0) {
                         tooltip.remove();
                         return;
                     }
 
-                    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-                    const hours = Math.floor(
-                        (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-                    );
-                    const minutes = Math.floor(
-                        (distance % (1000 * 60 * 60)) / (1000 * 60)
-                    );
-                    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                    const days = Math.floor(distance.asDays());
+                    const hours = distance.hours();
+                    const minutes = distance.minutes();
+                    const seconds = distance.seconds();
 
                     countdownEl.innerText = `Sisa waktu: ${days}h ${hours}j ${minutes}m ${seconds}d`;
                 }
@@ -179,7 +174,6 @@ function checkTableTooltipDeadline() {
         }
     });
 }
-
 // Panggil fungsi ini setiap kali halaman ready, dan bisa di-set interval untuk auto-refresh
 $(document).ready(function () {
     liveDataUser();

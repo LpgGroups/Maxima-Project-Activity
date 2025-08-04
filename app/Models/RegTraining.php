@@ -65,4 +65,5 @@ class RegTraining extends Model
     {
         return $this->hasMany(FileRequirement::class, 'file_id', 'id');
     }
+    
 }

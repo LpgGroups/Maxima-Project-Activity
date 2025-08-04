@@ -372,7 +372,6 @@ class RegTrainingController extends Controller
 
 
         if ($request->hasFile('proof_payment')) {
-            // Hapus file lama jika ada
             if ($record && $record->proof_payment) {
                 Storage::disk('public')->delete($record->proof_payment);
             }

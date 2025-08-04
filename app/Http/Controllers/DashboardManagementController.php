@@ -76,6 +76,7 @@ class DashboardManagementController extends Controller
             'phone'          => $training->phone_pic,
             'company'      => $training->name_company,
             'isfinish' => $training->isfinish,
+            'link'=> $training->link,
             'participants' => $training->participants->count(),
             'date'         => Carbon::parse($training->date)->translatedFormat('d F Y'),
             'date_end'     => Carbon::parse($training->date_end)->translatedFormat('d F Y'),
@@ -94,7 +95,8 @@ class DashboardManagementController extends Controller
                         ? route('download.confidential', ['type' => 'file-nobatch', 'file' => basename($file->file_nobatch)])
                         : null,
                     'created_at'            => $file->created_at ? $file->created_at->format('d-m-Y H:i') : null,
-                    // bisa tambahkan kolom lain sesuai kebutuhan
+                    
+                    'note'                  => $file->note ?? null,
                 ];
             }),
 

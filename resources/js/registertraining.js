@@ -1,4 +1,5 @@
 import { cityList } from "./cities.js";
+import moment from "moment-timezone";
 function showTabs() {
     const savedTab = maxTab;
     showTab(savedTab);
@@ -281,7 +282,7 @@ function showWarning(message) {
         text: message || "Ada data yang belum diisi.",
     });
 }
-
+let form3Closed = false;
 function checkSubmitBtnDeadline() {
     const btnSelectors = ["#submitBtn", "#submitBtnForm2", "#submitBtnForm3"];
 
@@ -289,32 +290,39 @@ function checkSubmitBtnDeadline() {
         const btn = $(selector);
         const trainingDateStr = btn.data("training-date");
 
-        if (!trainingDateStr) return; // kalau ga ada tanggal, skip
+        if (!trainingDateStr) return;
 
-        // pastikan parent tombol punya posisi relative agar tooltip absolute bisa pasang dengan benar
         const parent = btn.parent();
         if (parent.css("position") === "static") {
             parent.css("position", "relative");
         }
 
-        const trainingDate = new Date(trainingDateStr);
-        const now = new Date();
+        // Gunakan moment-timezone untuk pastikan waktu Jakarta
+        const trainingDateJakarta = moment.tz(trainingDateStr, "Asia/Jakarta");
+        const nowJakarta = moment.tz("Asia/Jakarta");
+        const hMinus8 = trainingDateJakarta.clone().subtract(7, "days");
 
-        const hMinus3 = new Date(trainingDate);
-        hMinus3.setDate(trainingDate.getDate() - 8);
-
-        if (now >= hMinus3) {
-            // disable tombol dan ubah style
+        if (nowJakarta.isSameOrAfter(hMinus8)) {
             btn.prop("disabled", true);
-            btn.removeClass("bg-blue-500").addClass(
-                "bg-gray-400 cursor-not-allowed"
-            );
+            btn.removeClass(
+                "bg-blue-500 hover:bg-blue-600 cursor-pointer"
+            ).addClass("bg-gray-400 cursor-not-allowed");
             btn.text("Pendaftaran Ditutup");
             parent.find(".tooltip-btn").remove();
+
+            // Set flag hanya untuk form 3
+            if (selector === "#submitBtnForm3") {
+                form3Closed = true;
+            }
         } else {
+            // Reset flag jika belum deadline
+            if (selector === "#submitBtnForm3") {
+                form3Closed = false;
+            }
+
             if (parent.find(".tooltip-btn").length === 0) {
-                const tooltip = $(`
-                    <div class="tooltip-btn absolute bg-gray-800 text-white text-xs px-3 py-2 rounded shadow-md flex justify-between items-start gap-2 w-max max-w-[250px]">
+                const tooltip = $(
+                    `<div class="tooltip-btn absolute bg-gray-800 text-white text-xs px-3 py-2 rounded shadow-md flex justify-between items-start gap-2 w-max max-w-[250px]">
                         <div>
                             <div class="font-semibold">Pendaftaran Dapat Diubah Hingga</div>
                             <div class="text-yellow-300" id="countdown-${selector.replace(
@@ -323,8 +331,8 @@ function checkSubmitBtnDeadline() {
                             )}"></div>
                         </div>
                         <button class="text-white hover:text-red-400 text-lg font-bold leading-none" style="line-height: 1;" data-tooltip-close>&times;</button>
-                    </div>
-                `);
+                    </div>`
+                );
 
                 btn.after(tooltip);
 
@@ -336,41 +344,39 @@ function checkSubmitBtnDeadline() {
                     zIndex: 50,
                 });
 
-                // fungsi close tooltip
                 tooltip.find("[data-tooltip-close]").on("click", function () {
                     tooltip.remove();
                 });
 
-                // countdown update
                 const countdownEl = tooltip.find(
                     `#countdown-${selector.replace("#", "")}`
                 )[0];
 
                 function updateCountdown() {
-                    const now = new Date();
-                    const distance = hMinus3 - now;
+                    const nowJakarta = moment.tz("Asia/Jakarta");
+                    const distance = moment.duration(hMinus8.diff(nowJakarta));
 
-                    if (distance <= 0) {
+                    if (distance.asMilliseconds() <= 0) {
                         tooltip.remove();
-                        // disable tombol juga kalau lewat deadline
                         btn.prop("disabled", true);
-                        btn.removeClass("bg-blue-500").addClass(
-                            "bg-gray-400 cursor-not-allowed"
-                        );
+                        btn.removeClass(
+                            "bg-blue-500 hover:bg-blue-600 cursor-pointer"
+                        ).addClass("bg-gray-400 cursor-not-allowed");
                         btn.text("Pendaftaran Ditutup");
+
+                        // Set flag jika sudah lewat deadline
+                        if (selector === "#submitBtnForm3") {
+                            form3Closed = true;
+                        }
                         return;
                     }
 
-                    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-                    const hours = Math.floor(
-                        (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-                    );
-                    const minutes = Math.floor(
-                        (distance % (1000 * 60 * 60)) / (1000 * 60)
-                    );
-                    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                    const days = Math.floor(distance.asDays());
+                    const hours = distance.hours();
+                    const minutes = distance.minutes();
+                    const seconds = distance.seconds();
 
-                    countdownEl.innerText = `Sisa waktu: ${days}h ${hours}j ${minutes}m ${seconds}d`;
+                    countdownEl.innerText = `Sisa waktu: ${days} hari ${hours} jam ${minutes} menit ${seconds} detik`;
                 }
 
                 updateCountdown();
@@ -379,11 +385,21 @@ function checkSubmitBtnDeadline() {
         }
     });
 }
+
 function checkBtnSendForm3() {
     const fileApprovalInput = document.getElementById("file_approval");
     const proofPaymentInput = document.getElementById("proof_payment");
-    const submitBtn = $("#submitBtnForm3"); // pakai jQuery
+    const submitBtn = $("#submitBtnForm3");
     function checkFilesSelected() {
+        // Cek juga deadline!
+        if (form3Closed) {
+            submitBtn.prop("disabled", true);
+            submitBtn
+                .removeClass("bg-blue-500 hover:bg-blue-600 cursor-pointer")
+                .addClass("bg-gray-400 cursor-not-allowed");
+            return;
+        }
+
         if (
             fileApprovalInput.files.length > 0 ||
             proofPaymentInput.files.length > 0
@@ -404,7 +420,6 @@ function checkBtnSendForm3() {
     proofPaymentInput.addEventListener("change", checkFilesSelected);
     checkFilesSelected();
 }
-
 function cities() {
     var $select = $("#city");
     var selected = $("#citySelected").val() || "";
