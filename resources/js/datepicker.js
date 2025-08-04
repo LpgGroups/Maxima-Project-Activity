@@ -52,7 +52,7 @@ $(document).ready(function () {
 
         const today = new Date();
         const tenDaysLater = new Date(today);
-        tenDaysLater.setDate(today.getDate() + 10);
+        tenDaysLater.setDate(today.getDate() + 9);
 
         // Isi tanggal penuh (kuota sudah 2) dari backend
         const fullQuotaDates = window.fullQuotaDates || []; // Format: ['2025-07-10', ...]

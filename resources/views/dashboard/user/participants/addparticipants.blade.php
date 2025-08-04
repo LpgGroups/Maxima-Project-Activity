@@ -193,8 +193,7 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1" for="letter_employee">Surat Keterangan
                         Kerja (PDF)<span class="text-red-500">*</span></label>
                     <div class="flex items-center gap-2">
-                        <input type="file" name="letter_employee" id="letter_employee"
-                            accept="application/pdf"
+                        <input type="file" name="letter_employee" id="letter_employee" accept="application/pdf"
                             class="block w-full text-sm text-gray-600 border border-gray-300 rounded cursor-pointer" />
                         <span class="checkmark hidden">
                             <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor"
@@ -220,8 +219,7 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1" for="letter_statement">Surat Pernyataan
                         (PDF)<span class="text-red-500">*</span></label>
                     <div class="flex items-center gap-2">
-                        <input type="file" name="letter_statement" id="letter_statement"
-                            accept="application/pdf"
+                        <input type="file" name="letter_statement" id="letter_statement" accept="application/pdf"
                             class="block w-full text-sm text-gray-600 border border-gray-300 rounded cursor-pointer" />
                         <span class="checkmark hidden">
                             <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor"
@@ -247,8 +245,7 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1" for="form_registration">Formulir
                         Pendaftaran (PDF)<span class="text-grey-500">(opsional)</span></label>
                     <div class="flex items-center gap-2">
-                        <input type="file" name="form_registration" id="form_registration"
-                            accept="application/pdf"
+                        <input type="file" name="form_registration" id="form_registration" accept="application/pdf"
                             class="block w-full text-sm text-gray-600 border border-gray-300 rounded cursor-pointer" />
                         <span class="checkmark hidden">
                             <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor"
@@ -356,13 +353,11 @@
                                 <!-- Edit Button -->
                                 <button type="button"
                                     class="edit-btn bg-blue-500 hover:bg-blue-700 text-white px-2 py-1 rounded text-xs"
-                                    data-id="{{ $participant->id }}" 
-                                    data-name="{{ $participant->name }}"
-                                    data-nik="{{ $participant->nik }}" 
-                                    data-birth_place="{{ $participant->birth_place }}" 
+                                    data-id="{{ $participant->id }}" data-name="{{ $participant->name }}"
+                                    data-nik="{{ $participant->nik }}"
+                                    data-birth_place="{{ $participant->birth_place }}"
                                     data-date_birth="{{ $participant->date_birth }}"
-                                    data-photo="{{ $participant->photo }}"
-                                     data-ijazah="{{ $participant->ijazah }}"
+                                    data-photo="{{ $participant->photo }}" data-ijazah="{{ $participant->ijazah }}"
                                     data-letter_employee="{{ $participant->letter_employee }}"
                                     data-letter_statement="{{ $participant->letter_statement }}"
                                     data-form_registration="{{ $participant->form_registration }}"
@@ -399,7 +394,8 @@
             </table>
         </div>
     </div>
-
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/min/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment-timezone@0.5.43/builds/moment-timezone-with-data.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             window.isClosed = @json($isClosed);
@@ -444,7 +440,8 @@
                     document.getElementById('participant_id').value = btn.getAttribute('data-id');
                     document.getElementById('name').value = btn.getAttribute('data-name');
                     document.getElementById('nik').value = btn.getAttribute('data-nik') ?? '';
-                    document.getElementById('birth_place').value = btn.getAttribute('data-birth_place') ?? '';
+                    document.getElementById('birth_place').value = btn.getAttribute(
+                        'data-birth_place') ?? '';
                     document.getElementById('date_birth').value = btn.getAttribute(
                         'data-date_birth') ?? '';
                     document.getElementById('blood_type').value = btn.getAttribute(
@@ -495,13 +492,12 @@
             const trainingDateStr = btn?.dataset?.trainingDate;
 
             if (btn && tooltip && trainingDateStr) {
-                const trainingDate = new Date(trainingDateStr);
-                const deadline = new Date(trainingDate);
-                deadline.setDate(trainingDate.getDate() - 5);
+                const trainingDate = moment.tz(trainingDateStr, "Asia/Jakarta");
+                const deadline = trainingDate.clone().subtract(7, 'days');
 
                 function showCountdown() {
-                    const now = new Date();
-                    const distance = deadline - now;
+                    const now = moment.tz("Asia/Jakarta");
+                    const distance = deadline.diff(now);
 
                     if (distance <= 0) {
                         tooltip.textContent = "Pendaftaran sudah ditutup.";
@@ -513,10 +509,11 @@
                         return;
                     }
 
-                    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-                    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                    const diff = moment.duration(distance);
+                    const days = Math.floor(diff.asDays());
+                    const hours = diff.hours();
+                    const minutes = diff.minutes();
+                    const seconds = diff.seconds();
 
                     tooltip.textContent = `Sisa waktu pendaftaran: ${days}h ${hours}j ${minutes}m ${seconds}d`;
                     tooltip.classList.remove('hidden');

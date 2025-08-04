@@ -16,6 +16,7 @@ class FileRequirement extends Model
         'budget_plan',
         'letter_implementation',
         'file_nobatch',
+        'note',
         'file_id',
     ];
 

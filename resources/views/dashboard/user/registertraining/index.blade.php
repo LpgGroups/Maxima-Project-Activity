@@ -66,13 +66,16 @@
                 <tbody class="lg:text-[12px] text-[8px]">
                     @foreach ($trainings as $index => $training)
                         @php
-                            $start = Carbon::parse($training->date);
-                            $end = Carbon::parse($training->date_end);
-                            $now = Carbon::now();
-                            $hMinus2 = $start->copy()->subDays(7);
-                            $showTooltip = $now->between($hMinus2, $start);
+                            $start = Carbon::parse($training->date); // Tanggal mulai pelatihan
+                            $end = Carbon::parse($training->date_end); // Tanggal selesai pelatihan
+                            $now = Carbon::now(); // Sekarang
 
-                            // Tanggal range display
+                            $hMinus7 = $start->copy()->subDays(7); // H-7 (pendaftaran ditutup)
+                            $hMinus9 = $start->copy()->subDays(9); // H-9 (peringatan mulai muncul)
+
+                            $showTooltip = $now->between($hMinus9, $hMinus7->copy()->subSecond()); // tooltip muncul hanya di H-9 & H-8
+
+                            // Tanggal range display (untuk tampilan jadwal pelatihan)
                             if ($start->year != $end->year) {
                                 $date = $start->translatedFormat('d F Y') . ' - ' . $end->translatedFormat('d F Y');
                             } elseif ($start->month != $end->month) {
@@ -81,6 +84,7 @@
                                 $date = $start->translatedFormat('d') . ' - ' . $end->translatedFormat('d F Y');
                             }
 
+                            // Progress bar logic
                             $progressValue = $training->isprogress;
                             $progressMap = [
                                 1 => ['percent' => 10, 'color' => 'bg-red-600'],
@@ -91,6 +95,7 @@
                             ];
                             $progress = $progressMap[$progressValue] ?? ['percent' => 0, 'color' => 'bg-gray-400'];
                         @endphp
+
 
                         <tr class="odd:bg-white even:bg-gray-300 cursor-pointer hover:bg-red-500 hover:text-white leading-loose"
                             onclick="window.location='{{ route('dashboard.form', ['id' => $training->id]) }}'">
