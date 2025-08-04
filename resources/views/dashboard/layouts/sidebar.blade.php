@@ -296,8 +296,8 @@
         </div>
     </div>
 </div>
-
-<script>
+ 
+<script> 
     let isSidebarOpen = true;
 
     function toggleSidebar() {
