@@ -48,215 +48,255 @@
 
 
     <div class="p-4 border border-t-0 border-gray-300 bg-white rounded-lg mt-6">
-        <h1 class="text-[24px] font-semibold">Daftar Pelatihan</h1>
-        <h2 class="text-[15px]">Lengkapi data form ini untuk mengikuti pelatihan yang akan diselenggarakan oleh PT
-            Maxima Aksara Jaya Utama, pastikan Anda mengisi form aplikasi pendaftaran dengan benar dan sesuai data
-            yang valid.</h2>
-        <form id="editFormbyAdmin" action="/dashboard/admin/training/{{ $training->id }}" method="POST"
-            data-training-id="{{ $training->id }}">
-            @csrf
-            <div class="flex gap-x-4">
-                <!-- Nama PIC Perusahaan -->
-                <div class="relative mt-4 w-64">
-                    <input id="name_pic" name="name_pic" type="text"
-                        class="peer block w-full appearance-none border border-[#515151] bg-transparent px-2.5 py-3 text-sm text-[#515151] rounded-md focus:border-[#1E6E9E] focus:outline-none focus:ring-1 focus:ring-[#1E6E9E] placeholder-transparent"
-                        placeholder="" required pattern="[A-Za-z\s]+" title="Nama PIC hanya boleh berisi huruf dan spasi."
-                        value="{{ old('name_pic', $training->name_pic ?? '') }}" />
-                    <label for="name_pic"
-                        class="absolute text-base rounded-lg bg-[#ffffff] text-[#515151] transition-all duration-300 transform -translate-y-4 scale-75 top-3 left-2.5 ml-2 z-10 origin-[0] peer-focus:text-[#1E6E9E] peer-focus:scale-75 peer-focus:-translate-y-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0">
-                        Nama PIC
-                    </label>
-                </div>
+        <div class="max-w-5xl mx-auto px-2 py-6">
+            <h1 class="text-[24px] font-semibold">Daftar Pelatihan</h1>
+            <h2 class="text-[15px] mb-6">
+                Lengkapi data form ini untuk mengikuti pelatihan yang akan diselenggarakan oleh PT Maxima Aksara Jaya Utama,
+                pastikan Anda mengisi form aplikasi pendaftaran dengan benar dan sesuai data yang valid.
+            </h2>
+            <div class="flex flex-col md:flex-row gap-8 items-start w-full">
+                <!-- FORM -->
+                <form id="editFormbyAdmin" action="/dashboard/admin/training/{{ $training->id }}" method="POST"
+                    data-training-id="{{ $training->id }}" class="flex-1">
+                    @csrf
 
-                <!-- Nama Perusahaan -->
-                <div class="relative mt-4 w-64">
-                    <input id="name_company" name="name_company" type="text"
-                        class="peer block w-full appearance-none border border-[#515151] bg-transparent px-2.5 py-3 text-sm text-[#515151] rounded-md focus:border-[#1E6E9E] focus:outline-none focus:ring-1 focus:ring-[#1E6E9E] placeholder-transparent"
-                        placeholder="" required title="Nama Perusahaan hanya boleh berisi huruf, angka, dan spasi."
-                        value="{{ old('name_company', $training->name_company ?? '') }}" />
-                    <label for="name_company"
-                        class="absolute text-base rounded-lg bg-[#ffffff] text-[#515151] transition-all duration-300 transform -translate-y-4 scale-75 top-3 left-2.5 ml-2 z-10 origin-[0] peer-focus:text-[#1E6E9E] peer-focus:scale-75 peer-focus:-translate-y-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0">
-                        Nama Perusahaan
-                    </label>
-                </div>
-            </div>
+                    <!-- GRID INPUT UTAMA 2 KOLOM -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-4 mb-2">
+                        <div>
+                            <!-- Nama PIC -->
+                            <div class="relative mb-3">
+                                <input id="name_pic" name="name_pic" type="text"
+                                    class="peer block w-full appearance-none border border-[#515151] bg-transparent px-2.5 py-3 text-sm text-[#515151] rounded-md focus:border-[#1E6E9E] focus:outline-none focus:ring-1 focus:ring-[#1E6E9E] placeholder-transparent"
+                                    placeholder="" required pattern="[A-Za-z\s]+"
+                                    title="Nama PIC hanya boleh berisi huruf dan spasi."
+                                    value="{{ old('name_pic', $training->name_pic ?? '') }}" />
+                                <label for="name_pic"
+                                    class="absolute text-base rounded-lg bg-[#ffffff] text-[#515151] transition-all duration-300 transform -translate-y-4 scale-75 top-3 left-2.5 ml-2 z-10 origin-[0] peer-focus:text-[#1E6E9E] peer-focus:scale-75 peer-focus:-translate-y-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0">
+                                    Nama PIC
+                                </label>
+                            </div>
+                            <!-- Nama Perusahaan -->
+                            <div class="relative mb-3">
+                                <input id="name_company" name="name_company" type="text"
+                                    class="peer block w-full appearance-none border border-[#515151] bg-transparent px-2.5 py-3 text-sm text-[#515151] rounded-md focus:border-[#1E6E9E] focus:outline-none focus:ring-1 focus:ring-[#1E6E9E] placeholder-transparent"
+                                    placeholder="" required
+                                    title="Nama Perusahaan hanya boleh berisi huruf, angka, dan spasi."
+                                    value="{{ old('name_company', $training->name_company ?? '') }}" />
+                                <label for="name_company"
+                                    class="absolute text-base rounded-lg bg-[#ffffff] text-[#515151] transition-all duration-300 transform -translate-y-4 scale-75 top-3 left-2.5 ml-2 z-10 origin-[0] peer-focus:text-[#1E6E9E] peer-focus:scale-75 peer-focus:-translate-y-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0">
+                                    Nama Perusahaan
+                                </label>
+                            </div>
+                        </div>
+                        <div>
+                            <!-- Email PIC -->
+                            <div class="relative mb-3">
+                                <input id="email_pic" name="email_pic" type="email"
+                                    class="peer block w-full appearance-none border border-[#515151] bg-transparent px-2.5 py-3 text-sm text-[#515151] rounded-md focus:border-[#1E6E9E] focus:outline-none focus:ring-1 focus:ring-[#1E6E9E] placeholder-transparent"
+                                    placeholder="" required value="{{ old('email_pic', $training->email_pic ?? '') }}" />
+                                <label for="email_pic"
+                                    class="absolute text-base rounded-lg bg-[#ffffff] text-[#515151] transition-all duration-300 transform -translate-y-4 scale-75 top-3 left-2.5 ml-2 z-10 origin-[0] peer-focus:text-[#1E6E9E] peer-focus:scale-75 peer-focus:-translate-y-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0">
+                                    Email PIC
+                                </label>
+                            </div>
+                            <!-- No WhatsApp -->
+                            <div class="relative mb-3">
+                                <input id="phone_pic" name="phone_pic" type="text"
+                                    class="peer block w-full appearance-none border border-[#515151] bg-transparent px-2.5 py-3 text-sm text-[#515151] rounded-md focus:border-[#1E6E9E] focus:outline-none focus:ring-1 focus:ring-[#1E6E9E] placeholder-transparent"
+                                    placeholder="" required title="No WhatsApp harus berupa nomor telepon yang valid."
+                                    value="{{ old('phone_pic', $training->phone_pic ?? '') }}" />
+                                <label for="phone_pic"
+                                    class="absolute text-base rounded-lg bg-[#ffffff] text-[#515151] transition-all duration-300 transform -translate-y-4 scale-75 top-3 left-2.5 ml-2 z-10 origin-[0] peer-focus:text-[#1E6E9E] peer-focus:scale-75 peer-focus:-translate-y-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0">
+                                    No WhatsApp
+                                </label>
+                                <span class="ml-1 text-sm text-gray-500 cursor-pointer relative group">
+                                    Ex:0818080808
+                                </span>
+                                @error('phone_pic')
+                                    <div class="text-red-500 text-sm mt-1 z-10">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END GRID INPUT UTAMA -->
 
-            <div class="flex gap-x-4 mt-2">
-                <!-- Email PIC -->
-                <div class="relative mt-4 w-64">
-                    <input id="email_pic" name="email_pic" type="email"
-                        class="peer block w-full appearance-none border border-[#515151] bg-transparent px-2.5 py-3 text-sm text-[#515151] rounded-md focus:border-[#1E6E9E] focus:outline-none focus:ring-1 focus:ring-[#1E6E9E] placeholder-transparent"
-                        placeholder="" required value="{{ old('email_pic', $training->email_pic ?? '') }}" />
-                    <label for="email_pic"
-                        class="absolute text-base rounded-lg bg-[#ffffff] text-[#515151] transition-all duration-300 transform -translate-y-4 scale-75 top-3 left-2.5 ml-2 z-10 origin-[0] peer-focus:text-[#1E6E9E] peer-focus:scale-75 peer-focus:-translate-y-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0">
-                        Email PIC
-                    </label>
-                </div>
+                    <!-- BARIS: KEGIATAN & TANGGAL -->
+                    <div class="flex flex-wrap gap-x-4 gap-y-2 mb-3">
+                        <div class="relative mt-2 w-64">
+                            <select id="activity" name="activity"
+                                class="peer block w-full appearance-none border border-[#515151] bg-transparent px-2.5 py-3 text-sm text-[#515151] rounded-md focus:border-[#1E6E9E] focus:outline-none focus:ring-1 focus:ring-[#1E6E9E]"
+                                required>
+                                <option value="" disabled selected hidden></option>
+                                <option value="TKPK1"
+                                    {{ old('activity', $training->activity ?? '') == 'TKPK1' ? 'selected' : '' }}>TKPK1
+                                </option>
+                                <option value="TKPK2"
+                                    {{ old('activity', $training->activity ?? '') == 'TKPK2' ? 'selected' : '' }}>TKPK2
+                                </option>
+                                <option value="TKBT1"
+                                    {{ old('activity', $training->activity ?? '') == 'TKBT1' ? 'selected' : '' }}>TKBT1
+                                </option>
+                                <option value="TKBT2"
+                                    {{ old('activity', $training->activity ?? '') == 'TKBT2' ? 'selected' : '' }}>TKBT2
+                                </option>
+                                <option value="BE"
+                                    {{ old('activity', $training->activity ?? '') == 'BE' ? 'selected' : '' }}>BE</option>
+                                <option value="P3K"
+                                    {{ old('activity', $training->activity ?? '') == 'P3K' ? 'selected' : '' }}>P3K
+                                </option>
+                                <option value="AK3U"
+                                    {{ old('activity', $training->activity ?? '') == 'AK3U' ? 'selected' : '' }}>AK3U
+                                </option>
+                            </select>
+                            <label for="activity"
+                                class="absolute text-base rounded-lg bg-[#ffffff] text-[#515151] transition-all duration-300 transform scale-75 -translate-y-4 top-3 left-2.5 ml-2 z-10 origin-[0] peer-focus:text-[#1E6E9E] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0">
+                                Kegiatan
+                            </label>
+                        </div>
+                        <div class="relative mt-2 w-64">
+                            @php
+                                use Carbon\Carbon;
+                                $formattedDate = old(
+                                    'date',
+                                    $training->date ? Carbon::parse($training->date)->format('Y-m-d') : '',
+                                );
+                            @endphp
+                            <input id="date" name="date" type="text"
+                                value="{{ \Carbon\Carbon::parse($training->date)->format('d-m-Y') }}"
+                                class="peer block w-full appearance-none border border-[#515151] bg-transparent px-2.5 py-3 text-sm text-[#515151] rounded-md focus:border-[#1E6E9E] focus:outline-none focus:ring-1 focus:ring-[#1E6E9E] placeholder-transparent"
+                                placeholder="" required />
+                            <label for="date"
+                                class="absolute text-base rounded-lg bg-[#ffffff] text-[#515151] transition-all duration-300 transform -translate-y-4 scale-75 top-3 left-2.5 ml-2 z-10 origin-[0] peer-focus:text-[#1E6E9E] peer-focus:scale-75 peer-focus:-translate-y-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0">
+                                Tanggal Kegiatan
+                            </label>
+                            <div class="flex items-center gap-2 mt-1">
+                                <p class="text-sm font-medium text-red-600 text-[10px]">Selesai Pada:</p>
+                                <input type="text" id="end_date" name="end_date" readonly
+                                    value="{{ old('end_date', \Carbon\Carbon::parse($training->date_end)->format('Y-m-d')) }}"
+                                    class="border border-gray-300 rounded-md px-3 py-2 text-sm w-28 bg-gray-100 text-gray-700" />
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END BARIS KEGIATAN & TANGGAL -->
 
-                <!-- No WhatsApp -->
-                <div class="relative mt-4 w-64">
-                    <input id="phone_pic" name="phone_pic" type="text"
-                        class="peer block w-full appearance-none border border-[#515151] bg-transparent px-2.5 py-3 text-sm text-[#515151] rounded-md focus:border-[#1E6E9E] focus:outline-none focus:ring-1 focus:ring-[#1E6E9E] placeholder-transparent"
-                        placeholder="" required title="No WhatsApp harus berupa nomor telepon yang valid."
-                        value="{{ old('phone_pic', $training->phone_pic ?? '') }}" />
-                    <label for="phone_pic"
-                        class="absolute text-base rounded-lg bg-[#ffffff] text-[#515151] transition-all duration-300 transform -translate-y-4 scale-75 top-3 left-2.5 ml-2 z-10 origin-[0] peer-focus:text-[#1E6E9E] peer-focus:scale-75 peer-focus:-translate-y-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0">
-                        No WhatsApp
-                    </label>
-                    <span class="ml-1 text-sm text-gray-500 cursor-pointer relative group">
-                        Ex:0818080808
-                    </span>
-                    @error('phone_pic')
-                        <div class="text-red-500 text-sm mt-1 z-10">{{ $message }}</div>
-                    @enderror
-                </div>
-                @if ($training->isfinish == 2)
-                    <div class="border border-red-500 h-30 w-[300px] rounded-lg p-2">
-                        <h3 class="text-xl font-bold mb-2 text-red-600 text-center">Pelatihan Ditolak</h3>
-                        <p class="text-[10px] text-gray-700 text-justify">
-                            Mohon maaf, pengajuan pelatihan ini <strong>tidak dapat dilanjutkan</strong>.
-                            <br><br>
-                            <strong>Alasan penolakan:</strong><br>
-                            <span class="text-red-600 italic">
-                                {{ $training->reason_fail ?? 'Tidak ada alasan yang tersedia.' }}
-                            </span>
-                        </p>
+                    <!-- LOKASI KEGIATAN -->
+                    <div class="mb-5">
+                        <h3 class="text-sm font-semibold text-gray-600 mb-3">Lokasi Kegiatan</h3>
+                        <div class="grid gap-4 sm:grid-cols-2 max-w-xl">
+                            <div>
+                                <label for="provience" class="block text-sm text-gray-700 font-medium mb-1">
+                                    Provinsi <span class="text-red-500">*</span>
+                                </label>
+                                <select id="provience" name="provience"
+                                    class="w-full p-2 border border-gray-300 rounded-md text-gray-900 focus:ring-2 focus:ring-blue-600 focus:outline-none">
+                                    <option value="">-- Pilih Provinsi --</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="city" class="block text-sm text-gray-700 font-medium mb-1">
+                                    Kota <span class="text-red-500">*</span>
+                                </label>
+                                <select id="city" name="city"
+                                    class="w-full p-2 border border-gray-300 rounded-md text-gray-900 focus:ring-2 focus:ring-blue-600 focus:outline-none">
+                                    <option value="">-- Pilih Kota --</option>
+                                </select>
+                            </div>
+                            <div class="sm:col-span-2">
+                                <label for="address" class="block mb-1 font-semibold text-gray-700 text-sm">Alamat
+                                    Lengkap</label>
+                                <textarea name="address" id="address"
+                                    class="w-full border border-gray-300 rounded p-2 min-h-[100px] focus:ring-2 focus:ring-blue-500" rows="3"
+                                    placeholder="Masukkan alamat lengkap lokasi pelatihan">{{ old('address', $training->address ?? '') }}</textarea>
+                            </div>
+                        </div>
+                        <input type="hidden" id="citySelected" value="{{ $training->city ?? '' }}">
+                        <input type="hidden" id="provSelected" value="{{ $training->provience ?? '' }}">
+                    </div>
+                    <!-- END LOKASI -->
+
+                    <label class="block mt-2 mb-2 text-sm font-medium text-gray-900">Tempat Pelatihan:</label>
+                    <div class="flex min-h-5">
+                        <div class="flex items-center justify-center gap-x-4 border border-gray-300 rounded-lg h-12 px-4">
+                            <div class="flex items-center">
+                                <input id="radio-online" type="radio" value="Online" name="colored-radio"
+                                    class="w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500"
+                                    {{ $training->place == 'Online' ? 'checked' : '' }}>
+                                <label for="radio-online" class="ms-2 text-sm font-medium text-gray-900 ">Online</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="radio-offline" type="radio" value="On-Site" name="colored-radio"
+                                    class="w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500"
+                                    {{ $training->place == 'On-Site' ? 'checked' : '' }}>
+                                <label for="radio-offline" class="ms-2 text-sm font-medium text-gray-900 ">On-Site</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="radio-blended" type="radio" value="Blended" name="colored-radio"
+                                    class="w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500"
+                                    {{ $training->place == 'Blended' ? 'checked' : '' }}>
+                                <label for="radio-blended" class="ms-2 text-sm font-medium text-gray-900 ">Blended</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 flex items-center gap-2">
+                        <input type="checkbox" id="confirmEdit"
+                            class="h-5 w-5 appearance-none border-2 border-gray-400 rounded-sm checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200" />
+                        <label for="confirmEdit" class="text-[12px] text-gray-700">
+                            Saya telah memverifikasi dan memastikan bahwa seluruh data yang diinput telah sesuai dengan
+                            informasi
+                            peserta yang valid. Jika terdapat perubahan, telah dilakukan berdasarkan konfirmasi dan bukti
+                            yang sah
+                        </label>
+                    </div>
+
+                    <button id="submitBtn" disabled
+                        class="mt-4 px-4 py-2 bg-gray-400 text-white rounded-md cursor-not-allowed transition disabled:opacity-50">
+                        Perbarui Data
+                    </button>
+                </form>
+
+                @if ($training->isfinish == 1)
+                    <!-- CARD SUKSES -->
+                    <div class="w-full md:w-[370px] mt-8 md:mt-0 md:sticky md:top-8">
+                        <div
+                            class="bg-green-50 border-2 border-green-400 rounded-2xl shadow-lg p-6 flex flex-col gap-3 items-center">
+                            <img src="{{ asset('img/approvebym.webp') }}" alt="Approved" class="h-24 w-auto mb-2" />
+                            <h3 class="text-lg font-bold text-green-700 text-center mb-1">Pelatihan Disetujui</h3>
+                            <p class="text-sm text-green-800 text-center">
+                                Selamat! Pengajuan pelatihan ini telah <span
+                                    class="font-semibold text-green-700">disetujui</span>.<br>
+                               oleh Management
+                            </p>
+                        </div>
+                    </div>
+                @elseif ($training->isfinish == 2)
+                    <!-- CARD PENOLAKAN -->
+                    <div class="w-full md:w-[370px] mt-8 md:mt-0 md:sticky md:top-8">
+                        <div class="bg-red-50 border-2 border-red-400 rounded-2xl shadow-lg p-6 flex flex-col gap-2">
+                            <div class="flex items-center gap-3 mb-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-red-500 flex-shrink-0"
+                                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 8v4m0 4h.01M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z" />
+                                </svg>
+                                <h3 class="text-lg font-bold text-red-600 mb-0">Pelatihan Ditolak</h3>
+                            </div>
+                            <p class="text-xs text-gray-700 mb-1">
+                                Mohon maaf, pengajuan pelatihan ini <span class="font-semibold text-red-700">tidak dapat
+                                    dilanjutkan</span>.
+                            </p>
+                            <div class="bg-red-100 border-l-4 border-red-400 p-3 rounded-md mt-2">
+                                <span class="font-semibold text-red-600 block mb-1">Alasan penolakan:</span>
+                                <span
+                                    class="text-red-700 italic">{{ $training->reason_fail ?? 'Tidak ada alasan yang tersedia.' }}</span>
+                            </div>
+                        </div>
                     </div>
                 @endif
             </div>
-
-            <div class="flex gap-x-4 mt-2">
-                <div class="relative mt-4 w-64">
-                    <select id="activity" name="activity"
-                        class="peer block w-full appearance-none border border-[#515151] bg-transparent px-2.5 py-3 text-sm text-[#515151] rounded-md focus:border-[#1E6E9E] focus:outline-none focus:ring-1 focus:ring-[#1E6E9E]"
-                        required>
-                        <option value="" disabled selected hidden></option>
-                        <option value="TKPK1"
-                            {{ old('activity', $training->activity ?? '') == 'TKPK1' ? 'selected' : '' }}>TKPK1</option>
-                        <option value="TKPK2"
-                            {{ old('activity', $training->activity ?? '') == 'TKPK2' ? 'selected' : '' }}>TKPK2</option>
-                        <option value="TKBT1"
-                            {{ old('activity', $training->activity ?? '') == 'TKBT1' ? 'selected' : '' }}>TKBT1</option>
-                        <option value="TKBT2"
-                            {{ old('activity', $training->activity ?? '') == 'TKBT2' ? 'selected' : '' }}>TKBT2</option>
-                        <option value="BE" {{ old('activity', $training->activity ?? '') == 'BE' ? 'selected' : '' }}>
-                            BE</option>
-                        <option value="P3K"
-                            {{ old('activity', $training->activity ?? '') == 'P3K' ? 'selected' : '' }}>
-                            P3K</option>
-                        <option value="AK3U"
-                            {{ old('activity', $training->activity ?? '') == 'AK3U' ? 'selected' : '' }}>
-                            AK3U</option>
-                    </select>
-
-                    <label for="activity"
-                        class="absolute text-base rounded-lg bg-[#ffffff] text-[#515151] transition-all duration-300 transform scale-75 -translate-y-4 top-3 left-2.5 ml-2 z-10 origin-[0] peer-focus:text-[#1E6E9E] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0">
-                        Kegiatan
-                    </label>
-                </div>
-
-                <div class="relative mt-4 w-64">
-                    @php
-                        use Carbon\Carbon;
-                        $formattedDate = old(
-                            'date',
-                            $training->date ? Carbon::parse($training->date)->format('Y-m-d') : '',
-                        );
-                    @endphp
-                    <input id="date" name="date" type="text"
-                        value="{{ \Carbon\Carbon::parse($training->date)->format('d-m-Y') }}"
-                        class="peer block w-full appearance-none border border-[#515151] bg-transparent px-2.5 py-3 text-sm text-[#515151] rounded-md focus:border-[#1E6E9E] focus:outline-none focus:ring-1 focus:ring-[#1E6E9E] placeholder-transparent"
-                        placeholder="" required /> <label for="date"
-                        class="absolute text-base rounded-lg bg-[#ffffff] text-[#515151] transition-all duration-300 transform -translate-y-4 scale-75 top-3 left-2.5 ml-2 z-10 origin-[0] peer-focus:text-[#1E6E9E] peer-focus:scale-75 peer-focus:-translate-y-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0">
-                        Tanggal Kegiatan
-                    </label>
-                    <div class="flex items-center gap-2 mt-1">
-                        <p class="text-sm font-medium text-red-600 text-[10px]">Selesai Pada:</p>
-                        <input type="text" id="end_date" name="end_date" readonly
-                            value="{{ old('end_date', \Carbon\Carbon::parse($training->date_end)->format('Y-m-d')) }}"
-                            class="border border-gray-300 rounded-md px-3 py-2 text-sm w-28 bg-gray-100 text-gray-700" />
-                    </div>
-
-                </div>
-            </div>
-
-            <div class="mb-6">
-                <h3 class="text-sm font-semibold text-gray-600 mb-3">Lokasi Kegiatan</h3>
-                <div class="grid gap-4 sm:grid-cols-2 max-w-xl">
-                    <!-- Provinsi -->
-                    <div>
-                        <label for="provience" class="block text-sm text-gray-700 font-medium mb-1">
-                            Provinsi <span class="text-red-500">*</span>
-                        </label>
-                        <select id="provience" name="provience"
-                            class="w-full p-2 border border-gray-300 rounded-md text-gray-900 focus:ring-2 focus:ring-blue-600 focus:outline-none">
-                            <option value="">-- Pilih Provinsi --</option>
-                        </select>
-                    </div>
-
-                    <!-- Kota -->
-                    <div>
-                        <label for="city" class="block text-sm text-gray-700 font-medium mb-1">
-                            Kota <span class="text-red-500">*</span>
-                        </label>
-                        <select id="city" name="city"
-                            class="w-full p-2 border border-gray-300 rounded-md text-gray-900 focus:ring-2 focus:ring-blue-600 focus:outline-none">
-                            <option value="">-- Pilih Kota --</option>
-                        </select>
-                    </div>
-
-                    <div class="">
-                        <label for="address" class="block mb-1 font-semibold text-gray-700 text-sm">Alamat
-                            Lengkap</label>
-                        <textarea name="address" id="address"
-                            class="w-full border border-gray-300 rounded p-2 min-h-[100px] focus:ring-2 focus:ring-blue-500" rows="3"
-                            placeholder="Masukkan alamat lengkap lokasi pelatihan">{{ old('address', $training->address ?? '') }}</textarea>
-                    </div>
-                </div>
-
-                <input type="hidden" id="citySelected" value="{{ $training->city ?? '' }}">
-                <input type="hidden" id="provSelected" value="{{ $training->provience ?? '' }}">
-            </div>
-            <label class="block mt-2 mb-2 text-sm font-medium text-gray-900">Tempat Pelatihan:</label>
-            <div class="flex min-h-5">
-                <div class="flex items-center justify-center gap-x-4 border border-gray-300 rounded-lg h-12 px-4">
-                    <div class="flex items-center">
-                        <input id="radio-online" type="radio" value="Online" name="colored-radio"
-                            class="w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                            {{ $training->place == 'Online' ? 'checked' : '' }}>
-                        <label for="radio-online" class="ms-2 text-sm font-medium text-gray-900 ">Online</label>
-                    </div>
-                    <div class="flex items-center">
-                        <input id="radio-offline" type="radio" value="On-Site" name="colored-radio"
-                            class="w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                            {{ $training->place == 'On-Site' ? 'checked' : '' }}>
-                        <label for="radio-offline" class="ms-2 text-sm font-medium text-gray-900 ">On-Site</label>
-                    </div>
-                    <div class="flex items-center">
-                        <input id="radio-blended" type="radio" value="Blended" name="colored-radio"
-                            class="w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                            {{ $training->place == 'Blended' ? 'checked' : '' }}>
-                        <label for="radio-blended" class="ms-2 text-sm font-medium text-gray-900 ">Blended</label>
-                    </div>
-                </div>
-            </div>
-
-
-            <div class="mt-4 flex items-center gap-2">
-                <input type="checkbox" id="confirmEdit"
-                    class="h-5 w-5 appearance-none border-2 border-gray-400 rounded-sm checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200" />
-                <label for="confirmEdit" class="text-[12px] text-gray-700">
-                    Saya telah memverifikasi dan memastikan bahwa seluruh data yang diinput telah sesuai dengan informasi
-                    peserta yang valid. Jika terdapat perubahan, telah dilakukan berdasarkan konfirmasi dan bukti yang sah
-                </label>
-            </div>
-
-            <button id="submitBtn" disabled
-                class="mt-4 px-4 py-2 bg-gray-400 text-white rounded-md cursor-not-allowed transition disabled:opacity-50">
-                Perbarui Data
-            </button>
-        </form>
+        </div>
     </div>
+
 
     <div class="p-4 border border-t-0 border-gray-300 bg-white rounded-lg mt-4">
         <h1 class="text-[24px] font-semibold">Peserta Terdaftar</h1>

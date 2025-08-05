@@ -276,8 +276,9 @@ function uploadFileForAdmin() {
                 $("#uploadAdminFileStatus")
                     .addClass("text-green-600")
                     .text("File berhasil diupload!");
-                form.reset();
-                console.log("Sukses upload, status hijau.");
+                $("#budget_plan").val("");
+                $("#letter_implementation").val("");
+                $("#file_nobatch").val("");
             } else {
                 $("#uploadAdminFileStatus")
                     .addClass("text-red-600")
@@ -680,18 +681,6 @@ function initStatusReasonWatcher() {
     }
 }
 
-function scrollToElement(selector) {
-    var element = $(selector);
-    if (element.length) {
-        $("html, body").animate(
-            {
-                scrollTop: element.offset().top,
-            },
-            600
-        ); // 600ms scroll animation
-    }
-}
-
 // ============ INIT ================
 $(document).ready(function () {
     try {
@@ -713,9 +702,6 @@ $(document).ready(function () {
     $("#uploadFileForAdminBtn").on("click", function (e) {
         e.preventDefault();
         uploadFileForAdmin(); // baru dipanggil waktu tombol diklik
-    });
-    $(document).ready(function () {
-        scrollToElement("#link-section");
     });
     // Handler delete tombol, tetap pakai on (untuk baris yang dynamic)
     $(document).on("click", ".deleteButtonParticipant", function () {

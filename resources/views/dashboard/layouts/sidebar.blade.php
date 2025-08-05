@@ -214,18 +214,75 @@
                     </li>
                 @elseif ($role == 'dev')
                     {{-- Menu untuk Management --}}
+                    <a href="/dashboard/developer"
+                        class="flex items-center space-x-2 menu-item-hover 
+    @if (request()->is('dashboard/developer') && !request()->is('dashboard/developer/*')) bg-red-500 text-white @else hover:bg-red-500 @endif 
+    rounded-lg p-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="size-6" fill="none" viewBox="0 0 24 24"
+                            stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M3 3h18v4H3V3zm0 6h18v4H3V9zm0 6h18v4H3v-4z" />
+                        </svg>
+                        <span class="text-sm">Dev Dashboard</span>
+                    </a>
+                    </li>
+
                     <li class="my-1">
-                        <a href="/dashboard/developer"
-                            class="flex items-center space-x-2 menu-item-hover 
-                               @if (request()->is('dashboard/developer*')) bg-red-500 text-white @else hover:bg-red-500 @endif 
-                                  rounded-lg p-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="size-6" fill="none"
-                                viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M3 3h18v4H3V3zm0 6h18v4H3V9zm0 6h18v4H3v-4z" />
-                            </svg>
-                            <span class="text-sm">Dev Dashboard</span>
-                        </a>
+                        <div class="group">
+                            <div
+                                class="flex items-center justify-between menu-item-hover 
+    @if (request()->is('dashboard/developer/*')) bg-red-500 text-white @else hover:bg-red-500 @endif 
+    rounded-lg p-2 cursor-pointer">
+                                <div class="flex items-center space-x-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke-width="1.5" stroke="currentColor" class="size-6">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+                                    </svg>
+                                    <span class="text-sm">Manajemen DEV</span>
+                                </div>
+                                <svg class="size-4 transition-transform group-hover:rotate-180" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </div>
+
+                            {{-- Sub-menu (Selalu tampil saat active, tampil saat hover) --}}
+                            <ul
+                                class="mt-1 ml-6 pl-3 border-l border-gray-200 space-y-1 hidden group-hover:block 
+                            @if (request()->is('dashboard/developer*'))  @endif">
+                                <li>
+                                    <a href="/dashboard/developer/account" @class([
+                                        'block px-2 py-1 rounded hover:bg-red-100 text-sm',
+                                        'text-red-500 font-bold' => request()->is('dashboard/developer/account'),
+                                        'text-gray-500' => !request()->is('dashboard/developer/account'),
+                                    ])>
+                                        Account
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/dashboard/schedule" @class([
+                                        'block px-2 py-1 rounded hover:bg-red-100 text-sm',
+                                        'text-red-500 font-bold' => request()->is('dashboard/schedule'),
+                                        'text-gray-500' => !request()->is('dashboard/schedule'),
+                                    ])>
+                                        Jadwal Pelatihan
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a href="/dashboard/developer/folder" @class([
+                                        'block px-2 py-1 rounded hover:bg-red-100 text-sm',
+                                        'text-red-500 font-bold' => request()->is('dashboard/developer/folder*'),
+                                        'text-gray-500' => !request()->is('dashboard/developer/folder*'),
+                                    ])>
+                                        Folder
+                                    </a>
+                                </li>
+                                {{-- Tambah submenu lain di sini jika perlu --}}
+                            </ul>
+                        </div>
                     </li>
 
                     <li class="my-1">
@@ -296,8 +353,8 @@
         </div>
     </div>
 </div>
- 
-<script> 
+
+<script>
     let isSidebarOpen = true;
 
     function toggleSidebar() {

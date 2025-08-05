@@ -434,6 +434,18 @@ function cities() {
     }
 }
 
+function scrollToElement(selector) {
+    var element = $(selector);
+    if (element.length) {
+        $("html, body").animate(
+            {
+                scrollTop: element.offset().top,
+            },
+            600
+        ); // 600ms scroll animation
+    }
+}
+
 // function send data
 $(document).ready(function () {
     showTabs();
@@ -441,13 +453,16 @@ $(document).ready(function () {
     checkSubmitBtnDeadline();
     $("#submitBtnForm2").click(function (e) {
         e.preventDefault(); // Mencegah form submit default
-        sendForm2(); // Panggil fungsi sendForm2 saat tombol diklik
+        sendForm2(); 
     });
 
     $("#submitBtnForm3").click(function (e) {
-        e.preventDefault(); // Mencegah form submit default
-        sendForm3(); // Panggil fungsi sendForm2 saat tombol diklik
+        e.preventDefault(); 
+        sendForm3(); 
     });
     checkBtnSendForm3();
     cities();
+    $(document).ready(function () {
+        scrollToElement("#tab2");
+    });
 });
