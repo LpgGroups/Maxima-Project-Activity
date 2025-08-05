@@ -1,5 +1,4 @@
 import { cityList } from "./cities.js";
-
 $(document).ready(function () {
     let currentDate = new Date();
     let selectedDay = null;
@@ -283,6 +282,15 @@ $(document).ready(function () {
         </div>
             `,
             didOpen: () => {
+                $("#select-provience").select2({
+                    width: "100%",
+                    dropdownParent: $(".swal2-container"),
+                });
+                $("#select-city").select2({
+                    width: "100%",
+                    dropdownParent: $(".swal2-container"),
+                });
+
                 var $prov = $("#select-provience");
                 $prov.html('<option value="">-- Pilih Provinsi --</option>');
                 $.each(cityList, function (i, p) {

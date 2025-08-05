@@ -74,6 +74,45 @@ class MaintanceFolderController extends Controller
                 ];
             });
 
+        // --- FILTER SERVER SIDE ---
+        $status = request('status');
+        $date_start = request('date_start');
+        $date_end = request('date_end');
+        $sort = request('sort');
+
+        $files = $files->filter(function ($file) use ($status, $date_start, $date_end) {
+            $t = $file['training'];
+            if (!$t) return false;
+
+            // Filter status
+            if ($status) {
+                if ($status === '5-1' && !($t->isprogress == 5 && $t->isfinish == 1)) return false; // Selesai
+                if ($status === '5-2' && !($t->isprogress == 5 && $t->isfinish == 2)) return false; // Ditolak
+                if ($status === '5-0' && !($t->isprogress == 5 && $t->isfinish == 0)) return false; // Menunggu Konfirmasi Manajemen
+                if ($status === '4-0' && !($t->isprogress < 5)) return false; // Proses
+            }
+
+            // Filter tanggal start & end
+            if ($date_start && (\Carbon\Carbon::parse($t->date)->lt($date_start))) return false;
+            if ($date_end && (\Carbon\Carbon::parse($t->date)->gt($date_end))) return false;
+            return true;
+        });
+
+        // --- SORTING ---
+        if ($sort == 'terbaru') {
+            $files = $files->sortByDesc(function ($file) {
+                $t = $file['training'];
+                return $t ? ($t->date_end ?? $t->date) : null;
+            });
+        } elseif ($sort == 'terlama') {
+            $files = $files->sortBy(function ($file) {
+                $t = $file['training'];
+                return $t ? ($t->date ?? null) : null;
+            });
+        }
+
+        $files = $files->values(); // reset index
+
         return view('dashboard.dev.folder.file', [
             "title" => "Isi Folder: $folderName",
             "folderName" => $folderName,

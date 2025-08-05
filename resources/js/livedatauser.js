@@ -16,7 +16,7 @@ function liveDataUser() {
             }
 
             result.data.forEach((item) => {
-                console.log("Training date:", item.date);
+               
 
                 // Menentukan status label dan warna
                 const statusMap = {
