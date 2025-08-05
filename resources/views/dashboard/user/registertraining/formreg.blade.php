@@ -629,12 +629,16 @@
                         Kami mengucapkan terima kasih atas kerja sama dan perhatian Bapak/Ibu dalam melengkapi
                         berkas-berkas persyaratan pengajuan pelatihan dengan baik dan tepat waktu. Berkat kelengkapan
                         dokumen tersebut, proses pengajuan pelatihan kini dapat kami lanjutkan ke tahap berikutnya.
-
                         <br><br>
                         Apabila terdapat pertanyaan atau informasi tambahan yang diperlukan, jangan sungkan untuk
                         menghubungi kami.
                         <br><br>
                         Terima kasih atas perhatian dan kerja sama yang luar biasa.
+                        <br><br>
+                        <span class="font-bold">Catatan:</span>
+
+                        <span class="italic">"Jika ujian berakhir di hari libur atau tanggal merah, maka ujian akan diundur
+                            di hari berikutnya."</span>
                         <br><br>
                         Hormat kami,
                         <br>
@@ -651,12 +655,18 @@
                         Jika ada pertanyaan tambahan, silakan hubungi kami.
                     </p>
                 @else
-                    <h3 class="text-xl font-bold mb-2 text-red-600">Informasi Data</h3>
+                    <h3 class="text-xl font-bold mb-2 text-red-600">Informasi</h3>
                     <ul class="list-disc text-xs ml-2 text-red-600">
                         <li>Harap lengkapi data-data peserta H-8 sebelum hari pelatihan di mulai.</li>
                         <li>Data dapat di ubah H-8 sebelum hari pelatihan.</li>
                         <li>Mohon untuk input data dengan baik dan benar</li>
                         <li>PIC diharapkan Mengupload kembali MoU/Quotation/PO yang telah ditanda tangan.</li>
+                        <li> <span class="font-bold">Catatan:</span>
+
+                            <span class="italic">"Jika ujian berakhir di hari libur atau tanggal merah, maka ujian akan
+                                diundur
+                                di hari berikutnya."</span>
+                        </li>
                     </ul>
                 @endif
             </div>
