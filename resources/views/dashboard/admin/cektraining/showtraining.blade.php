@@ -48,7 +48,7 @@
 
 
     <div class="p-4 border border-t-0 border-gray-300 bg-white rounded-lg mt-6">
-        <div class="max-w-5xl mx-auto px-2 py-6">
+        <div class="max-w-5xl px-2 py-6">
             <h1 class="text-[24px] font-semibold">Daftar Pelatihan</h1>
             <h2 class="text-[15px] mb-6">
                 Lengkapi data form ini untuk mengikuti pelatihan yang akan diselenggarakan oleh PT Maxima Aksara Jaya Utama,
@@ -265,7 +265,7 @@
                             <p class="text-sm text-green-800 text-center">
                                 Selamat! Pengajuan pelatihan ini telah <span
                                     class="font-semibold text-green-700">disetujui</span>.<br>
-                               oleh Management
+                                oleh Management
                             </p>
                         </div>
                     </div>
@@ -292,7 +292,26 @@
                             </div>
                         </div>
                     </div>
+                @elseif ($training->isfinish == 0)
+                    <!-- CARD SEDANG DIPROSES -->
+                    <div class="w-full md:w-[370px] mt-8 md:mt-0 md:sticky md:top-8">
+                        <div
+                            class="bg-blue-50 border-2 border-blue-400 rounded-2xl shadow-lg p-6 flex flex-col gap-2 items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-blue-500 mb-2" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 8v4m0 4h.01M12 20c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8z" />
+                            </svg>
+                            <h3 class="text-lg font-bold text-blue-700 text-center mb-1">Validasi Data Pengguna</h3>
+                            <p class="text-sm text-blue-800 text-center">
+                                Data pendaftaran pengguna <span class="font-semibold text-blue-700">sedang Anda
+                                    periksa</span>.<br>
+                                Pastikan seluruh informasi sudah benar sebelum melanjutkan proses berikutnya.
+                            </p>
+                        </div>
+                    </div>
                 @endif
+
             </div>
         </div>
     </div>
@@ -582,7 +601,7 @@
                 </div>
             @endif
             <div class="">
-                <label for="note" class="block mb-1 font-bold text-gray-700 text-sm">Note</label>
+                <label for="note" class="block mb-1 font-bold text-gray-700 text-sm">Catatan</label>
                 <textarea name="note" id="note" maxlength="150"
                     class="w-full border border-gray-300 rounded p-2 min-h-[100px] focus:ring-2 focus:ring-blue-500 text-left"
                     rows="3" placeholder="Masukkan Note untuk management (opsional)">{{ old('note', $fileRequirement->note ?? '') }}</textarea>
