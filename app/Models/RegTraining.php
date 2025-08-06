@@ -24,6 +24,8 @@ class RegTraining extends Model
         'reason_fail',
         'place',
         'city',
+        'provience',
+        'address',
         'isprogress',
         'isfinish',
         'user_id',
@@ -63,4 +65,5 @@ class RegTraining extends Model
     {
         return $this->hasMany(FileRequirement::class, 'file_id', 'id');
     }
+    
 }

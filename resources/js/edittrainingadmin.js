@@ -1,4 +1,5 @@
 import { cityList } from "./cities.js";
+import moment from "moment-timezone";
 function datePicker() {
     flatpickr("#date", {
         dateFormat: "d-m-Y",
@@ -38,20 +39,6 @@ function updateEndDate() {
     const year = endDate.getFullYear();
 
     endDateInput.value = `${day}-${month}-${year}`;
-}
-
-function cities() {
-    var $select = $("#city");
-    var selected = $("#citySelected").val() || "";
-    if ($select.length) {
-        var options = '<option value="">-- Pilih Kota --</option>';
-        $.each(cityList, function (i, city) {
-            options += `<option value="${city}"${
-                city === selected ? " selected" : ""
-            }>${city}</option>`;
-        });
-        $select.html(options);
-    }
 }
 
 function setupConfirmationCheckbox() {
@@ -174,6 +161,48 @@ function updateForm1User(event) {
         });
 }
 
+function locationTraining() {
+    $(document).ready(function () {
+        var $prov = $("#provience");
+        var $city = $("#city");
+        var provSelected = $("#provSelected").val();
+        var citySelected = $("#citySelected").val();
+
+        $prov.html('<option value="">-- Pilih Provinsi --</option>');
+        $.each(cityList, function (i, p) {
+            $prov.append(
+                $("<option>", { value: p.provinsi, text: p.provinsi })
+            );
+        });
+
+        // Saat pilih provinsi, isi kota
+        $prov.on("change", function () {
+            var selectedProv = $(this).val();
+            $city.html('<option value="">-- Pilih Kota --</option>');
+            var provObj = cityList.find(function (p) {
+                return p.provinsi === selectedProv;
+            });
+            if (provObj) {
+                $.each(provObj.kota, function (i, kota) {
+                    $city.append($("<option>", { value: kota, text: kota }));
+                });
+            }
+            // Reset pilihan kota jika ganti provinsi
+            $city.val("");
+        });
+
+        // Set selected provinsi (jika ada)
+        if (provSelected) {
+            $prov.val(provSelected).trigger("change");
+            setTimeout(function () {
+                if (citySelected) {
+                    $city.val(citySelected);
+                }
+            }, 100);
+        }
+    });
+}
+
 function updateForm2User() {
     const form = document.getElementById("participantTableForm");
     const csrfToken = document.querySelector('input[name="_token"]').value;
@@ -242,14 +271,14 @@ function uploadFileForAdmin() {
             } else {
                 data = { success: false, message: await res.text() };
             }
-            console.log("Parsed data:", data);
 
             if (res.ok && data.success) {
                 $("#uploadAdminFileStatus")
                     .addClass("text-green-600")
                     .text("File berhasil diupload!");
-                form.reset();
-                console.log("Sukses upload, status hijau.");
+                $("#budget_plan").val("");
+                $("#letter_implementation").val("");
+                $("#file_nobatch").val("");
             } else {
                 $("#uploadAdminFileStatus")
                     .addClass("text-red-600")
@@ -573,15 +602,14 @@ function timeDeadline() {
     const trainingDateStr = timeD?.dataset?.trainingDate;
 
     if (timeD && trainingDateStr) {
-        const trainingDate = new Date(trainingDateStr);
-        const deadline = new Date(trainingDate);
-        deadline.setDate(trainingDate.getDate() - 5);
+        const trainingDate = moment.tz(trainingDateStr, "Asia/Jakarta");
+        const deadline = trainingDate.clone().subtract(5, "days");
 
-        let intervalId; // deklarasi dulu
+        let intervalId;
 
         function showCountdown() {
-            const now = new Date();
-            const distance = deadline - now;
+            const now = moment.tz("Asia/Jakarta");
+            const distance = deadline.diff(now);
 
             if (distance <= 0) {
                 timeD.textContent = "⛔ Pendaftaran sudah ditutup.";
@@ -598,18 +626,15 @@ function timeDeadline() {
                     "border-red-400"
                 );
 
-                clearInterval(intervalId); // ini sudah aman sekarang
+                clearInterval(intervalId);
                 return;
             }
 
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor(
-                (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-            );
-            const minutes = Math.floor(
-                (distance % (1000 * 60 * 60)) / (1000 * 60)
-            );
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            const duration = moment.duration(distance);
+            const days = Math.floor(duration.asDays());
+            const hours = duration.hours();
+            const minutes = duration.minutes();
+            const seconds = duration.seconds();
 
             timeD.textContent = `⏳ Waktu pendaftaran: ${days}h ${hours}j ${minutes}m ${seconds}d`;
             timeD.classList.remove("hidden");
@@ -663,6 +688,7 @@ $(document).ready(function () {
     } catch (e) {
         console.error("Error di timeDeadline:", e);
     }
+    locationTraining();
     initStatusReasonWatcher();
     datePicker(); // Inisialisasi date picker
     updateEndDate(); // Hitung end date saat halaman dimuat
@@ -695,6 +721,6 @@ $(document).ready(function () {
     $(document).on("click", ".toggle-nik-btn", function () {
         toggleNIK(this);
     });
-    cities();
+
     copyCode();
 });

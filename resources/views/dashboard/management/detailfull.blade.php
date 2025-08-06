@@ -24,10 +24,28 @@
                     <span class="font-bold text-gray-600">Nama Kegiatan:</span>
                     <div class="mt-1">{{ config('activity_map.' . $training->activity) ?? $training->activity }}</div>
                 </div>
-                <div>
-                    <span class="font-bold text-gray-600">Lokasi Kegiatan:</span>
-                    <div class="mt-1">{{ $training->place }} - {{ $training->city ?? 'Tidak Ada' }}</div>
-                </div>
+                @if (!empty($training->place) || !empty($training->provience) || !empty($training->city))
+                    <div>
+                        <span class="font-bold text-gray-600">Lokasi Kegiatan:</span>
+                        <div class="mt-1">
+                            <strong>{{ $training->place ?? '' }}</strong>
+
+                            @if (!empty($training->provience) || !empty($training->city))
+                                -
+                                {{ $training->provience ?? '' }}
+                                {{ !empty($training->provience) && !empty($training->city) ? ',' : '' }}
+                                {{ $training->city ?? '' }}
+                            @endif
+                        </div>
+                    </div>
+                @endif
+
+                @if (!empty($training->address))
+                    <div>
+                        <span class="font-bold text-gray-600">Alamat Kegiatan:</span>
+                        <div class="mt-1">{{ $training->address }}</div>
+                    </div>
+                @endif
                 <div>
                     <span class="font-bold text-gray-600">Perusahaan:</span>
                     <div class="mt-1">{{ $training->name_company }}</div>
@@ -76,7 +94,8 @@
 
         {{-- Kelengkapan Berkas --}}
         <div>
-            <h3 class="text-lg font-semibold text-gray-800 border-b pb-2 mb-3">Dokumen {{ $training->name_company }}</h3>
+            <h3 class="text-lg font-semibold text-gray-800 border-b pb-2 mb-3">Kelengkapan Dokumen -
+                {{ $training->name_company }}</h3>
 
             @if ($training->approvalFiles && count($training->approvalFiles))
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -151,8 +170,26 @@
                         @endif
                     @endforeach
                 </div>
+                @if ($file->note)
+                    <div class="mt-4 flex items-start space-x-3 bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded">
+                        <!-- Icon -->
+                        <svg class="w-6 h-6 text-yellow-500 mt-1" fill="none" stroke="currentColor" stroke-width="2"
+                            viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M13 16h-1v-4h-1m1-4h.01M12 20.5a8.5 8.5 0 100-17 8.5 8.5 0 000 17z"></path>
+                        </svg>
+
+                        <!-- Note Content -->
+                        <div class="text-sm text-yellow-800">
+                            <span class="font-semibold block mb-1">Catatan:</span>
+                            {{ $file->note }}
+                        </div>
+                    </div>
+                @else
+                    <p class="text-sm italic text-gray-500 mt-4 text-[12px]">Belum ada catatan dari admin.</p>
+                @endif
             @else
-                <p class="text-sm italic text-gray-500">Tidak ada berkas approval yang tersedia.</p>
+                <p class="text-sm italic text-gray-500 text-[12px]">Tidak ada berkas approval yang tersedia.</p>
             @endif
 
             @if ($training->isprogress === 5)
@@ -168,6 +205,38 @@
                         'participants' => $training->participants->count(),
                     ];
                 @endphp
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-800 border-b pb-2 mb-2 mt-4">
+                        Laporan Kegiatan - {{ $training->name_company }}
+                    </h3>
+
+                    <div>
+                        <span class="font-bold text-gray-600">Link Laporan Kegiatan:</span>
+                        <div class="mt-2">
+                            @if ($training->link && filter_var($training->link, FILTER_VALIDATE_URL))
+                                <a href="{{ $training->link }}" target="_blank"
+                                    class="inline-flex items-center gap-2 bg-purple-200 text-purple-800 text-sm font-semibold px-4 py-2 rounded-md hover:bg-purple-300 transition">
+
+                                    <!-- SVG icon -->
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M14 3h7v7m0-7L10 14M5 5v14h14v-7" />
+                                    </svg>
+
+                                    <span>Buka Laporan - {{ $training->activity }}</span>
+                                </a>
+                            @else
+                                <span class="text-gray-500 italic text-[12px]">Belum ada link laporan kegiatan (Link ini di
+                                    update
+                                    ketika pelatihan sudah selesai oleh admin sebagai dokumentasi pelatihan).</span>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+
+
+
 
                 <div class="relative inline-block mt-4">
                     <button type="button"
@@ -179,6 +248,8 @@
             @endif
 
         </div>
+
+
     </div>
 @endsection
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

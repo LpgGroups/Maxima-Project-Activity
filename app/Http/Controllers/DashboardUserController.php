@@ -52,7 +52,8 @@ class DashboardUserController extends Controller
             'activity' => 'required',
             'place' => 'required',
             'isprogress' => 'required',
-            'city' => 'nullable|string|max:100'
+            'city' => 'nullable|string|max:100',
+            'provience' => 'nullable|string|max:100'
         ]);
 
         try {
@@ -89,6 +90,7 @@ class DashboardUserController extends Controller
             $booking->activity = $validated['activity'];
             $booking->place = $validated['place'];
             $booking->city = $validated['city'] ?? null;
+            $booking->provience = $validated['provience'] ?? null;
             $booking->isprogress = max($booking->isprogress, $validated['isprogress']);
             $booking->code_training = strtoupper(Str::random(6)) . '-' . strtoupper(Str::random(6));
             $countSameDay = RegTraining::where('date', $startDate->toDateString())
@@ -205,7 +207,6 @@ class DashboardUserController extends Controller
                 'progress_color' => $progress['color'],
                 'isfinish' => (int) $training->isfinish,
                 'isprogress' => (int) $training->isprogress,
-
                 'url' => route('dashboard.form', ['id' => $training->id])
             ];
         });
@@ -215,6 +216,4 @@ class DashboardUserController extends Controller
             'data' => $data
         ]);
     }
-
-    public function showProfile() {}
 }

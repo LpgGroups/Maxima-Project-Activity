@@ -90,7 +90,7 @@
                                 value="{{ old('name_pic', $training->name_pic ?? '') }}" />
                             <label for="name_pic"
                                 class="absolute text-base rounded-lg bg-[#ffffff] text-[#515151] transition-all duration-300 transform -translate-y-4 scale-75 top-3 left-2.5 ml-2 z-10 origin-[0] peer-focus:text-[#1E6E9E] peer-focus:scale-75 peer-focus:-translate-y-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0">
-                                Nama PIC
+                                Nama PIC<span class="text-red-500">*</span>
                             </label>
                         </div>
 
@@ -102,7 +102,7 @@
                                 value="{{ old('name_company', $training->name_company ?? '') }}" />
                             <label for="name_company"
                                 class="absolute text-base rounded-lg bg-[#ffffff] text-[#515151] transition-all duration-300 transform -translate-y-4 scale-75 top-3 left-2.5 ml-2 z-10 origin-[0] peer-focus:text-[#1E6E9E] peer-focus:scale-75 peer-focus:-translate-y-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0">
-                                Nama Perusahaan
+                                Nama Perusahaan<span class="text-red-500">*</span>
                             </label>
                         </div>
                     </div>
@@ -116,7 +116,7 @@
                                 value="{{ old('email_pic', $training->email_pic ?? Auth::user()->email) }}" />
                             <label for="email_pic"
                                 class="absolute text-base rounded-lg bg-[#ffffff] text-[#515151] transition-all duration-300 transform -translate-y-4 scale-75 top-3 left-2.5 ml-2 z-10 origin-[0] peer-focus:text-[#1E6E9E] peer-focus:scale-75 peer-focus:-translate-y-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0">
-                                Email PIC
+                                Email PIC<span class="text-red-500">*</span>
                             </label>
                         </div>
 
@@ -131,7 +131,7 @@
 
                             <label for="phone_pic"
                                 class="absolute text-base rounded-lg bg-[#ffffff] text-[#515151] transition-all duration-300 transform -translate-y-4 scale-75 top-3 left-2.5 ml-2 z-10 origin-[0] peer-focus:text-[#1E6E9E] peer-focus:scale-75 peer-focus:-translate-y-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0">
-                                No WhatsApp
+                                No WhatsApp<span class="text-red-500">*</span>
                             </label>
                             <span class="ml-1 text-sm text-gray-500 cursor-pointer relative group">
                                 Ex:0818080808
@@ -142,48 +142,77 @@
                         </div>
                     </div>
 
-                    <div class="mt-2 p-2 bg-white rounded-lg border">
-                        <h2 class="text-2xl font-semibold text-gray-800 mb-6">Informasi Kegiatan</h2>
+                    <div class="mt-6 p-6 bg-white border border-gray-200 rounded-xl shadow-md">
+                        <h2 class="text-2xl font-bold text-gray-900 border-b border-gray-200 pb-2 mb-6">Informasi
+                            Kegiatan</h2>
 
                         <!-- Jenis Kegiatan -->
-                        <div class="mb-4">
-                            <p class="text-gray-600 text-base font-bold">Jenis Kegiatan</p>
-                            <p id="activity" class="text-[15px] text-gray-800 font-medium">
+                        <div class="mb-6">
+                            <h3 class="text-sm font-semibold text-gray-600 mb-1">Jenis Kegiatan</h3>
+                            <p id="activity" class="text-base text-gray-900 font-medium tracking-wide">
                                 {{ config('activity_map.' . $training->activity) ?? $training->activity }}
                             </p>
                         </div>
 
                         @if (Str::lower($training->place) === 'blended' || Str::lower($training->place) === 'on-site')
-                            <div class="mb-4">
-                                <label for="city" class="block text-gray-600 text-base font-bold mb-1">Lokasi
-                                    Pelatihan:</label>
-                                <div class="mb-4">
-                                    <select name="city" id="city"
-                                        class="w-[200px] p-2 border border-gray-300 rounded-lg text-gray-800">
-                                        <option value="">-- Pilih Kota --</option>
-                                    </select>
-                                    <input type="hidden" id="citySelected" value="{{ $training->city ?? '' }}">
+                            <!-- Lokasi -->
+                            <div class="mb-6">
+                                <h3 class="text-sm font-semibold text-gray-600 mb-3">Lokasi Kegiatan</h3>
+                                <div class="grid gap-4 sm:grid-cols-2 max-w-xl">
+                                    <!-- Provinsi -->
+                                    <div>
+                                        <label for="provience" class="block text-sm text-gray-700 font-medium mb-1">
+                                            Provinsi <span class="text-red-500">*</span>
+                                        </label>
+                                        <select id="provience" name="provience"
+                                            class="w-full p-2 border border-gray-300 rounded-md text-gray-900 focus:ring-2 focus:ring-blue-600 focus:outline-none">
+                                            <option value="">-- Pilih Provinsi --</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Kota -->
+                                    <div>
+                                        <label for="city" class="block text-sm text-gray-700 font-medium mb-1">
+                                            Kota <span class="text-red-500">*</span>
+                                        </label>
+                                        <select id="city" name="city"
+                                            class="w-full p-2 border border-gray-300 rounded-md text-gray-900 focus:ring-2 focus:ring-blue-600 focus:outline-none">
+                                            <option value="">-- Pilih Kota --</option>
+                                        </select>
+                                    </div>
                                 </div>
+
+                                <input type="hidden" id="citySelected" value="{{ $training->city ?? '' }}">
+                                <input type="hidden" id="provSelected" value="{{ $training->provience ?? '' }}">
+                            </div>
+
+                            <!-- Alamat Lengkap (Opsional) -->
+                            <div class="mb-6">
+                                <h3 class="text-sm font-semibold text-gray-600 mb-1">Alamat Lengkap Pelatihan</h3>
+                                <textarea id="address" name="address" rows="3"
+                                    placeholder="Masukkan alamat lengkap lokasi pelatihan (Opsional)"
+                                    class="w-full max-w-xl p-3 border border-gray-300 rounded-md text-gray-900 text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none resize-none shadow-sm">{{ $training->address ?? '' }}</textarea>
                             </div>
                         @endif
+
                         <!-- Tanggal Pelatihan -->
                         <div class="mb-4">
-                            <p class="text-gray-600 text-base font-bold">Tanggal Pelatihan</p>
-                            <p id="date" class="text-[15px] text-gray-800 font-medium">
+                            <h3 class="text-sm font-semibold text-gray-600 mb-1">Tanggal Mulai Pelatihan</h3>
+                            <p id="date" class="text-base text-gray-900 font-medium tracking-wide">
                                 {{ \Carbon\Carbon::parse($training->date)->translatedFormat('d F Y') }}
                             </p>
                         </div>
 
                         <!-- Tanggal Selesai Pelatihan -->
                         <div class="mb-6">
-                            <p class="text-gray-600 text-base font-bold">Tanggal Selesai Pelatihan</p>
-                            <p id="date_end" class="text-[15px] text-gray-800 font-medium">
+                            <h3 class="text-sm font-semibold text-gray-600 mb-1">Tanggal Selesai Pelatihan</h3>
+                            <p id="date_end" class="text-base text-gray-900 font-medium tracking-wide">
                                 {{ \Carbon\Carbon::parse($training->date_end)->translatedFormat('d F Y') }}
                             </p>
                         </div>
 
                         <!-- Loading Spinner dan Pesan -->
-                        <div class="flex items-center space-x-2">
+                        <div class="flex items-center gap-2">
                             <div id="loadingSpinner" class="hidden">
                                 <svg class="animate-spin h-5 w-5 text-blue-500" xmlns="http://www.w3.org/2000/svg"
                                     fill="none" viewBox="0 0 24 24">
@@ -195,7 +224,6 @@
                             <div id="responseMessage" class="hidden text-sm text-blue-600"></div>
                         </div>
                     </div>
-
 
                     <!-- Submit Button -->
                     <div class="mt-4 flex flex-col lg:flex-row gap-2 w-full max-w-[1920px] p-4">
@@ -601,12 +629,16 @@
                         Kami mengucapkan terima kasih atas kerja sama dan perhatian Bapak/Ibu dalam melengkapi
                         berkas-berkas persyaratan pengajuan pelatihan dengan baik dan tepat waktu. Berkat kelengkapan
                         dokumen tersebut, proses pengajuan pelatihan kini dapat kami lanjutkan ke tahap berikutnya.
-
                         <br><br>
                         Apabila terdapat pertanyaan atau informasi tambahan yang diperlukan, jangan sungkan untuk
                         menghubungi kami.
                         <br><br>
                         Terima kasih atas perhatian dan kerja sama yang luar biasa.
+                        <br><br>
+                        <span class="font-bold">Catatan:</span>
+
+                        <span class="italic">"Jika ujian berakhir di hari libur atau tanggal merah, maka ujian akan diundur
+                            di hari berikutnya."</span>
                         <br><br>
                         Hormat kami,
                         <br>
@@ -623,12 +655,18 @@
                         Jika ada pertanyaan tambahan, silakan hubungi kami.
                     </p>
                 @else
-                    <h3 class="text-xl font-bold mb-2 text-red-600">Informasi Data</h3>
+                    <h3 class="text-xl font-bold mb-2 text-red-600">Informasi</h3>
                     <ul class="list-disc text-xs ml-2 text-red-600">
                         <li>Harap lengkapi data-data peserta H-8 sebelum hari pelatihan di mulai.</li>
                         <li>Data dapat di ubah H-8 sebelum hari pelatihan.</li>
                         <li>Mohon untuk input data dengan baik dan benar</li>
                         <li>PIC diharapkan Mengupload kembali MoU/Quotation/PO yang telah ditanda tangan.</li>
+                        <li> <span class="font-bold">Catatan:</span>
+
+                            <span class="italic">"Jika ujian berakhir di hari libur atau tanggal merah, maka ujian akan
+                                diundur
+                                di hari berikutnya."</span>
+                        </li>
                     </ul>
                 @endif
             </div>

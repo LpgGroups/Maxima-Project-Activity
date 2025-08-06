@@ -116,7 +116,8 @@ class RegTrainingController extends Controller
             'name_company' => ['required', 'string'],
             'email_pic' => ['required', 'email'],
             'phone_pic' => ['required', 'numeric', 'digits_between:10,13'],
-            'isprogress' => 'required'
+            'isprogress' => 'required',
+            'provience' => 'nullable|string|max:100',
         ], [
             'name_pic.regex' => 'Nama PIC hanya boleh berisi huruf dan spasi.',
             'email_pic.email' => 'Format email tidak valid.',
@@ -157,6 +158,8 @@ class RegTrainingController extends Controller
                     'email_pic' => $request->input('email_pic'),
                     'phone_pic' => $phone,
                     'city' => $request->input('city'),
+                    'provience' => $request->input('provience'),
+                    'address' => $request->input('address'),
                     'isprogress' => max($currentProgress, $newProgress),
                 ]);
 
@@ -181,10 +184,11 @@ class RegTrainingController extends Controller
                     'email_pic' => $request->input('email_pic'),
                     'phone_pic' => $phone,
                     'city' => $request->input('city'),
+                    'provience' => $request->input('provience'),
+                    'address' => $request->input('address'),
                     'isprogress' => $request->input('isprogress'),
                 ]);
             }
-
             return response()->json(['success' => true, 'message' => 'Data berhasil disimpan/diupdate!']);
         } catch (\Exception $e) {
             Log::error('Error in saveForm1: ' . $e->getMessage());
@@ -368,7 +372,6 @@ class RegTrainingController extends Controller
 
 
         if ($request->hasFile('proof_payment')) {
-            // Hapus file lama jika ada
             if ($record && $record->proof_payment) {
                 Storage::disk('public')->delete($record->proof_payment);
             }

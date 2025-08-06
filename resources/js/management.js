@@ -114,6 +114,44 @@ function showDetail(id) {
                             : '<div class="text-gray-500 italic">Tidak ada file</div>'
                     }
                 </div>
+                 <!-- Tambahkan catatan admin di sini -->
+    <div class="mt-4 p-4 border-l-4 border-yellow-400 bg-yellow-50 rounded text-yellow-800 text-sm flex items-start space-x-3">
+    <svg class="w-6 h-6 mt-1 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M12 20.5a8.5 8.5 0 100-17 8.5 8.5 0 000 17z"></path>
+    </svg>
+    <div class="text-left">
+        <span class="font-semibold block mb-1">Catatan:</span>
+        ${
+            data.files.length > 0 && data.files[0].note
+                ? data.files[0].note
+                : `<span class="italic text-gray-500">Belum ada catatan dari admin.</span>`
+        }
+    </div>
+</div>
+
+<div class="font-extrabold mt-4">Link Laporan Kegiatan</div>
+<div class="text-sm bg-gray-50 border border-gray-300 rounded-md p-4 mt-1">
+  ${
+      data.link && /^https?:\/\//.test(data.link)
+          ? `
+      <div>
+        <span class="font-bold text-gray-700">Laporan Kegiatan:</span>
+        <div class="mt-2">
+          <a href="${data.link}" target="_blank"
+             class="inline-flex items-center gap-2 bg-purple-200 text-purple-800 text-sm font-semibold px-4 py-2 rounded-md hover:bg-purple-300 transition">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none"
+                 viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M14 3h7v7m0-7L10 14M5 5v14h14v-7" />
+            </svg>
+            <span>Buka Laporan - ${data.activity}</span>
+          </a>
+        </div>
+      </div>
+      `
+          : `<span class="text-gray-500 italic">Belum ada link laporan kegiatan.</span>`
+  }
+</div>        
             `;
 
             Swal.fire({

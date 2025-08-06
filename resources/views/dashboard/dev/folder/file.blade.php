@@ -10,7 +10,31 @@
             <div class="mb-4 px-4 py-2 bg-red-200 text-red-800 rounded">{{ session('error') }}</div>
         @endif
 
-        {{-- FORM BULK DELETE (HANYA 1 FORM UNTUK BULK) --}}
+        {{-- FORM FILTER (GET) --}}
+        <form method="GET" class="flex flex-wrap gap-3 items-center mb-3">
+            <select name="status" class="border rounded px-2 py-1">
+                <option value="">Semua Status</option>
+                <option value="5-1" {{ request('status') == '5-1' ? 'selected' : '' }}>Selesai</option>
+                <option value="5-2" {{ request('status') == '5-2' ? 'selected' : '' }}>Ditolak</option>
+                <option value="4-0" {{ request('status') == '4-0' ? 'selected' : '' }}>Proses</option>
+                <option value="5-0" {{ request('status') == '5-0' ? 'selected' : '' }}>Menunggu</option>
+            </select>
+            <input type="date" name="date_start" value="{{ request('date_start') }}" class="border rounded px-2 py-1"
+                placeholder="Mulai">
+            <input type="date" name="date_end" value="{{ request('date_end') }}" class="border rounded px-2 py-1"
+                placeholder="Selesai">
+            <select name="sort" class="border rounded px-2 py-1">
+                <option value="">Urutkan</option>
+                <option value="terbaru" {{ request('sort') == 'terbaru' ? 'selected' : '' }}>Terbaru</option>
+                <option value="terlama" {{ request('sort') == 'terlama' ? 'selected' : '' }}>Terlama</option>
+            </select>
+            <button type="submit" class="bg-blue-500 text-white px-3 py-1 rounded">Filter</button>
+            @if (request()->hasAny(['status', 'date_start', 'date_end', 'sort']))
+                <a href="{{ route('folder.show', $folderName) }}" class="text-red-600 ml-2 underline">Reset</a>
+            @endif
+        </form>
+
+        {{-- FORM BULK DELETE & DOWNLOAD --}}
         <form method="POST" action="{{ route('folder.bulkDelete', $folderName) }}" id="bulkDeleteForm">
             @csrf
             <div class="mb-3 flex flex-wrap gap-3 items-center">
@@ -46,17 +70,15 @@
                                     @php $training = $file['training'] ?? null; @endphp
                                     @if ($training)
                                         @if ($training->isprogress == 5 && $training->isfinish == 1)
-                                            <span
-                                                class="bg-green-600 text-white font-semibold text-[10px] px-2 py-[2px] rounded inline-block w-[70px] text-center">Selesai</span>
+                                            <span class="bg-green-600 font-semibold text-[10px] px-2 py-[2px] rounded inline-block w-[70px] text-center">Selesai</span>
                                         @elseif ($training->isprogress == 5 && $training->isfinish == 2)
-                                            <span
-                                                class="bg-red-600 text-white font-semibold text-[10px] px-2 py-[2px] rounded inline-block w-[70px] text-center">Ditolak</span>
-                                        @elseif ($training->isprogress <= 4 && $training->isfinish == 0)
-                                            <span
-                                                class="bg-blue-400 text-white font-semibold text-[10px] px-2 py-[2px] rounded inline-block w-[70px] text-center">Proses</span>
+                                            <span class="bg-red-600 font-semibold text-[10px] px-2 py-[2px] rounded inline-block w-[70px] text-center">Ditolak</span>
+                                        @elseif ($training->isprogress == 5 && $training->isfinish == 0)
+                                            <span class="bg-yellow-400 font-semibold text-[10px] px-2 py-[2px] rounded inline-block w-[70px] text-center">Menunggu</span>
+                                        @elseif ($training->isprogress < 5)
+                                            <span class="bg-blue-400 font-semibold text-[10px] px-2 py-[2px] rounded inline-block w-[70px] text-center">Proses</span>
                                         @else
-                                            <span
-                                                class="bg-yellow-400 text-black font-semibold text-[10px] px-2 py-[2px] rounded inline-block w-[70px] text-center">Menunggu</span>
+                                            <span class="text-gray-400">-</span>
                                         @endif
                                     @else
                                         <span class="text-gray-400">-</span>
@@ -92,7 +114,7 @@
             </div>
         </form>
 
-        {{-- FORM DELETE INDIVIDU (DILUAR FORM BULK DELETE!) --}}
+        {{-- FORM DELETE INDIVIDU --}}
         @foreach ($files as $file)
             <form id="delete-form-{{ $file['basename'] }}" action="{{ $file['delete_route'] }}" method="POST"
                 style="display:none;">
