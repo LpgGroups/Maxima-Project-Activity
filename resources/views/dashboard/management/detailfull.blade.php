@@ -24,10 +24,28 @@
                     <span class="font-bold text-gray-600">Nama Kegiatan:</span>
                     <div class="mt-1">{{ config('activity_map.' . $training->activity) ?? $training->activity }}</div>
                 </div>
-                <div>
-                    <span class="font-bold text-gray-600">Lokasi Kegiatan:</span>
-                    <div class="mt-1">{{ $training->place }} - {{ $training->city ?? 'Tidak Ada' }}</div>
-                </div>
+                @if (!empty($training->place) || !empty($training->provience) || !empty($training->city))
+                    <div>
+                        <span class="font-bold text-gray-600">Lokasi Kegiatan:</span>
+                        <div class="mt-1">
+                            <strong>{{ $training->place ?? '' }}</strong>
+
+                            @if (!empty($training->provience) || !empty($training->city))
+                                -
+                                {{ $training->provience ?? '' }}
+                                {{ !empty($training->provience) && !empty($training->city) ? ',' : '' }}
+                                {{ $training->city ?? '' }}
+                            @endif
+                        </div>
+                    </div>
+                @endif
+
+                @if (!empty($training->address))
+                    <div>
+                        <span class="font-bold text-gray-600">Alamat Kegiatan:</span>
+                        <div class="mt-1">{{ $training->address }}</div>
+                    </div>
+                @endif
                 <div>
                     <span class="font-bold text-gray-600">Perusahaan:</span>
                     <div class="mt-1">{{ $training->name_company }}</div>
@@ -168,10 +186,10 @@
                         </div>
                     </div>
                 @else
-                    <p class="text-sm italic text-gray-500 mt-4">Belum ada catatan dari admin.</p>
+                    <p class="text-sm italic text-gray-500 mt-4 text-[12px]">Belum ada catatan dari admin.</p>
                 @endif
             @else
-                <p class="text-sm italic text-gray-500">Tidak ada berkas approval yang tersedia.</p>
+                <p class="text-sm italic text-gray-500 text-[12px]">Tidak ada berkas approval yang tersedia.</p>
             @endif
 
             @if ($training->isprogress === 5)
@@ -209,7 +227,9 @@
                                     <span>Buka Laporan - {{ $training->activity }}</span>
                                 </a>
                             @else
-                                <span class="text-gray-500 italic">Belum ada link laporan kegiatan.</span>
+                                <span class="text-gray-500 italic text-[12px]">Belum ada link laporan kegiatan (Link ini di
+                                    update
+                                    ketika pelatihan sudah selesai oleh admin sebagai dokumentasi pelatihan).</span>
                             @endif
                         </div>
                     </div>

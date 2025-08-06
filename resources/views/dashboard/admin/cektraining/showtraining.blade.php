@@ -47,8 +47,8 @@
     </div>
 
 
-    <div class="p-4 border border-t-0 border-gray-300 bg-white rounded-lg mt-6">
-        <div class="max-w-5xl px-2 py-6">
+    <div class="p-4 border border-t-0 border-gray-300 bg-white rounded-lg mt-4">
+        <div class="max-w-5xl px-2 py-2">
             <h1 class="text-[24px] font-semibold">Daftar Pelatihan</h1>
             <h2 class="text-[15px] mb-6">
                 Lengkapi data form ini untuk mengikuti pelatihan yang akan diselenggarakan oleh PT Maxima Aksara Jaya Utama,
@@ -610,7 +610,7 @@
 
             <button type="button" id="uploadFileForAdminBtn"
                 class="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition">
-                Upload
+                Upload File
             </button>
             <div id="uploadAdminFileStatus" class="text-center text-sm mt-2"></div>
         </form>
