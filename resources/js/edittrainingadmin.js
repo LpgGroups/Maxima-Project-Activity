@@ -603,7 +603,7 @@ function timeDeadline() {
 
     if (timeD && trainingDateStr) {
         const trainingDate = moment.tz(trainingDateStr, "Asia/Jakarta");
-        const deadline = trainingDate.clone().subtract(5, "days");
+        const deadline = trainingDate.clone().subtract(7, "days");
 
         let intervalId;
 
