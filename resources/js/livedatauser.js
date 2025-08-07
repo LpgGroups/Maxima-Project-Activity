@@ -16,8 +16,6 @@ function liveDataUser() {
             }
 
             result.data.forEach((item) => {
-               
-
                 // Menentukan status label dan warna
                 const statusMap = {
                     selesai: {
@@ -79,7 +77,7 @@ function liveDataUser() {
                                         <tr 
                        data-training-date="${item.training_date_raw}"" 
                         onclick="window.location='${item.url}'"
-                        class="training-row odd:bg-white even:bg-gray-300 cursor-pointer hover:bg-red-500 hover:text-white leading-loose relative py-6"
+                      class="training-row odd:bg-white/30 even:bg-gray-500/30 cursor-pointer hover:bg-red-500 hover:text-white leading-loose relative py-6"
                         >
                         <td>${item.no}</td>
                         <td>

@@ -364,7 +364,7 @@ class DashboardAdminController extends Controller
         $training->link = $request->input('link');
         $training->save();
 
-        return redirect()->back()->with('success', 'Link dokumen pelatihan berhasil diperbarui.');
+        return redirect()->to(url()->previous() . '#report-activity-admin')->with('success', 'Link dokumen pelatihan berhasil diperbarui.');
     }
 
 

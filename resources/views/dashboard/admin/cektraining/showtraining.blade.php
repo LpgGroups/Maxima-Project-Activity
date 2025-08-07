@@ -617,7 +617,7 @@
     </div>
 
     @if ($training->isfinish === 1)
-        <div class="p-4 border border-t-0 border-gray-300 bg-white rounded-lg mt-4" id="link-section">
+        <div id="report-activity-admin" class="p-4 border border-t-0 border-gray-300 bg-white rounded-lg mt-4" id="link-section">
             @if (session('success'))
                 <div class="mb-4 p-3 bg-green-100 text-green-700 rounded">
                     {{ session('success') }}

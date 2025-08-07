@@ -25,7 +25,8 @@
                 </div>
                 <div>
                     <span class="font-bold text-gray-600">Lokasi Kegiatan:</span>
-                    <div class="mt-1">{{ $training->place }} - {{ $training->city ?? 'Tidak Ada' }}</div>
+                    <div class="mt-1"><strong>{{ $training->place }}</strong> - {{ $training->provience ?? 'Tidak Ada' }}
+                        - {{ $training->city ?? '' }}</div>
                 </div>
                 <div>
                     <span class="font-bold text-gray-600">Perusahaan:</span>
@@ -64,9 +65,32 @@
                         @endif
                     </div>
                 </div>
+
+                <div>
+                    <span class="font-bold text-gray-600">Link Laporan Kegiatan:</span>
+                    <div class="mt-2">
+                        @if ($training->link && filter_var($training->link, FILTER_VALIDATE_URL))
+                            <a href="{{ $training->link }}" target="_blank"
+                                class="inline-flex items-center gap-2 bg-purple-200 text-purple-800 text-sm font-semibold px-4 py-2 rounded-md hover:bg-purple-300 transition">
+
+                                <!-- SVG icon -->
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M14 3h7v7m0-7L10 14M5 5v14h14v-7" />
+                                </svg>
+
+                                <span>Buka Laporan - {{ $training->activity }}</span>
+                            </a>
+                        @else
+                            <span class="text-gray-500 italic text-[12px]">Belum ada link laporan kegiatan (Link ini di
+                                update
+                                ketika pelatihan sudah selesai oleh admin sebagai dokumentasi pelatihan).</span>
+                        @endif
+                    </div>
+                </div>
             </div>
         </div>
-
 
         <div class="">
             <h3 class="text-lg font-semibold text-gray-800 border-b">Peserta {{ $training->name_company }}</h3>
@@ -141,6 +165,5 @@
                 </table>
             </div>
         </div>
-
     </div>
 @endsection
