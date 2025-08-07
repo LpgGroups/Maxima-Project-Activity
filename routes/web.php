@@ -143,6 +143,7 @@ Route::middleware(['auth'])->group(function () {
             ->name('dashboard.viewers.index');
         Route::get('/dashboard/viewers/detail/{id}', [DashboardViewersController::class, 'show'])
             ->name('dashboard.viewers.show');
+        Route::post('/dashboard/viewers/detail/{id}/update-link', [DashboardViewersController::class, 'updateTrainingLinkByViewer'])->name('training.update-link.viewer');
     });
 
     Route::get('/dashboard/schedule', [MonitoringController::class, 'schedule'])->name('dashboard.shcedule');

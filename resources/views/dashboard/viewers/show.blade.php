@@ -519,6 +519,13 @@
                     @endif
                 </div>
             @endif
+            <div class="">
+                <label for="note" class="block mb-1 font-bold text-gray-700 text-sm">Catatan</label>
+                <textarea name="note" id="note" maxlength="150"
+                    class="w-full border border-gray-300 rounded p-2 min-h-[100px] focus:ring-2 focus:ring-blue-500 text-left"
+                    rows="3" placeholder="Masukkan Note untuk management (opsional)">{{ old('note', $fileRequirement->note ?? '') }}</textarea>
+
+            </div>
             <div id="uploadAdminFileStatus" class="text-center text-sm mt-2"></div>
         </form>
     </div>
@@ -607,6 +614,42 @@
 
             </div>
         </div>
+    </div>
+
+    <div id="report-activity" class="p-4 border border-t-0 border-gray-300 bg-white rounded-lg mt-4">
+        @if ($training->isfinish === 1)
+            <div class="p-4 border border-t-0 border-gray-300 bg-white rounded-lg mt-4" id="link-section">
+                @if (session('success'))
+                    <div class="mb-4 p-3 bg-green-100 text-green-700 rounded">
+                        {{ session('success') }}
+                    </div>
+                @endif
+                <h2 class="text-2xl font-bold mb-2 text-gray-700">Laporan Kegiatan</h2>
+                <p class="text-[15px]">
+                    Silakan unggah laporan kegiatan setelah pelatihan selesai. Laporan ini akan menjadi bagian dari
+                    dokumentasi
+                    dan evaluasi internal.
+                </p>
+                <form action="{{ route('training.update-link.viewer', $training->id) }}" method="POST">
+                    @csrf
+
+                    <div class="relative mt-4 w-64">
+                        <input id="link" name="link" type="url"
+                            class="peer block w-full appearance-none border border-[#515151] bg-transparent px-2.5 py-3 text-sm text-[#515151] rounded-md focus:border-[#1E6E9E] focus:outline-none focus:ring-1 focus:ring-[#1E6E9E] placeholder-transparent"
+                            placeholder=" " required value="{{ old('link', $training->link ?? '') }}" />
+                        <label for="link"
+                            class="absolute text-base rounded-lg bg-[#ffffff] text-[#515151] transition-all duration-300 transform -translate-y-4 scale-75 top-3 left-2.5 ml-2 z-10 origin-[0] peer-focus:text-[#1E6E9E] peer-focus:scale-75 peer-focus:-translate-y-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0">
+                            Laporan Kegiatan
+                        </label>
+                    </div>
+
+                    <button type="submit" class="mt-4 rounded bg-blue-600 px-6 py-2 text-white hover:bg-blue-700">
+                        Simpan Link
+                    </button>
+                </form>
+            </div>
+        @endif
+
     </div>
     <script>
         function initShowDetailParticipant() {
