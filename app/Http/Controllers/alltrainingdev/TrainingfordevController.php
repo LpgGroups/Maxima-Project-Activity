@@ -73,12 +73,17 @@ class TrainingfordevController extends Controller
     }
 
 
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         DB::beginTransaction();
 
         try {
             $training = RegTraining::findOrFail($id);
+
+            // ✅ Validasi nomor surat
+            if ($request->input('confirm_letter') !== $training->no_letter) {
+                return redirect()->back()->with('error', 'Nomor surat tidak cocok. Gagal menghapus pelatihan.');
+            }
 
             // Hapus semua peserta
             $training->participants()->delete();
@@ -94,7 +99,6 @@ class TrainingfordevController extends Controller
             return redirect()->back()->with('success', 'Pelatihan berhasil dihapus.');
         } catch (\Exception $e) {
             DB::rollBack();
-
             return redirect()->back()->with('error', 'Gagal menghapus pelatihan: ' . $e->getMessage());
         }
     }

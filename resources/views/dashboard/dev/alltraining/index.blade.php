@@ -56,7 +56,7 @@
                 </thead>
                 <tbody class="lg:text-[14px] text-[10px]">
                     @forelse ($trainingAll as $index => $training)
-                        <tr onclick="window.location='{{ route('dashboard.admin.training.show', ['id' => $training->id]) }}'"
+                        <tr
                             class="odd:bg-white even:bg-gray-300 cursor-pointer hover:bg-red-500 hover:text-white leading-loose">
                             <td>{{ $trainingAll->firstItem() + $index }}</td>
                             <td class="max-w-[100px] truncate whitespace-nowrap" title="{{ $training->user->name }}">
@@ -172,13 +172,20 @@
                                 </div>
                             </td>
                             <td class="py-2 px-2 text-center">
-                                {{-- Delete --}}
-                                <form action="{{ route('training.destroy', $training->id) }}" method="POST"
-                                    onsubmit="event.stopPropagation(); return confirm('Yakin ingin menghapus pelatihan ini?');">
+                                <button type="button" class="text-red-600 hover:underline"
+                                    onclick="confirmDeleteWithLetter('{{ $training->id }}', '{{ $training->no_letter }}')">
+                                    Hapus
+                                </button>
+
+                                {{-- Form di luar tombol --}}
+                                <form id="delete-form-{{ $training->id }}"
+                                    action="{{ route('training.destroy', $training->id) }}" method="POST"
+                                    style="display: none;">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="text-red-600 hover:underline">Hapus</button>
+                                    <input type="hidden" name="confirm_letter" id="confirm_letter_{{ $training->id }}">
                                 </form>
+
                             </td>
                         </tr>
                     @empty
@@ -193,6 +200,53 @@
             </div>
         </div>
     </div>
+    <script>
+        function confirmDeleteWithLetter(id, noLetter) {
+            Swal.fire({
+                title: 'Konfirmasi Hapus',
+                html: `Ketik <b>${noLetter}</b> untuk menghapus pelatihan.`,
+                input: 'text',
+                inputPlaceholder: 'Ketik nomor surat di sini',
+                showCancelButton: true,
+                confirmButtonText: 'Hapus',
+                cancelButtonText: 'Batal',
+                preConfirm: (inputValue) => {
+                    if (inputValue.trim() !== noLetter.trim()) {
+                        Swal.showValidationMessage('Nomor surat tidak cocok!');
+                        return false;
+                    }
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('confirm_letter_' + id).value = result.value.trim();
+                    document.getElementById('delete-form-' + id).submit();
+                }
+            });
+        }
+    </script>
+    @if (session('success'))
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: '{{ session('success') }}',
+                timer: 2500,
+                showConfirmButton: false
+            });
+        </script>
+    @endif
+
+    @if (session('error'))
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops!',
+                text: '{{ session('error') }}',
+                timer: 3000,
+                showConfirmButton: false
+            });
+        </script>
+    @endif
 @endsection
 @push('scripts')
     @vite('resources/js/livedata.js')
