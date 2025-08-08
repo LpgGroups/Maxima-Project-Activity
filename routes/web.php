@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\alltrainingdev\TrainingfordevController;
 use App\Http\Controllers\CodeTrainingController;
 use App\Http\Controllers\DashboardAdminController;
 use App\Http\Controllers\DashboardDevController;
@@ -127,14 +128,21 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{folderName}', [MaintanceFolderController::class, 'show'])->name('show');
             Route::get('/', [MaintanceFolderController::class, 'index'])->name('index');
         });
+
         Route::prefix('dashboard/dev/carrousel')->name('carrousel.')->group(function () {
             Route::get('/', [CarrouselController::class, 'index'])->name('index');
             Route::get('/create', [CarrouselController::class, 'create'])->name('create');
             Route::post('/', [CarrouselController::class, 'store'])->name('store');
             Route::get('/{id}/edit', [CarrouselController::class, 'edit'])->name('edit');
             Route::put('/{id}', [CarrouselController::class, 'update'])->name('update');
-            Route::delete('/{id}', [CarrouselController::class, 'destroy'])->name('destroy');
         });
+
+        Route::prefix('dashboard/developer/trainingall')->name('training.')->group(function () {
+            Route::get('/', [TrainingfordevController::class, 'index'])->name('index');
+            Route::delete('/{id}', [TrainingfordevController::class, 'destroy'])->name('destroy');
+        });
+        Route::delete('/dashboard/developer/trainingall/{id}', [TrainingfordevController::class, 'destroy'])
+            ->name('training.destroy');
         Route::delete('/dashboard/developer/account/{id}', [DashboardDevController::class, 'destroyUser'])->name('user.destroy');
     });
 
