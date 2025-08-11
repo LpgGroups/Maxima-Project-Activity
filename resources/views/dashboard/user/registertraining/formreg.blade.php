@@ -13,39 +13,45 @@
     <div class="container mx-auto">
         <!-- Tab Navigation -->
         <div class="rounded-lg">
-            <ul class="flex flex-col sm:flex-row border-b border-gray-300">
-                <li class="flex-1">
+            <ul
+                class="flex flex-col sm:flex-row border-b border-gray-300
+           overflow-x-auto sm:overflow-visible whitespace-nowrap sm:whitespace-normal
+           snap-x snap-mandatory no-scrollbar">
+                <li class="flex-none sm:flex-1 snap-start">
                     <a href="#" id="tab1"
-                        class="flex justify-center items-center gap-2 text-violet-400 py-2 px-4 bg-gray-400 rounded-tl-lg text-center">
+                        class="flex justify-center items-center gap-2 text-violet-400 py-2 px-4 bg-gray-400 rounded-tl-lg text-center
+                min-w-[220px] sm:min-w-0">
                         Daftar Pelatihan
                         @if ($training->isComplete())
                             <img src="{{ asset('img/svg/success.svg') }}" alt="Success" class="w-4 h-4">
                         @endif
                     </a>
-
                 </li>
-                <li class="flex-1">
-                    <a href="#" id="tab2"
-                        class="flex justify-center items-center gap-2 text-violet-400 py-2 px-4 bg-gray-400 text-center">
-                        Pendaftaran Peserta
 
+                <li class="flex-none sm:flex-1 snap-start">
+                    <a href="#" id="tab2"
+                        class="flex justify-center items-center gap-2 text-violet-400 py-2 px-4 bg-gray-400 text-center
+                min-w-[220px] sm:min-w-0">
+                        Pendaftaran Peserta
                         @if ($training->isLinkFilled())
                             <img src="{{ asset('img/svg/success.svg') }}" alt="Success" class="w-4 h-4">
                         @endif
                     </a>
                 </li>
-                <li class="flex-1">
+
+                <li class="flex-none sm:flex-1 snap-start">
                     <a href="#" id="tab3"
-                        class="flex justify-center items-center gap-2 text-violet-400 py-2 px-4 bg-gray-400 text-center rounded-r-lg">Submit
-                        Data
+                        class="flex justify-center items-center gap-2 text-violet-400 py-2 px-4 bg-gray-400 text-center rounded-r-lg
+                min-w-[220px] sm:min-w-0">
+                        Submit Data
                         @if ($training->isfinish == 1)
                             <img src="{{ asset('img/svg/success.svg') }}" alt="Success" class="w-4 h-4">
                         @endif
                     </a>
-
                 </li>
             </ul>
         </div>
+
 
         <!-- Tab Content -->
         <div id="content1" class="tab-content">

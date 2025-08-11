@@ -89,7 +89,8 @@ function liveDataUser() {
                                 ${statusText}
                             </span>
                         </td>
-                        <td>${item.date}</td>
+                      <td class="max-w-[90px] truncate md:max-w-full">${item.date}</td>
+
                         <td>
                             <div class="w-[80px] h-2 bg-gray-200 rounded-full dark:bg-gray-700 mx-auto">
                                 <div class="${progressColor} text-[8px] font-medium text-white text-center leading-none rounded-full"

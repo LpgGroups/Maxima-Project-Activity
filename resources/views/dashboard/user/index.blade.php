@@ -4,14 +4,11 @@
         <!-- Container untuk informasi -->
         <div class="flex flex-wrap gap-4 w-full lg:w-[570px] h-auto">
             <!-- Elemen Total Pelatihan -->
-            <!-- Elemen Total Pelatihan -->
             <div class="w-[276px] sm:w-full md:w-[276px] h-auto bg-rose-100 rounded-2xl shadow-md p-4"
                 style="background-image: url('/img/logo_training.png'); background-repeat: no-repeat; background-position: right bottom; background-size: 140px 140px;">
                 <div class="text-blue-700 text-2xl font-bold">Total Pelatihan</div>
                 <div class="text-black text-[52px] font-bold">{{ $totalTrainings }}</div>
             </div>
-
-            <!-- Spacer -->
 
             <!-- Elemen Total Peserta -->
             <div class="w-[276px] sm:w-full md:w-[276px] h-auto bg-rose-100 rounded-2xl shadow-md p-4"
@@ -19,14 +16,11 @@
                 <div class="text-blue-700 text-2xl font-bold">Total Peserta</div>
                 <div class="text-black text-[52px] font-bold">{{ $totalParticipants }}</div>
             </div>
-
-
-
             <div
-                class="lg:w-[568px] sm:w-full w-[276px] h-auto bg-gradient-to-br from-white via-rose-100 to-rose-200 rounded-2xl shadow-md p-4 sm:mb-0 lg:mb-[500px]">
+                class="lg:w-[568px] sm:min-w-[568px] w-[276px] h-auto bg-gradient-to-br from-white via-rose-100 to-rose-200 rounded-2xl shadow-md p-4 sm:mb-0 lg:mb-[500px]">
                 {{-- table --}}
-                <div class="rounded-2xl p-2 w-full">
-                    <table class="table-auto w-full text-center align-middle ">
+                <div class="rounded-2xl p-2 w-full overflow-x-auto sm:overflow-x-visible ">
+                    <table class="table-auto w-full text-center align-middle overflow-x-auto sm:overflow-x-visible">
                         <thead>
                             <tr class="bg-slate-600 lg:text-sm text-white text-[10px]">
                                 <th class="rounded-l-lg">No</th>
@@ -36,7 +30,7 @@
                                 <th class="rounded-r-lg">Progress</th>
                             </tr>
                         </thead>
-                        <tbody class="lg:text-[14px] text-[10px]">
+                        <tbody class="lg:text-[14px] text-[10px] ">
                             @forelse ($trainings as $index => $training)
                             @empty
                                 <tr>
@@ -123,7 +117,7 @@
                     <span>Hari Ini</span>
                 </div>
                 <div class="flex flex-col items-center">
-                    <div class="w-4 h-2 bg-white border border-gray-400 rounded-sm mb-1"></div>
+                    <div class="w-4 h-2 bg-transparent border border-gray-400 rounded-sm mb-1"></div>
                     <span>Tersedia</span>
                 </div>
                 <div class="flex flex-col items-center">
