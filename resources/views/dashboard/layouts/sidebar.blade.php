@@ -261,6 +261,17 @@
                                         Account
                                     </a>
                                 </li>
+
+                                 <li>
+                                    <a href="/dashboard/developer/trainingall" @class([
+                                        'block px-2 py-1 rounded hover:bg-red-100 text-sm',
+                                        'text-red-500 font-bold' => request()->is(
+                                            'dashboard/developer/trainingall*'),
+                                        'text-gray-500' => !request()->is('dashboard/developer/trainingall*'),
+                                    ])>
+                                        Semua Pelatihan
+                                    </a>
+                                </li>
                                 <li>
                                     <a href="/dashboard/schedule" @class([
                                         'block px-2 py-1 rounded hover:bg-red-100 text-sm',
@@ -280,6 +291,8 @@
                                         Folder
                                     </a>
                                 </li>
+
+                               
                                 {{-- Tambah submenu lain di sini jika perlu --}}
                             </ul>
                         </div>
