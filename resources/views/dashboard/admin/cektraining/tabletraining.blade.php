@@ -58,7 +58,7 @@
                         <tr onclick="window.location='{{ route('dashboard.admin.training.show', ['id' => $training->id]) }}'"
                             class="odd:bg-white even:bg-gray-300 cursor-pointer hover:bg-red-500 hover:text-white leading-loose">
                             <td>{{ $trainingAll->firstItem() + $index }}</td>
-                            <td class="max-w-[100px] truncate whitespace-nowrap" title="{{ $training->user->name }}">
+                            <td class="max-w-[100px] truncate whitespace-nowrap" title="{{ $training->no_letter }}">
                                 {{ $training->no_letter ?? '-' }}
                             </td>
 

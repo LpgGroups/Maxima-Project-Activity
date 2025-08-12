@@ -1,13 +1,11 @@
 @extends('dashboard.layouts.dashboardmain')
 @section('container')
-    <x-welcome-comp :name="Auth::user()->name" position="br" />
     <div class="w-full h-auto bg-white rounded-2xl shadow-md p-4 sm:mb-0">
         {{-- table --}}
         <div class="rounded-2xl p-2 w-full">
             <form method="GET" class="mb-4 flex flex-wrap gap-2 items-end">
                 <input type="text" name="search" placeholder="Search..." value="{{ request('search') }}"
                     class="border rounded px-2 py-1 text-sm" />
-
                 <select name="sort" class="border w-40 rounded px-2 py-1 text-sm">
                     <option value="">Urutkan</option>
                     <option value="az" {{ request('sort') == 'az' ? 'selected' : '' }}>A - Z (Perusahaan)</option>
@@ -15,11 +13,19 @@
 
                 <input type="date" id="start_date" name="start_date" class="border rounded px-2 py-1 text-sm" />
                 <input type="date" id="end_date" name="end_date" class="border rounded px-2 py-1 text-sm" />
+                <select name="isprogress" class="border w-36 rounded px-2 py-1 text-sm">
+                    <option value="">Semua Progress</option>
+                    <option value="proses" {{ request('isprogress') == 'proses' ? 'selected' : '' }}>Proses</option>
+                    <option value="selesai" {{ request('isprogress') == 'selesai' ? 'selected' : '' }}>Selesai</option>
+                    <option value="ditolak" {{ request('isprogress') == 'ditolak' ? 'selected' : '' }}>Ditolak</option>
+                    <option value="menunggu" {{ request('isprogress') == 'menunggu' ? 'selected' : '' }}>Menunggu</option>
+                </select>
+
 
                 <button type="submit"
                     class="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600">Filter</button>
 
-                <a href="{{ route('dashboard.viewers.index') }}"
+                <a href="{{ '/dashboard/admin/training/alltraining' }}"
                     class="text-sm text-gray-600 underline hover:text-red-500">Reset</a>
             </form>
             <form method="GET" class="mb-2">
@@ -44,15 +50,16 @@
                         <th>Peserta</th>
                         <th>Status</th>
                         <th>Tanggal</th>
-                        <th class="rounded-r-lg">Progress</th>
+                        <th>Progress</th>
+                        <th class="rounded-r-lg">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="lg:text-[14px] text-[10px]">
                     @forelse ($trainingAll as $index => $training)
-                        <tr onclick="window.location='{{ route('dashboard.viewers.show', ['id' => $training->id]) }}'"
+                        <tr
                             class="odd:bg-white even:bg-gray-300 cursor-pointer hover:bg-red-500 hover:text-white leading-loose">
                             <td>{{ $trainingAll->firstItem() + $index }}</td>
-                            <td class="max-w-[100px] truncate whitespace-nowrap" title="{{ $training->user->name }}">
+                            <td class="max-w-[100px] truncate whitespace-nowrap" title="{{ $training->no_letter }}">
                                 {{ $training->no_letter ?? '-' }}
                             </td>
 
@@ -64,6 +71,28 @@
                             </td>
 
                             <td>{{ $training->activity }}
+                                @php
+                                    // Ambil semua notifikasi training yang sudah dilihat oleh ADMIN
+                                    $adminNotifications = $training->trainingNotifications->filter(function ($notif) {
+                                        return $notif->viewed_at && $notif->user && $notif->user->role === 'admin';
+                                    });
+
+                                    // Apakah sudah dibaca oleh minimal satu admin?
+                                    $adminSeen = $adminNotifications->isNotEmpty();
+
+                                    // Ambil waktu terakhir admin melihat training
+                                    $lastAdminViewedAt = $adminNotifications->max('viewed_at');
+
+                                    // Logika badge
+                                    $isNew = !$adminSeen;
+                                    $isUpdated = $adminSeen && $training->updated_at > $lastAdminViewedAt;
+                                @endphp
+
+                                @if ($isNew)
+                                    <img src="/img/gif/new.gif" alt="New" class="w-5 h-3 -mt-3 inline-block">
+                                @elseif ($isUpdated)
+                                    <img src="/img/gif/update.gif" alt="Updated" class="w-5 h-3 -mt-3 inline-block">
+                                @endif
                             </td>
                             <td>{{ $training->participants->count() }}</td>
                             <td class="p-1">
@@ -142,6 +171,22 @@
                                     </div>
                                 </div>
                             </td>
+                            <td class="py-2 px-2 text-center">
+                                <button type="button" class="text-red-600 hover:underline"
+                                    onclick="confirmDeleteWithLetter('{{ $training->id }}', '{{ $training->no_letter }}')">
+                                    Hapus
+                                </button>
+
+                                {{-- Form di luar tombol --}}
+                                <form id="delete-form-{{ $training->id }}"
+                                    action="{{ route('training.destroy', $training->id) }}" method="POST"
+                                    style="display: none;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <input type="hidden" name="confirm_letter" id="confirm_letter_{{ $training->id }}">
+                                </form>
+
+                            </td>
                         </tr>
                     @empty
                         <tr>
@@ -155,4 +200,55 @@
             </div>
         </div>
     </div>
+    <script>
+        function confirmDeleteWithLetter(id, noLetter) {
+            Swal.fire({
+                title: 'Konfirmasi Hapus',
+                html: `Ketik <b class="text-red-600 select-none">${noLetter}</b> untuk menghapus pelatihan.`,
+
+                input: 'text',
+                inputPlaceholder: 'Ketik nomor surat di sini',
+                showCancelButton: true,
+                confirmButtonText: 'Hapus',
+                cancelButtonText: 'Batal',
+                preConfirm: (inputValue) => {
+                    if (inputValue.trim() !== noLetter.trim()) {
+                        Swal.showValidationMessage('Nomor surat tidak cocok!');
+                        return false;
+                    }
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('confirm_letter_' + id).value = result.value.trim();
+                    document.getElementById('delete-form-' + id).submit();
+                }
+            });
+        }
+    </script>
+    @if (session('success'))
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: '{{ session('success') }}',
+                timer: 2500,
+                showConfirmButton: false
+            });
+        </script>
+    @endif
+
+    @if (session('error'))
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops!',
+                text: '{{ session('error') }}',
+                timer: 3000,
+                showConfirmButton: false
+            });
+        </script>
+    @endif
 @endsection
+@push('scripts')
+    @vite('resources/js/livedata.js')
+@endpush

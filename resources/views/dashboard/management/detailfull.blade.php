@@ -186,7 +186,7 @@
                         </div>
                     </div>
                 @else
-                    <p class="text-sm italic text-gray-500 mt-4 text-[12px]">Belum ada catatan dari admin.</p>
+                    <p class="text-sm italic text-gray-500 mt-4 text-[12px]">Tidak ada catatan</p>
                 @endif
             @else
                 <p class="text-sm italic text-gray-500 text-[12px]">Tidak ada berkas approval yang tersedia.</p>

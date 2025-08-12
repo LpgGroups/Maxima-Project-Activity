@@ -105,7 +105,7 @@ $(document).ready(function () {
 
                     $("#days div.bg-blue-500")
                         .removeClass("bg-blue-500 text-white")
-                        .addClass("bg-white text-black");
+                        .addClass("text-black");
 
                     dayCell
                         .removeClass("bg-white")

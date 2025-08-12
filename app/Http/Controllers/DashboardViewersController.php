@@ -9,10 +9,7 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use App\Models\RegTraining;
-use App\Models\TrainingNotification;
-use App\Models\User;
-use App\Notifications\TrainingUpdatedNotification;
-use Illuminate\Support\Facades\Storage;
+
 
 class DashboardViewersController extends Controller
 {
@@ -72,5 +69,18 @@ class DashboardViewersController extends Controller
             'training' => $training,
             'fileRequirement' => $fileRequirement
         ]);
+    }
+
+    public function updateTrainingLinkByViewer(Request $request, $id)
+    {
+        $request->validate([
+            'link' => 'nullable|url|max:255', // Validasi link, boleh kosong
+        ]);
+
+        $training = RegTraining::findOrFail($id);
+        $training->link = $request->input('link');
+        $training->save();
+
+        return redirect()->to(url()->previous() . '#report-activity')->with('success', 'Link dokumen pelatihan berhasil diperbarui.');
     }
 }
