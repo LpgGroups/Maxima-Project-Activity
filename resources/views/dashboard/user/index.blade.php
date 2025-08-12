@@ -1,5 +1,6 @@
 @extends('dashboard.layouts.dashboardmain')
 @section('container')
+    <x-welcome-comp :name="Auth::user()->name" position="br" />
     <div class="flex flex-col lg:flex-row gap-4 ">
         <!-- Container untuk informasi -->
         <div class="flex flex-wrap gap-4 w-full lg:w-[570px] h-auto">

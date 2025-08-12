@@ -1,6 +1,7 @@
 @extends('dashboard.layouts.dashboardmain')
 
 @section('container')
+    <x-welcome-comp :name="Auth::user()->name" variant="info" class="mt-2" />
     <div class="overflow-x-auto mt-6">
         <div class="flex flex-nowrap gap-6 px-2">
 
