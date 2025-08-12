@@ -1,5 +1,6 @@
 @extends('dashboard.layouts.dashboardmain')
 @section('container')
+    <x-welcome-comp :name="Auth::user()->name" position="br" />
     <div class="w-full h-auto bg-white rounded-2xl shadow-md p-4 sm:mb-0">
         {{-- table --}}
         <div class="rounded-2xl p-2 w-full">

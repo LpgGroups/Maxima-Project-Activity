@@ -78,28 +78,61 @@ class TrainingfordevController extends Controller
         DB::beginTransaction();
 
         try {
-            $training = RegTraining::findOrFail($id);
+            $training = RegTraining::with(['participants', 'approvalFiles'])->findOrFail($id);
 
-            // ✅ Validasi nomor surat
-            if ($request->input('confirm_letter') !== $training->no_letter) {
-                return redirect()->back()->with('error', 'Nomor surat tidak cocok. Gagal menghapus pelatihan.');
+            // Validasi nomor surat
+            $posted = trim((string)$request->input('confirm_letter'));
+            $expected = trim((string)($training->no_letter ?? ''));
+            if ($posted !== $expected) {
+                return back()->with('error', 'Nomor surat tidak cocok. Gagal menghapus pelatihan.');
             }
 
-            // Hapus semua peserta
+            $fileFields = [
+                'photo',
+                'ijazah',
+                'letter_employee',
+                'letter_statement',
+                'form_registration',
+                'letter_health',
+                'cv',
+            ];
+
+            foreach ($training->participants as $participant) {
+                foreach ($fileFields as $field) {
+                    $path = $participant->$field;
+                    if ($path && Storage::disk('public')->exists($path)) {
+                        Storage::disk('public')->delete($path);
+                    }
+                }
+            }
+
+            // (Opsional) Hapus file-file requirement pelatihan jika ada (dari form3)
+            if ($training->fileRequirement) {
+                $req = $training->fileRequirement;
+                foreach (['file_approval', 'proof_payment'] as $field) {
+                    $path = $req->$field;
+                    if ($path && Storage::disk('public')->exists($path)) {
+                        Storage::disk('public')->delete($path);
+                    }
+                }
+                $req->delete();
+            }
+
+            // ========== HAPUS DATA DB ==========
+            // hapus peserta
             $training->participants()->delete();
 
-            // Hapus folder file terkait
+            // hapus folder pelatihan (kalau kamu memang bikin folder ini)
             Storage::disk('public')->deleteDirectory("uploads/training/{$id}");
 
-            // Hapus data pelatihan
+            // hapus record training
             $training->delete();
 
             DB::commit();
-
-            return redirect()->back()->with('success', 'Pelatihan berhasil dihapus.');
-        } catch (\Exception $e) {
+            return back()->with('success', 'Pelatihan dan semua file terkait berhasil dihapus.');
+        } catch (\Throwable $e) {
             DB::rollBack();
-            return redirect()->back()->with('error', 'Gagal menghapus pelatihan: ' . $e->getMessage());
+            return back()->with('error', 'Gagal menghapus pelatihan: ' . $e->getMessage());
         }
     }
 }

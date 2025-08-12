@@ -1,8 +1,9 @@
 @extends('dashboard.layouts.dashboardmain')
 @section('container')
+    <x-welcome-comp :name="Auth::user()->name" position="br" />
     <div class="flex flex-col lg:flex-row gap-4 ">
         <div class="flex flex-wrap gap-4 w-full lg:w-full h-auto">
-           
+
             <div class="lg:w-[276px] sm:w-full h-auto bg-white rounded-2xl shadow-md p-4">
                 <div class="text-violet-400 text-2xl font-bold">Total Pelatihan</div>
                 <div class="text-black text-[52px] font-bold">{{ $totalTraining }}</div>
@@ -30,7 +31,7 @@
                             </tr>
                         </thead>
                         <tbody id="live-training-body" class="lg:text-[14px] text-[10px]">
-                            
+
                         </tbody>
                     </table>
                 </div>

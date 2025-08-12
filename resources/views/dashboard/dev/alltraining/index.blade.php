@@ -59,7 +59,7 @@
                         <tr
                             class="odd:bg-white even:bg-gray-300 cursor-pointer hover:bg-red-500 hover:text-white leading-loose">
                             <td>{{ $trainingAll->firstItem() + $index }}</td>
-                            <td class="max-w-[100px] truncate whitespace-nowrap" title="{{ $training->user->name }}">
+                            <td class="max-w-[100px] truncate whitespace-nowrap" title="{{ $training->no_letter }}">
                                 {{ $training->no_letter ?? '-' }}
                             </td>
 
@@ -204,7 +204,8 @@
         function confirmDeleteWithLetter(id, noLetter) {
             Swal.fire({
                 title: 'Konfirmasi Hapus',
-                html: `Ketik <b>${noLetter}</b> untuk menghapus pelatihan.`,
+                html: `Ketik <b class="text-red-600 select-none">${noLetter}</b> untuk menghapus pelatihan.`,
+
                 input: 'text',
                 inputPlaceholder: 'Ketik nomor surat di sini',
                 showCancelButton: true,
