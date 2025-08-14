@@ -4,7 +4,6 @@ function fetchTrainingDataAdmin() {
         .then((response) => {
             const trainings = response.data.reverse();
             let html = "";
-
             const maxDisplay = 10;
             const displayTrainings = trainings.slice(0, maxDisplay);
 
