@@ -1,0 +1,84 @@
+<?php
+
+namespace App\Http\Controllers\finance;
+
+use App\Http\Controllers\Controller;
+use App\Models\RegTraining;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Carbon\Carbon;
+
+class DashboardFinanceController extends Controller
+{
+    public function index()
+    {
+        // Halaman kosong + komponen live akan fetch sendiri
+        return view('dashboard.finance.index', [
+            "title" => "Dtest",
+        ]);
+    }
+
+    public function data(Request $request)
+    {
+        $pageSize = (int) $request->get('per_page', 10);
+
+        $query = RegTraining::query()
+            ->with('approvalFiles')
+            ->orderByDesc('created_at');
+
+
+        if ($search = $request->get('q')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('no_letter', 'like', "%{$search}%")
+                    ->orWhere('activity', 'like', "%{$search}%");
+            });
+        }
+
+        $paginator = $query->paginate($pageSize)->appends($request->query());
+
+        $items = collect($paginator->items())->map(function ($t, $i) use ($paginator) {
+            // format date yang aman (string / null / carbon)
+            $tgl = null;
+            try {
+                if ($t->date instanceof \DateTimeInterface) {
+                    $tgl = $t->date->format('d M Y');
+                } elseif (is_string($t->date) && trim($t->date) !== '') {
+                    $tgl = Carbon::parse($t->date)->format('d M Y');
+                }
+            } catch (\Throwable $e) {
+                $tgl = null;
+            }
+
+            $proofFile = $t->approvalFiles->firstWhere('proof_payment', '!=', null);
+
+            $statusUpload = $proofFile
+                ? 'Sudah diupload'
+                : 'Belum diupload';
+            return [
+                'no'         => ($paginator->firstItem() ?? 1) + $i,
+                'no_letter'   => $t->no_letter,
+                // sementara ambil dari kolom fallback di tabelnya
+                'pic'        => $t->name_pic ?? '-',
+                'company' => $t->name_company ?? '-',
+                'activity'  => $t->activity,
+                'provience'  => $t->provience,
+                'city'  => $t->city,
+                'date'    => $tgl,
+                'progress'   => (int) ($t->progress_percent ?? 0),
+                'status_upload' => $statusUpload,
+            ];
+        });
+
+        return response()->json([
+            'data' => $items,
+            'meta' => [
+                'current_page' => $paginator->currentPage(),
+                'per_page'     => $paginator->perPage(),
+                'last_page'    => $paginator->lastPage(),
+                'total'        => $paginator->total(),
+                'first_item'   => $paginator->firstItem(),
+                'last_item'    => $paginator->lastItem(),
+            ],
+        ]);
+    }
+}

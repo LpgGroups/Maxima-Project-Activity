@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\carrousel\CarrouselController;
+use App\Http\Controllers\finance\DashboardFinanceController;
 use App\Http\Controllers\MaintanceFolderController;
 
 Route::get('/', [LoginController::class, 'index'])->name('login.index');
@@ -99,6 +100,11 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/dashboard/management/training/{id}/detail', [DashboardManagementController::class, 'detailView'])
             ->name('management.training.detail');
         Route::put('/dashboard/management/approve/{id}', [DashboardManagementController::class, 'approve']);
+    });
+
+    Route::middleware([UserAccess::class . ':finance'])->group(function () {
+        Route::get('/dashboard/finance', [DashboardFinanceController::class, 'index'])->name('dashboard.finance.index');
+        Route::get('/dashboard/finance/getdata', [DashboardFinanceController::class, 'data'])->name('trainings.data');
     });
 
     Route::middleware([UserAccess::class . ':dev'])->group(function () {
