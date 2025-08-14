@@ -669,7 +669,7 @@ function initStatusReasonWatcher() {
         const status = $select.val();
         const $reasonInput = $select
             .closest("tr")
-            .find("input[name^='participants']");
+            .find("textarea[name^='participants']");
 
         if (status == "2") {
             // 2 = Rejected
