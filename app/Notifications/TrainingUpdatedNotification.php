@@ -3,9 +3,6 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Notifications\Notification;
 use App\Models\RegTraining;
 use Illuminate\Support\Facades\Log;

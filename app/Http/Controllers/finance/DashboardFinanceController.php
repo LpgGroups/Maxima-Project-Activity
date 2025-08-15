@@ -18,6 +18,31 @@ class DashboardFinanceController extends Controller
         ]);
     }
 
+    // DashboardFinanceController.php
+    public function show($id)
+    {
+        $training = RegTraining::with('approvalFiles')->findOrFail($id);
+
+        // Contoh format tanggal aman
+        $tgl = null;
+        try {
+            if ($training->date instanceof \DateTimeInterface) {
+                $tgl = $training->date->format('d M Y');
+            } elseif (is_string($training->date) && trim($training->date) !== '') {
+                $tgl = Carbon::parse($training->date)->format('d M Y');
+            }
+        } catch (\Throwable $e) {
+            $tgl = null;
+        }
+
+        return view('dashboard.finance.show', [
+            'title'    => 'Detail Pelatihan',
+            'training' => $training,
+            'date_fmt' => $tgl,
+        ]);
+    }
+
+
     public function data(Request $request)
     {
         $pageSize = (int) $request->get('per_page', 10);
@@ -55,6 +80,7 @@ class DashboardFinanceController extends Controller
                 ? 'Sudah diupload'
                 : 'Belum diupload';
             return [
+                'id'           => $t->id,
                 'no'         => ($paginator->firstItem() ?? 1) + $i,
                 'no_letter'   => $t->no_letter,
                 // sementara ambil dari kolom fallback di tabelnya

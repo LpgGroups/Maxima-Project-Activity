@@ -41,9 +41,9 @@ function getData(page = 1, q = "") {
                     ${progress}
                 </div>
                 `;
-
+                const showUrl = `/dashboard/finance/${training.id}`;
                 html += `
-                <tr class="odd:bg-white even:bg-gray-300 cursor-pointer hover:bg-red-500 hover:text-white leading-loose text-[12px]">
+                <tr onclick="window.location.href='${showUrl}'" class="odd:bg-white even:bg-gray-300 cursor-pointer hover:bg-red-500 hover:text-white leading-loose text-[12px]">
                     <td>${training.no}</td>
                     <td class="max-w-[120px] truncate whitespace-nowrap" title="${numberLetter}">${numberLetter}</td>
                     <td class="max-w-[50px] truncate whitespace-nowrap" title="${namePic}">${namePic}</td>
