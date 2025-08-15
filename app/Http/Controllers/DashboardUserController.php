@@ -68,7 +68,8 @@ class DashboardUserController extends Controller
 
             $duration = match ($activity) {
                 'TKPK1', 'TKPK2' => 6,
-                'TKBT1', 'TKBT2' => 4,
+                'TKBT2' => 4,
+                'TKBT1' => 3,
                 'AK3U' => 12,
                 'P3K' => 3,
                 'BE' => match ($place) {

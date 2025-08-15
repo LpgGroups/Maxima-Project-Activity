@@ -53,6 +53,8 @@ class LoginController extends Controller
                     return redirect()->route('dashboard.dev.index');
                 case 'viewer':
                     return redirect()->route('dashboard.viewers.index');
+                case 'finance':
+                    return redirect()->route('dashboard.finance.index');
                 default:
                     Auth::logout();
                     return redirect('/')->withErrors('Periksa Akun Kembali');

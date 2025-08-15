@@ -348,10 +348,10 @@
                                 <tr class="main-row {{ $index % 2 === 0 ? 'bg-red-100' : 'bg-blue-100' }} text-sm"
                                     data-participant-id="{{ $participant->id }}">
                                     <td>{{ $index + 1 }}</td>
-                                    <td class="max-w-[120px] truncate whitespace-nowrap"
+                                    <td class="max-w-[150px] truncate whitespace-nowrap"
                                         title="{{ $participant->name }}">
                                         {{ $participant->name }}</td>
-                                    <td class="max-w-[100px]">
+                                    <td class="max-w-[70px]">
                                         @php
                                             $nik = $participant->nik;
                                             $repeat = max(0, strlen($nik) - 4);
@@ -368,7 +368,7 @@
                                         </div>
                                     </td>
 
-                                    <td class="max-w-[70px]">
+                                    <td class="max-w-[50px]">
                                         <select name="participants[{{ $participant->id }}][status]"
                                             class="px-4 py-1 bg-transparent">
                                             <option value="0" {{ $participant->status == 0 ? 'selected' : '' }}>
@@ -376,15 +376,15 @@
                                             <option value="1" {{ $participant->status == 1 ? 'selected' : '' }}>
                                                 ✅Success</option>
                                             <option value="2" {{ $participant->status == 2 ? 'selected' : '' }}>
-                                                ❌Rejected</option>
+                                                ❌Reject</option>
                                         </select>
                                     </td>
 
-                                    <td>
-                                        <input type="text" name="participants[{{ $participant->id }}][reason]"
-                                            value="{{ $participant->reason }}" placeholder="Masukkan alasan"
-                                            style="width: 100%;">
+                                    <td class="max-w-[100px]">
+                                        <textarea name="participants[{{ $participant->id }}][reason]" placeholder="Masukkan alasan"
+                                            style="width: 100%; height: 20px;">{{ $participant->reason }}</textarea>
                                     </td>
+
                                     <td>
 
                                         <button type="button" class="text-blue-700 showDetailBtn rounded"
@@ -423,11 +423,27 @@
 
                                         </button>
                                     </td>
-
                                 </tr>
                                 {{-- Dropdown row, hidden by default --}}
                                 <tr class="detail-row hidden" id="detail-row-{{ $participant->id }}">
                                     <td colspan="8" class="bg-gray-100 text-left px-4 py-3">
+                                        <div class="my-3">
+                                            <div
+                                                class="inline-flex items-center gap-2 bg-blue-100 text-blue-800 px-3 py-1 rounded-full shadow-sm text-sm">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
+                                                    viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                </svg>
+                                                <span class="text-sm">Terakhir diupdate:</span>
+                                                <span class="font-bold">
+                                                    {{ \Carbon\Carbon::parse($participant->updated_at)->setTimezone('Asia/Jakarta')->translatedFormat('d F Y H:i') }}
+                                                    WIB
+                                                </span>
+                                            </div>
+                                        </div>
+
+
                                         <div class="mb-2 font-semibold text-[15px]">Data Selengkapnya</div>
 
                                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-gray-800">
@@ -618,6 +634,7 @@
 
     @if ($training->isfinish === 1)
         <div id="report-activity-admin" class="p-4 border border-t-0 border-gray-300 bg-white rounded-lg mt-4" id="link-section">
+
             @if (session('success'))
                 <div class="mb-4 p-3 bg-green-100 text-green-700 rounded">
                     {{ session('success') }}

@@ -50,7 +50,6 @@
                     </div>
                 @endif
             </div>
-
         </div>
 
         <!-- Kalender Maxima Academy -->
