@@ -52,7 +52,6 @@
             </div>
         </div>
 
-
         <!-- Kalender Maxima Academy -->
         <div
             class="lg:w-96 sm:w-full w-[276px] h-[534px] bg-gradient-to-br from-white via-rose-100 to-rose-200
