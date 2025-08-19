@@ -105,6 +105,7 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware([UserAccess::class . ':finance'])->group(function () {
         Route::get('/dashboard/finance', [DashboardFinanceController::class, 'index'])->name('dashboard.finance.index');
         Route::get('/dashboard/finance/getdata', [DashboardFinanceController::class, 'data'])->name('trainings.data');
+        Route::get('/dashboard/finance/{id}', [DashboardFinanceController::class, 'show'])->name('dashboard.finance.show');
     });
 
     Route::middleware([UserAccess::class . ':dev'])->group(function () {

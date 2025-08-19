@@ -13,8 +13,10 @@ use App\Models\TrainingNotification;
 use App\Models\User;
 use Illuminate\Support\Str;
 use App\Notifications\TrainingUpdatedNotification;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use ZipArchive;
+use Illuminate\Support\Facades\Notification;
 
 
 class DashboardAdminController extends Controller
@@ -378,18 +380,48 @@ class DashboardAdminController extends Controller
         ]);
 
         $customMessage = "Proses verifikasi berhasil. Pengajuan pelatihan {$training->activity} akan segera ditinjau untuk disetujui.";
-
+        $customMessageUser = "Proses verifikasi berhasil. Pengajuan pelatihan {$training->activity} akan segera ditinjau untuk disetujui.";
+        $customMessageMgmt = "Pengajuan pelatihan {$training->activity} siap ditinjau untuk disetujui.";
         $adminName = optional(Auth::user())->name ?? '-';
-        if ($training->user) {
-            $training->user->notify(new TrainingUpdatedNotification(
-                $training,
-                'admin',
-                'Daftar Pelatihan',
-                $customMessage,
-                'verifacc',
-                $adminName,
-                'admin'
-            ));
+        try {
+            // === Notif untuk user pengaju ===
+            if ($training->user) {
+                Notification::sendNow(
+                    $training->user,
+                    new TrainingUpdatedNotification(
+                        $training,
+                        'admin',
+                        'Daftar Pelatihan',
+                        $customMessageUser,
+                        'verifacc',
+                        $adminName,
+                        'admin'
+                    )
+                );
+            }
+
+            // === Notif untuk semua user management ===
+            $managementUsers = User::where('role', 'management')->get();
+            if ($managementUsers->isNotEmpty()) {
+                Notification::sendNow(
+                    $managementUsers,
+                    new TrainingUpdatedNotification(
+                        $training,
+                        'admin',
+                        'Daftar Pelatihan',
+                        $customMessageMgmt,
+                        'update',
+                        $adminName,
+                        'admin'
+                    )
+                );
+            }
+        } catch (\Throwable $e) {
+            Log::error('Gagal kirim notifikasi trainingFinish', [
+                'training_id' => $training->id,
+                'error'       => $e->getMessage(),
+            ]);
+            // jangan throw supaya update progress tetap sukses
         }
         return response()->json(['success' => true, 'message' => 'Progress berhasil diperbarui.']);
     }

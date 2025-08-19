@@ -70,6 +70,7 @@
                     </label>
                     <input type="text" name="phone" value="{{ old('phone') }}"
                         class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300 text-sm sm:text-base" />
+                    <span class="text-[12px] text-gray-500">contoh: 081190090901</span>
                 </div>
 
                 <div class="sm:flex sm:space-x-4">
@@ -117,6 +118,7 @@
                     </div>
 
             </form>
+          
         </div>
     </div>
     <script>

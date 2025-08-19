@@ -3,9 +3,6 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Notifications\Notification;
 use App\Models\RegTraining;
 use Illuminate\Support\Facades\Log;
@@ -59,6 +56,14 @@ class TrainingUpdatedNotification extends Notification
         $activity = $this->training->activity ?? 'Training';
 
         $formText = $this->formName ? " pada {$this->formName}" : '';
+        $role = strtolower((string)($notifiable->role ?? 'user'));
+
+        $targetUrl = match ($role) {
+            'admin'      => route('dashboard.admin.training.show', $this->training->id),
+            'finance'    => route('dashboard.finance.show', $this->training->id),   // <-- siapkan route ini
+            'management' => route('management.training.detail', ['id' => $this->training->id]),
+            default      => route('dashboard.form', $this->training->id),
+        };
         if ($this->triggeredBy === 'user') {
             return [
                 'type' => 'update',
@@ -67,7 +72,7 @@ class TrainingUpdatedNotification extends Notification
                 'training_id' => $this->training->id,
                 'user_name' => $userName,
                 'user_role' => $this->actorRole,
-                'url' => route('dashboard.admin.training.show', $this->training->id),
+                'url'         => $targetUrl,
             ];
         }
         if (!empty($this->customMessage)) {
@@ -84,7 +89,7 @@ class TrainingUpdatedNotification extends Notification
                 'training_id' => $this->training->id,
                 'user_name' => $userName,
                 'user_role' => $this->actorRole,
-                'url' => $url
+                'url'         => $targetUrl,
             ];
         }
 
@@ -95,7 +100,7 @@ class TrainingUpdatedNotification extends Notification
             'training_id' => $this->training->id,
             'user_name' => $userName,
             'user_role' => $this->actorRole,
-            'url' => route('dashboard.form', $this->training->id), // ganti sesuai route kamu
+            'url'         => $targetUrl, // ganti sesuai route kamu
         ];
     }
     public function toArray(object $notifiable): array
