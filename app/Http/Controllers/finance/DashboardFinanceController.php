@@ -4,9 +4,11 @@ namespace App\Http\Controllers\finance;
 
 use App\Http\Controllers\Controller;
 use App\Models\RegTraining;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardFinanceController extends Controller
 {
@@ -33,6 +35,26 @@ class DashboardFinanceController extends Controller
             }
         } catch (\Throwable $e) {
             $tgl = null;
+        }
+
+        $user = Auth::user();
+        $trainingId = $training->id;
+
+        if ($user->role === 'finance') {
+            $financeUsers = User::where('role', 'finance')->get();
+            foreach ($financeUsers as $finance) {
+                $finance->unreadNotifications->where('data.training_id', $trainingId)->each(function ($notif) {
+                    $notif->markAsRead();
+                });
+            }
+        } else {
+            $notification = $user->unreadNotifications
+                ->where('data.training_id', $trainingId)
+                ->first();
+
+            if ($notification) {
+                $notification->markAsRead();
+            }
         }
 
         return view('dashboard.finance.show', [

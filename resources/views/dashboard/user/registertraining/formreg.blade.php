@@ -656,7 +656,7 @@
                         Semua data dan dokumen pengajuan pelatihan sudah dikirimkan.
                         Silakan menunggu proses verifikasi dan persetujuan dari tim Maxima.
                         <br><br>
-                        Anda akan mendapatkan notifikasi apabila proses sudah selesai.
+                        Anda akan mendapatkan notifikasi dan pesan WhatsApp apabila proses sudah selesai.
                         <br><br>
                         Jika ada pertanyaan tambahan, silakan hubungi kami.
                     </p>

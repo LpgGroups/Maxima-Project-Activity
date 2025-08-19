@@ -15,6 +15,7 @@ use Illuminate\Support\Str;
 use App\Models\User;
 use App\Notifications\TrainingUpdatedNotification;
 
+use Illuminate\Support\Facades\Notification;
 
 class RegTrainingController extends Controller
 {
@@ -358,7 +359,8 @@ class RegTrainingController extends Controller
 
         $fileApprovalPath = $record->file_approval ?? null;
         $proofPaymentPath = $record->proof_payment ?? null;
-
+        $approvalUploaded = false;
+        $proofUploaded    = false;
 
         if ($request->hasFile('file_approval')) {
 
@@ -368,6 +370,7 @@ class RegTrainingController extends Controller
             $fileName = "File_{$noLetter}_{$nameCompany}_{$nameTraining}." . $request->file('file_approval')->getClientOriginalExtension();
 
             $fileApprovalPath = $request->file('file_approval')->storeAs('uploads/fileapproval', $fileName, 'public');
+            $approvalUploaded  = true;
         }
 
 
@@ -376,7 +379,9 @@ class RegTrainingController extends Controller
                 Storage::disk('public')->delete($record->proof_payment);
             }
             $proofName = "Proof_{$noLetter}_{$nameCompany}_{$nameTraining}." . $request->file('proof_payment')->getClientOriginalExtension();
+
             $proofPaymentPath = $request->file('proof_payment')->storeAs('uploads/proofpayment', $proofName, 'public');
+            $proofUploaded = true;
         }
 
 
@@ -400,19 +405,54 @@ class RegTrainingController extends Controller
         // Sentuh updated_at
         $training->touch();
 
-        // Notifikasi ke admin
-        $admins = User::where('role', 'admin')->get();
-        foreach ($admins as $admin) {
-            $admin->notify(new TrainingUpdatedNotification(
-                $training,
-                'user',
-                'Upload Persetujuan / Bukti Pembayaran',
-                '',
-                '',
-                '',
-                'user'
-            ));
+
+        try {
+            // 1) Jika upload bukti pembayaran → ke FINANCE
+            if ($proofUploaded) {
+                $recipients = User::whereIn('role', ['admin', 'finance'])->get();
+
+                if ($recipients->isNotEmpty()) {
+                    Notification::sendNow(
+                        $recipients,
+                        new TrainingUpdatedNotification(
+                            $training,
+                            'user',
+                            'Upload Bukti Pembayaran',
+                            'Bukti pembayaran pelatihan telah diunggah.',
+                            'update',
+                            '',
+                            'user'
+                        )
+                    );
+                }
+            }
+
+            // 2) Jika upload file approval → ke ADMIN
+            if ($approvalUploaded) {
+                $adminRecipients = User::where('role', 'admin')->get();
+                if ($adminRecipients->isNotEmpty()) {
+                    Notification::sendNow(
+                        $adminRecipients,
+                        new TrainingUpdatedNotification(
+                            $training,
+                            'user',
+                            'Upload File Persetujuan',
+                            'File persetujuan pelatihan telah diunggah.',
+                            'update',
+                            '',
+                            'user'
+                        )
+                    );
+                }
+            }
+        } catch (\Throwable $e) {
+            Log::error('Gagal kirim notifikasi saveForm3', [
+                'training_id' => $training->id,
+                'error'       => $e->getMessage(),
+            ]);
+            // jangan throw; biarkan upload tetap sukses
         }
+
 
         return response()->json(['message' => 'File berhasil diperbarui!']);
     }

@@ -362,7 +362,7 @@
 
         <!-- Version Info -->
         <div class="p-4 mt-auto">
-            <span class="text-sm">Version: Beta V1.7.2 </span>
+            <span class="text-sm">Version: Beta V1.7.3 </span>
         </div>
     </div>
 </div>
