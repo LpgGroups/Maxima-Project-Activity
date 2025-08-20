@@ -1,13 +1,26 @@
 @extends('dashboard.layouts.dashboardmain')
 @section('container')
-    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center w-full gap-2">
-        <p class="text-center sm:text-left text-base sm:text-[15px] font-semibold text-[#9694FF]">
-            {{ config('activity_map.' . $training->activity) ?? $training->activity }}
-        </p>
-
-        <p class="text-center sm:text-right text-sm sm:text-base text-gray-600">
-            No: {{ $training->no_letter }}
-        </p>
+    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center w-full gap-2 mb-2">
+        <span
+            class="inline-flex gap-2 rounded-xl bg-indigo-900/30 px-3 py-1.5 text-xs font-medium text-indigo-700 ring-1 ring-indigo-100">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="lucide lucide-pin-icon lucide-pin">
+                <path d="M12 17v5" />
+                <path
+                    d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z" />
+            </svg>
+            <span class="font-bold">
+                {{ config('activity_map.' . $training->activity) ?? $training->activity }}</span>
+        </span>
+        <span
+            class="inline-flex items-center gap-2 rounded-xl bg-indigo-900/30 px-3 py-1.5 text-xs font-medium text-indigo-700 ring-1 ring-indigo-100">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                    d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L3 13.99V4h9l8.59 8.59a2 2 0 010 2.82zM7.5 7.5a1.5 1.5 0 100 3 1.5 1.5 0 000-3z" />
+            </svg>
+            No Surat: <span class="font-semibold"> {{ $training->no_letter }}</span>
+        </span>
     </div>
 
     <div class="container mx-auto">

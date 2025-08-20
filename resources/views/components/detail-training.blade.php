@@ -1,4 +1,3 @@
-{{-- resources/views/components/detail-training.blade.php --}}
 @props([
     'training', // instance RegTraining (with 'approvalFiles' relation)
     'dateFmt' => null, // tanggal sudah diformat di controller
@@ -22,7 +21,7 @@
     $badgeText = $hasProof ? 'Sudah diupload' : 'Belum diupload';
     $badgeClass = $hasProof
         ? 'bg-emerald-100 text-emerald-700 ring-1 ring-emerald-200'
-        : 'bg-amber-100 text-amber-700 ring-1 ring-amber-200';
+        : 'bg-red-100 text-red-700 ring-1 ring-red-200';
 
     // Avatar inisial PIC (optional garnish)
     $initials = collect(explode(' ', trim($pic)))
@@ -36,8 +35,7 @@
 <div class="relative overflow-hidden rounded-2xl border bg-white shadow-sm ring-1 ring-gray-950/5">
     {{-- Header strip --}}
     <div class="relative">
-        <div class="h-28 bg-gradient-to-r from-rose-200 via-rose-300 to-pink-200"></div>
-
+        <div class="h-28 bg-gradient-to-br from-sky-200 via-sky-300 to-blue-200"></div>
         <div
             class="absolute inset-0 opacity-15 mix-blend-overlay pointer-events-none bg-[radial-gradient(60rem_60rem_at_80%_-10%,white,transparent)]">
         </div>
@@ -46,7 +44,16 @@
         <div class="px-6 sm:px-8 -mt-20 pb-12">
             <div class="flex items-end justify-between gap-4">
                 <div class="flex items-center gap-4">
-                    <div class="text-gray-500">
+                    {{-- Icon building --}}
+                    <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-sky-100 text-sky-600">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="h-6 w-6">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M3 21h18M4 10h16M4 6h16M10 14h4v7h-4v-7zM7 21V4a1 1 0 011-1h8a1 1 0 011 1v17" />
+                        </svg>
+                    </div>
+
+                    <div class="text-gray-800">
                         <h2 class="text-xl sm:text-2xl font-semibold leading-tight drop-shadow">
                             {{ $company }}
                         </h2>
@@ -55,6 +62,7 @@
                         </p>
                     </div>
                 </div>
+
 
                 {{-- Kembali / Actions slot --}}
                 <div class="flex items-center gap-2">
@@ -82,8 +90,8 @@
     <div class="grid grid-cols-1 gap-6 px-6 pb-6 sm:px-8 sm:pb-8 lg:grid-cols-12">
         {{-- Kartu ringkasan kiri --}}
         <div class="lg:col-span-7 space-y-6">
-            <div
-                class="rounded-2xl border p-5 shadow-sm ring-1 ring-gray-950/5 bg-gradient-to-b from-white via-rose-300 to-white">
+            <div class="rounded-2xl border p-5 shadow-sm ring-1 ring-gray-950/5 
+           ">
                 <div class="flex flex-wrap items-center gap-2">
                     <span
                         class="inline-flex items-center gap-2 rounded-xl bg-indigo-900/30 px-3 py-1.5 text-xs font-medium text-indigo-700 ring-1 ring-indigo-100">
@@ -141,22 +149,13 @@
                 {{-- Progress --}}
                 <div class="mt-5">
 
-                    <div
-                        class="mt-2 h-3 w-full overflow-hidden rounded-full bg-gray-100 ring-1 ring-gray-950/5 dark:bg-neutral-800 dark:ring-neutral-700">
-                        <div class="h-full rounded-full bg-gradient-to-r from-rose-400 via-pink-400 to-fuchsia-400 transition-all duration-700"
+                    <div class="mt-2 h-1 w-full overflow-hidden rounded-full bg-gray-100 ring-1 ring-gray-950/5">
+                        <div class="h-full rounded-full bg-gradient-to-r from-white via-sky-500 to-white transition-all duration-700"
                             aria-label="progress bar">
                         </div>
                     </div>
                 </div>
             </div>
-
-            {{-- Catatan / slot konten tambahan --}}
-            @if (trim($slot) !== '')
-                <div
-                    class="rounded-2xl border bg-white p-5 shadow-sm ring-1 ring-gray-950/5 dark:bg-neutral-900 dark:ring-neutral-800">
-                    {{ $slot }}
-                </div>
-            @endif
         </div>
 
         {{-- Sidebar kanan --}}
@@ -164,7 +163,8 @@
             {{-- Files --}}
             @if ($showFiles)
                 <div
-                    class="rounded-2xl border bg-white p-5 shadow-sm ring-1 ring-gray-950/5 bg-gradient-to-b from-rose-200 via-rose-300 to-pink-200">
+                    class="rounded-2xl border bg-white p-5 shadow-sm ring-1 ring-gray-950/5 
+           ">
                     <div class="flex items-center justify-between">
                         <h3 class="text-sm font-semibold text-gray-900">Bukti Pembayaran Pelatihan
                         </h3>
@@ -197,7 +197,10 @@
                                             <p class="text-sm font-medium text-gray-900">
                                                 {{ $label }}</p>
                                             <p class="text-xs text-white">
-                                                {{ $isProof ? 'Bukti pembayaran terunggah' : 'Belum ada bukti' }}
+                                                <span class="{{ $isProof ? 'text-green-500' : 'text-red-600' }}">
+                                                    {{ $isProof ? 'Bukti pembayaran terunggah' : 'Belum ada bukti' }}
+                                                </span>
+
                                             </p>
                                         </div>
                                     </div>

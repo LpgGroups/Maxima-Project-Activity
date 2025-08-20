@@ -1,3 +1,4 @@
+
 function getData(page = 1, q = "") {
     const perPage = 10;
     const url = new URL("/dashboard/finance/getdata", window.location.origin);
@@ -8,6 +9,7 @@ function getData(page = 1, q = "") {
     fetch(url)
         .then((response) => response.json())
         .then((response) => {
+            
             const trainings = response.data;
             let html = "";
             const tbody = document.querySelector('[data-ref="tbody"]');
@@ -67,7 +69,6 @@ function getData(page = 1, q = "") {
         });
 }
 
-// 🔍 Fungsi untuk handle pencarian
 function setupSearchInput() {
     let searchTimeout = null;
 
@@ -81,8 +82,8 @@ function setupSearchInput() {
     });
 }
 
-// 🚀 Eksekusi saat dokumen siap
 $(document).ready(function () {
     getData(); // Ambil data awal
     setupSearchInput(); // Aktifkan pencarian
+     setInterval(getData, 30000);
 });

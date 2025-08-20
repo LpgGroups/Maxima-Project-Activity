@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('budget_plan')->nullable();
             $table->string('file_nobatch')->nullable();
             $table->string('letter_implementation')->nullable();
-            $table->string('note')->nullable()->after('letter_implementation');
+            $table->string('note')->nullable();
             $table->unsignedBigInteger('file_id')->nullable();
             $table->timestamps();
             $table->foreign('file_id')->references('id')->on('reg_training')->onDelete('cascade');
