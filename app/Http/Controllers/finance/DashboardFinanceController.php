@@ -77,7 +77,8 @@ class DashboardFinanceController extends Controller
         if ($search = $request->get('q')) {
             $query->where(function ($q) use ($search) {
                 $q->where('no_letter', 'like', "%{$search}%")
-                    ->orWhere('activity', 'like', "%{$search}%");
+                    ->orWhere('activity', 'like', "%{$search}%")
+                    ->orWhere('name_company', 'like', "%{$search}%");
             });
         }
 
