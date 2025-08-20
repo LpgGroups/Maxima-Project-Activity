@@ -1,3 +1,4 @@
+
 function getData(page = 1, q = "") {
     const perPage = 10;
     const url = new URL("/dashboard/finance/getdata", window.location.origin);
@@ -8,6 +9,7 @@ function getData(page = 1, q = "") {
     fetch(url)
         .then((response) => response.json())
         .then((response) => {
+            
             const trainings = response.data;
             let html = "";
             const tbody = document.querySelector('[data-ref="tbody"]');
@@ -41,9 +43,9 @@ function getData(page = 1, q = "") {
                     ${progress}
                 </div>
                 `;
-
+                const showUrl = `/dashboard/finance/${training.id}`;
                 html += `
-                <tr class="odd:bg-white even:bg-gray-300 cursor-pointer hover:bg-red-500 hover:text-white leading-loose text-[12px]">
+                <tr onclick="window.location.href='${showUrl}'" class="odd:bg-white even:bg-gray-300 cursor-pointer hover:bg-red-500 hover:text-white leading-loose text-[12px]">
                     <td>${training.no}</td>
                     <td class="max-w-[120px] truncate whitespace-nowrap" title="${numberLetter}">${numberLetter}</td>
                     <td class="max-w-[50px] truncate whitespace-nowrap" title="${namePic}">${namePic}</td>
@@ -67,7 +69,6 @@ function getData(page = 1, q = "") {
         });
 }
 
-// 🔍 Fungsi untuk handle pencarian
 function setupSearchInput() {
     let searchTimeout = null;
 
@@ -81,8 +82,8 @@ function setupSearchInput() {
     });
 }
 
-// 🚀 Eksekusi saat dokumen siap
 $(document).ready(function () {
     getData(); // Ambil data awal
     setupSearchInput(); // Aktifkan pencarian
+     setInterval(getData, 30000);
 });

@@ -15,7 +15,7 @@ function updateEndDate() {
     const durationMap = {
         TKPK1: 6,
         TKPK2: 6,
-        TKBT1: 4,
+        TKBT1: 3,
         TKBT2: 4,
         BE: 2,
         AK3U: 12,

@@ -4,9 +4,11 @@ namespace App\Http\Controllers\finance;
 
 use App\Http\Controllers\Controller;
 use App\Models\RegTraining;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardFinanceController extends Controller
 {
@@ -17,6 +19,51 @@ class DashboardFinanceController extends Controller
             "title" => "Dtest",
         ]);
     }
+
+    // DashboardFinanceController.php
+    public function show($id)
+    {
+        $training = RegTraining::with('approvalFiles')->findOrFail($id);
+
+        // Contoh format tanggal aman
+        $tgl = null;
+        try {
+            if ($training->date instanceof \DateTimeInterface) {
+                $tgl = $training->date->format('d M Y');
+            } elseif (is_string($training->date) && trim($training->date) !== '') {
+                $tgl = Carbon::parse($training->date)->format('d M Y');
+            }
+        } catch (\Throwable $e) {
+            $tgl = null;
+        }
+
+        $user = Auth::user();
+        $trainingId = $training->id;
+
+        if ($user->role === 'finance') {
+            $financeUsers = User::where('role', 'finance')->get();
+            foreach ($financeUsers as $finance) {
+                $finance->unreadNotifications->where('data.training_id', $trainingId)->each(function ($notif) {
+                    $notif->markAsRead();
+                });
+            }
+        } else {
+            $notification = $user->unreadNotifications
+                ->where('data.training_id', $trainingId)
+                ->first();
+
+            if ($notification) {
+                $notification->markAsRead();
+            }
+        }
+
+        return view('dashboard.finance.show', [
+            'title'    => 'Detail Pelatihan',
+            'training' => $training,
+            'date_fmt' => $tgl,
+        ]);
+    }
+
 
     public function data(Request $request)
     {
@@ -55,6 +102,7 @@ class DashboardFinanceController extends Controller
                 ? 'Sudah diupload'
                 : 'Belum diupload';
             return [
+                'id'           => $t->id,
                 'no'         => ($paginator->firstItem() ?? 1) + $i,
                 'no_letter'   => $t->no_letter,
                 // sementara ambil dari kolom fallback di tabelnya
