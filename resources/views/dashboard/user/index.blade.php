@@ -56,7 +56,7 @@
         <!-- Kalender Maxima Academy -->
         <div
             class="lg:w-96 sm:w-full w-[276px] h-[534px] bg-gradient-to-br from-white via-rose-100 to-rose-200
- rounded-2xl shadow-lg p-5">
+                    rounded-2xl shadow-lg p-5">
 
             <!-- Header Kalender + Tooltip -->
             <div class="relative flex items-start justify-between">

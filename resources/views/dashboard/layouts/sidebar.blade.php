@@ -65,7 +65,7 @@
                     <li class="my-1">
                         <a href="/dashboard/user/training"
                             class="flex items-center space-x-2 menu-item-hover 
-                                  @if (request()->is('dashboard/user/training')) bg-red-500 text-white @else hover:bg-red-500 @endif 
+                                  @if (request()->is('dashboard/user/training*')) bg-red-500 text-white @else hover:bg-red-500 @endif 
                                   rounded-lg p-2">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                 stroke-width="1.5" stroke="currentColor" class="size-6">
@@ -155,7 +155,6 @@
                         </div>
                     </li>
 
-                    {{-- Menu lainnya --}}
                     <li class="my-1">
                         <a href="/dashboard/admin/users"
                             class="flex items-center space-x-2 menu-item-hover 
@@ -213,7 +212,6 @@
                         </a>
                     </li>
                 @elseif ($role == 'dev')
-                    {{-- Menu untuk Management --}}
                     <a href="/dashboard/developer"
                         class="flex items-center space-x-2 menu-item-hover 
     @if (request()->is('dashboard/developer') && !request()->is('dashboard/developer/*')) bg-red-500 text-white @else hover:bg-red-500 @endif 
@@ -262,7 +260,7 @@
                                     </a>
                                 </li>
 
-                                 <li>
+                                <li>
                                     <a href="/dashboard/developer/trainingall" @class([
                                         'block px-2 py-1 rounded hover:bg-red-100 text-sm',
                                         'text-red-500 font-bold' => request()->is(
@@ -292,7 +290,7 @@
                                     </a>
                                 </li>
 
-                               
+
                                 {{-- Tambah submenu lain di sini jika perlu --}}
                             </ul>
                         </div>
@@ -356,13 +354,35 @@
                             <span class="text-sm">Monitoring</span>
                         </a>
                     </li>
+                @elseif ($role == 'finance')
+                    {{-- Menu untuk Management --}}
+                    <li class="my-1">
+                        <a href="/dashboard/finance"
+                            class="flex items-center space-x-2 menu-item-hover 
+                               @if (request()->is('dashboard/finance*')) bg-red-500 text-white @else hover:bg-red-500 @endif 
+                                  rounded-lg p-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"
+                                stroke-linecap="round" stroke-linejoin="round"
+                                class="lucide lucide-hand-coins-icon lucide-hand-coins">
+                                <path d="M11 15h2a2 2 0 1 0 0-4h-3c-.6 0-1.1.2-1.4.6L3 17" />
+                                <path
+                                    d="m7 21 1.6-1.4c.3-.4.8-.6 1.4-.6h4c1.1 0 2.1-.4 2.8-1.2l4.6-4.4a2 2 0 0 0-2.75-2.91l-4.2 3.9" />
+                                <path d="m2 16 6 6" />
+                                <circle cx="16" cy="9" r="2.9" />
+                                <circle cx="6" cy="5" r="3" />
+                            </svg>
+                            <span class="text-sm">Finance Dashboard</span>
+                        </a>
+                    </li>
                 @endif
+
             </ul>
         </div>
 
         <!-- Version Info -->
         <div class="p-4 mt-auto">
-            <span class="text-sm">Version: Beta V1.7.3 </span>
+            <span class="text-sm">Version: Beta V1.7.4 </span>
         </div>
     </div>
 </div>

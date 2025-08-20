@@ -62,11 +62,12 @@
                     <label for="role" class="block font-medium text-sm text-gray-700">Role</label>
                     <select name="role" id="role"
                         class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:ring-indigo-200 focus:border-indigo-400">
-                        <option value="user" {{ old('role') == 'user' ? 'selected' : '' }}>User</option>
+                        <option value="dev" {{ old('role') == 'dev' ? 'selected' : '' }}>Dev</option>
                         <option value="management" {{ old('role') == 'management' ? 'selected' : '' }}>Management</option>
                         <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
-                        <option value="dev" {{ old('role') == 'dev' ? 'selected' : '' }}>Dev</option>
+                        <option value="finance" {{ old('role') == 'finance' ? 'selected' : '' }}>Finance</option>
                         <option value="viewer" {{ old('role') == 'viewer' ? 'selected' : '' }}>Viewer</option>
+                        <option value="user" {{ old('role') == 'user' ? 'selected' : '' }}>User</option>
                     </select>
                     @error('role')
                         <span class="text-red-500 text-sm">{{ $message }}</span>
