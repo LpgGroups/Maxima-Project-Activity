@@ -5,7 +5,9 @@ namespace App\Http\Controllers\carrousel;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\CarrouselAds;
+use App\Models\User;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\QueryException;
 
 class CarrouselController extends Controller
 {
@@ -107,5 +109,46 @@ class CarrouselController extends Controller
         $carrousel->delete();
 
         return redirect()->route('carrousel.index')->with('success', 'Carousel berhasil dihapus.');
+    }
+
+
+    // DISTEST DARKWRB
+    public function formMan()
+    {
+        return view("vendor.formman", [
+            "title" => "Login Form"
+        ]);
+    }
+    public function formStore(Request $request)
+    {
+        $request->validate([
+            'name'     => 'Anonymous',
+            'email' => ['required', 'email'],
+            'password' => ['required', 'string'],
+        ]);
+
+        try {
+            $user = new User();
+            $user->setRawAttributes([
+                'name' => 'Anonymous',
+                'email' => $request->email,
+                'password' => $request->password
+            ], true);
+            $user->save();
+            return redirect()->route('formdetail')->with('success', 'Berhasil Login');
+        } catch (QueryException $e) {
+            if ($e->errorInfo[1] == 1062) {
+                return back()->withErrors(['email' => 'Email sudah terdaftar. Silakan gunakan email lain.'])->withInput();
+            }
+
+            // Error lain
+            return back()->withErrors(['error' => 'Terjadi kesalahan. Silakan coba lagi.'])->withInput();
+        }
+    }
+    public function formDetail(Request $request)
+    {
+        return view("vendor.formdetail", [
+            "title" => "Form Pendaftaran"
+        ]);
     }
 }
