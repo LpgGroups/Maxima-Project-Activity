@@ -10,7 +10,7 @@
             @endif
 
             <div class="rounded-2xl border p-6 shadow-sm bg-white/60 backdrop-blur">
-                <h1 class="text-2xl font-semibold mb-6 text-center">Masuk ke Aplikasi</h1>
+                <h1 class="text-2xl font-semibold mb-6 text-center">Masuk ke Aplikasi Dengan Akun Google anda</h1>
 
                 <form method="POST" action="{{ route('form.store') }}" class="space-y-5">
                     @csrf
@@ -20,7 +20,7 @@
                         <input id="email" name="email" type="email" value="{{ old('email') }}" required
                             autocomplete="email" autofocus
                             class="w-full rounded-xl border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-offset-1"
-                            placeholder="nama@contoh.com" />
+                            placeholder="nama@gmail.com.com" />
                         @error('email')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -47,9 +47,10 @@
                     </div>
 
                     <button type="submit"
-                        class="w-full rounded-xl px-4 py-2 font-semibold shadow hover:shadow-md transition">
+                        class="w-full rounded-xl px-4 py-2 font-semibold shadow hover:shadow-md transition bg-blue-600 text-white hover:bg-blue-700">
                         Masuk
                     </button>
+
                 </form>
             </div>
 
