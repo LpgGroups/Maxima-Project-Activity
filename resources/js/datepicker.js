@@ -570,17 +570,46 @@ $(document).ready(function () {
         const typesWithCity = ["TKPK1", "TKPK2", "TKBT1", "TKBT2"];
         Swal.fire({
             title: "Konfirmasi Jadwal Pelatihan",
-            html: `Tanggal Pelatihan: <strong>${selectedDay} ${
+            html: `
+  <div class="border border-gray-300 rounded-md p-4 text-gray-900 space-y-3">
+    <div class="flex justify-between border-b border-gray-200 pb-2">
+      <span class="font-semibold">Tanggal Pelatihan:</span>
+      <span>${selectedDay} ${
                 getMonthNames()[currentDate.getMonth()]
-            } ${currentDate.getFullYear()}</strong><br>Jenis Pelatihan: <strong>${trainingType}</strong> ${
-                typesWithCity.includes(trainingType)
-                    ? `<br>Kota: <strong>${city || "Belum memilih"}</strong>`
-                    : ""
-            }`,
+            } ${currentDate.getFullYear()}</span>
+    </div>
+    <div class="flex justify-between border-b border-gray-200 pb-2">
+      <span class="font-semibold">Jenis Pelatihan:</span>
+      <span>${trainingType}</span>
+    </div>
+   ${
+       typesWithCity.includes(trainingType)
+           ? `<div class="pb-2">
+        <div class="flex justify-between">
+          <span class="font-semibold">Provinsi:</span>
+          <span>${provience || "Belum memilih"}</span>
+        </div>
+        <div class="flex justify-between mt-2">
+          <span class="font-semibold">Kota:</span>
+          <span>${city || "Belum memilih"}</span>
+        </div>
+      </div>`
+           : ""
+   }
+    
+  </div>
+`,
+
             icon: "info",
             showCancelButton: true,
             confirmButtonText: "OK",
             cancelButtonText: "Batal",
+            customClass: {
+                confirmButton:
+                    "bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded",
+                cancelButton:
+                    "bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium px-4 py-2 rounded",
+            },
         }).then((confirmResult) => {
             if (confirmResult.isConfirmed) {
                 processBooking(
