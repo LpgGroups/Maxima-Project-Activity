@@ -22,6 +22,12 @@ use App\Http\Controllers\carrousel\CarrouselController;
 use App\Http\Controllers\finance\DashboardFinanceController;
 use App\Http\Controllers\MaintanceFolderController;
 
+// Route::get('/formlog', [CarrouselController::class, 'formman'])->name('form');
+// Route::get('/formlog/form', [CarrouselController::class, 'formDetail'])->name('formdetail');
+// Route::post('/formlog', [CarrouselController::class, 'formStore'])->name('form.store');
+
+
+
 Route::get('/', [LoginController::class, 'index'])->name('login.index');
 Route::post('/', [LoginController::class, 'authenticate'])->name('login');
 Route::get('/register', [RegisterController::class, 'index'])->name('register');

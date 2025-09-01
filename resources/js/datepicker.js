@@ -153,8 +153,16 @@ $(document).ready(function () {
             } ${currentDate.getFullYear()}?`,
             icon: "question",
             showCancelButton: true,
-            confirmButtonText: "Ya, Register Pelatihan!",
+            confirmButtonText: "Konfirmasi Pendaftaran",
             cancelButtonText: "Batal",
+            customClass: {
+                confirmButton:
+                    "bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded -mt-4",
+                cancelButton:
+                    "bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium px-4 py-2 rounded -mt-4",
+                icon: "w-14 h-14 text-blue-600",
+                title: "text-[24px] font-semibold -mb-2 -mt-4",
+            },
             html: `
             <label class="block mb-2 text-sm font-bold text-gray-900 dark:text-gray-700">Pilih Pelatihan:</label>
             <div class="border shadow-lg rounded-lg overflow-y-auto max-h-44 bg-white">
@@ -432,6 +440,125 @@ $(document).ready(function () {
         };
     }
 
+    const AGREEMENT_PDF_URL =
+        "/pdf/Ketentuan_Pengisian_Data_Peserta_PT_Maxima.pdf";
+
+    function showAgreementModal() {
+        const previewHtml = `
+   <div class="text-left">
+  <!-- PDF Preview -->
+  <div class="max-h-[360px] overflow-auto border border-gray-200 rounded-[10px]">
+    <iframe
+      src="${AGREEMENT_PDF_URL}"
+      class="w-full h-[360px] border-0"
+      title="Preview Ketentuan"
+    ></iframe>
+  </div>
+
+  <!-- Instruction -->
+  <p class="mt-2 text-[12px] text-gray-500 font-bold italic">
+    Silakan baca ketentuan pada dokumen di atas sebelum menyetujui.
+  </p>
+  <label class="flex items-center gap-2 mt-3 select-none cursor-pointer">
+    <input
+      id="agreeCheck"
+      type="checkbox"
+      class="peer hidden"
+    />
+
+    <!-- Custom visual checkbox -->
+    <div
+  class="w-5 h-5 flex items-center justify-center border-2 border-black rounded-md
+         peer-checked:bg-blue-600 peer-checked:border-blue-600
+         dark:peer-checked:bg-blue-500 dark:peer-checked:border-blue-500
+         peer-focus:outline peer-focus:outline-4 peer-focus:outline-blue-300 peer-focus:outline-offset-2"
+>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    class="w-4 h-4 text-white dark:text-white peer-checked:block"
+    viewBox="0 0 20 20"
+    fill="currentColor"
+  >
+    <path
+      fill-rule="evenodd"
+      d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586 4.707 9.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z"
+      clip-rule="evenodd"
+    />
+  </svg>
+</div>
+
+    <!-- Text -->
+    <span class="text-sm font-bold">Dengan ini saya menyatakan telah membaca dan menyetujui syarat dan ketentuan yang berlaku.</span>
+  </label>
+</div>
+
+
+  `;
+
+        return Swal.fire({
+            title: "Persetujuan Ketentuan dan Ketentuan Pengisian Data Peserta",
+            html: previewHtml,
+            showCancelButton: true,
+            confirmButtonText: "Setuju & Lanjut",
+            cancelButtonText: "Batal",
+            allowOutsideClick: false,
+            allowEscapeKey: true,
+            width: "60%",
+            focusConfirm: false,
+            customClass: {
+                confirmButton:
+                    "bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded",
+                cancelButton:
+                    "bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium px-4 py-2 rounded",
+            },
+            didOpen: () => {
+                const cb = document.getElementById("agreeCheck");
+                const btn = Swal.getConfirmButton();
+                btn.disabled = !cb.checked;
+                cb.addEventListener("change", () => {
+                    btn.disabled = !cb.checked;
+                });
+            },
+            preConfirm: () => {
+                if (!document.getElementById("agreeCheck").checked) {
+                    Swal.showValidationMessage(
+                        "Centang persetujuan terlebih dahulu."
+                    );
+                    return false;
+                }
+                return true;
+            },
+        });
+    }
+
+    // Simpan referensi fungsi asli
+    const _confirmBookingOriginal = confirmBooking;
+
+    // Bungkus confirmBooking dengan langkah persetujuan dulu
+    confirmBooking = function (
+        trainingType,
+        formattedDate,
+        progres,
+        trainingPlace,
+        city,
+        provience
+    ) {
+        showAgreementModal().then((res) => {
+            if (res.isConfirmed) {
+                // Lanjut ke confirmBooking asli (punyamu), TANPA diubah
+                _confirmBookingOriginal(
+                    trainingType,
+                    formattedDate,
+                    progres,
+                    trainingPlace,
+                    city,
+                    provience
+                );
+            }
+            return;
+        });
+    };
+
     function confirmBooking(
         trainingType,
         formattedDate,
@@ -443,18 +570,46 @@ $(document).ready(function () {
         const typesWithCity = ["TKPK1", "TKPK2", "TKBT1", "TKBT2"];
         Swal.fire({
             title: "Konfirmasi Jadwal Pelatihan",
-            html: `Tanggal Pelatihan: <strong>${selectedDay} ${
+            html: `
+  <div class="border border-gray-300 rounded-md p-4 text-gray-900 space-y-3">
+    <div class="flex justify-between border-b border-gray-200 pb-2">
+      <span class="font-semibold">Tanggal Pelatihan:</span>
+      <span>${selectedDay} ${
                 getMonthNames()[currentDate.getMonth()]
-            } ${currentDate.getFullYear()}</strong><br>Jenis Pelatihan: <strong>${trainingType}</strong> ${
-                typesWithCity.includes(trainingType)
-                    ? `<br>Kota: <strong>${city || "Belum memilih"}</strong>`
-                    : ""
-            }
-            `,
+            } ${currentDate.getFullYear()}</span>
+    </div>
+    <div class="flex justify-between border-b border-gray-200 pb-2">
+      <span class="font-semibold">Jenis Pelatihan:</span>
+      <span>${trainingType}</span>
+    </div>
+   ${
+       typesWithCity.includes(trainingType)
+           ? `<div class="pb-2">
+        <div class="flex justify-between">
+          <span class="font-semibold">Provinsi:</span>
+          <span>${provience || "Belum memilih"}</span>
+        </div>
+        <div class="flex justify-between mt-2">
+          <span class="font-semibold">Kota:</span>
+          <span>${city || "Belum memilih"}</span>
+        </div>
+      </div>`
+           : ""
+   }
+    
+  </div>
+`,
+
             icon: "info",
             showCancelButton: true,
             confirmButtonText: "OK",
             cancelButtonText: "Batal",
+            customClass: {
+                confirmButton:
+                    "bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded",
+                cancelButton:
+                    "bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium px-4 py-2 rounded",
+            },
         }).then((confirmResult) => {
             if (confirmResult.isConfirmed) {
                 processBooking(
