@@ -3,9 +3,8 @@
     <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center w-full gap-2 mb-2">
         <span
             class="inline-flex gap-2 rounded-xl bg-indigo-900/30 px-3 py-1.5 text-xs font-medium text-indigo-700 ring-1 ring-indigo-100">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                class="lucide lucide-pin-icon lucide-pin">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pin-icon lucide-pin">
                 <path d="M12 17v5" />
                 <path
                     d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z" />
@@ -287,29 +286,41 @@
 
         <div id="content2" class="tab-content hidden">
             <div class="p-4 border border-t-0 border-gray-300 bg-white">
-                <div class="relative flex items-start space-x-2">
-                    <h3 class="text-[24px] font-semibold">Submit Peserta</h3>
+                <div class="relative flex items-center justify-between">
+                    <!-- kiri: judul + icon + tooltip (punyamu) -->
+                    <div class="flex items-center gap-2">
+                        <h3 class="text-[24px] font-semibold">Submit Peserta</h3>
 
-                    <!-- Icon + Tooltip -->
-                    <div class="relative group">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-blue-500 mt-1 cursor-pointer"
-                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M8.228 9c.313-1.17 1.29-2 2.522-2 1.54 0 2.75 1.21 2.75 2.75 0 1.052-.597 1.976-1.469 2.406a2.25 2.25 0 00-1.281 2.156m0 3h.008M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" />
-                        </svg>
-
-                        <!-- Tooltip container -->
-                        <div class="absolute top-0 left-full ml-2 w-[500px] hidden group-hover:flex z-50">
-                            <video src="/img/vid/tutorregparticipants.webm" autoplay muted loop
-                                class="w-[500px] h-auto rounded shadow-lg" playsinline>
-                                Browser anda tidak mendukung video tag.
-                            </video>
+                        <div class="relative group">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-blue-500 mt-1 cursor-pointer"
+                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M8.228 9c.313-1.17 1.29-2 2.522-2 1.54 0 2.75 1.21 2.75 2.75 0 1.052-.597 1.976-1.469 2.406a2.25 2.25 0 00-1.281 2.156m0 3h.008M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" />
+                            </svg>
+                            <div class="absolute top-0 left-full ml-2 w-[500px] hidden group-hover:flex z-50">
+                                <video src="/img/vid/tutorregparticipants.webm" autoplay muted loop
+                                    class="w-[500px] h-auto rounded shadow-lg" playsinline>
+                                    Browser anda tidak mendukung video tag.
+                                </video>
+                            </div>
                         </div>
                     </div>
+
+                    <!-- kanan: tombol download -->
+                    <a href="/pdf/Ketentuan_Pengisian_Data_Peserta_PT_Maxima.pdf"
+                        download="Ketentuan_Pengisian_Data_Peserta_PT_Maxima.pdf"
+                        class="inline-flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium bg-indigo-600 text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed">
+                        <!-- ikon download --> <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 3v12m0 0l-4-4m4 4l4-4M4 21h16" />
+                        </svg> <span>Unduh Surat Pernyataan</span> </a>
                 </div>
-                <p class="mb-2">Lengkapi Data Peserta yang akan mengikuti pelatihan yang diselenggarakan oleh PT. Maxima
+
+                <p class="mb-2 mt-2">Lengkapi Data Peserta yang akan mengikuti pelatihan yang diselenggarakan oleh PT.
+                    Maxima
                     Aksara Jaya
-                    Utama</p>
+                    Utama.</p>
 
                 <a href="{{ route('dashboard.addparticipant', ['form_id' => $training->id]) }}"
                     class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm px-5 py-2 rounded-lg shadow-md transition duration-200 ease-in-out mt-4 mb-2">
