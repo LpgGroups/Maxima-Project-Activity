@@ -639,7 +639,38 @@
                     }
                 }
             });
+
+            const formId = 'form2';
+            const fieldsToStore = ['name', 'nik', 'birth_place', 'date_birth', 'blood_type'];
+            document.addEventListener('DOMContentLoaded', function() {
+                fieldsToStore.forEach(field => {
+                    const input = document.getElementById(field);
+                    const savedValue = localStorage.getItem('form_' + field);
+                    if (input && savedValue !== null) {
+                        input.value = savedValue;
+                    }
+                });
+            });
+
+            // Simpan ke localStorage saat user mengetik/pilih
+            fieldsToStore.forEach(field => {
+                const input = document.getElementById(field);
+                if (input) {
+                    input.addEventListener('input', function() {
+                        localStorage.setItem('form_' + field, this.value);
+                    });
+                }
+            });
+
+            // Hapus localStorage saat form disubmit
+            const form = document.getElementById(formId);
+            form.addEventListener('submit', function() {
+                fieldsToStore.forEach(field => {
+                    localStorage.removeItem('form_' + field);
+                });
+            });
         });
+
         document.querySelectorAll('.file-upload-group input[type="file"]').forEach(function(input) {
             const group = input.closest('.file-upload-group');
             const checkmark = group.querySelector('.checkmark');
@@ -677,6 +708,45 @@
                     if (fileInfo) fileInfo.textContent = '';
                 }
             });
+        });
+        document.addEventListener("DOMContentLoaded", function() {
+            const fields = ['name', 'nik', 'birth_place', 'date_birth', 'blood_type'];
+            const submitBtn = document.getElementById('form-submit-btn');
+
+            // 1. Load localStorage saat halaman dibuka
+            fields.forEach(field => {
+                const input = document.getElementById(field);
+                if (input) {
+                    const savedValue = localStorage.getItem('form_' + field);
+                    if (savedValue !== null) {
+                        input.value = savedValue;
+                        if (input.tagName === 'SELECT') {
+                            input.dispatchEvent(new Event('change'));
+                        }
+                    }
+
+                    // Simpan perubahan ke localStorage
+                    input.addEventListener('input', () => {
+                        localStorage.setItem('form_' + field, input.value);
+                    });
+
+                    input.addEventListener('change', () => {
+                        localStorage.setItem('form_' + field, input.value);
+                    });
+                }
+            });
+
+            // 2. Hapus localStorage saat tombol submit diklik
+            if (submitBtn) {
+                submitBtn.addEventListener('click', function() {
+                    if (submitBtn.disabled) return; // Jika tombol disabled, jangan hapus
+
+                    fields.forEach(field => {
+                        localStorage.removeItem('form_' + field);
+                        console.log('Removed:', 'form_' + field);
+                    });
+                });
+            }
         });
     </script>
 
