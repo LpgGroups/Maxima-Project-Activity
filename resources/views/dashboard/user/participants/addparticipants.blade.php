@@ -63,7 +63,7 @@
                 <div class="relative mt-4 w-full">
                     <input id="name" name="name" type="text"
                         class="peer block w-full appearance-none border border-[#515151] bg-transparent px-2.5 py-3 text-sm text-[#515151] rounded-md focus:border-[#1E6E9E] focus:outline-none focus:ring-1 focus:ring-[#1E6E9E] placeholder-transparent"
-                        placeholder="Contoh: Budi Santoso" required />
+                        placeholder="Contoh: Budi Santoso" required value="{{ old('name') }}" />
                     <label for="name"
                         class="absolute text-base rounded-lg bg-[#ffffff] text-[#515151] transition-all duration-300 transform -translate-y-4 scale-75 top-3 left-2.5 ml-2 z-10 origin-[0] peer-focus:text-[#1E6E9E] peer-focus:scale-75 peer-focus:-translate-y-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0">
                         Nama Lengkap <span class="text-red-500">*</span>
@@ -76,7 +76,7 @@
                     <div class="relative">
                         <input id="nik" name="nik" type="number"
                             class="peer block w-full appearance-none border border-[#515151] bg-transparent px-2.5 py-3 text-sm text-[#515151] rounded-md focus:border-[#1E6E9E] focus:outline-none focus:ring-1 focus:ring-[#1E6E9E] placeholder-transparent pr-10"
-                            placeholder="Nomor Induk Kependudukan" required maxlength="16" />
+                            placeholder="Nomor Induk Kependudukan" required maxlength="16" value="{{ old('nik') }}" />
                         <label for="nik"
                             class="absolute text-base rounded-lg bg-[#ffffff] text-[#515151] transition-all duration-300 transform -translate-y-4 scale-75 top-3 left-2.5 ml-2 z-10 origin-[0] peer-focus:text-[#1E6E9E] peer-focus:scale-75 peer-focus:-translate-y-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0">
                             Nomor Induk Kependudukan <span class="text-red-500">*</span>
@@ -100,7 +100,7 @@
                 <div class="relative mt-4 w-full">
                     <input id="birth_place" name="birth_place" type="text"
                         class="peer block w-full appearance-none border border-[#515151] bg-transparent px-2.5 py-3 text-sm text-[#515151] rounded-md focus:border-[#1E6E9E] focus:outline-none focus:ring-1 focus:ring-[#1E6E9E] placeholder-transparent"
-                        placeholder="Contoh: Jakarta" required />
+                        placeholder="Contoh: Jakarta" required value="{{ old('birth_place') }}" />
                     <label for="birth_place"
                         class="absolute text-base rounded-lg bg-[#ffffff] text-[#515151] transition-all duration-300 transform -translate-y-4 scale-75 top-3 left-2.5 ml-2 z-10 origin-[0] peer-focus:text-[#1E6E9E] peer-focus:scale-75 peer-focus:-translate-y-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0">
                         Tempat Lahir <span class="text-red-500">*</span>
@@ -111,7 +111,7 @@
                 <div class="relative mt-4 w-full">
                     <input id="date_birth" name="date_birth" type="date"
                         class="peer block w-full appearance-none border border-[#515151] bg-transparent px-2.5 py-3 text-sm text-[#515151] rounded-md focus:border-[#1E6E9E] focus:outline-none focus:ring-1 focus:ring-[#1E6E9E]"
-                        required />
+                        required value="{{ old('date_birth') }}" />
                     <label for="date_birth"
                         class="absolute text-base rounded-lg bg-[#ffffff] text-[#515151] transition-all duration-300 transform -translate-y-4 scale-75 top-3 left-2.5 ml-2 z-10 origin-[0] peer-focus:text-[#1E6E9E] peer-focus:scale-75 peer-focus:-translate-y-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0">
                         Tanggal Lahir <span class="text-red-500">*</span>
@@ -396,6 +396,7 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/min/moment.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/moment-timezone@0.5.43/builds/moment-timezone-with-data.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             window.isClosed = @json($isClosed);
@@ -638,6 +639,114 @@
                     }
                 }
             });
+
+            const formId = 'form2';
+            const fieldsToStore = ['name', 'nik', 'birth_place', 'date_birth', 'blood_type'];
+            document.addEventListener('DOMContentLoaded', function() {
+                fieldsToStore.forEach(field => {
+                    const input = document.getElementById(field);
+                    const savedValue = localStorage.getItem('form_' + field);
+                    if (input && savedValue !== null) {
+                        input.value = savedValue;
+                    }
+                });
+            });
+
+            // Simpan ke localStorage saat user mengetik/pilih
+            fieldsToStore.forEach(field => {
+                const input = document.getElementById(field);
+                if (input) {
+                    input.addEventListener('input', function() {
+                        localStorage.setItem('form_' + field, this.value);
+                    });
+                }
+            });
+
+            // Hapus localStorage saat form disubmit
+            const form = document.getElementById(formId);
+            form.addEventListener('submit', function() {
+                fieldsToStore.forEach(field => {
+                    localStorage.removeItem('form_' + field);
+                });
+            });
+        });
+
+        document.querySelectorAll('.file-upload-group input[type="file"]').forEach(function(input) {
+            const group = input.closest('.file-upload-group');
+            const checkmark = group.querySelector('.checkmark');
+            const fileInfo = group.querySelector('.file-info-' + input.id);
+
+            input.addEventListener('change', function() {
+                const file = this.files[0];
+                const maxSize = 2 * 1024 * 1024; // 2MB
+                const label = document.querySelector(`label[for="${this.id}"]`);
+                const fieldName = label ? label.innerText.replace('*', '').trim() : 'File';
+                const currentInput = this;
+
+                if (file) {
+                    if (file.size > maxSize) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Ukuran File Terlalu Besar',
+                            html: `<strong>${fieldName}</strong> melebihi batas 2MB.<br>Silakan pilih file lain.`,
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#d33'
+                        }).then(() => {
+                            // Reset semua tampilan karena file gagal
+                            currentInput.value = '';
+                            checkmark?.classList.add('hidden');
+                            if (fileInfo) fileInfo.textContent = '';
+                        });
+                    } else {
+                        // File valid: tampilkan checkmark & nama file
+                        checkmark?.classList.remove('hidden');
+                        if (fileInfo) fileInfo.textContent = `File dipilih: ${file.name}`;
+                    }
+                } else {
+                    // Tidak ada file: sembunyikan semuanya
+                    checkmark?.classList.add('hidden');
+                    if (fileInfo) fileInfo.textContent = '';
+                }
+            });
+        });
+        document.addEventListener("DOMContentLoaded", function() {
+            const fields = ['name', 'nik', 'birth_place', 'date_birth', 'blood_type'];
+            const submitBtn = document.getElementById('form-submit-btn');
+
+            // 1. Load localStorage saat halaman dibuka
+            fields.forEach(field => {
+                const input = document.getElementById(field);
+                if (input) {
+                    const savedValue = localStorage.getItem('form_' + field);
+                    if (savedValue !== null) {
+                        input.value = savedValue;
+                        if (input.tagName === 'SELECT') {
+                            input.dispatchEvent(new Event('change'));
+                        }
+                    }
+
+                    // Simpan perubahan ke localStorage
+                    input.addEventListener('input', () => {
+                        localStorage.setItem('form_' + field, input.value);
+                    });
+
+                    input.addEventListener('change', () => {
+                        localStorage.setItem('form_' + field, input.value);
+                    });
+                }
+            });
+
+            // 2. Hapus localStorage saat tombol submit diklik
+            if (submitBtn) {
+                submitBtn.addEventListener('click', function() {
+                    if (submitBtn.disabled) return; // Jika tombol disabled, jangan hapus
+
+                    fields.forEach(field => {
+                        localStorage.removeItem('form_' + field);
+                        console.log('Removed:', 'form_' + field);
+                    });
+                });
+            }
         });
     </script>
 
