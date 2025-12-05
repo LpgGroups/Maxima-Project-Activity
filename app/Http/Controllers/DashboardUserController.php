@@ -116,8 +116,8 @@ class DashboardUserController extends Controller
             //     ]);
             // }
             $now = now();
-            $month = $now->format('m'); // bulan saat ini
-            $year = $now->format('Y');  // tahun saat ini
+            $month = $now->format('m');
+            $year = $now->format('Y');  
 
             // Hitung jumlah pendaftaran tahun ini untuk activity yang sama
             $sequence = RegTraining::where('activity', $booking->activity)
